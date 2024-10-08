@@ -3,8 +3,18 @@ import React from "react";
 import { ReactComponent as Rocket } from "../../../assets/icons/rocket.svg";
 import { ReactComponent as Hand } from "../../../assets/images/hand.svg";
 import { ReactComponent as Star } from "../../../assets/particles/star.svg";
+import {useNavigate} from "react-router-dom";
 
-const DontMiss = ({ walletId , onConnectWallet , onLogout }) => {
+const DontMiss = ({ walletId }) => {
+    const navigate = useNavigate();
+
+    const handleLaunchApp = async () => {
+        if (walletId) {
+            navigate('/form')
+        } else {
+            alert('Please connect to your wallet')
+        }
+    };
     const starData = [
         { top: 20, left: 5, size: 9 },
         { top: 75, left: 80, size: 12 },
@@ -24,27 +34,12 @@ const DontMiss = ({ walletId , onConnectWallet , onLogout }) => {
                     height: `${star.size}%`
                 }}/>
             ))}
-            {walletId ? (
-                <div className='wallet-container'>
-                    <div className='wallet-id'>
-                        {`${walletId.slice(0, 4)}...${walletId.slice(-4)}`}
-                    </div>
-                    <button className='gradient-button'
-                            onClick={onLogout}
-                    >
-                        Log Out
-                    </button>
-                </div>
-            ) : (
                 <div className='miss-button'>
-                    <button className='launch-button miss-btn'
-                            onClick={onConnectWallet}
-                    >
+                    <button className='launch-button' onClick={handleLaunchApp}>
                         Launch App <Rocket/>
                     </button>
                     <Hand className='hand-icon'/>
                 </div>
-            )}
         </div>
     )
 }

@@ -91,9 +91,8 @@ body{
 @media (min-width: 1800px) {
     .home{
         background-color: transparent;
-        width: 125%;
+        width: 100%;
         position: relative;
-        right: 150px;
     }
     .center-text {
         font-size: 100px;
@@ -113,9 +112,8 @@ body{
 @media (max-width: 1800px) {
     .home{
         background-color: transparent;
-        width: 120%;
+        width: 100%;
         position: relative;
-        right: 100px;
     }
 
     .center-text {

@@ -9,7 +9,7 @@ import './dashboard.css';
 
 const Dashboard = () => {
     return (
-        <div className="container-fluid position-relative">
+        <div className="container-fluid position-relative container">
             <div className="backdround-gradients">
                 <div className="backdround-gradient"></div>
                 <div className="backdround-gradient"></div>

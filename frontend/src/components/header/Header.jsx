@@ -11,7 +11,7 @@ function Header({ walletId, onConnectWallet, onLogout }) {
                   <Logo/>
               </div>
               <div className='nav-items'>
-                  <a href="#home">Home</a>
+                  <a href="/">Home</a>
                   <Link to="/dashboard">Dashboard</Link>
               </div>
               <div className='wallet-section'>

@@ -103,11 +103,6 @@
 }
 
 @media (min-width: 1800px) {
-    .about-container {
-        width: 125%;
-        right: 150px;
-    }
-
     .card-title h4{
         font-size: 1.6em;
     }

@@ -1,0 +1,218 @@
+.form-container{
+    margin: 0;
+    position: relative;
+    height: 75vh;
+}
+
+.form-card{
+    width: 340px;
+    height: 150px;
+    background: linear-gradient(0deg, rgba(72, 143, 162, 0.03) 0%, rgba(72, 143, 162, 0.03) 100%), linear-gradient(123deg, rgba(116, 214, 253, 0.50) 0.63%, rgba(11, 12, 16, 0.50) 100.03%);
+    flex-direction: column;
+    gap: 15px;
+    border-radius: 20px;
+    border: 0.5px solid #74D6FD;
+    box-shadow: 0px 3.75px 3.75px 0px rgba(0, 0, 0, 0.15), 3.75px 3.75px 9.375px 0px rgba(153, 234, 255, 0.25) inset;
+    backdrop-filter: blur(21.09375px);
+}
+
+.form-wrapper{
+    width: max-content;
+    margin: 0 auto;
+}
+
+.form-title h1{
+    text-align: center;
+}
+
+.form-card__container{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 50px;
+}
+
+.form-card__container > *{
+    color: white;
+}
+
+.form-card__container svg {
+    width: 22px;
+    height: 22px;
+}
+
+.form-card__container p{
+    color: darkgray;
+}
+
+.token-card label{
+    border: 2px solid var(--blue-color);
+    border-radius: 10px;
+    padding: 5px;
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.token-label{
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.token-label input{
+    background-color: transparent;
+    border: 1px solid var(--blue-color);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+
+.form-wrapper > *{
+    color: white;
+    margin-bottom: 10px;
+}
+
+.token-card h5{
+    margin-top: 9px;
+    font-size: 20px;
+    color: white;
+}
+
+.token-card svg{
+    width: 25px;
+    height: 25px;
+}
+
+.form-token{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.multiplier-card{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: relative;
+    gap: 10px;
+}
+
+.recommended{
+    position: absolute;
+    height: 15px;
+}
+
+.recommended p{
+    background-color: var(--blue-color);
+    width: 120px;
+    height: 15px;
+    text-align: center;
+    font-size: 15px;
+    border-radius: 5px 5px 0 0;
+    display: flex;
+    align-items: center;
+    color: black;
+    font-family: var(--text-font);
+    justify-content: center;
+}
+
+
+.multiplier-item label{
+    border: 1px solid var(--blue-color);
+    width: 120px;
+    height: 50px;
+    border-radius: 5px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input[type="radio"]{
+    display: none;
+    padding: 10px;
+    border: 1px solid #ccc; /* Default border */
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.token-card input[type="radio"]:checked + label{
+    background-color: var(--blue-color);
+}
+
+.multiplier-item input[type="radio"]:checked + label {
+    border-color: var(--blue-color);
+    box-shadow: 0 4px 8px var(--blue-color);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    color: white;
+}
+
+.error-message {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: red;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+input[type="number"].error {
+    border-color: red;
+    background-color: #ffe6e6;
+    color: black;
+}
+
+.form-gradient:nth-child(1){
+    position: absolute;
+    top: 150px;
+    left: -40px;
+    width: 232px;
+    height: 208px;
+    flex-shrink: 0;
+    border-radius: 2000px;
+    background: var(--gradient, linear-gradient(73deg, #74D6FD 1.13%, #E01DEE 103.45%));
+    filter: blur(80px);
+}
+
+.form-gradient:nth-child(2){
+    position: absolute;
+    right: -50px;
+    bottom: -200px;
+    width: 232px;
+    height: 208px;
+    flex-shrink: 0;
+    border-radius: 2000px;
+    background: var(--gradient, linear-gradient(73deg, #74D6FD 1.13%, #E01DEE 103.45%));
+    filter: blur(80px);
+}
+
+@media (min-width: 1800px) {
+    .form-card{
+        width: 400px;
+    }
+
+    .form-token label, .multiplier-card label{
+        width: 150px;
+        height: 80px;
+    }
+
+    input[type='number']{
+        height: 75px;
+    }
+
+    .recommended p {
+        width: 150px;
+        height: 25px;
+    }
+}

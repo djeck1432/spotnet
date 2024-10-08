@@ -1,11 +1,11 @@
-import About from '../about/About'
+import React from 'react';
+import About from '../about/About';
 import Partnership from "../partnership/Partnership";
-import React from "react";
-import Informaion from "../information/Informaion";
+import Information from "../information/Informaion";
 import DontMiss from "../dont_miss/DontMiss";
 import Home from "../home/Home";
 
-const SpotnetApp = ({ walletId, onConnectWallet, onLogout }) =>{
+const SpotnetApp = ({ walletId, onConnectWallet, onLogout }) => {
     return (
         <div className='spotnet-app'>
             <Home
@@ -15,10 +15,10 @@ const SpotnetApp = ({ walletId, onConnectWallet, onLogout }) =>{
             />
             <About />
             <Partnership />
-            <Informaion />
+            <Information />
             <DontMiss />
         </div>
-    )
+    );
 }
 
 export default SpotnetApp;
