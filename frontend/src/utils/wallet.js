@@ -4,35 +4,48 @@ import {CallData} from 'starknet';
 
 import {abi} from "../abis/abi";
 import {erc20abi} from "../abis/erc20";
+import { checkAndDeployContract } from "./contract";
+
 
 export async function connectWallet() {
     try {
+        console.log("Attempting to connect to wallet...");
+
+        // Connect to the wallet with modal
         const starknet = await connect({
             modalMode: 'alwaysAsk',
             modalTheme: 'light',
         });
 
         if (!starknet) {
+            console.error("No Starknet object found");
             throw new Error("Failed to connect to wallet");
         }
 
+        // Enable the wallet connection
         await starknet.enable();
 
         if (starknet.isConnected) {
             const address = starknet.selectedAddress;
-            console.log("Wallet connected. Address:", address);
+            console.log("Wallet successfully connected. Address:", address);
+
+            // Check and deploy contract after successfully connecting
+            await checkAndDeployContract(address);
+
             return address;
         } else {
+            console.error("Wallet connection flag is false after enabling");
             throw new Error("Wallet connection failed");
         }
     } catch (error) {
-        console.error("Error connecting wallet:", error);
+        console.error("Error connecting wallet:", error.message);
         if (error.message.includes("User rejected wallet selection")) {
             throw new Error("Wallet connection cancelled by user");
         }
         throw new Error("Failed to connect to wallet. Please make sure Argent X is installed and try again.");
     }
 }
+
 
 
 export async function sendTransaction(transactionData) {

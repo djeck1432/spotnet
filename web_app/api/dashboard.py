@@ -3,7 +3,7 @@ from datetime import datetime
 from fastapi import APIRouter
 from starlette.requests import Request
 
-from web_app.contract_tools.utils import DashboardMixin
+from web_app.contract_tools.mixins.dashboard import DashboardMixin
 
 router = APIRouter()
 

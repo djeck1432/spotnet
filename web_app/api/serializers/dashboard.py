@@ -40,7 +40,7 @@ class Position(BaseModel):
         return converted_balances
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class Product(BaseModel):
@@ -66,4 +66,4 @@ class ZkLendPositionResponse(BaseModel):
         return converted_products
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True

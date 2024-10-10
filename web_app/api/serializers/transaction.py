@@ -98,3 +98,8 @@ class TransactionDataRequest(BaseModel):
     token: str = Field(..., description="Token name for the transaction")
     multiplier: int = Field(..., description="Multiplier for the transaction")
     amount: str = Field(..., description="Amount to deposit as a string")
+
+
+class UpdateUserContractRequest(BaseModel):
+    wallet_id: str
+    transaction_hash: str

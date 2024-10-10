@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, Request
-from fastapi.templating import Jinja2Templates
 
 from web_app.api.serializers.transaction import (
     ApproveData,
@@ -8,10 +7,8 @@ from web_app.api.serializers.transaction import (
     TransactionDataResponse,
 )
 from web_app.contract_tools.constants import TokenParams
-from web_app.contract_tools.utils import DepositMixin
+from web_app.contract_tools.mixins.deposit import DepositMixin
 
-# Initialize the client and templates
-templates = Jinja2Templates(directory="web_app/api/templates")
 router = APIRouter()  # Initialize the router
 
 
@@ -26,7 +23,6 @@ async def get_transaction_data(
     :param transaction_data: Pydantic model for the query parameters
     :return: List of dicts containing the transaction data
     """
-    print("transaction_data", transaction_data)
     # Get the transaction data from the DepositMixin
     transaction_result = await DepositMixin.get_transaction_data(
         transaction_data.token,
