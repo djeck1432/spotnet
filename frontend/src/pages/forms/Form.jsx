@@ -20,6 +20,7 @@ const Form = ({ walletId }) => {
     const [selectedToken, setSelectedToken] = useState('');
     const [selectedMultiplier, setSelectedMultiplier] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         // Fetch balances from the backend endpoint
@@ -67,6 +68,7 @@ const Form = ({ walletId }) => {
             setError('All fields are required!');
         } else {
             setError('');
+            setLoading(true);
 
             // Prepare form data for submission
             const formData = {
@@ -98,6 +100,8 @@ const Form = ({ walletId }) => {
                 setTokenAmount('');
             } catch (err) {
                 console.error('Failed to create position:', err);
+            } finally {
+                setLoading(false);
             }
         }
     };
@@ -193,6 +197,7 @@ const Form = ({ walletId }) => {
                     <div className="submit">
                         <button type="submit" className='form-button'>Submit</button>
                     </div>
+                    {loading && <p className="loading-message">Loading...</p>}
                 </div>
             </form>
         </div>

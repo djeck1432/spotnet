@@ -221,6 +221,13 @@ input[type="number"].error {
     font-weight: 700;
 }
 
+.loading-message {
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin-top: 30px;
+    text-align: center;
+}
+
 @media (min-width: 1800px) {
     .form-card{
         width: 400px;
