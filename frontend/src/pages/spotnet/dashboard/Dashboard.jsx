@@ -58,6 +58,7 @@ const Dashboard = ({ walletId }) => {
     ];
 
     useEffect(() => {
+
         const getData = async () => {
             if (!walletId) {
                 console.error("getData: walletId is undefined");
@@ -184,16 +185,16 @@ const Dashboard = ({ walletId }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="card-footer text-center">
-                            <button
-                                className="btn redeem-btn border-0"
-                                onClick={() => closePositionEvent()}
-                            >
-                                Redeem
-                            </button>
-                        </div>
                     </div>
                 ))}
+            </div>
+            <div>
+                <button
+                    className="btn redeem-btn border-0"
+                    onClick={() => closePositionEvent()}
+                >
+                    Redeem
+                </button>
             </div>
         </div>
     );
