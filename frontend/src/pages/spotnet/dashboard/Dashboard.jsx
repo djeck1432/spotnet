@@ -50,7 +50,6 @@ const Dashboard = ({ walletId }) => {
     const [cardData, setCardData] = useState([]);
     const [healthFactor, setHealthFactor] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
     const starData = [
         { top: 1, left: 0, size: 1.5 },
         { top: 75, left: 35, size: 2.5 },
@@ -58,10 +57,10 @@ const Dashboard = ({ walletId }) => {
     ];
 
     useEffect(() => {
+
         const getData = async () => {
             if (!walletId) {
                 console.error("getData: walletId is undefined");
-                setError(true);
                 setLoading(false);
                 return;
             }
@@ -69,7 +68,8 @@ const Dashboard = ({ walletId }) => {
             const data = await fetchCardData({ walletId });
             if (data && data.zklend_position && data.zklend_position.products) {
                 const positions = data.zklend_position.products[0].positions || [];
-                const healthRatio = data.zklend_position.products[0].health_ratio || 0;
+                const healthRatio = data.zklend_position.products[0].health_ratio;
+                console.log("Positions:", positions);
 
                 const cardData = positions.map((position, index) => {
                     const isFirstCard = index === 0;
@@ -80,7 +80,7 @@ const Dashboard = ({ walletId }) => {
                         return {
                             title: "Collateral & Earnings",
                             icon: CollateralIcon,
-                            balance: position.totalBalances[Object.keys(position.totalBalances)[0]] || 0,
+                            balance: position.totalBalances[Object.keys(position.totalBalances)[0]],
                             currencyName: isEthereum ? "Ethereum" : "STRK",
                             currencyIcon: isEthereum ? EthIcon : StrkIcon,
                         };
@@ -89,7 +89,7 @@ const Dashboard = ({ walletId }) => {
                     return {
                         title: "Borrow",
                         icon: BorrowIcon,
-                        balance: position.totalBalances[Object.keys(position.totalBalances)[0]] || 0,
+                        balance: position.totalBalances[Object.keys(position.totalBalances)[0]],
                         currencyName: "USD Coin",
                         currencyIcon: UsdIcon,
                     };
@@ -97,36 +97,33 @@ const Dashboard = ({ walletId }) => {
 
                 setCardData(cardData);
                 setHealthFactor(healthRatio);
-                setError(false);
             } else {
                 console.error("Data is missing or incorrectly formatted");
-                setError(true);
-                setCardData([]);
-                setHealthFactor(0);
+                setCardData([{
+                    title: "Collateral & Earnings",
+                    icon: CollateralIcon,
+                    balance: '0.00',
+                    currencyName: 'Ethereum',
+                    currencyIcon: EthIcon,
+                },
+                {
+                    title: "Borrow",
+                    icon: BorrowIcon,
+                    balance: '0.00',
+                    currencyName: 'USD Coin',
+                    currencyIcon: UsdIcon,
+                },]);
+                setHealthFactor('0.00');
             }
             setLoading(false);
         };
 
-        const timeoutId = setTimeout(() => {
-            if (loading) {
-                setError(true);
-                setLoading(false);
-                setCardData([]);
-                setHealthFactor(0);
-            }
-        }, 10000);
-
         getData();
 
-        return () => clearTimeout(timeoutId);
     }, [walletId]);
 
     if (loading) {
         return <div className="d-flex text-white justify-content-center align-items-center min-vh-100">Loading...</div>;
-    }
-
-    if (error || !cardData.length) {
-        return <div className="text-white text-center min-vh-100 d-flex align-items-center justify-content-center">Error during getting the data. Please try again later.</div>;
     }
 
     return (
@@ -184,16 +181,16 @@ const Dashboard = ({ walletId }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="card-footer text-center">
-                            <button
-                                className="btn redeem-btn border-0"
-                                onClick={() => closePositionEvent()}
-                            >
-                                Redeem
-                            </button>
-                        </div>
                     </div>
                 ))}
+            </div>
+            <div>
+                <button
+                    className="btn redeem-btn border-0"
+                    onClick={() => closePositionEvent()}
+                >
+                    Redeem
+                </button>
             </div>
         </div>
     );
