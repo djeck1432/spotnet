@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException
 
 from web_app.api.serializers.transaction import (
     LoopLiquidityData,
@@ -54,9 +54,10 @@ async def get_repay_data(
     :param supply_token: Supply token address
     :param wallet_id: Wallet ID
     :return: Dict containing the repay transaction data
+    :raises: HTTPException :return: Dict containing status code and detail
     """
     if not wallet_id:
-        raise ValueError("Wallet ID is required")
+        raise HTTPException(status_code=404, detail="Wallet not found")
 
     contract_address = position_db_connector.get_contract_address_by_wallet_id(
         wallet_id
@@ -74,9 +75,10 @@ async def close_position(position_id: str) -> str:
     Close a position.
     :param position_id: contract address
     :return: str
+    :raises: HTTPException :return: Dict containing status code and detail
     """
-    if position_id is None or position_id == 'undefined':
-        raise ValueError("Invalid position_id provided")
+    if position_id is None or position_id == "undefined":
+        raise HTTPException(status_code=404, detail="Position not Found")
 
     position_status = position_db_connector.close_position(position_id)
     return position_status
@@ -88,9 +90,10 @@ async def open_position(position_id: str) -> str:
     Open a position.
     :param position_id: contract address
     :return: str
+    :raises: HTTPException :return: Dict containing status code and detail
     """
     if not position_id:
-        raise ValueError("Position ID is required")
+        raise HTTPException(status_code=404, detail="Position not found")
 
     position_status = position_db_connector.open_position(position_id)
     return position_status

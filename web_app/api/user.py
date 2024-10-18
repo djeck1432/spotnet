@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException, Query
 from web_app.db.crud import UserDBConnector
 from web_app.api.serializers.transaction import UpdateUserContractRequest
 
@@ -13,10 +13,15 @@ async def get_user_contract(wallet_id: str) -> int:
     Get the contract status of a user.
     :param wallet_id: wallet id
     :return: int
+    :raises: HTTPException :return: Dict containing status code and detail
     """
+
     user = user_db.get_user_by_wallet_id(wallet_id)
-    if user is None or not user.is_contract_deployed:
-        return 0
+
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    elif not user.is_contract_deployed:
+        raise HTTPException(status_code=404, detail="Contract not deployed")
     else:
         return user.deployed_transaction_hash
 
