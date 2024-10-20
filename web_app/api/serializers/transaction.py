@@ -65,6 +65,7 @@ class RepayTransactionDataResponse(BaseModel):
     """
     Pydantic model for the repay transaction data response.
     """
+
     supply_token: str
     debt_token: str
     pool_key: PoolKey
@@ -78,5 +79,14 @@ class UpdateUserContractRequest(BaseModel):
     """
     Pydantic model for the update user contract request.
     """
+
     wallet_id: str
     contract_address: str
+
+
+class DeploymentStatus(BaseModel):
+    is_contract_deployed: bool
+
+
+class ContractAddress(BaseModel):
+    contract_address: str | None

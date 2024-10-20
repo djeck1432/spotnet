@@ -1,31 +1,36 @@
+from typing import Literal
+
 from fastapi import APIRouter, Request
+from web_app.api.serializers.transaction import (ContractAddress,
+                                                 DeploymentStatus,
+                                                 UpdateUserContractRequest)
 from web_app.db.crud import UserDBConnector
-from web_app.api.serializers.transaction import UpdateUserContractRequest
 
 router = APIRouter()  # Initialize the router
 
 user_db = UserDBConnector()
 
 
-@router.get("/api/get-user-contract")
-async def get_user_contract(wallet_id: str) -> int:
+@router.get("/api/get-user-contract", response_model=str)
+async def get_user_contract(wallet_id: str) -> str:
     """
     Get the contract status of a user.
     :param wallet_id: wallet id
-    :return: int
+    :return: str
     """
     user = user_db.get_user_by_wallet_id(wallet_id)
     if user is None or not user.is_contract_deployed:
-        return 0
+        return ""
     else:
-        return user.deployed_transaction_hash
+        return user.contract_address
 
 
-@router.get("/api/check-user")
-async def check_user(request: Request, wallet_id: str) -> dict:
+@router.get("/api/check-user", response_model=DeploymentStatus)
+async def check_user(request: Request, wallet_id: str) -> DeploymentStatus:
     """
     Add a user to the database.
     :param request: Request object
+    :param wallet_id: str
     :return: dict
     """
     user = user_db.get_user_by_wallet_id(wallet_id)
@@ -38,8 +43,8 @@ async def check_user(request: Request, wallet_id: str) -> dict:
         return {"is_contract_deployed": True}
 
 
-@router.post("/api/update-user-contract")
-async def change_user_contract(data: UpdateUserContractRequest) -> dict:
+@router.post("/api/update-user-contract", response_model=DeploymentStatus)
+async def change_user_contract(data: UpdateUserContractRequest) -> DeploymentStatus:
     """
     Change the contract status of a user.
     :param data: UpdateUserContractRequest
@@ -53,8 +58,8 @@ async def change_user_contract(data: UpdateUserContractRequest) -> dict:
         return {"is_contract_deployed": False}
 
 
-@router.get("/api/get-user-contract-address")
-async def get_user_contract_address(wallet_id: str) -> dict:
+@router.get("/api/get-user-contract-address", response_model=ContractAddress)
+async def get_user_contract_address(wallet_id: str) -> ContractAddress:
     """
     Get the contract address of a user.
     :param wallet_id: wallet id

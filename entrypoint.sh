@@ -2,6 +2,7 @@
 
 echo "Run migration with alembic"
 alembic -c web_app/alembic.ini upgrade head
+alembic -c web_app/alembic.ini upgrade heads
 
 echo "Starting the server ..."
 
