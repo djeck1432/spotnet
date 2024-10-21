@@ -1,13 +1,11 @@
-import httpx
+from web_app.api.serializers.transaction import UpdateUserContractRequest
+from web_app.api.main import app
+
 import pytest
 
-from web_app.api.serializers.transaction import UpdateUserContractRequest
+from fastapi.testclient import TestClient
 
-
-@pytest.fixture(scope="function")
-async def async_client():
-    async with httpx.AsyncClient(base_url="http://localhost:8000") as client:
-        yield client
+client = TestClient(app=app)
 
 
 @pytest.mark.asyncio
@@ -21,16 +19,14 @@ async def async_client():
         ),
     ],
 )
-async def test_get_user_contract(
-    async_client, wallet_id: str, expected_contract_address: str
-):
+async def test_get_user_contract(wallet_id: str, expected_contract_address: str):
     """
-    Test get_user_contract endpoint,
-    where wallet_id = "0x27994c503bd8c32525fbdaf9d398bdd4e86757988c64581b055a06c5955ea49" or ""
-    :param async_client: httpx.AsyncClient
+    Test get_user_contract endpoint
+    :param wallet_id: "" or "0x27994c503bd8c32525fbdaf9d398bdd4e86757988c64581b055a06c5955ea49"
+    :param expected_contract_address: "" or "0x698b63df00be56ba39447c9b9ca576ffd0edba0526d98b3e8e4a902ffcf12f0"
     :return: None
     """
-    response = await async_client.get(
+    response = client.get(
         url="/api/get-user-contract",
         params={
             "wallet_id": wallet_id,
@@ -38,9 +34,15 @@ async def test_get_user_contract(
     )
     response_json = response.json()
 
-    assert response.is_success
-    assert isinstance(response_json, str)
-    assert response_json == expected_contract_address or response_json == ""
+    if response.is_success:
+        assert isinstance(response_json, str)
+        assert response_json == expected_contract_address
+    else:
+        assert isinstance(response_json, dict)
+        assert response_json.get("detail") in (
+            "User not found",
+            "Contract not deployed",
+        )
 
 
 @pytest.mark.asyncio
@@ -51,14 +53,13 @@ async def test_get_user_contract(
         "0x27994c503bd8c32525fbdaf9d398bdd4e86757988c64581b055a06c5955ea49",
     ],
 )
-async def test_check_user(async_client, wallet_id: str):
+async def test_check_user(wallet_id: str):
     """
-    Test check_user endpoint,
-    where wallet_id = "0x27994c503bd8c32525fbdaf9d398bdd4e86757988c64581b055a06c5955ea49" or ""
-    :param async_client: httpx.AsyncClient
+    Test check_user endpoint
+    :param wallet_id: "" or "0x27994c503bd8c32525fbdaf9d398bdd4e86757988c64581b055a06c5955ea49"
     :return: None
     """
-    response = await async_client.get(
+    response = client.get(
         url="/api/check-user",
         params={
             "wallet_id": wallet_id,
@@ -68,8 +69,7 @@ async def test_check_user(async_client, wallet_id: str):
 
     assert response.is_success
     assert isinstance(response_json, dict)
-    assert "is_contract_deployed" in response_json
-    assert isinstance(response_json["is_contract_deployed"], bool)
+    assert isinstance(response_json.get("is_contract_deployed"), bool)
 
 
 @pytest.mark.asyncio
@@ -83,14 +83,11 @@ async def test_check_user(async_client, wallet_id: str):
         ),
     ],
 )
-async def test_change_user_contract(
-    async_client, wallet_id: str, contract_address: str
-):
+async def test_change_user_contract(wallet_id: str, contract_address: str):
     """
-    Test get_user_contract endpoint,
-    where wallet_id = "0x27994c503bd8c32525fbdaf9d398bdd4e86757988c64581b055a06c5955ea49" or ""
-    and contract_address = "0x698b63df00be56ba39447c9b9ca576ffd0edba0526d98b3e8e4a902ffcf12f0" or ""
-    :param async_client: httpx.AsyncClient
+    Test get_user_contract endpoint
+    :param wallet_id: "" or "0x27994c503bd8c32525fbdaf9d398bdd4e86757988c64581b055a06c5955ea49"
+    :param contract_address: "" or "0x698b63df00be56ba39447c9b9ca576ffd0edba0526d98b3e8e4a902ffcf12f0"
     :return: None
     """
     data = UpdateUserContractRequest(
@@ -98,7 +95,7 @@ async def test_change_user_contract(
         contract_address=contract_address,
     )
 
-    response = await async_client.post(
+    response = client.post(
         url="/api/update-user-contract",
         json=data.dict(),
     )
@@ -106,8 +103,7 @@ async def test_change_user_contract(
 
     assert response.is_success
     assert isinstance(response_json, dict)
-    assert "is_contract_deployed" in response_json
-    assert response_json["is_contract_deployed"]
+    assert response_json.get("is_contract_deployed")
 
 
 @pytest.mark.asyncio
@@ -122,15 +118,15 @@ async def test_change_user_contract(
     ],
 )
 async def test_get_user_contract_address(
-    async_client, wallet_id: str, expected_contract_address: str
+    wallet_id: str, expected_contract_address: str
 ):
     """
-    Test get_user_contract_address endpoint,
-    where wallet_id = "0x27994c503bd8c32525fbdaf9d398bdd4e86757988c64581b055a06c5955ea49" or ""
-    :param async_client: httpx.AsyncClient
+    Test get_user_contract_address endpoint
+    :param wallet_id: "" or "0x27994c503bd8c32525fbdaf9d398bdd4e86757988c64581b055a06c5955ea49"
+    :param expected_contract_address: "" or "0x698b63df00be56ba39447c9b9ca576ffd0edba0526d98b3e8e4a902ffcf12f0"
     :return: None
     """
-    response = await async_client.get(
+    response = client.get(
         url="/api/get-user-contract-address",
         params={
             "wallet_id": wallet_id,
@@ -140,5 +136,4 @@ async def test_get_user_contract_address(
 
     assert response.is_success
     assert isinstance(response_json, dict)
-    assert "contract_address" in response_json
-    assert response_json["contract_address"] == expected_contract_address
+    assert response_json.get("contract_address") == expected_contract_address
