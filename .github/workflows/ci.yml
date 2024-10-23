@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main # Only run on PRs targeting the main branch
 
 jobs:
   test:
