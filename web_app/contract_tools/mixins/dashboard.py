@@ -9,11 +9,44 @@ CLIENT = StarknetClient()
 # ARGENT_X_POSITION_URL = "https://cloud.argent-api.com/v1/tokens/defi/decomposition/{wallet_id}?chain=starknet"
 ARGENT_X_POSITION_URL = "https://cloud.argent-api.com/v1/tokens/defi/"
 
+# [ADDED] New constant for AVNU price endpoint
+AVNU_PRICE_URL = "https://starknet.impulse.avnu.fi/v1/tokens/short"
+
 
 class DashboardMixin:
     """
     Mixin class for dashboard related methods.
     """
+
+    # [ADDED] New method to fetch current token prices
+    @classmethod
+    async def get_current_prices(cls) -> Dict[str, float]:
+        """
+        Fetch current token prices from AVNU API.
+        
+        Returns:
+            Dict[str, float]: Dictionary mapping token symbols to their current prices
+                            Example: {'ETH': 2000.0, 'USDC': 1.0}
+        """
+        try:
+            response = await APIRequest(base_url=AVNU_PRICE_URL).fetch("")
+            if not response:
+                return {}
+
+            prices = {}
+            for token_data in response:
+                address = token_data.get("address")
+                current_price = token_data.get("currentPrice")
+                
+                if address and current_price is not None:
+                    symbol = TokenParams.get_token_symbol(address)
+                    if symbol:
+                        prices[symbol] = float(current_price)
+
+            return prices
+        except Exception as e:
+            print(f"Failed to fetch current prices: {e}")
+            return {}
 
     @classmethod
     async def get_wallet_balances(cls, holder_address: str) -> Dict[str, str]:
