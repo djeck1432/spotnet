@@ -31,7 +31,7 @@ class DepositMixin:
         :return: approve_data and loop_liquidity_data
         """
         deposit_token_address = TokenParams.get_token_address(deposit_token)
-        amount = int(Decimal(amount) * Decimal(10 ** 18))
+        amount = int(Decimal(amount) * Decimal(10**18))
 
         loop_liquidity_data = await CLIENT.get_loop_liquidity_data(
             deposit_token_address, amount, multiplier, wallet_id, borrowing_token
@@ -40,7 +40,7 @@ class DepositMixin:
         return loop_liquidity_data
 
     @classmethod
-    async def get_repay_data(cls, supply_token) -> dict:
+    async def get_repay_data(cls, supply_token: str) -> dict:
         """
         Get transaction data for the repay.
         :param supply_token: Deposit token
@@ -53,4 +53,6 @@ class DepositMixin:
             "debt_token": debt_token_address,
         }
 
-        return repay_data | await CLIENT.get_repay_data(deposit_token_address, debt_token_address)
+        return repay_data | await CLIENT.get_repay_data(
+            deposit_token_address, debt_token_address
+        )

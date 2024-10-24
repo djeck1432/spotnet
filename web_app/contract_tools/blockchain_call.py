@@ -62,7 +62,7 @@ class StarknetClient:
         )
         try:
             res = await self.client.call_contract(call)
-        except Exception as e: # Catch and log any errors
+        except Exception as e:  # Catch and log any errors
             logger.error(f"Error making contract call: {e}")
             time.sleep(self.SLEEP_TIME)
             res = await self.client.call_contract(call)
@@ -104,8 +104,12 @@ class StarknetClient:
         )
         price_data = await ekubo_contract.functions["get_pool_price"].call(pool_key)
 
-        underlying_token_0_address = TokenParams.add_underlying_address(str(hex(pool_key["token0"])))
-        underlying_token_1_address = TokenParams.add_underlying_address(str(hex(pool_key["token1"])))
+        underlying_token_0_address = TokenParams.add_underlying_address(
+            str(hex(pool_key["token0"]))
+        )
+        underlying_token_1_address = TokenParams.add_underlying_address(
+            str(hex(pool_key["token1"]))
+        )
 
         token_0_decimals = TokenParams.get_token_decimals(underlying_token_0_address)
         token_1_decimals = TokenParams.get_token_decimals(underlying_token_1_address)
@@ -197,7 +201,15 @@ class StarknetClient:
         pool_key["token0"], pool_key["token1"] = deposit_token, borrowing_token
         is_token1 = deposit_token == pool_key["token1"]
         supply_price = floor(await self._get_pool_price(pool_key, is_token1))
-        debt_price = floor((1 / supply_price) * 10**decimals_sum)
+
+        try:
+            debt_price = floor((1 / supply_price) * 10**decimals_sum)
+        except ZeroDivisionError:
+            logger.error(
+                f"Error while getting repay data: {deposit_token=}, {borrowing_token=}"
+            )
+            return {}
+
         return {
             "supply_price": supply_price,
             "debt_price": debt_price,
