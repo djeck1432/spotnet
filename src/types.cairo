@@ -3,6 +3,10 @@ use ekubo::types::delta::Delta;
 use ekubo::types::keys::PoolKey;
 use starknet::ContractAddress;
 
+pub type TokenPrice = u256;
+pub type TokenAmount = u256;
+pub type Decimals = u64;
+
 #[derive(Copy, Drop, Serde)]
 pub struct SwapResult {
     pub delta: Delta,
@@ -18,7 +22,7 @@ pub struct SwapData {
 #[derive(Copy, Drop, Serde)]
 pub struct DepositData {
     pub token: ContractAddress,
-    pub amount: u256,
+    pub amount: TokenAmount,
     pub multiplier: u32
 }
 
@@ -34,8 +38,8 @@ pub struct MarketReserveData {
     last_update_timestamp: felt252,
     lending_accumulator: felt252,
     debt_accumulator: felt252,
-    current_lending_rate: felt252,
-    current_borrowing_rate: felt252,
+    pub current_lending_rate: felt252,
+    pub current_borrowing_rate: felt252,
     raw_total_debt: felt252,
     flash_loan_fee: felt252,
     liquidation_bonus: felt252,

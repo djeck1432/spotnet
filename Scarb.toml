@@ -2,18 +2,19 @@
 name = "spotnet"
 version = "0.1.0"
 edition = "2024_07"
-cairo-version = "2.8.2"
+cairo-version = "2.8.4"
 
 # See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest.html
 
 [dependencies]
-starknet = "2.8.2"
+starknet = "2.8.4"
 ekubo = { git = "https://github.com/ekuboprotocol/abis", rev = "edb6de8" }
 alexandria_math = { git = "https://github.com/keep-starknet-strange/alexandria.git", rev = "8208871" }
 openzeppelin_token = "0.17.0"
 
 [dev-dependencies]
-snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.30.0" }
+pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib", tag = "2.8.2" }
+snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.32.0" }
 
 [lib]
 
@@ -29,6 +30,5 @@ block_id.tag = "latest"
 
 [[tool.snforge.fork]]
 name = "MAINNET"
-# url = "https://starknet-mainnet.public.blastapi.io/rpc/v0_7"
 url = "http://127.0.0.1:5050"
 block_id.tag = "latest"
