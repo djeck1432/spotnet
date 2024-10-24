@@ -9,14 +9,8 @@ from typing import Type, TypeVar
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import scoped_session, sessionmaker
-
 from web_app.db.database import SQLALCHEMY_DATABASE_URL
-from web_app.db.models import (
-    Base,
-    User,
-    Position,
-    Status,
-)
+from web_app.db.models import Base, Position, Status, User
 
 logger = logging.getLogger(__name__)
 ModelType = TypeVar("ModelType", bound=Base)
@@ -168,6 +162,8 @@ class PositionDBConnector(UserDBConnector):
     Provides database connection and operations management for the Position model.
     """
 
+    start_price = 0.0
+
     @staticmethod
     def _position_to_dict(position: Position) -> dict:
         """
@@ -259,6 +255,7 @@ class PositionDBConnector(UserDBConnector):
                 existing_position.token_symbol = token_symbol
                 existing_position.amount = amount
                 existing_position.multiplier = multiplier
+                existing_position.start_price = PositionDBConnector.start_price
                 session.commit()  # Commit the changes to the database
                 session.refresh(existing_position)  # Refresh to get updated values
                 return existing_position
@@ -270,6 +267,7 @@ class PositionDBConnector(UserDBConnector):
                 amount=amount,
                 multiplier=multiplier,
                 status=Status.PENDING.value,  # Set status as 'pending' by default
+                start_price=PositionDBConnector.start_price,
             )
 
             # Write the new position to the database
@@ -286,7 +284,6 @@ class PositionDBConnector(UserDBConnector):
         if position:
             return position[0]["id"]
         return None
-
 
     def update_position(self, position: Position, amount: str, multiplier: int) -> None:
         """
