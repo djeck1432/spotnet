@@ -27,6 +27,17 @@ class TokenConfig:
     name: str
 
 
+@dataclass(frozen=True)
+class TokenMultipliers:
+    """
+    Class to hold the predefined multipliers for supported tokens/
+    """
+
+    ETH: float = 5.0
+    STRK: float = 2.5
+    USDC: float = 5.0
+
+    
 class TokenParams:
     """
     Class to hold the token configurations for tokens as class-level variables.

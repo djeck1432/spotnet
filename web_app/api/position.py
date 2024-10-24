@@ -4,17 +4,47 @@ This module handles position-related API endpoints.
 
 from fastapi import APIRouter, Request, HTTPException
 
+from pydantic import BaseModel
 from web_app.api.serializers.transaction import (
     LoopLiquidityData,
     RepayTransactionDataResponse,
 )
 from web_app.api.serializers.position import PositionFormData
-from web_app.contract_tools.constants import TokenParams
+from web_app.contract_tools.constants import TokenParams, TokenMultipliers
 from web_app.contract_tools.mixins.deposit import DepositMixin
 from web_app.db.crud import PositionDBConnector
 
 router = APIRouter()  # Initialize the router
 position_db_connector = PositionDBConnector()  # Initialize the PositionDBConnector
+
+class TokenMultiplierResponse(BaseModel):
+    multipliers: dict[str, float]
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "multipliers": {
+                    "ETH": 5.0,
+                    "STRK": 2.5,
+                    "USDC": 5.0
+                }
+            }
+        }
+    
+
+@router.get("/api/get-multipliers", tags=["Position Operations"], response_model=TokenMultiplierResponse, summary="Get token multipliers", response_description="Returns token multipliers")
+async def get_multipliers() -> TokenMultiplierResponse:
+    """
+    This Endpoint retrieves the multipliers for tokens like ETH, STRK, and USDC.
+    """
+
+    
+    multipliers = {
+        "ETH": TokenMultipliers.ETH,
+        "STRK": TokenMultipliers.STRK,
+        "USDC": TokenMultipliers.USDC
+    }
+    return TokenMultiplierResponse(multipliers=multipliers)
 
 
 @router.post(
