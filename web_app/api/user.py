@@ -3,27 +3,30 @@ This module handles user-related API endpoints.
 """
 
 from fastapi import APIRouter, Request, HTTPException
-from web_app.db.crud import UserDBConnector
+from web_app.db.crud import PositionDBConnector, UserDBConnector
 from web_app.api.serializers.transaction import UpdateUserContractRequest
 from web_app.api.serializers.user import (
-    CheckUserResponse, 
-    UpdateUserContractResponse, 
-    GetUserContractAddressResponse
+    CheckUserResponse,
+    UpdateUserContractResponse,
+    GetUserContractAddressResponse,
+    GetStats,
 )
 
 router = APIRouter()  # Initialize the router
 
 user_db = UserDBConnector()
 
+position_db = PositionDBConnector()
+
 
 @router.get(
-        "/api/get-user-contract", 
-        tags=["User Operations"], 
-        summary="Get user's contract status", 
-        response_description=(
-            "Returns 0 if the user is None or if the contract is not deployed. "
-            "Returns the transaction hash if the contract is deployed."
-        ),
+    "/api/get-user-contract",
+    tags=["User Operations"],
+    summary="Get user's contract status",
+    response_description=(
+        "Returns 0 if the user is None or if the contract is not deployed. "
+        "Returns the transaction hash if the contract is deployed."
+    ),
 )
 async def get_user_contract(wallet_id: str) -> str:
     """
@@ -42,11 +45,11 @@ async def get_user_contract(wallet_id: str) -> str:
 
 
 @router.get(
-        "/api/check-user", 
-        tags=["User Operations"], 
-        summary="Check if user exists and contract status", 
-        response_model=CheckUserResponse, 
-        response_description="Returns whether the user's contract is deployed.",
+    "/api/check-user",
+    tags=["User Operations"],
+    summary="Check if user exists and contract status",
+    response_model=CheckUserResponse,
+    response_description="Returns whether the user's contract is deployed.",
 )
 async def check_user(wallet_id: str) -> CheckUserResponse:
     """
@@ -69,15 +72,17 @@ async def check_user(wallet_id: str) -> CheckUserResponse:
     else:
         return {"is_contract_deployed": True}
 
-      
+
 @router.post(
-        "/api/update-user-contract", 
-        tags=["User Operations"], 
-        summary="Update the user's contract", 
-        response_model=UpdateUserContractResponse, 
-        response_description="Returns if the contract is updated and deployed.",
+    "/api/update-user-contract",
+    tags=["User Operations"],
+    summary="Update the user's contract",
+    response_model=UpdateUserContractResponse,
+    response_description="Returns if the contract is updated and deployed.",
 )
-async def update_user_contract(data: UpdateUserContractRequest) ->  UpdateUserContractResponse:
+async def update_user_contract(
+    data: UpdateUserContractRequest,
+) -> UpdateUserContractResponse:
     """
     This endpoint updates the user's contract.
 
@@ -98,11 +103,11 @@ async def update_user_contract(data: UpdateUserContractRequest) ->  UpdateUserCo
 
 
 @router.get(
-        "/api/get-user-contract-address", 
-        tags=["User Operations"], 
-        summary="Get user's contract address", 
-        response_model=GetUserContractAddressResponse, 
-        response_description="Returns the contract address of the user or None if not deployed.",
+    "/api/get-user-contract-address",
+    tags=["User Operations"],
+    summary="Get user's contract address",
+    response_model=GetUserContractAddressResponse,
+    response_description="Returns the contract address of the user or None if not deployed.",
 )
 async def get_user_contract_address(wallet_id: str) -> GetUserContractAddressResponse:
     """
@@ -120,3 +125,42 @@ async def get_user_contract_address(wallet_id: str) -> GetUserContractAddressRes
         return {"contract_address": contract_address}
     else:
         return {"contract_address": None}
+
+
+@router.get(
+    "/api/get_stats",
+    tags=["Statistics"],
+    summary="Get all user amounts and the number of unique users.",
+    response_model=GetStats,
+    response_description="returns a dictionary of all users and their respective total amounts for open position and the number of unique users who have these open positions",
+)
+async def get_stats():
+    """
+    Returns all user amounts for open positions and the number of unique users.
+
+    ### Returns:
+    - Dictionary containing:
+        - total_amounts: dict where keys are user IDs and values are total amounts
+        - unique_users: The count of unique users with open positions
+    """
+    try:
+        # Fetch amounts for each user where position status is OPENED
+        users_amounts = position_db.get_all_amounts_for_opened_positions()
+
+        # Get the number of unique users
+        unique_users_count = len(users_amounts)
+
+        # Returns all status OPENED users amount and unique users count
+        return {"users_amounts": users_amounts, "unique_users": unique_users_count}
+
+    except KeyError as key_error:
+        # Handle KeyError if any issue with dictionary keys
+        raise HTTPException(
+            status_code=500, detail=f"Data processing error: {str(key_error)}"
+        )
+
+    except Exception as e:
+        # Catch all other exceptions
+        raise HTTPException(
+            status_code=500, detail=f"An unexpected error occurred: {str(e)}"
+        )

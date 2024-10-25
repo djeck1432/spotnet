@@ -17,7 +17,12 @@ class PoolKey(BaseModel):
     extension: str
 
     @field_validator(
-        "token0", "token1", "fee", "tick_spacing", "extension", mode="before",
+        "token0",
+        "token1",
+        "fee",
+        "tick_spacing",
+        "extension",
+        mode="before",
     )
     def convert_int_to_str(cls, value) -> str:
         """

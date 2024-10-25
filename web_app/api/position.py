@@ -25,22 +25,21 @@ position_db_connector = PositionDBConnector()  # Initialize the PositionDBConnec
     response_description="Returns the new position and transaction data.",
 )
 async def create_position_with_transaction_data(
-    form_data: PositionFormData
+    form_data: PositionFormData,
 ) -> LoopLiquidityData:
     """
     This endpoint creates a new user position.
-    
+
     ### Parameters:
     - **wallet_id**: The wallet ID of the user.
     - **token_symbol**: The symbol of the token used for the position.
     - **amount**: The amount of the token being deposited.
     - **multiplier**: The multiplier applied to the user's position.
-    
+
     ### Returns:
     The created position's details and transaction data.
     """
 
-    
     # Create a new position in the database
     position = position_db_connector.create_position(
         form_data.wallet_id,
@@ -80,7 +79,7 @@ async def get_repay_data(
     :return: Dict containing the repay transaction data
     :raises: HTTPException :return: Dict containing status code and detail
     """
-    
+
     if not wallet_id:
         raise HTTPException(status_code=404, detail="Wallet not found")
 
@@ -129,7 +128,7 @@ async def open_position(position_id: str) -> str:
     :return: str
     :raises: HTTPException :return: Dict containing status code and detail
     """
-    
+
     if not position_id:
         raise HTTPException(status_code=404, detail="Position not found")
 

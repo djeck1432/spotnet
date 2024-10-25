@@ -27,7 +27,7 @@ app = FastAPI(
     license_info={
         "name": "MIT License",
         "url": "https://opensource.org/licenses/MIT",
-    }
+    },
 )
 
 # Set up the templates directory
@@ -36,7 +36,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Add session middleware with a secret key
 app.add_middleware(SessionMiddleware, secret_key=f"Secret:{str(uuid4())}")
 # CORS middleware for React frontend
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_headers=["*"], allow_methods=["*"])
+app.add_middleware(
+    CORSMiddleware, allow_origins=["*"], allow_headers=["*"], allow_methods=["*"]
+)
 
 # Include the form and login routers
 app.include_router(position_router)

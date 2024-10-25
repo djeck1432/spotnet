@@ -23,7 +23,7 @@ position_db_connector = PositionDBConnector()
 )
 async def get_dashboard(wallet_id: str) -> DashboardResponse:
     """
-    This endpoint fetches the user's dashboard data, 
+    This endpoint fetches the user's dashboard data,
     including balances, multipliers, start dates, and ZkLend position.
 
     ### Parameters:
