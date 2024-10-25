@@ -279,7 +279,11 @@ mod Deposit {
 	    proofs: Span<felt252>
 	) {
 	    assert(self.is_position_open.read(), 'Position is not open');
-	    
+	    assert(proofs.len() != 0, 'Proofs Span cannot be empty');
+
+	    for _proof in proofs {
+	    // TODO: Implement transfer logic
+	    } 
 	}
     }
 
