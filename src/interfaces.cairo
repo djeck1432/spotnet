@@ -1,5 +1,5 @@
 use ekubo::types::keys::PoolKey;
-use spotnet::types::{MarketReserveData, SwapData, SwapResult, DepositData};
+use spotnet::types::{MarketReserveData, SwapData, SwapResult, DepositData, ClaimData};
 use starknet::{ContractAddress};
 
 #[starknet::interface]
@@ -20,6 +20,12 @@ pub trait IDeposit<TContractState> {
         pool_key: PoolKey,
         supply_price: felt252,
         debt_price: felt252
+    );
+
+    fn claim_rewards(
+	ref self: TContractState,
+	claim_data: ClaimData,
+	proofs: Span<felt252>
     );
 }
 

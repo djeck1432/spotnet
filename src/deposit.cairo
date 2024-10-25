@@ -10,7 +10,7 @@ mod Deposit {
     use spotnet::constants::ZK_SCALE_DECIMALS;
 
     use spotnet::interfaces::{IMarketDispatcher, IMarketDispatcherTrait, IDeposit};
-    use spotnet::types::{SwapData, SwapResult, DepositData};
+    use spotnet::types::{SwapData, SwapResult, DepositData, ClaimData};
 
     use starknet::event::EventEmitter;
     use starknet::storage::{StoragePointerWriteAccess, StoragePointerReadAccess};
@@ -272,6 +272,15 @@ mod Deposit {
                     }
                 );
         }
+
+	fn claim_rewards(
+	    ref self: ContractState,
+	    claim_data: ClaimData,
+	    proofs: Span<felt252>
+	) {
+	    assert(self.is_position_open.read(), 'Position is not open');
+	    
+	}
     }
 
     #[abi(embed_v0)]

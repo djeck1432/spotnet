@@ -41,3 +41,11 @@ pub struct MarketReserveData {
     liquidation_bonus: felt252,
     debt_limit: felt252
 }
+
+#[derive(Copy, Drop, Serde)]
+pub struct ClaimData {
+    amount: u256,
+    claim_contract: ContractAddress,
+    claim_id: u64,
+    claimed: bool
+}
