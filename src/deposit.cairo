@@ -9,8 +9,8 @@ mod Deposit {
     use openzeppelin_token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
     use spotnet::constants::ZK_SCALE_DECIMALS;
 
-    use spotnet::interfaces::{IMarketDispatcher, IMarketDispatcherTrait, IDeposit};
-    use spotnet::types::{SwapData, SwapResult, DepositData, ClaimData};
+    use spotnet::interfaces::{IMarketDispatcher, IMarketDispatcherTrait, IAirdropDispatcher, IAirdropDispatcherTrait, IDeposit};
+    use spotnet::types::{SwapData, SwapResult, DepositData, Claim};
 
     use starknet::event::EventEmitter;
     use starknet::storage::{StoragePointerWriteAccess, StoragePointerReadAccess};
@@ -21,6 +21,7 @@ mod Deposit {
         owner: ContractAddress,
         ekubo_core: ICoreDispatcher,
         zk_market: IMarketDispatcher,
+	token_airdrop: IAirdropDispatcher,
         is_position_open: bool
     }
 
@@ -29,11 +30,13 @@ mod Deposit {
         ref self: ContractState,
         owner: ContractAddress,
         ekubo_core: ICoreDispatcher,
-        zk_market: IMarketDispatcher
+        zk_market: IMarketDispatcher,
+	token_airdrop: IAirdropDispatcher
     ) {
         self.owner.write(owner);
         self.ekubo_core.write(ekubo_core);
         self.zk_market.write(zk_market);
+	self.token_airdrop.write(token_airdrop);
     }
 
     fn get_borrow_amount(
@@ -272,18 +275,20 @@ mod Deposit {
                     }
                 );
         }
-
+	
 	fn claim_rewards(
 	    ref self: ContractState,
-	    claim_data: ClaimData,
-	    proofs: Span<felt252>
-	) {
+	    claim_data: Claim,
+	    proofs: Span<felt252>,
+	    airdrop_token: ContractAddress
+        ) -> bool {
 	    assert(self.is_position_open.read(), 'Position is not open');
 	    assert(proofs.len() != 0, 'Proofs Span cannot be empty');
 
-	    for _proof in proofs {
-	    // TODO: Implement transfer logic
-	    } 
+	    let airdrop_dispatcher = IAirdropDispatcher { contract_address: airdrop_token };
+
+	    let res = airdrop_dispatcher.claim(claim_data, proofs);
+	    res
 	}
     }
 

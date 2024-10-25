@@ -43,9 +43,15 @@ pub struct MarketReserveData {
 }
 
 #[derive(Copy, Drop, Serde)]
-pub struct ClaimData {
-    amount: u256,
-    claim_contract: ContractAddress,
-    claim_id: u64,
-    claimed: bool
+pub struct Config {
+    root: felt252,
+    refundable_timestamp: u64,
+    refund_to: ContractAddress
+}
+
+#[derive(Copy, Drop, Serde)]
+pub struct Claim {
+    id: u64,
+    claimee: ContractAddress,
+    amount: u128
 }
