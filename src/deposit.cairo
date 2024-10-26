@@ -21,7 +21,6 @@ mod Deposit {
         owner: ContractAddress,
         ekubo_core: ICoreDispatcher,
         zk_market: IMarketDispatcher,
-	token_airdrop: IAirdropDispatcher,
         is_position_open: bool
     }
 
@@ -31,12 +30,10 @@ mod Deposit {
         owner: ContractAddress,
         ekubo_core: ICoreDispatcher,
         zk_market: IMarketDispatcher,
-	token_airdrop: IAirdropDispatcher
     ) {
         self.owner.write(owner);
         self.ekubo_core.write(ekubo_core);
         self.zk_market.write(zk_market);
-	self.token_airdrop.write(token_airdrop);
     }
 
     fn get_borrow_amount(
@@ -291,14 +288,21 @@ mod Deposit {
 	    ref self: ContractState,
 	    claim_data: Claim,
 	    proofs: Span<felt252>,
-	    claim_contract: ContractAddress
+	    claim_contract: ContractAddress,
+	    reward_token: ContractAddress
         ) {
 	    assert(self.is_position_open.read(), 'Position is not open');
 	    assert(proofs.len() != 0, 'Proofs Span cannot be empty');
 
 	    let airdrop_dispatcher = IAirdropDispatcher { contract_address: claim_contract };
+	    let reward_dispatcher = ERC20ABIDispatcher { contract_address: reward_token };
 
 	    let res = airdrop_dispatcher.claim(claim_data, proofs);
+	    assert(res, 'Claim failed');
+	    
+	    let send_res = reward_dispatcher.transfer(claim_data.claimee, claim_data.amount.into());
+	    
+	    assert(send_res, 'Transfer failed');
 	    
 	    self
 	    	.emit(

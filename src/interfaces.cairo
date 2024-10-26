@@ -26,7 +26,8 @@ pub trait IDeposit<TContractState> {
 	ref self: TContractState,
 	claim_data: Claim,
 	proofs: Span<felt252>,
-	claim_contract: ContractAddress
+	claim_contract: ContractAddress,
+	reward_token: ContractAddress
     );
 }
 
