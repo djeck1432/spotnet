@@ -23,11 +23,11 @@ pub trait IDeposit<TContractState> {
     );
 
     fn claim_rewards(
-	ref self: TContractState,
-	claim_data: Claim,
-	proofs: Span<felt252>,
-	claim_contract: ContractAddress,
-	reward_token: ContractAddress
+        ref self: TContractState,
+        claim_data: Claim,
+        proofs: Span<felt252>,
+        claim_contract: ContractAddress,
+        reward_token: ContractAddress
     );
 }
 
