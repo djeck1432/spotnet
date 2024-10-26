@@ -5,11 +5,10 @@ This module contains the dashboard mixin class.
 import logging
 from typing import Dict
 
+from web_app.api.serializers.dashboard import ZkLendPositionResponse
+from web_app.contract_tools.api_request import APIRequest
 from web_app.contract_tools.blockchain_call import StarknetClient
 from web_app.contract_tools.constants import TokenParams
-from web_app.contract_tools.api_request import APIRequest
-from web_app.api.serializers.dashboard import ZkLendPositionResponse
-
 from web_app.db.database import get_database
 from web_app.db.models import Position
 
@@ -82,7 +81,18 @@ class DashboardMixin:
         return [product for dapp in dapps for product in dapp.get("products", [])]
 
     @classmethod
-    def get_current_prices(cls, token_symbol):
+    def get_current_prices(cls, token_symbol: str) -> int:
+        """Retrieves the current prices of a specified token from the database.
+
+        This method queries the Position model for records that match the given token symbol
+        and retrieves the associated start prices.
+
+        :param token_symbol: str - The symbol of the token for which the prices are to be retrieved.
+        :return: int - token price"""
         db = get_database()
         model = Position()
-        return db.query(model).filter(getattr(model, "start_price")).filter(getattr(model, token_symbol))
+        return (
+            db.query(model)
+            .filter(getattr(model, "start_price"))
+            .filter(getattr(model, token_symbol))
+        )
