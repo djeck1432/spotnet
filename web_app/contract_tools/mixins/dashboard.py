@@ -10,6 +10,9 @@ from web_app.contract_tools.constants import TokenParams
 from web_app.contract_tools.api_request import APIRequest
 from web_app.api.serializers.dashboard import ZkLendPositionResponse
 
+from web_app.db.database import get_database
+from web_app.db.models import Position
+
 logger = logging.getLogger(__name__)
 
 
@@ -77,3 +80,9 @@ class DashboardMixin:
         :return: List of positions
         """
         return [product for dapp in dapps for product in dapp.get("products", [])]
+
+    @classmethod
+    def get_current_prices(cls, token_symbol):
+        db = get_database()
+        model = Position()
+        return db.query(model).filter(getattr(model, "start_price")).filter(getattr(model, token_symbol))
