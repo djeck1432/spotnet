@@ -26,8 +26,8 @@ pub trait IDeposit<TContractState> {
 	ref self: TContractState,
 	claim_data: Claim,
 	proofs: Span<felt252>,
-	airdrop_token: ContractAddress
-    ) -> bool;
+	claim_contract: ContractAddress
+    );
 }
 
 #[starknet::interface]

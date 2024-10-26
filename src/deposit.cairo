@@ -81,11 +81,22 @@ mod Deposit {
         repaid_amount: u256
     }
 
+    #[derive(starknet::Event, Drop)]
+    struct RewardClaimed {
+	claim_id: u64,
+	claimed_amount: u128,
+	claimee: ContractAddress,
+	proofs: Span<felt252>,
+	claim_status: bool,
+	claim_contract: ContractAddress
+    }
+
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
         LiquidityLooped: LiquidityLooped,
-        PositionClosed: PositionClosed
+        PositionClosed: PositionClosed,
+	RewardClaimed: RewardClaimed
     }
 
     #[abi(embed_v0)]
@@ -280,15 +291,26 @@ mod Deposit {
 	    ref self: ContractState,
 	    claim_data: Claim,
 	    proofs: Span<felt252>,
-	    airdrop_token: ContractAddress
-        ) -> bool {
+	    claim_contract: ContractAddress
+        ) {
 	    assert(self.is_position_open.read(), 'Position is not open');
 	    assert(proofs.len() != 0, 'Proofs Span cannot be empty');
 
-	    let airdrop_dispatcher = IAirdropDispatcher { contract_address: airdrop_token };
+	    let airdrop_dispatcher = IAirdropDispatcher { contract_address: claim_contract };
 
 	    let res = airdrop_dispatcher.claim(claim_data, proofs);
-	    res
+	    
+	    self
+	    	.emit(
+		    RewardClaimed {
+			claim_id: claim_data.id,
+			claimed_amount: claim_data.amount,
+			claimee: claim_data.claimee,
+			proofs,
+			claim_status: res,
+			claim_contract
+		    }
+		);
 	}
     }
 

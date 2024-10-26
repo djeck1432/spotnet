@@ -51,7 +51,7 @@ pub struct Config {
 
 #[derive(Copy, Drop, Serde)]
 pub struct Claim {
-    id: u64,
-    claimee: ContractAddress,
-    amount: u128
+    pub id: u64,
+    pub claimee: ContractAddress,
+    pub amount: u128
 }
