@@ -300,28 +300,3 @@ input[type="number"].error {
         font-size: 15px;
     }
 }
-
-.forms-gradient .card-gradient:nth-child(1){
-    position: absolute;
-    top: 100px;
-    left: -156px;
-    width: 232px;
-    height: 208px;
-    flex-shrink: 0;
-    border-radius: 2000px;
-    background: var(--gradient, linear-gradient(73deg, #74D6FD 1.13%, #E01DEE 103.45%));
-    filter: blur(111px);
-}
-
-.forms-gradient .card-gradient:nth-child(2){
-    position: absolute;
-    right: -70px;
-    bottom: 120px;
-    width: 232px;
-    height: 208px;
-    flex-shrink: 0;
-    border-radius: 2000px;
-    background: var(--gradient, linear-gradient(73deg, #74D6FD 1.13%, #E01DEE 103.45%));
-    /* Blur */
-    filter: blur(123px);
-}
