@@ -3,7 +3,7 @@ import {
   sendTransaction,
   closePosition,
   handleTransaction,
-} from "../../src/utils/transaction";
+} from "../../src/services/transaction";
 import axios from "axios";
 import { mockBackendUrl } from "../constants";
 

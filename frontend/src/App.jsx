@@ -6,7 +6,7 @@ import Footer from './components/Footer/Footer';
 import SpotnetApp from './pages/spotnet/spotnet_app/SpotnetApp';
 import Login from "./pages/Login";
 import Form from "./pages/forms/Form";
-import { connectWallet, logout } from './utils/wallet';
+import { connectWallet, logout } from './services/wallet';
 
 function App() {
   const [walletId, setWalletId] = useState(localStorage.getItem('wallet_id'));

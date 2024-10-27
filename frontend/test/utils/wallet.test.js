@@ -4,12 +4,12 @@ import {
   getTokenBalances,
   getBalances,
   logout,
-} from "../../src/utils/wallet";
+} from "../../src/services/wallet";
 import {
   ETH_ADDRESS,
   STRK_ADDRESS,
   USDC_ADDRESS,
-} from "../../src/utils/constants";
+} from "../../src/services/constants";
 
 jest.mock("../assets/icons/ethereum.svg", () => ({
   ReactComponent: () => "ETH-icon",
@@ -122,7 +122,7 @@ describe("Wallet Functions", () => {
       ];
 
       jest
-        .spyOn(require("../../src/utils/wallet"), "getTokenBalances")
+        .spyOn(require("../../src/services/wallet"), "getTokenBalances")
         .mockResolvedValue(mockTokenBalances);
 
       await getBalances(mockWalletId, mockSetBalances);
@@ -134,7 +134,7 @@ describe("Wallet Functions", () => {
     it("should not fetch balances if wallet ID is not provided", async () => {
       const mockSetBalances = jest.fn();
       const mockGetTokenBalances = jest.spyOn(
-        require("../../src/utils/wallet"),
+        require("../../src/services/wallet"),
         "getTokenBalances"
       );
 

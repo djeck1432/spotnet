@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {getTokenBalances, sendTransaction} from '../utils/wallet';
+import {getTokenBalances, sendTransaction} from '../services/wallet';
+import axios from 'axios';
 
 const LendingForm = ({walletId}) => {
     const navigate = useNavigate();
@@ -57,22 +58,28 @@ const LendingForm = ({walletId}) => {
             const backendUrl = process.env.BACKEND_URL || 'http://127.0.0.1:8000';
             console.log("BACKENDURL", backendUrl)// Replace with your backend URL
             console.log("Query Params:", queryParams);
-            const response = await fetch(`${backendUrl}/transaction-data?${queryParams}`, {
-                method: 'GET',
+            // const response = await fetch(`${backendUrl}/transaction-data?${queryParams}`, {
+            //     method: 'GET',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            // });
+
+            const response = await axios.get(`${backendUrl}/transaction-data`, {
+                params: queryParams,
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
 
             console.log("Response:", response);
-            if (response.ok) {
-                const data = await response.json();
-                console.log(data);
-                setTransactionData(data);
-                console.log("Transaction data fetched successfully:", data);
+            if (response.status === 200) {
+                console.log(response);
+                setTransactionData(response);
+                console.log("Transaction data fetched successfully:", response);
 
                 try {
-                    const txResult = await sendTransaction(data);
+                    const txResult = await sendTransaction(response);
                     console.log("Transaction result:", txResult);
                     setTransactionStatus('Transaction sent successfully!');
                 } catch (txError) {
@@ -80,7 +87,7 @@ const LendingForm = ({walletId}) => {
                     setTransactionStatus('Failed to send transaction. Please try again.');
                 }
             } else {
-                const errorData = await response.text();
+                const errorData = response.data
                 console.error('Failed to fetch transaction data:', errorData);
                 setTransactionStatus('Failed to fetch transaction data. Please try again.');
             }

@@ -5,11 +5,11 @@ import { ReactComponent as EthIcon } from "../../../assets/icons/ethereum.svg";
 import { ReactComponent as UsdIcon } from "../../../assets/icons/usd_coin.svg";
 import { ReactComponent as BorrowIcon } from "../../../assets/icons/borrow.svg";
 import { ReactComponent as StrkIcon } from "../../../assets/icons/strk.svg";
-import { closePosition } from "../../../utils/transaction"
+import { closePosition } from "../../../services/transaction"
 import axios from 'axios';
 import './dashboard.css';
 
-import {ZETH_ADDRESS} from "../../../utils/constants";
+import {ZETH_ADDRESS} from "../../../services/constants";
 import Spinner from '../../../components/spinner/Spinner';
 
 

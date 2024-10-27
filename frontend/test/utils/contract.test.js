@@ -3,13 +3,13 @@ import axios from "axios";
 import {
   deployContract,
   checkAndDeployContract,
-} from "../../src/utils/contract";
-import { getDeployContractData } from "../../src/utils/constants";
+} from "../../src/services/contract";
+import { getDeployContractData } from "../../src/services/constants";
 import { mockBackendUrl } from "../constants";
 
 jest.mock("get-starknet");
 jest.mock("axios");
-jest.mock("../../src/utils/constants");
+jest.mock("../../src/services/constants");
 
 describe("Contract Deployment Tests", () => {
   const mockWalletId = "0x123...";
