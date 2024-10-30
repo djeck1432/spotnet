@@ -370,14 +370,21 @@ class PositionDBConnector(UserDBConnector):
         """
         with self.Session() as db:
             try:
-                open_positions = db.query(Position).filter(Position.status == Status.OPENED.value).all()
+                open_positions = (
+                    db.query(Position)
+                    .filter(Position.status == Status.OPENED.value)
+                    .all()
+                )
                 current_prices = await self.get_current_prices()
 
                 total_amounts = {}
                 for position in open_positions:
                     token_symbol = position.token_symbol
                     current_price = Decimal(current_prices.get(token_symbol, 0))
-                    total_amounts[token_symbol] = total_amounts.get(token_symbol, 0) + Decimal(position.amount) * current_price
+                    total_amounts[token_symbol] = (
+                        total_amounts.get(token_symbol, 0)
+                        + Decimal(position.amount) * current_price
+                    )
                 return total_amounts
             except SQLAlchemyError as e:
                 logger.error(f"Error calculating total amounts for open positions: {e}")
