@@ -22,6 +22,7 @@ ARGENT_X_POSITION_URL = "https://cloud.argent-api.com/v1/tokens/defi/"
 # New constant for AVNU price endpoint
 AVNU_PRICE_URL = "https://starknet.impulse.avnu.fi/v1/tokens/short"
 
+
 class DashboardMixin:
     """
     Mixin class for dashboard related methods.
@@ -75,7 +76,7 @@ class DashboardMixin:
                 )
 
         return wallet_balances
-    
+
     @classmethod
     async def get_zklend_position(cls, contract_address: str) -> ZkLendPositionResponse:
         """
