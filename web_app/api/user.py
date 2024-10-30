@@ -132,25 +132,22 @@ async def get_user_contract_address(wallet_id: str) -> GetUserContractAddressRes
     tags=["User Operations"],
     summary="Get total opened amounts and number of unique users",
     response_model=GetStatsResponse,
-    response_description="Total amount for all open positions across all users & \
-                              Number of unique users in the database.",
+    response_description="Total value for all open positions across all users & \
+                          Number of unique users in the database.",
 )
 async def get_stats() -> GetStatsResponse:
     """
-    Retrieves the total amount for open positions and the count of unique users.
+    Retrieves the total value for open positions and the count of unique users.
 
     ### Returns:
-    - total_opened_amount: Sum of amounts for all open positions.
+    - total_opened_value: Total value of all open positions.
     - unique_users: Total count of unique users.
     """
     try:
-        total_opened_amount = position_db.get_total_amounts_for_open_positions()
+        total_opened_value = await position_db.get_total_amounts_for_open_positions()
         unique_users = user_db.get_unique_users_count()
         return GetStatsResponse(
-            total_opened_amount=total_opened_amount, unique_users=unique_users
+            total_opened_value=total_opened_value, unique_users=unique_users
         )
-
-    except AttributeError as e:
-        raise HTTPException(status_code=500, detail=f"AttributeError: {str(e)}")
-    except TypeError as e:
-        raise HTTPException(status_code=500, detail=f"TypeError: {str(e)}")
+    except (AttributeError, TypeError) as e:
+        raise HTTPException(status_code=500, detail=str(e))

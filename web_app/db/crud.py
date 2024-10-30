@@ -362,23 +362,26 @@ class PositionDBConnector(UserDBConnector):
             logger.error(f"Position with ID {position_id} not found")
             return None
 
-    def get_total_amounts_for_open_positions(self) -> Decimal:
+    async def get_total_amounts_for_open_positions(self) -> dict:
         """
-        Calculates the total amount for all positions where status is 'OPENED'.
+        Calculates the total value for all open positions based on current token prices.
 
-        :return: Total amount for all opened positions
+        :return: A dictionary mapping token symbols to the total value of open positions in that token.
         """
         with self.Session() as db:
             try:
-                total_opened_amount = (
-                    db.query(func.sum(cast(Position.amount, Numeric)))
-                    .filter(Position.status == Status.OPENED.value)
-                    .scalar()
-                )
-                return total_opened_amount
+                open_positions = db.query(Position).filter(Position.status == Status.OPENED.value).all()
+                current_prices = await self.get_current_prices()
+
+                total_amounts = {}
+                for position in open_positions:
+                    token_symbol = position.token_symbol
+                    current_price = Decimal(current_prices.get(token_symbol, 0))
+                    total_amounts[token_symbol] = total_amounts.get(token_symbol, 0) + Decimal(position.amount) * current_price
+                return total_amounts
             except SQLAlchemyError as e:
-                logger.error(f"Error calculating total amount for open positions: {e}")
-                return Decimal(0.0)
+                logger.error(f"Error calculating total amounts for open positions: {e}")
+                return {}
 
     def save_current_price(self, position: Position, price_dict: dict) -> None:
         """

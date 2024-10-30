@@ -47,12 +47,8 @@ class DashboardMixin:
                     symbol = TokenParams.get_token_symbol(address)
                     if symbol:
                         prices[symbol] = str(Decimal(current_price))
-            except AttributeError as e:
-                logger.info(f"AttributeError while parsing price for {address}: {str(e)}")
-            except TypeError as e:
-                logger.info(f"TypeError while parsing price for {address}: {str(e)}")
-            except ValueError as e:
-                logger.info(f"ValueError while parsing price for {address}: {str(e)}")
+            except (AttributeError, TypeError, ValueError) as e:
+                logger.info(f"Error while parsing price for {address}: {str(e)}")
 
         return prices
 
