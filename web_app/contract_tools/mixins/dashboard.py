@@ -22,6 +22,7 @@ ARGENT_X_POSITION_URL = "https://cloud.argent-api.com/v1/tokens/defi/"
 # New constant for AVNU price endpoint
 AVNU_PRICE_URL = "https://starknet.impulse.avnu.fi/v1/tokens/short"
 
+
 class DashboardMixin:
     """
     Mixin class for dashboard related methods.
@@ -47,12 +48,8 @@ class DashboardMixin:
                     symbol = TokenParams.get_token_symbol(address)
                     if symbol:
                         prices[symbol] = str(Decimal(current_price))
-            except AttributeError as e:
-                logger.info(f"AttributeError while parsing price for {address}: {str(e)}")
-            except TypeError as e:
-                logger.info(f"TypeError while parsing price for {address}: {str(e)}")
-            except ValueError as e:
-                logger.info(f"ValueError while parsing price for {address}: {str(e)}")
+            except (AttributeError, TypeError, ValueError) as e:
+                logger.info(f"Error while parsing price for {address}: {str(e)}")
 
         return prices
 
@@ -79,7 +76,7 @@ class DashboardMixin:
                 )
 
         return wallet_balances
-    
+
     @classmethod
     async def get_zklend_position(cls, contract_address: str) -> ZkLendPositionResponse:
         """
