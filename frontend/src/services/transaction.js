@@ -78,10 +78,6 @@ export const handleTransaction = async (connectedWalletId, formData, setError, s
     await sendTransaction(transactionData, transactionData.contract_address);
     console.log('Transaction executed successfully');
 
-    const openPositionResponse = await axiosInstance.get(`/api/open-position`, {
-      params: { position_id: transactionData.position_id },
-    });
-
     // Reset form data
     setTokenAmount('');
   } catch (err) {
