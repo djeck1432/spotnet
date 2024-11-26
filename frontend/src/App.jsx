@@ -12,6 +12,7 @@ import LogoutModal from './components/Logout/LogoutModal';
 import { connectWallet, logout, checkForCRMToken } from 'services/wallet';
 import { saveTelegramUser, getTelegramUserWalletId } from 'services/telegram';
 import Documentation from 'pages/spotnet/documentation/Documentation';
+import Vault from 'pages/spotnet/Vault/Vault';
 
 function App() {
   const [walletId, setWalletId] = useState(localStorage.getItem('wallet_id'));
@@ -111,6 +112,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard walletId={walletId} telegramId={tgUser} />} />
           <Route path="/form" element={<Form walletId={walletId} setWalletId={setWalletId} />} />
           <Route path="/documentation" element={<Documentation/>} />
+          <Route path="/vault" element={<Vault/>} />
         </Routes>
       </main>
       <Footer />

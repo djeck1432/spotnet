@@ -11,6 +11,10 @@ const NavigationLinks = ({ onNavClick }) => (
     <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'active-link' : '')} onClick={onNavClick}>
       Dashboard
     </NavLink>
+    <div className="nav-divider"></div>
+    <NavLink to="/vault" className={({ isActive }) => (isActive ? 'active-link' : '')} onClick={onNavClick}>
+      Vault
+    </NavLink>
   </div>
 );
 
