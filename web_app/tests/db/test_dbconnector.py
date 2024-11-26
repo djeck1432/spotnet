@@ -139,3 +139,24 @@ def test_create_empty_claim_non_existent_user(db_connector):
     fake_user_id = uuid.uuid4()
     with pytest.raises(SQLAlchemyError):
         connector.create_empty_claim(fake_user_id)
+
+"""
+3. Test Case: Database Exception
+Scenario: An exception occurs while querying or committing the database.
+Expectation: The function logs the error and does not raise an exception to the caller.
+
+"""
+def test_delete_all_users_airdrop_db_exception(mocker):
+    mock_session = mocker.patch("self.Session", autospec=True)
+    mock_db = mock_session.return_value.__enter__.return_value
+    mock_query = mock_db.query.return_value
+    mock_query.filter_by.side_effect = SQLAlchemyError("Test Exception")
+    mock_logger = mocker.patch("logging.getLogger(__name__)", autospec=True)
+
+    instance = YourClass()
+    instance.delete_all_users_airdrop(user_id=uuid.uuid4())
+
+    mock_logger.error.assert_called_once_with(
+        mocker.ANY,  # Replace with the actual format string from your logger
+    )
+    mock_db.commit.assert_not_called()

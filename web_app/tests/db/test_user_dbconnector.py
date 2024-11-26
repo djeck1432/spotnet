@@ -86,3 +86,93 @@ def test_get_unique_users_count(mock_user_db_connector):
     result = mock_user_db_connector.get_unique_users_count()
 
     assert result == 5
+
+"""
+2. Test Case: No Airdrops Exist
+Scenario: The user has no airdrops.
+Expectation: The function does not attempt to delete anything but commits successfully.
+"""
+def test_delete_all_users_airdrop_no_airdrops(mocker):
+    mock_session = mocker.patch("self.Session", autospec=True)
+    mock_db = mock_session.return_value.__enter__.return_value
+    mock_query = mock_db.query.return_value
+    mock_query.filter_by.return_value.all.return_value = []
+
+    instance = YourClass()
+    instance.delete_all_users_airdrop(user_id=uuid.uuid4())
+
+    assert mock_query.filter_by.called_once_with(user_id=uuid.uuid4())
+    mock_db.delete.assert_not_called()
+    mock_db.commit.assert_called_once()
+
+    """
+1. Test Case: Normal Behavior
+This test verifies that the method deletes all user positions and commits the transaction.
+
+"""
+def test_delete_all_user_positions_success(mocker):
+    # Mock the database session and query
+    mock_session = mocker.patch("crud.PositionDBConnector.Session", autospec=True)
+    mock_db = mock_session.return_value.__enter__.return_value
+    mock_query = mock_db.query.return_value
+    mock_positions = [mocker.Mock(), mocker.Mock()]
+    mock_query.filter_by.return_value.all.return_value = mock_positions
+
+    # Create an instance of PositionDBConnector and call the method
+    position_connector = PositionDBConnector()
+    user_id = uuid.uuid4()
+    position_connector.delete_all_user_positions(user_id=user_id)
+
+    # Assertions
+    mock_query.filter_by.assert_called_once_with(user_id=user_id)
+    assert mock_db.delete.call_count == len(mock_positions)
+    mock_db.commit.assert_called_once()
+
+"""
+2. Test Case: No Positions Exist
+This test ensures the method handles the scenario where no positions exist for the user gracefully.
+
+"""
+def test_delete_all_user_positions_no_positions(mocker):
+    # Mock the database session and query
+    mock_session = mocker.patch("crud.PositionDBConnector.Session", autospec=True)
+    mock_db = mock_session.return_value.__enter__.return_value
+    mock_query = mock_db.query.return_value
+    mock_query.filter_by.return_value.all.return_value = []
+
+    # Create an instance of PositionDBConnector and call the method
+    position_connector = PositionDBConnector()
+    user_id = uuid.uuid4()
+    position_connector.delete_all_user_positions(user_id=user_id)
+
+    # Assertions
+    mock_query.filter_by.assert_called_once_with(user_id=user_id)
+    mock_db.delete.assert_not_called()
+    mock_db.commit.assert_called_once()
+
+"""
+3. Test Case: Database Exception
+This test ensures that when a database exception occurs, the method logs the error and does not raise an exception to the caller.
+
+"""
+
+def test_delete_all_user_positions_db_exception(mocker):
+    # Mock the database session and query
+    mock_session = mocker.patch("crud.PositionDBConnector.Session", autospec=True)
+    mock_db = mock_session.return_value.__enter__.return_value
+    mock_query = mock_db.query.return_value
+    mock_query.filter_by.side_effect = SQLAlchemyError("Test Exception")
+
+    # Mock the logger
+    mock_logger = mocker.patch("crud.logger", autospec=True)
+
+    # Create an instance of PositionDBConnector and call the method
+    position_connector = PositionDBConnector()
+    user_id = uuid.uuid4()
+    position_connector.delete_all_user_positions(user_id=user_id)
+
+    # Assertions
+    mock_logger.error.assert_called_once_with(
+        f"Error deleting positions for user {user_id}: Test Exception"
+    )
+    mock_db.commit.assert_not_called()
