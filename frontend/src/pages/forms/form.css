@@ -1,7 +1,7 @@
 .form-content-wrapper {
   background: url('/public/background.png') no-repeat;
   background-size: cover;
-  background-position: center 50%; 
+  background-position: center 50%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -28,7 +28,7 @@
   margin-bottom: 10px;
 }
 
-.token-card{
+.token-card {
   width: 148px;
   height: 64px;
 }
@@ -80,7 +80,7 @@
 }
 
 
-.form-container > * {
+.form-container>* {
   color: var(--primary);
 }
 
@@ -221,21 +221,7 @@ input[type='number'].error {
 
 .form-button-container {
   margin-top: 20px;
-  border-radius: 100px;
-  background: var(--button-gradient);
-  transition: background 1.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 1px;
-}
-
-.form-button-container:hover {
-  background: var(--button-gradient-hover);
-} 
-
-.form-button-container:active {
-  background: var(--button-gradient-active);
 }
 
 .balance-card {
@@ -327,7 +313,7 @@ input[type='number'].error {
   .form-content-wrapper {
     background: url('/public/mobilebackground.png') no-repeat;
     background-size: cover;
-    background-position: center -105px; 
+    background-position: center -105px;
     min-height: 100%;
     display: flex;
     flex-direction: column;
@@ -335,6 +321,7 @@ input[type='number'].error {
     align-items: center;
     gap: 0;
   }
+
   .form-container {
     padding: 0;
     margin-left: 0;
@@ -342,24 +329,26 @@ input[type='number'].error {
     width: 100%;
     padding: 1rem;
   }
+
   .form-container>form {
     padding: 0 1rem;
   }
-  .form-button-container {
-    border-radius: 16px;
-  }
+
   .form-button {
     font-size: 16px;
   }
-  .form-token{
+
+  .form-token {
     max-width: 100%;
     overflow-x: scroll;
     gap: 16px;
     scrollbar-width: none;
   }
+
   .form-container label {
     font-size: 12px;
   }
+
   .balance-container {
     flex-direction: row;
     justify-content: flex-start;
@@ -384,21 +373,26 @@ input[type='number'].error {
     border-radius: 16px;
     background: none;
   }
+
   .balance-item:first-child {
     margin-left: 20px;
   }
+
   .balance-item:last-child {
     margin-right: 20px;
   }
+
   .balance-item .balance-title {
     font-size: 1rem;
     display: flex;
     align-items: center;
   }
-  .balance-item .title-container + label:nth-of-type(1) {
+
+  .balance-item .title-container+label:nth-of-type(1) {
     font-size: 20px;
     font-weight: 600;
   }
+
   .title-container {
     display: flex;
     flex-direction: row;
@@ -416,50 +410,60 @@ input[type='number'].error {
     color: var(--secondary);
     font-size: 14px;
   }
+
   .form-title h1 {
     text-align: center;
     font-weight: normal;
     font-size: 1rem;
     margin-bottom: 20px;
   }
+
   .token-icon {
     margin-right: 5px;
     position: relative;
     z-index: 1;
   }
-  .token-card{
+
+  .token-card {
     width: auto;
     height: auto;
   }
+
   .token-card h5 {
     margin: 0;
     font-size: 14px;
     gap: 0;
   }
+
   .token-card svg {
     width: 15px;
     height: 15px;
   }
+
   .token-label input {
     border-radius: 16px;
     font-size: 14px;
   }
+
   .token-card label {
     border-radius: 12px;
     max-width: max-content;
     padding: 4px 8px;
   }
+
   .token-container {
     border-radius: 12px;
     max-width: fit-content;
     position: relative;
   }
+
   .pagination {
     display: flex;
     gap: 8px;
     margin-top: 25px;
     justify-content: center;
   }
+
   .dot {
     width: 8px;
     height: 8px;
@@ -474,9 +478,7 @@ input[type='number'].error {
 }
 
 /* Tablet devices */
-@media screen and (min-width: 600px) and (max-width: 900px) {
- 
-}
+@media screen and (min-width: 600px) and (max-width: 900px) {}
 
 /* Large screens */
 @media (min-width: 1800px) {
@@ -489,6 +491,7 @@ input[type='number'].error {
     width: auto;
     height: 60px;
   }
+
   input[type='number'] {
     height: 60px;
   }

@@ -13,6 +13,7 @@ import TelegramNotificationModal from 'components/TelegramNotificationModal/Tele
 import { ZETH_ADDRESS } from 'utils/constants';
 import useDashboardData from 'hooks/useDashboardData';
 import { useClosePosition } from 'hooks/useClosePosition';
+import Button from 'components/ui/Button/Button';
 
 export default function Component({ walletId, telegramId }) {
   const [isCollateralActive, setIsCollateralActive] = useState(true);
@@ -141,7 +142,6 @@ export default function Component({ walletId, telegramId }) {
               </div>
             </div>
           </div>
-
           <div className="main-card">
             <div className="tabs">
               <button
@@ -218,15 +218,15 @@ export default function Component({ walletId, telegramId }) {
               </div>
             )}
           </div>
-
-          <button className="redeem-button" onClick={() => closePositionEvent()} disabled={isClosing}>
+          <Button variant="primary" size="lg" onClick={() => closePositionEvent()} disabled={isClosing}>
             {isClosing ? 'Closing...' : 'Redeem'}
-          </button>
+          </Button>
+
           {closePositionError && <div>Error: {closePositionError.message}</div>}
-          <button className="telegram-button" onClick={handleOpen}>
+          <Button variant="secondary" size="lg" onClick={handleOpen}>
             <TelegramIcon className="tab-icon" />
             Enable telegram notification bot
-          </button>
+          </Button>
           {showModal && (
             <TelegramNotificationModal telegramId={telegramId?.id} walletId={walletId} onClose={handleClose} />
           )}

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTokenBalances, sendTransaction } from 'services/wallet';
-import { Notifier } from 'components/Notifier/Notifier';
 import { notifyError } from 'utils/notification';
 import { axiosInstance } from 'utils/axios';
+import Button from 'components/ui/Button/Button';
 
 const LendingForm = ({ walletId }) => {
   const navigate = useNavigate();
@@ -63,9 +63,9 @@ const LendingForm = ({ walletId }) => {
       console.log('BACKENDURL', backendUrl); // Replace with your backend URL
       console.log('Query Params:', queryParams);
 
-      const res = axiosInstance.get(`/transaction-data?${queryParams}`)
+      const res = axiosInstance.get(`/transaction-data?${queryParams}`);
       if (res.status === 200) {
-        const data = res.data
+        const data = res.data;
         setTransactionData(data);
         console.log('Transaction data fetched successfully:', data);
 
@@ -166,9 +166,9 @@ const LendingForm = ({ walletId }) => {
           </select>
         </div>
 
-        <button type="submit" className="btn-submit" disabled={isLoading}>
+        <Button variant="primary" size="lg" disabled={isLoading}>
           {isLoading ? 'Processing...' : 'Submit'}
-        </button>
+        </Button>
         <Notifier />
       </form>
 

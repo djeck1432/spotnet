@@ -15,7 +15,7 @@ body {
 }
 
 
-.dashboard-container{
+.dashboard-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -302,9 +302,9 @@ body {
 }
 
 
-@media screen and (max-width: 768px) {
+@media (max-width: 768px) {
   .dashboard-wrapper {
-    padding: 1rem; 
+    padding: 1rem;
   }
 
   .dashboard-container {
@@ -318,6 +318,7 @@ body {
 
   .main-container {
     width: 100%;
+    max-width: 100%;
     padding: 0.5rem;
     gap: 16px;
   }
@@ -332,11 +333,11 @@ body {
     justify-content: center;
   }
 
-  .card {    
+  .card {
     height: 90px;
     padding: 8px 2px 14px 2px;
     border-radius: 14px;
-    display: flex;    
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -363,7 +364,7 @@ body {
     white-space: nowrap;
   }
 
-  .redeem-button {    
+  .redeem-button {
     border-radius: 16px;
     display: flex;
     justify-content: center;
@@ -371,14 +372,15 @@ body {
   }
 
   .telegram-button {
-    margin-top: 0;    
+    margin-top: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 18px 24px 18px 24px;
   }
+
   .telegram-button::before {
-    border-radius: 16px;    
+    border-radius: 16px;
   }
 
   .tab {
@@ -386,12 +388,12 @@ body {
   }
 
   .main-card {
-    width: 100%;
+    width: 700px;
     height: auto;
     min-height: 280px;
     border-radius: 14px;
     padding: 12px 16px;
-    margin: 20px 0;
+    margin: 20px auto;
   }
 
   .tab-content {
@@ -408,7 +410,7 @@ body {
   .redeem-button,
   .telegram-button {
     width: 100%;
-    height: 48px;    
+    height: 48px;
   }
 
   .dashboard-title {
@@ -462,22 +464,37 @@ body {
   }
 }
 
-@media screen and (max-width: 380px) {  
+@media (max-width: 425px) {
   .dashboard-wrapper {
     padding: 0.75rem;
+  }
+
+  .main-card {
+    width: 400px !important;
+    margin: 20px;
   }
 
   .tab-title {
     font-size: 14px;
   }
 
+  .tab-content {
+    width: fit-content;
+  }
+
+  .balance-info {
+    width: fit-content;
+  }
+
   .top-cards {
+    flex-direction: column;
     gap: 8px;
   }
 
   .card {
+    flex: 1;
     padding: 8px 8px 12px 8px;
-  } 
+  }
 
   .tab {
     padding: 6px 8px;

@@ -9,17 +9,20 @@ import Login from 'pages/Login';
 import Form from 'pages/forms/Form';
 import { createPortal } from 'react-dom';
 import LogoutModal from './components/Logout/LogoutModal';
-import { connectWallet, logout, checkForCRMToken } from 'services/wallet';
+import { logout } from 'services/wallet';
 import { saveTelegramUser, getTelegramUserWalletId } from 'services/telegram';
 import Documentation from 'pages/spotnet/documentation/Documentation';
 import Withdraw from 'pages/vault/withdraw/Withdraw';
+import { useConnectWallet } from 'hooks/useConnectWallet';
+import { Notifier } from 'components/Notifier/Notifier';
 
 function App() {
   const [walletId, setWalletId] = useState(localStorage.getItem('wallet_id'));
   const [tgUser, setTgUser] = useState(JSON.parse(localStorage.getItem('tg_user')));
-  const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+
+  const connectWalletMutation = useConnectWallet(setWalletId);
 
   useEffect(() => {
     if (tgUser) {
@@ -51,25 +54,8 @@ function App() {
     }
   }, [tgUser, walletId]);
 
-  const handleConnectWallet = async () => {
-    try {
-      setError(null);
-      const walletAddress = await connectWallet();
-
-      if (!walletAddress) {
-        throw new Error('Failed to connect wallet');
-      }
-
-      const hasCRMToken = await checkForCRMToken(walletAddress);
-      if (!hasCRMToken) {
-        return; // Stop further actions if wallet doesn't have CRM token
-      }
-
-      setWalletId(walletAddress);
-    } catch (err) {
-      console.error('Failed to connect wallet:', err);
-      setError(err.message);
-    }
+  const handleConnectWallet = () => {
+    connectWalletMutation.mutate();
   };
 
   const handleLogout = () => {
@@ -89,6 +75,7 @@ function App() {
 
   return (
     <div className="App">
+      <Notifier />
       {showModal && createPortal(<LogoutModal onClose={closeModal} onLogout={handleLogout} />, document.body)}
       <Header
         tgUser={tgUser}
@@ -98,7 +85,6 @@ function App() {
         onLogout={handleLogoutModal}
       />
       <main>
-        {error && <div className="alert alert-danger">{error}</div>}
         <Routes>
           <Route
             index
