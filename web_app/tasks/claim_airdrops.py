@@ -12,6 +12,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from web_app.contract_tools.airdrop import ZkLendAirdrop
 from web_app.contract_tools.blockchain_call import StarknetClient
 from web_app.db.crud import AirDropDBConnector
+from spotnet_tracker.celery_config import app
 
 logger = logging.getLogger(__name__)
 
@@ -98,6 +99,13 @@ class AirdropClaimer:
             )
             return False
 
+@app.task(name="run_airdrop_claimer")
+def run_airdrop_claimer():
+    """
+    A Celery task to run claim_airdrops() in background
+    """
+    airdrop_claimer = AirdropClaimer()
+    asyncio.run(airdrop_claimer.claim_airdrops())
 
 if __name__ == "__main__":
     airdrop_claimer = AirdropClaimer()
