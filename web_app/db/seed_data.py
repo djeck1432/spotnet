@@ -45,7 +45,7 @@ def create_positions(session: SessionLocal, users: list[User]) -> None:
     """
     positions = []
     for user in users:
-        for _ in range(2):
+        for _ in range(10):
             position = Position(
                 user_id=user.id,
                 token_symbol=fake.random_choices(
@@ -59,6 +59,10 @@ def create_positions(session: SessionLocal, users: list[User]) -> None:
                 status=fake.random_element(
                     elements=[status.value for status in Status]
                 ),
+                is_protection=fake.boolean(),
+                liquidation_bonus=float(fake.pydecimal(left_digits=2, right_digits=2, positive=True)),
+                is_liquidated=fake.boolean(),
+                datetime_liquidation=fake.date_time_this_year() if fake.boolean() else None,
             )
             positions.append(position)
     if positions:
@@ -78,7 +82,7 @@ def create_airdrops(session: SessionLocal, users: list[User]) -> None:
     """
     airdrops = []
     for user in users:
-        for _ in range(2):
+        for _ in range(10):
             airdrop = AirDrop(
                 user_id=user.id,
                 amount=Decimal(
@@ -91,6 +95,7 @@ def create_airdrops(session: SessionLocal, users: list[User]) -> None:
     if airdrops:
         session.bulk_save_objects(airdrops)
         session.commit()
+        logger.info(f"Created {len(airdrops)} airdrops for {len(users)} users.")
 
 
 def create_telegram_users(session: SessionLocal, users: list[User]) -> None:
@@ -101,7 +106,7 @@ def create_telegram_users(session: SessionLocal, users: list[User]) -> None:
     """
     telegram_users = []
     for user in users:
-        for _ in range(2):
+        for _ in range(10):
             telegram_user = TelegramUser(
                 telegram_id=fake.unique.uuid4(),
                 username=fake.user_name(),
@@ -109,6 +114,7 @@ def create_telegram_users(session: SessionLocal, users: list[User]) -> None:
                 last_name=fake.last_name(),
                 wallet_id=user.wallet_id,
                 photo_url=fake.image_url(),
+                is_allowed_notification=fake.boolean(),
             )
             telegram_users.append(telegram_user)
     session.bulk_save_objects(telegram_users)
