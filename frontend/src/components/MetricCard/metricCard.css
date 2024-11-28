@@ -9,6 +9,17 @@
   align-items: center;
 }
 
+@media (max-width: 1024px) {
+
+  /* For screens smaller than 1024px */
+  .metric-card {
+    gap: 4px;
+    width: 100%;
+    height: 100px;
+    border-radius: 16px !important;
+  }
+}
+
 @media (max-width: 480px) {
 
   /* For screens smaller than 480px */
