@@ -10,11 +10,11 @@ import { createPortal } from 'react-dom';
 import useLockBodyScroll from 'hooks/useLockBodyScroll';
 import CongratulationsModal from 'components/congratulationsModal/CongratulationsModal';
 import Button from 'components/ui/Button/Button';
-import { ClosePositionModal } from 'components/ClosePositionModal/ClosePositionModal';
 import { useWalletStore } from 'stores/useWalletStore';
 import { useConnectWallet } from 'hooks/useConnectWallet';
 import { useCheckPosition } from 'hooks/useClosePosition';
 import { useNavigate } from 'react-router-dom';
+import { ActionModal } from 'components/ui/ActionModal';
 
 const Form = () => {
   const navigate = useNavigate();
@@ -78,11 +78,22 @@ const Form = () => {
     <div className="form-content-wrapper send-to-back">
       <BalanceCards walletId={walletId} />
       {successful && createPortal(<CongratulationsModal />, document.body)}
-      <ClosePositionModal
-        isOpen={isClosePositionOpen}
-        onClose={handleCloseModal}
-        handleSubmit={onClosePositionAction}
-      />
+      {isClosePositionOpen && (
+        <ActionModal
+          isOpen={isClosePositionOpen}
+          title="Open New Position"
+          subTitle="Do you want to open new a position?"
+          content={[
+            'You have already opened a position.',
+            'Please close active position to open a new one.',
+            'Click the ‘Close Active Position’ button to continue.',
+          ]}
+          cancelLabel="Cancel"
+          submitLabel="Close Active Position"
+          submitAction={onClosePositionAction}
+          cancelAction={handleCloseModal}
+        />
+      )}
       <form className="form-container" onSubmit={handleSubmit}>
         <div className="form-title">
           <h1>Please submit your leverage details</h1>

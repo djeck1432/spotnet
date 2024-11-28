@@ -1,0 +1,94 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: url('../../../public/background.png') no-repeat;
+  background-size: cover;
+  background-position: center 39%;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.sidebar {
+  width: 280px;
+  background-color: #00000F;
+  border-right: 1px solid #300734;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 2.5rem 1.5rem;
+  position: absolute;
+  height: 100%;
+}
+
+.sidebar-title {
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--light-purple);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+  padding-bottom: 10px;
+}
+
+.nav-item:hover {
+  color: white;
+}
+
+.nav-bullet {
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.nav-item.active {
+  position: relative;
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, #49ABD2, #36294E);
+}
+
+
+.nav-item.active .nav-bullet {
+  color: var(--nav-button-hover);
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem 0;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    width: 160px;
+  }
+
+}

@@ -8,23 +8,23 @@ import SpotnetApp from 'pages/spotnet/spotnet_app/SpotnetApp';
 import Login from 'pages/Login';
 import Form from 'pages/forms/Form';
 import { createPortal } from 'react-dom';
-import LogoutModal from './components/Logout/LogoutModal';
 import { logout } from 'services/wallet';
 import { saveTelegramUser, getTelegramUserWalletId } from 'services/telegram';
 import Documentation from 'pages/spotnet/documentation/Documentation';
 import Withdraw from 'pages/vault/withdraw/Withdraw';
-import { useWalletStore } from 'stores/useWalletStore'; 
+import { useWalletStore } from 'stores/useWalletStore';
 import { Notifier } from 'components/Notifier/Notifier';
 import { useConnectWallet } from 'hooks/useConnectWallet';
-
+import { ActionModal } from 'components/ui/ActionModal';
+import Stake from 'pages/vault/stake/Stake';
 
 function App() {
-  const { walletId, setWalletId, removeWalletId } = useWalletStore(); 
+  const { walletId, setWalletId, removeWalletId } = useWalletStore();
   const [tgUser, setTgUser] = useState(JSON.parse(localStorage.getItem('tg_user')));
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
-  const connectWalletMutation = useConnectWallet(setWalletId); 
+  const connectWalletMutation = useConnectWallet(setWalletId);
   useEffect(() => {
     if (tgUser) {
       saveTelegramUser(tgUser, walletId)
@@ -51,7 +51,7 @@ function App() {
   }, [tgUser, walletId, setWalletId]);
 
   const handleConnectWallet = () => {
-    connectWalletMutation.mutate(); 
+    connectWalletMutation.mutate();
   };
 
   const handleLogout = () => {
@@ -72,7 +72,19 @@ function App() {
   return (
     <div className="App">
       <Notifier />
-      {showModal && createPortal(<LogoutModal onClose={closeModal} onLogout={handleLogout} />, document.body)}
+      {showModal &&
+        createPortal(
+          <ActionModal
+            isOpen={showModal}
+            title="Logout"
+            subTitle={'Do you want to disconnect your wallet and logout of this account?'}
+            cancelLabel="Cancel"
+            submitLabel="Yes, logout"
+            submitAction={handleLogout}
+            cancelAction={closeModal}
+          />,
+          document.body
+        )}
       <Header
         tgUser={tgUser}
         setTgUser={setTgUser}
@@ -90,6 +102,8 @@ function App() {
           <Route path="/withdraw" element={<Withdraw />} />
           <Route path="/form" element={<Form />} />
           <Route path="/documentation" element={<Documentation />} />
+
+            <Route path="/stake" element={<Stake />} />
         </Routes>
       </main>
       <Footer />

@@ -4,9 +4,11 @@ import { ReactComponent as DiamondIcon } from 'assets/icons/diamond.svg';
 import { ReactComponent as TimeIcon } from 'assets/icons/time.svg';
 import { ReactComponent as SettingIcon } from 'assets/icons/settings.svg';
 import MetricCard from 'components/MetricCard/MetricCard';
+import { VaultLayout } from '../VaultLayout';
 
 export default function Withdraw() {
   return (
+    <VaultLayout>
     <div className="withdraw-wrapper">
       <div className="withdraw-container">
         <div className="main-container">
@@ -55,5 +57,6 @@ export default function Withdraw() {
         <button className="withdraw-button">Withdraw</button>
       </div>
     </div>
+    </VaultLayout>
   );
 }
