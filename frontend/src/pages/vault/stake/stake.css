@@ -1,0 +1,146 @@
+.stake-wrapper {
+  background-size: cover;
+  background-position: center 39%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.stake-card {
+  width: 309px;
+  background: var(--header-button-bg);
+  border: var(--midnight-purple-border);
+  border-radius: 900px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.stake-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary);
+  text-align: center;
+}
+
+.stake-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+}
+
+.network-selector-container {
+  position: relative;
+  width: 100%;
+}
+
+.network-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--light-purple);
+  color: white;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+}
+
+.network-selector .selected-network {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.network-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.chevron {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.network-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: var(--gray);
+  border-radius: 2rem;
+  z-index: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.network-dropdown .network-option {
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  border-radius: 2rem;
+  transition: background 0.3s;
+}
+
+.network-dropdown .network-option:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.network-selector-container:hover .network-dropdown {
+  display: block;
+}
+
+.network-selector-container:hover .chevron {
+  transform: rotate(180deg);
+}
+
+.amount-input {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.amount-field {
+  background: transparent;
+  border: none;
+  color: var(--gray);
+  font-size: 64px;
+  font-weight: 600;
+  outline: none;
+  text-align: center;
+  width: 100%;
+}
+
+.currency {
+  position: absolute;
+  color: var(--dark-gray);
+  right: -5%;
+  top: 10%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  font-size: 1.5rem;
+  z-index: 999999;
+}
+
+.apy-rate {
+  color: var(--dark-gray);
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.stake-button {
+  width: 100%;
+}
