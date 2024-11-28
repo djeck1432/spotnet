@@ -174,7 +174,7 @@
   z-index: -1;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 481px) and (max-width: 768px) {
   .withdraw-wrapper {
     padding: 1rem;
   }
@@ -205,7 +205,16 @@
     justify-content: center;
   }
 
+  .main-card {
+    max-width: 100% !important;
+  }
+
+  .withdraw-button {
+    max-width: 100% !important;
+  }
+
 }
+
 
 @media (max-width: 480px) {
   .withdraw-wrapper {
