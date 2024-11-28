@@ -1,10 +1,21 @@
 .metric-card {
-    width: 309px;
-    background: var(--header-button-bg);
-    border: var(--midnight-purple-border);
-    border-radius: 900px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  width: 309px;
+  background: var(--header-button-bg);
+  border: var(--midnight-purple-border);
+  border-radius: 900px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 480px) {
+
+  /* For screens smaller than 480px */
+  .metric-card {
+    gap: 4px;
+    width: 167px;
+    height: 88px;
+    border-radius: 16px !important;
   }
+}

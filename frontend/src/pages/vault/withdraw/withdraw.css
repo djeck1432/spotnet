@@ -210,21 +210,42 @@
 @media (max-width: 480px) {
   .withdraw-wrapper {
     padding: 0.75rem;
+    min-height: 83vh !important;
+    margin: 0px !important;
   }
 
   .main-card {
-    width: 380px !important;
+    width: 390px !important;
     margin: auto !important;
+    border: 0;
+    border-radius: 0%;
+    padding: 5px;
+  }
+
+  .amount-stack-card {
+    border-radius: 8px;
+    width: 100%;
+    padding: 16px;
+    height: 97px;
+  }
+
+  .withdraw-input {
+    border-radius: 16px !important;
   }
 
   .top-cards {
-    flex-direction: column;
+    flex-direction: row;
     gap: 8px;
   }
 
   .withdraw-button {
     width: 380px;
     margin: auto;
+    border-radius: 16px !important;
+  }
+
+  .withdraw-button::before {
+    border-radius: 16px !important;
   }
 
 }
