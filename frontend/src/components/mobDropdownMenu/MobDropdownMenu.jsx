@@ -23,7 +23,7 @@ function MobDropdownMenu() {
       >
         <ArrowDownIcon className="dpd-icon" />
       </button>
-      <ul className="dropdown-menu dropdown-items" aria-labelledby="dropdownMenuButton1">
+      <ul className="dropdown-menu dropdown-items " aria-labelledby="dropdownMenuButton1">
         {menuItems.map((item) => (
           <li key={item.id}>
             <a className="dropdown-item" href={item.link}>

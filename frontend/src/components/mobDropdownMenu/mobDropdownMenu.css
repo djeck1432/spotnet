@@ -19,10 +19,20 @@
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
-    background: rgba(0, 0, 13, 0.64);
-    z-index: 9999;
+    background: rgba(0, 0, 13, 1);
+    z-index: 50 !important;
     pointer-events: auto;
     top: 280px !important;
+  }
+
+  .send-to-back {
+    z-index: -5;
+    position: relative;
+  }
+
+  .send-to-ultimate-back {
+    z-index: -10;
+    position: relative;
   }
 
   .centered-menu.show {

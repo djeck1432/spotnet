@@ -75,7 +75,7 @@ const Form = () => {
   };
 
   return (
-    <div className="form-content-wrapper">
+    <div className="form-content-wrapper send-to-back">
       <BalanceCards walletId={walletId} />
       {successful && createPortal(<CongratulationsModal />, document.body)}
       <ClosePositionModal

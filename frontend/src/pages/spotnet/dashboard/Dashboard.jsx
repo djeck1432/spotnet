@@ -116,13 +116,13 @@ export default function Component({ telegramId }) {
   };
 
   return (
-    <div className="dashboard-wrapper">
+    <div className="dashboard-wrapper send-to-ultimate-back">
       <div className="dashboard-container">
         {loading && <Spinner loading={loading} />}
         <h1 className="dashboard-title">zkLend Position</h1>
         <div className="dashboard-content">
-          <div className="top-cards">
-            <div className="card">
+          <div className="top-cards ">
+            <div className="card send-to-back">
               <div className="card-header">
                 <HealthIcon className="icon" />
                 <span className="label">Health Factor</span>
@@ -132,7 +132,7 @@ export default function Component({ telegramId }) {
               </div>
             </div>
 
-            <div className="card">
+            <div className="card send-to-back">
               <div className="card-header">
                 <EthIcon className="icon" />
                 <span className="label">Borrow Balance</span>
@@ -143,7 +143,7 @@ export default function Component({ telegramId }) {
               </div>
             </div>
           </div>
-          <div className="dashboard-info-card">
+          <div className="dashboard-info-card send-to-back">
             <div className="tabs">
               <button
                 onClick={() => setIsCollateralActive(true)}
@@ -228,9 +228,7 @@ export default function Component({ telegramId }) {
             <TelegramIcon className="tab-icon" />
             Enable telegram notification bot
           </Button>
-          {showModal && (
-            <TelegramNotificationModal telegramId={telegramId?.id} onClose={handleClose} />
-          )}
+          {showModal && <TelegramNotificationModal telegramId={telegramId?.id} onClose={handleClose} />}
         </div>
       </div>
     </div>
