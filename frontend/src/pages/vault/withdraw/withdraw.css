@@ -6,7 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
- 
+
 }
 
 .withdraw-card {
@@ -61,6 +61,7 @@
   padding: 3rem 1.5rem;
   height: auto;
   gap: 24px;
+  margin: auto;
 }
 
 .amount-stack-card {
@@ -149,6 +150,7 @@
   padding: 16px 24px 16px 24px;
   z-index: 1;
   overflow: hidden;
+  margin: auto;
 }
 
 .withdraw-button::before {
@@ -170,4 +172,59 @@
   -webkit-mask-composite: destination-out;
   mask-composite: exclude;
   z-index: -1;
+}
+
+@media (max-width: 768px) {
+  .withdraw-wrapper {
+    padding: 1rem;
+  }
+
+  .withdraw-container {
+    padding-left: 6px;
+    padding-right: 6px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .main-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.5rem;
+    gap: 16px;
+  }
+
+  .top-cards {
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .withdraw-wrapper {
+    padding: 0.75rem;
+  }
+
+  .main-card {
+    width: 380px !important;
+    margin: auto !important;
+  }
+
+  .top-cards {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .withdraw-button {
+    width: 380px;
+    margin: auto;
+  }
+
 }
