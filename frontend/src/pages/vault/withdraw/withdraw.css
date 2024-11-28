@@ -176,6 +176,7 @@
 
 @media (min-width: 481px) and (max-width: 768px) {
   .withdraw-wrapper {
+    background: var(--header-button-bg);
     padding: 1rem;
   }
 
@@ -193,7 +194,9 @@
     max-width: 100%;
     padding: 0.5rem;
     gap: 16px;
+    margin-bottom: -16px;
   }
+
 
   .top-cards {
     flex-direction: row;
@@ -205,12 +208,41 @@
     justify-content: center;
   }
 
+  .mobile-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--footer-divider-bg);
+    margin: 1rem 0;
+  }
+
   .main-card {
-    max-width: 100% !important;
+    max-width: 100%;
+    border: 0px;
+    margin-top: -36px;
+    gap: 36px;
+  }
+
+  .amount-stack-card {
+    border-radius: 16px;
+    width: 100%;
+    padding: 16px;
+    height: 120px;
+  }
+
+  .withdraw-input {
+    border-radius: 16px;
+    padding: 42px;
   }
 
   .withdraw-button {
-    max-width: 100% !important;
+    max-width: 100%;
+    margin: auto;
+    margin-top: -32px;
+    border-radius: 16px;
+  }
+
+  .withdraw-button::before {
+    border-radius: 16px;
   }
 
 }
@@ -218,28 +250,10 @@
 
 @media (max-width: 480px) {
   .withdraw-wrapper {
+    background: var(--header-button-bg);
     padding: 0.75rem;
-    min-height: 83vh !important;
-    margin: 0px !important;
-  }
-
-  .main-card {
-    width: 390px !important;
-    margin: auto !important;
-    border: 0;
-    border-radius: 0%;
-    padding: 5px;
-  }
-
-  .amount-stack-card {
-    border-radius: 8px;
-    width: 100%;
-    padding: 16px;
-    height: 97px;
-  }
-
-  .withdraw-input {
-    border-radius: 16px !important;
+    min-height: auto;
+    margin: 0px;
   }
 
   .top-cards {
@@ -247,14 +261,51 @@
     gap: 8px;
   }
 
+  .mobile-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--footer-divider-bg);
+    margin: 1rem 0;
+  }
+
+  .withdraw-title {
+    margin-top: -30px;
+  }
+
+  .withdraw-input {
+    font-size: 14px;
+    padding: 32px;
+  }
+
+  .main-card {
+    width: 390px;
+    margin: auto;
+    border: 0;
+    gap: 42px;
+    border-radius: 0%;
+    padding: 5px;
+  }
+
+  .amount-stack-card {
+    border-radius: 16px;
+    width: 100%;
+    padding: 16px;
+    height: 97px;
+  }
+
+  .withdraw-input {
+    border-radius: 16px;
+  }
+
   .withdraw-button {
     width: 380px;
     margin: auto;
-    border-radius: 16px !important;
+    border-radius: 16px;
+    margin-bottom: 50px;
   }
 
   .withdraw-button::before {
-    border-radius: 16px !important;
+    border-radius: 16px;
   }
 
 }

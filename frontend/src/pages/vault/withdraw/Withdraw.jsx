@@ -14,6 +14,7 @@ export default function Withdraw() {
             <MetricCard title="Total Amount staked" value="324,909,894" />
             <MetricCard title="Daily Boost Multiplier" value="0.5%" />
           </div>
+          <div className="mobile-divider"></div>
         </div>
         <h1 className="withdraw-title">Staking withdrawal</h1>
         <div className="main-card">
