@@ -22,7 +22,7 @@ body {
   gap: 32px;
 }
 
-.main-container {
+.dashboard-content {
   width: 642px;
   gap: 24px;
   border-radius: 20px;
@@ -91,7 +91,7 @@ body {
   color: white;
 }
 
-.main-card {
+.dashboard-info-card {
   background: rgba(18, 7, 33, 1);
   border: 1px solid rgba(54, 41, 78, 1);
   padding: 2rem;
@@ -316,7 +316,7 @@ body {
     box-sizing: border-box;
   }
 
-  .main-container {
+  .dashboard-content {
     width: 100%;
     max-width: 100%;
     padding: 0.5rem;
@@ -387,12 +387,12 @@ body {
     padding: 0.5rem 0.5rem;
   }
 
-  .main-card {
-    width: 700px;
+  .dashboard-info-card {
+    width: 100% !important;
     height: auto;
     min-height: 280px;
-    border-radius: 14px;
-    padding: 12px 16px;
+    border-radius: 14px !important;
+    padding: 16px 24px !important;
     margin: 20px auto;
   }
 
@@ -469,9 +469,12 @@ body {
     padding: 0.75rem;
   }
 
-  .main-card {
-    width: 400px !important;
-    margin: 20px;
+  .dashboard-content {
+    gap: 32px;
+  }
+
+  .dashboard-info-card {
+    max-width: 342px;
   }
 
   .tab-title {
@@ -487,13 +490,19 @@ body {
   }
 
   .top-cards {
-    flex-direction: column;
+    width: 100%;
+    flex-direction: row;
     gap: 8px;
   }
 
   .card {
     flex: 1;
-    padding: 8px 8px 12px 8px;
+    padding: 16px 24px;
+  }
+
+  .card-header {
+    width: 120%;
+    gap: 4px;
   }
 
   .tab {

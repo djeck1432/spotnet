@@ -18,9 +18,9 @@ import Button from 'components/ui/Button/Button';
 import { useWalletStore } from 'stores/useWalletStore';
 export default function Component({ telegramId }) {
   const { walletId } = useWalletStore();
-const [isCollateralActive, setIsCollateralActive] = useState(true);
+  const [isCollateralActive, setIsCollateralActive] = useState(true);
   const [showModal, setShowModal] = useState(false);
- const handleOpen = () => {
+  const handleOpen = () => {
     setShowModal(true);
   };
 
@@ -120,7 +120,7 @@ const [isCollateralActive, setIsCollateralActive] = useState(true);
       <div className="dashboard-container">
         {loading && <Spinner loading={loading} />}
         <h1 className="dashboard-title">zkLend Position</h1>
-        <div className="main-container">
+        <div className="dashboard-content">
           <div className="top-cards">
             <div className="card">
               <div className="card-header">
@@ -143,7 +143,7 @@ const [isCollateralActive, setIsCollateralActive] = useState(true);
               </div>
             </div>
           </div>
-          <div className="main-card">
+          <div className="dashboard-info-card">
             <div className="tabs">
               <button
                 onClick={() => setIsCollateralActive(true)}
@@ -229,7 +229,7 @@ const [isCollateralActive, setIsCollateralActive] = useState(true);
             Enable telegram notification bot
           </Button>
           {showModal && (
-            <TelegramNotificationModal telegramId={telegramId?.id}  onClose={handleClose} />
+            <TelegramNotificationModal telegramId={telegramId?.id} onClose={handleClose} />
           )}
         </div>
       </div>
