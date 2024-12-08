@@ -121,7 +121,7 @@ const Form = () => {
           sliderValue={selectedMultiplier}
         />
         <div className="token-label">
-          <label>Token Amount</label>
+          <label className="token-amount">Token Amount</label>
           {error && <p className="error-message">{error}</p>}
           <input
             type="number"

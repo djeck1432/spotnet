@@ -88,6 +88,10 @@
   font-size: 1rem;
 }
 
+.token-amount {
+  margin: 18px 0 8px 0;
+}
+
 .token-card h5 {
   margin-top: 9px;
   font-size: 16px;

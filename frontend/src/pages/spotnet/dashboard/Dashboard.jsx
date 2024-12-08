@@ -61,7 +61,11 @@ export default function Component({ telegramId }) {
 
   useEffect(() => {
     const getData = async () => {
+      if (isLoading) {
+        return;
+      }
       console.log('Data:', data);
+
       if (!walletId) {
         console.error('getData: walletId is undefined');
         setLoading(false);
