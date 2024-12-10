@@ -119,14 +119,14 @@ describe('Wallet Services', () => {
           callContract: jest.fn().mockImplementation(({ contractAddress }) => {
             const balances = {
               [ETH_ADDRESS]: { result: ['1000000000000000000'] },
-              [USDC_ADDRESS]: { result: ['2000000000000000000'] },
+              [USDC_ADDRESS]: { result: ['2000000'] },
               [STRK_ADDRESS]: { result: ['3000000000000000000'] },
             };
             return balances[contractAddress];
           }),
         },
       };
-
+      
       connect.mockResolvedValue(mockStarknet);
 
       const balances = await getTokenBalances('0x123');
