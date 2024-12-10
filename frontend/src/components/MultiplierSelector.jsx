@@ -10,7 +10,7 @@ const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
   const isDragging = useRef(false);
 
   const maxMultiplier = useMemo(() => {
-    return Math.round(parseFloat(data?.[selectedToken])) || 5.0;
+    return parseFloat(data?.[selectedToken]) || 5.0;
   }, [data, selectedToken]);
 
   const mapSliderToValue = useCallback(
@@ -80,9 +80,7 @@ const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
   useEffect(() => {
     if (actualValue > maxMultiplier) {
       setActualValue(maxMultiplier);
-      setSelectedMultiplier(maxMultiplier.toFixed(2));
-    } else {
-      setSelectedMultiplier(actualValue.toFixed(2));
+      setSelectedMultiplier(maxMultiplier.toFixed(1));
     }
   }, [maxMultiplier, actualValue, setSelectedMultiplier]);
 

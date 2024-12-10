@@ -39,10 +39,15 @@ const TableOfContents = ({ items, defaultActiveId, tabelTitle, headerHeight = 80
 
       window.scrollTo({
         top: targetId === defaultActiveId ? 0 : offsetPosition,
+        // top: offsetPosition,
+
         behavior: 'smooth',
       });
 
-      setActiveId(targetId);
+      // setActiveId(targetId);
+      setTimeout(() => {
+        setActiveId(targetId);
+      }, 250);
     }
   };
 

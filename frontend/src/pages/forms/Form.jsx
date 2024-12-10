@@ -35,7 +35,9 @@ const Form = () => {
   const { data: positionData, refetch: refetchPosition } = useCheckPosition();
 
   const connectWalletHandler = () => {
-    connectWalletMutation.mutate();
+    if (!walletId) {
+      connectWalletMutation.mutate();
+    }
   };
 
   const [balances, setBalances] = useState([

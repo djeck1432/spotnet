@@ -32,7 +32,7 @@
 .content {
   margin-top: 94px;
   flex: 1;
-  margin-left: 300px;
+  margin-left: 370px;
   padding: 24px 0px 0px 24px;
 }
 
@@ -81,6 +81,12 @@
   list-style: decimal;
   color: white;
   margin-top: 16px;
+}
+
+@media (max-width: 1440px) {
+  .content {
+    margin-left: 300px;
+  }
 }
 
 /* Responsive Design */

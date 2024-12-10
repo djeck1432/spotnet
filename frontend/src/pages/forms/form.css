@@ -2,7 +2,6 @@
   background: url('/public/background.png') no-repeat;
   background-size: cover;
   background-position: center 50%;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   gap: 30px;
