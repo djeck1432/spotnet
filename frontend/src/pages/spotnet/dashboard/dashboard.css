@@ -323,6 +323,22 @@ body {
   font-weight: 600;
 }
 
+.error-message {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: red;
+  font-size: 15px;
+  color: black;
+  margin-bottom: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-alert-hex {
+  margin-left: auto;
+}
+
 @media (max-width: 950px) {
   .top-card-value {
     font-size: 22px;

@@ -10,6 +10,7 @@
   padding-top: 1rem;
   padding-bottom: 1rem;
   font-family: var(--font-family);
+  height: 100vh;
 }
 
 .form-container {
@@ -93,7 +94,7 @@
 }
 
 .token-amount {
-  margin: 18px 0 12px 0;
+  margin: 20px 0 12px 0;
 }
 
 .token-card h5 {
@@ -472,10 +473,11 @@ input[type='number'].error {
     background-color: var(--light-blue);
   }
 
-  @media (max-width: 768px) {
-    .token-label {
-      margin-top: 0;
-    }
+  .token-label {
+    margin-top: 0;
+  }
+  .token-amount {
+    margin: 25px 0 12px 0;
   }
 }
 
@@ -485,6 +487,12 @@ input[type='number'].error {
     overflow-x: scroll;
     gap: 16px;
     scrollbar-width: none;
+  }
+}
+
+@media (max-width: 375px) {
+  .token-amount {
+    margin: 20px 0 12px 0;
   }
 }
 
