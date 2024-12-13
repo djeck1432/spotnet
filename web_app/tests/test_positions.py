@@ -22,6 +22,12 @@ client = TestClient(app)
 app.dependency_overrides.clear()
 
 
+@pytest.fixture
+async def async_client():
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        yield client
+
+
 @pytest.mark.anyio
 async def test_open_position_success(client: AsyncClient) -> None:
     """
@@ -36,8 +42,8 @@ async def test_open_position_success(client: AsyncClient) -> None:
         "web_app.db.crud.PositionDBConnector.open_position"
     ) as mock_open_position:
         mock_open_position.return_value = "Position successfully opened"
-        response = client.get(f"/api/open-position?position_id={position_id}")
-        assert response.is_success
+        response = await client.get(f"/api/open-position?position_id={position_id}")
+        assert response.status_code == 200
         assert response.json() == "Position successfully opened"
 
 
@@ -52,7 +58,7 @@ async def test_open_position_missing_position_data(
     Returns:
         None
     """
-    response = client.get("/api/open-position?position_id=")
+    response = await client.get("/api/open-position?position_id=")
     assert response.status_code == 404
     assert response.json() == {"detail": "Position not found"}
 
@@ -71,8 +77,8 @@ async def test_close_position_success(client: AsyncClient) -> None:
         "web_app.db.crud.PositionDBConnector.close_position"
     ) as mock_close_position:
         mock_close_position.return_value = "Position successfully closed"
-        response = client.get(f"/api/close-position?position_id={position_id}")
-        assert response.is_success
+        response = await client.get(f"/api/close-position?position_id={position_id}")
+        assert response.status_code == 200
         assert response.json() == "Position successfully closed"
 
 
@@ -194,7 +200,7 @@ async def test_get_repay_data_success(
         mock_get_position_id.return_value = 123
         mock_get_repay_data.return_value = mock_repay_data
         DepositMixin.get_repay_data = mock_get_repay_data
-        response = client.get(
+        response = await client.get(
             f"/api/get-repay-data?supply_token={supply_token}&wallet_id={wallet_id}"
         )
         mock_get_contract_address.assert_called_once_with(wallet_id)
@@ -205,7 +211,7 @@ async def test_get_repay_data_success(
             "contract_address": "mock_contract_address",
             "position_id": "123",
         }
-        assert response.is_success
+        assert response.status_code == 200
         assert response.json() == expected_response
 
 
@@ -400,14 +406,16 @@ async def test_create_position_success(
         (12345, "ETH", 100, "1.5", 422),
     ],
 )
-def test_create_position_invalid(
-    wallet_id, token_symbol, amount, multiplier, expected_status
+@pytest.mark.anyio
+async def test_create_position_invalid(
+    async_client,
+    wallet_id, 
+    token_symbol, 
+    amount, 
+    multiplier, 
+    expected_status
 ):
-    """
-    Test for attempting to create a position with various valid and invalid input data.
-    Should return 422 for invalid data and 200 for valid data.
-    """
-    response = client.post(
+    response = await async_client.post(
         "/api/create-position",
         json={
             "wallet_id": wallet_id,
