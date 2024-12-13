@@ -188,3 +188,16 @@ async def open_position(position_id: str) -> str:
     current_prices = await DashboardMixin.get_current_prices()
     position_status = position_db_connector.open_position(position_id, current_prices)
     return position_status
+
+
+@router.get(
+    "/api/position-history",
+    tags=["Position History"],
+    summary="Users position history",
+    response_description="Returns position history based of wallet id"
+)
+async def get_position(wallet_id: str):
+    positions= position_db_connector.get_positions_by_wallet_id(wallet_id)
+    if not positions:
+        raise HTTPException(status_code=404, detail="No position history found")
+    return positions
