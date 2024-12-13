@@ -3,6 +3,8 @@ This module defines the serializers for the position data.
 """
 
 from pydantic import BaseModel, field_validator
+from datetime import datetime
+from typing import List, Optional
 
 
 class PositionFormData(BaseModel):
@@ -55,3 +57,25 @@ class TokenMultiplierResponse(BaseModel):
         schema_extra = {
             "example": {"multipliers": {"ETH": 5.0, "STRK": 2.5, "USDC": 5.0}}
         }
+
+
+class UserPositionResponse(BaseModel):
+    """
+    Represents a single position in the user's position list.
+    """
+    id: str
+    token_symbol: str
+    amount: str
+    multiplier: float
+    status: str
+    created_at: datetime
+    start_price: float
+    is_liquidated: bool
+    datetime_liquidation: Optional[datetime] = None
+
+
+class UserPositionsListResponse(BaseModel):
+    """
+    Response model for list of user positions.
+    """
+    List[UserPositionResponse]

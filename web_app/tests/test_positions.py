@@ -9,6 +9,7 @@ that all edge cases and error scenarios are appropriately handled.
 
 import uuid
 from unittest.mock import Mock, patch
+from datetime import datetime
 
 import pytest
 from fastapi import HTTPException
@@ -419,3 +420,61 @@ def test_create_position_invalid(
     assert response.status_code == expected_status
     if expected_status == 422:
         assert "detail" in response.json()
+
+
+@pytest.mark.asyncio
+async def test_get_user_positions_success(client: AsyncClient) -> None:
+    """
+    Test successfully retrieving user positions.
+    """
+    wallet_id = "test_wallet_id"
+    mock_positions = [
+        {
+            "id": str(uuid.uuid4()),
+            "token_symbol": "ETH",
+            "amount": "100",
+            "multiplier": 2.0,
+            "status": "opened",
+            "created_at": datetime.now(),
+            "start_price": 1800.0,
+            "is_liquidated": False
+        }
+    ]
+    
+    with patch(
+        "web_app.db.crud.PositionDBConnector.get_positions_by_wallet_id"
+    ) as mock_get_positions:
+        mock_get_positions.return_value = mock_positions
+        response = await client.get(f"/api/user-positions/{wallet_id}")
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data["positions"]) == len(mock_positions)
+        assert data["positions"][0]["token_symbol"] == mock_positions[0]["token_symbol"]
+        assert data["positions"][0]["amount"] == mock_positions[0]["amount"]
+
+
+@pytest.mark.asyncio
+async def test_get_user_positions_empty_wallet_id(client: AsyncClient) -> None:
+    """
+    Test retrieving positions with empty wallet ID.
+    """
+    response = await client.get("/api/user-positions/")
+    assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_get_user_positions_no_positions(client: AsyncClient) -> None:
+    """
+    Test retrieving positions for wallet with no positions.
+    """
+    wallet_id = "wallet_with_no_positions"
+    with patch(
+        "web_app.db.crud.PositionDBConnector.get_positions_by_wallet_id"
+    ) as mock_get_positions:
+        mock_get_positions.return_value = []
+        response = await client.get(f"/api/user-positions/{wallet_id}")
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data["positions"]) == 0
