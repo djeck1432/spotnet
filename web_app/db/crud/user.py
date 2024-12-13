@@ -3,12 +3,13 @@ This module contains the user database configuration.
 """
 
 import logging
-from typing import List, TypeVar, Tuple
+from typing import List, TypeVar, Tuple, Dict
 
 from sqlalchemy.exc import SQLAlchemyError
 
 from .base import DBConnector
 from web_app.db.models import Base, Position, Status, User, TelegramUser
+# from fastapi import APIRouter, HTTPException
 
 logger = logging.getLogger(__name__)
 ModelType = TypeVar("ModelType", bound=Base)
@@ -215,3 +216,53 @@ class UserDBConnector(DBConnector):
                 session.rollback()
                 logger.error(f"Failed to delete user with wallet_id {wallet_id}: {e}")
                 raise e
+
+    async def withdraw_all(self, wallet_id: str) -> Dict[str, any]:
+        """
+        Withdraws all available tokens (ETH, STRK, USDC) for a given wallet.
+        
+        Args:
+            wallet_id: The ID of the wallet to withdraw from
+            
+        Returns:
+            Dict containing withdrawal results for each token
+            
+        Raises:
+            HTTPException:
+                404: If user not found
+                400: If contract is not deployed
+                500: For database or withdrawal errors
+        """
+        try:
+            user = self.get_user_by_wallet_id(wallet_id)
+            if not user:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"User not found with wallet ID {wallet_id}"
+                )
+                
+            if not user.is_contract_deployed or not user.contract_address:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Contract not deployed for this wallet"
+                )
+                
+            results = await CLIENT.withdraw_all(user.contract_address)
+            
+            return {
+                "wallet_id": wallet_id,
+                "contract_address": user.contract_address,
+                "withdrawals": results
+            }
+            
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in withdraw_all for wallet {wallet_id}: {str(e)}")
+            raise HTTPException(
+                status_code=500,
+                detail="Database error occurred while processing withdrawal"
+            )
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error in withdraw_all for wallet {wallet_id}: {str(e)}")
+            raise HTTPException(status_code=500, detail=str(e))
