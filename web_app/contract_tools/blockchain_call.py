@@ -258,7 +258,9 @@ class StarknetClient:
         }
 
         pool_price = floor(
-            await self._get_pool_price(pool_key, deposit_token == pool_key["token1"], ekubo_contract)
+            await self._get_pool_price(
+                pool_key, deposit_token == pool_key["token1"], ekubo_contract
+            )
         )
         return {
             "pool_price": pool_price,
@@ -271,7 +273,9 @@ class StarknetClient:
             "caller": wallet_id,
         }
 
-    async def get_repay_data(self, deposit_token: str, borrowing_token: str, ekubo_contract: "Contract") -> dict:
+    async def get_repay_data(
+            self, deposit_token: str, borrowing_token: str, ekubo_contract: "Contract"
+    ) -> dict:
         """
         Get data for Spotnet position closing.
 
