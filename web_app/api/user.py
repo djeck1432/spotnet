@@ -21,6 +21,7 @@ from web_app.db.crud import (
     TelegramUserDBConnector,
     UserDBConnector,
 )
+from web_app.contract_tools.blockchain_call import CLIENT
 
 logger = logging.getLogger(__name__)
 router = APIRouter()  # Initialize the router
@@ -298,3 +299,38 @@ async def allow_notification(
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal server error")
+
+
+@router.post(
+    "/api/withdraw-all",
+    tags=["User Operations"],
+    summary="Withdraw all tokens from user's contract",
+    response_description="Status of withdrawal operations",
+)
+async def withdraw_all(wallet_id: str) -> dict:
+    """
+    Withdraws all supported tokens from the user's contract.
+
+    ### Parameters:
+    - **wallet_id**: The wallet ID of the user.
+
+    ### Returns:
+    Success status of the withdrawals.
+    """
+    try:
+        # Get user's contract address
+        contract_address = await get_user_contract(wallet_id)
+        if not contract_address:
+            raise HTTPException(status_code=404, detail="Contract not found")
+
+        # Perform withdrawals
+        await CLIENT.withdraw_all(contract_address)
+        
+        return {"detail": "Successfully initiated withdrawals for all tokens"}
+        
+    except Exception as e:
+        logger.error(f"Error in withdraw_all: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to withdraw tokens: {str(e)}"
+        )

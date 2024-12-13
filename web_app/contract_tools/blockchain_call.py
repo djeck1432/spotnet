@@ -326,5 +326,27 @@ class StarknetClient:
             calldata=[],
         )
 
+    async def withdraw_all(self, contract_address: str) -> List[Any]:
+        """
+        Withdraws all supported tokens from the contract by calling withdraw with amount=0.
+        
+        :param contract_address: The contract address to withdraw from
+        :return: List of responses from withdraw calls
+        """
+        contract_addr_int = self._convert_address(contract_address)
+        tasks = []
+        
+        for token in TokenParams.tokens():
+            token_addr_int = self._convert_address(token.address)
+            tasks.append(
+                self._func_call(
+                    addr=contract_addr_int,
+                    selector="withdraw",
+                    calldata=[token_addr_int, 0]
+                )
+            )
+        
+        return await asyncio.gather(*tasks)
+
 
 CLIENT = StarknetClient()
