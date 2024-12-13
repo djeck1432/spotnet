@@ -3,13 +3,10 @@ This module contains the tests for the user endpoints.
 """
 
 from unittest.mock import MagicMock, patch
-
 import pytest
-
 from web_app.api.serializers.transaction import UpdateUserContractRequest
 from web_app.api.serializers.user import SubscribeToNotificationResponse
 from web_app.tests.conftest import client, mock_user_db_connector
-
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
@@ -48,15 +45,17 @@ async def test_get_user_contract(
     )
     response_json = response.json()
 
-    if response.is_success:
-        assert isinstance(response_json, str)
-        assert response_json == str(expected_contract_address)
-    else:
+    assert response.status_code == 200  # Ensure status code is 200 for success
+
+    if expected_contract_address is None:
         assert isinstance(response_json, dict)
         assert response_json.get("detail") in (
             "User not found",
             "Contract not deployed",
         )
+    else:
+        assert isinstance(response_json, str)
+        assert response_json == str(expected_contract_address)
 
 
 @pytest.mark.asyncio
@@ -89,7 +88,7 @@ async def test_check_user(
     )
     response_json = response.json()
 
-    assert response.is_success
+    assert response.status_code == 200  # Ensure status code is 200 for success
     assert isinstance(response_json, dict)
     assert isinstance(response_json.get("is_contract_deployed"), bool)
 
@@ -116,7 +115,7 @@ async def test_change_user_contract(
     contract_address: str,
 ) -> None:
     """
-    Test get_user_contract endpoint
+    Test update_user_contract endpoint (not get_user_contract)
     :param client: fastapi.testclient.TestClient
     :param mock_user_db_connector: unittest.mock.MagicMock
     :param wallet_id: str[wallet_id]
@@ -134,9 +133,9 @@ async def test_change_user_contract(
     )
     response_json = response.json()
 
-    assert response.is_success
+    assert response.status_code == 200  # Ensure status code is 200 for success
     assert isinstance(response_json, dict)
-    assert response_json.get("is_contract_deployed")
+    assert response_json.get("is_contract_deployed") is True
 
 
 @pytest.mark.asyncio
@@ -176,7 +175,7 @@ async def test_get_user_contract_address(
     )
     response_json = response.json()
 
-    assert response.is_success
+    assert response.status_code == 200  # Ensure status code is 200 for success
     assert isinstance(response_json, dict)
 
     contract_address = response_json.get("contract_address")
@@ -224,7 +223,6 @@ async def test_subscribe_to_notification(
 ) -> None:
     """
     Test subscribe_to_notification endpoint with both positive and negative cases.
-
     :param client: fastapi.testclient.TestClient
     :param mock_get_user_by_wallet_id: unittest.mock.MagicMock for get_user_by_wallet_id
     :param mock_allow_notification: unittest.mock.MagicMock for allow_notification
@@ -242,19 +240,14 @@ async def test_subscribe_to_notification(
     else:
         mock_get_user_by_wallet_id.return_value = {"wallet_id": wallet_id}
 
-    if telegram_id and wallet_id:
-        data = {
-            "telegram_id": telegram_id,
-            "wallet_id": wallet_id,
-        }
-    else:
-        data = {"telegram_id": telegram_id, "wallet_id": wallet_id}
+    data = {"telegram_id": telegram_id, "wallet_id": wallet_id}
 
     response = client.post(
         url="/api/subscribe-to-notification",
         json=data,
     )
     response_json = response.json()
+
     assert response.status_code == expected_status_code
 
     if expected_response:
