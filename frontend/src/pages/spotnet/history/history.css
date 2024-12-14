@@ -1,0 +1,89 @@
+.overview-container {
+  background: url('../../../../public/historybg.png') no-repeat;
+  background-size: cover;
+  background-position: center 39%;
+  min-height: 100vh;
+  min-width: 100vw;
+  max-width: 1440px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  color: white;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+}
+
+.side_nav {
+  width: 374px;
+  height: 912px;
+  display:flex;
+  justify-content: center;
+  min-height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #00000F;
+  padding-top: 50px;
+}
+
+
+aside{
+ display:flex;
+ justify-content: center;
+ flex-direction: column;
+ padding:0 20px;
+}
+h1{
+  text-align: center;
+}
+
+.card_container{
+  color: white;
+  display: flex;
+  gap:20px;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.card{
+  border:#36294E 1px solid;
+  display:flex;
+  flex-direction: column;
+  gap: 5px;
+  width: fit-content;
+  padding: 20px;
+  border-radius:0px;
+}
+
+.card_container_sub_data{
+  display: flex;
+  align-items:center;
+  gap:4px;
+}
+
+.table-container{
+  margin-top: 40px;
+}
+aside section{
+  border:#36294E 1px solid;
+  padding:20px;
+}
+
+aside div h2{
+  font-weight: 600;
+  font-size:16px;
+  text-transform: capitalize;
+}
+aside section h3{
+  color: #83919F ;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+aside section div{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom:#36294E 1px solid;
+  padding-bottom: 4px;
+}

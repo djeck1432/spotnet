@@ -18,6 +18,7 @@ import { useConnectWallet } from 'hooks/useConnectWallet';
 import OverviewPage from 'pages/spotnet/overview/Overview';
 import { ActionModal } from 'components/ui/ActionModal';
 import Stake from 'pages/vault/stake/Stake';
+import History from 'pages/spotnet/history/History';
 
 function App() {
   const { walletId, setWalletId, removeWalletId } = useWalletStore();
@@ -104,7 +105,7 @@ function App() {
           <Route path="/overview" element={<OverviewPage />} />
           <Route path="/form" element={<Form />} />
           <Route path="/documentation" element={<Documentation />} />
-
+          <Route path="/history" element={<History />} />
           <Route path="/stake" element={<Stake />} />
         </Routes>
       </main>
