@@ -2,7 +2,7 @@
   background: url('../../../../public/historybg.png') no-repeat;
   background-size: cover;
   background-position: center 39%;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   min-width: 100vw;
   max-width: 1440px;
   display: flex;
@@ -19,7 +19,7 @@
   height: 912px;
   display:flex;
   justify-content: center;
-  min-height: 100vh;
+  height: 100vh;
   overflow-y: auto;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   background-color: #00000F;
@@ -32,8 +32,12 @@ aside{
  justify-content: center;
  flex-direction: column;
  padding:0 20px;
+ margin-top: 50px;
 }
 h1{
+  font-weight: 600;
+  font-size:20px;
+  margin-bottom: 20px;
   text-align: center;
 }
 
@@ -45,28 +49,50 @@ h1{
   justify-content: center;
 }
 
+.card_container .card img{
+  width: 18px;
+}
 .card{
   border:#36294E 1px solid;
   display:flex;
   flex-direction: column;
-  gap: 5px;
-  width: fit-content;
+  text-align: center;
+  align-items: center;
+  gap: 2px;
+  width: 300px;
+  font-weight: 600;
+  color: white;
+  border-radius: 8px;
   padding: 20px;
-  border-radius:0px;
+}
+
+.card h4{
+  font-size: 14px;
+}
+
+.card span{
+  font-size: 24px;
+}
+.text-green{
+  color: #1EDC9E;
 }
 
 .card_container_sub_data{
   display: flex;
   align-items:center;
-  gap:4px;
+  margin: 0 auto;
+  gap:3px;
 }
 
 .table-container{
   margin-top: 40px;
 }
-aside section{
+aside table{
+  display: grid;
+  gap:15px;
   border:#36294E 1px solid;
   padding:20px;
+  border-radius: 8px;
 }
 
 aside div h2{
@@ -74,16 +100,80 @@ aside div h2{
   font-size:16px;
   text-transform: capitalize;
 }
-aside section h3{
+aside table th{
   color: #83919F ;
   font-weight: 600;
   font-size: 14px;
   text-transform: capitalize;
 }
-aside section div{
+aside table .table-header tr{
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
+  padding:0 20px ;
   align-items: center;
   border-bottom:#36294E 1px solid;
   padding-bottom: 4px;
+}
+tbody{
+  display: grid;
+  gap: 16px;
+}
+tbody tr{
+  position: relative;
+}
+tbody tr .num{
+  position: absolute;
+  top:0px;
+  left: 2px;
+}
+.item{
+  display: flex;
+  align-items: center;
+  padding-bottom: 4px;
+  justify-content: space-evenly;
+}
+.item td{
+  color: #FDFDFD;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: capitalize;
+  line-height: 9.07px;
+}
+.item .table-token{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+.item .table-token img{
+  width: 24px;
+  border-bottom: 0px;
+}
+
+.pagination{
+  display: flex;
+  margin: 0 auto;
+  gap: 25px;
+  color: #433B5A;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16.34px;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  min-width: 300px;
+  margin-top: 20px;
+}
+.pagination .section-num{
+  display: flex;
+  gap: 10px;
+}
+.pagination .btn-img{
+  background-color: #180B30;
+  border-radius: 50%;
+  padding: 5px;
+}
+.pagination img{
+  width:16px;
+
 }
