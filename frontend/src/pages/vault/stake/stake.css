@@ -33,8 +33,8 @@
 }
 
 .stake-title {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 400;
   color: var(--primary);
   text-align: center;
 }
@@ -43,7 +43,29 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  gap: 20px;
+  gap: 48px; 
+  margin-top: 36px;
+}
+
+.stake-header-text{
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--primary);
+  text-align: center;
+  /* margin-top: 30px; */
+  /* background: #000; */
+}
+
+.stake-balance {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stake-main-container{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .main-container {
@@ -73,7 +95,7 @@
 }
 
 .main-card {
-  padding: 3rem 1.5rem;
+  padding: 48px 24px;
   height: auto;
   gap: 24px;
   display: flex;
@@ -191,6 +213,11 @@
   width: 100%;
 }
 
+.button--secondary::before {
+  border-radius: 8px !important;
+}
+
+
 .balance-display-container .large-screen-balance {
   display: block;
 }
@@ -268,10 +295,6 @@
   .balance-item label:nth-child(2) {
     color: var(--secondary);
     /* font-size: 14px; */
-  }
-  .stake-title {
-    font-size: 16px;
-    font-weight: 400;
   }
 
   .main-card {

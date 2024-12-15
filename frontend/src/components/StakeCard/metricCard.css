@@ -1,12 +1,20 @@
 .stake-card {
-  width: 309px;
+  /* width: 309px; */
   background: var(--header-button-bg);
   border: var(--midnight-purple-border);
-  border-radius: 900px;
+  border-radius: 8px !important;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 101px;
+}
+
+.stake-card .label{
+  font-size: 14px;
+  font-weight: 600;
+  color: #83919F;
+  text-align: center;
 }
 
 .stake-card .img {
