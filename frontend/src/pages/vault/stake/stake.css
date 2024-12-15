@@ -52,8 +52,6 @@
   font-weight: 600;
   color: var(--primary);
   text-align: center;
-  /* margin-top: 30px; */
-  /* background: #000; */
 }
 
 .stake-balance {
@@ -213,8 +211,8 @@
   width: 100%;
 }
 
-.button--secondary::before {
-  border-radius: 8px !important;
+.stake-button .button--secondary::before, .stake-button {
+  border-radius: 8px;
 }
 
 
