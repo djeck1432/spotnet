@@ -168,6 +168,56 @@ def test_get_total_amounts_for_open_positions(mock_position_db_connector):
 
     assert result == Decimal(1000.0)
 
+def test_save_transaction_success(db_connector, mocker):
+    """Test successful transaction creation"""
+    position_id = uuid4()
+    transaction_hash = "0x123456789"
+    status = TransactionStatus.OPENED.value
+    
+    transaction = db_connector.save_transaction(
+        position_id=position_id,
+        status=status,
+        transaction_hash=transaction_hash
+    )
+    
+    assert transaction is not None
+    assert transaction.position_id == position_id
+    assert transaction.transaction_hash == transaction_hash
+    assert transaction.status == status
+
+def test_save_transaction_duplicate_hash(db_connector):
+    """Test handling duplicate transaction hash"""
+    position_id = uuid4()
+    transaction_hash = "0x123456789"
+    status = TransactionStatus.OPENED.value
+    
+    db_connector.save_transaction(
+        position_id=position_id,
+        status=status,
+        transaction_hash=transaction_hash
+    )
+    
+    with pytest.raises(SQLAlchemyError):
+        db_connector.save_transaction(
+            position_id=position_id,
+            status=status,
+            transaction_hash=transaction_hash
+        )
+
+def test_save_transaction_invalid_position(db_connector):
+    """Test handling non-existent position ID"""
+    invalid_position_id = uuid4()
+    transaction_hash = "0x123456789"
+    status = TransactionStatus.OPENED.value
+    
+    transaction = db_connector.save_transaction(
+        position_id=invalid_position_id,
+        status=status,
+        transaction_hash=transaction_hash
+    )
+    
+    assert transaction is None
+
 
 @patch.object(scoped_session, "__call__")
 def test_delete_all_user_positions_success(mock_scoped_session_call):

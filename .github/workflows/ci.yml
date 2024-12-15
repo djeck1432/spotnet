@@ -47,6 +47,10 @@ jobs:
         run: |
           docker-compose exec backend poetry run pytest web_app/tests
 
+      - name: Run tests coverage
+        run: |
+          docker-compose exec backend poetry run pytest --cov=web_app/tests --cov-fail-under=90
+
       - name: Tear down
         run: |
           docker-compose down
