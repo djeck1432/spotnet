@@ -311,11 +311,8 @@ async def withdraw_all(wallet_id: str) -> dict:
     """
     Withdraws all supported tokens from the user's contract.
 
-    ### Parameters:
-    - **wallet_id**: The wallet ID of the user.
-
-    ### Returns:
-    Success status of the withdrawals.
+    :param wallet_id: The wallet ID of the user.
+    :return: detail: "Successfully initiated withdrawals for all tokens"
     """
     try:
         # Get user's contract address
@@ -324,7 +321,10 @@ async def withdraw_all(wallet_id: str) -> dict:
             raise HTTPException(status_code=404, detail="Contract not found")
 
         # Perform withdrawals
-        await CLIENT.withdraw_all(contract_address)
+        try:
+            await CLIENT.withdraw_all(contract_address)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to withdraw tokens: {str(e)}")
         
         return {"detail": "Successfully initiated withdrawals for all tokens"}
         
