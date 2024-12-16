@@ -171,6 +171,41 @@ async def open_position(position_id: str) -> str:
     return position_status
 
 
+@router.post(
+    "/api/add-extra-deposit/{position_id}",
+    tags=["Position Operations"],
+    summary="Add extra deposit to a user position",
+    response_description="Returns the result of extra deposit",
+)
+async def add_extra_deposit(
+    position_id: int,
+    amount: str
+):
+    """
+    This endpoint adds extra deposit to a user position.
+
+    ### Parameters:
+    - **position_id**: The position ID.
+    - **amount**: The amount of the token being deposited.
+    """
+
+    if not position_id:
+        raise HTTPException(status_code=404, detail="Position ID is required")
+    
+    if not amount:
+        raise HTTPException(status_code=404, detail="Amount is required")
+    
+    position = position_db_connector.get_position_by_id(position_id)
+
+    if not position:
+        raise HTTPException(status_code=404, detail="Position not found")
+
+    position_db_connector.add_extra_deposit_to_position(position, amount)
+
+    return {"detail": "Successfully added extra deposit"}
+
+
+    
 @router.get(
     "/api/user-positions/{wallet_id}",
     tags=["Position Operations"],

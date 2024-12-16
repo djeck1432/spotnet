@@ -140,3 +140,49 @@ class Vault(Base):
     updated_at = Column(
         DateTime, nullable=False, default=func.now(), onupdate=func.now()
     )
+
+class TransactionStatus(PyEnum):
+    """
+    Enum for the transaction status.
+    """
+    OPENED = "opened"
+    CLOSED = "closed"
+
+    @classmethod
+    def choices(cls):
+        """
+        Returns the list of transaction status choices.
+        """
+        return [status.value for status in cls]
+
+class Transaction(Base):
+    """
+    SQLAlchemy model for the transaction table.
+    Stores transaction information related to positions.
+    """
+    __tablename__ = "transaction"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    position_id = Column(
+        UUID(as_uuid=True), 
+        ForeignKey("position.id"), 
+        index=True, 
+        nullable=False
+    )
+    status = Column(
+        Enum(
+            TransactionStatus, 
+            name="transaction_status_enum", 
+            values_callable=lambda x: [e.value for e in x]
+        ),
+        nullable=False,
+        default="opened",
+    )
+    transaction_hash = Column(String, nullable=False, unique=True, index=True)
+    created_at = Column(DateTime, nullable=False, default=func.now())
+    updated_at = Column(
+        DateTime, 
+        nullable=False, 
+        default=func.now(), 
+        onupdate=func.now()
+    )
