@@ -1,9 +1,9 @@
-import { connect } from 'get-starknet';
+import { connect } from 'starknetkit';
 import { sendTransaction, closePosition, handleTransaction } from '../../src/services/transaction';
 import { axiosInstance } from '../../src/utils/axios';
 import { mockBackendUrl } from '../constants';
 
-jest.mock('get-starknet');
+jest.mock('starknetkit');
 jest.mock('../../src/utils/axios');
 
 jest.mock('starknet', () => ({

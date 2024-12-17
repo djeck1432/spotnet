@@ -1,4 +1,4 @@
-import { connect } from 'get-starknet';
+import { connect } from 'starknetkit';
 import {
   checkForCRMToken,
   connectWallet,
@@ -8,7 +8,7 @@ import {
 } from '../../src/services/wallet';
 import { ETH_ADDRESS, STRK_ADDRESS, USDC_ADDRESS } from '../../src/utils/constants';
 
-jest.mock('get-starknet', () => ({
+jest.mock('starknetkit', () => ({
   connect: jest.fn(),
 }));
 

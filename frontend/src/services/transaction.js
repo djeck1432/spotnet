@@ -1,4 +1,4 @@
-import { connect } from 'get-starknet';
+import { connect } from 'starknetkit';
 import { CallData } from 'starknet';
 import { erc20abi } from '../abis/erc20';
 import { abi } from '../abis/abi';
