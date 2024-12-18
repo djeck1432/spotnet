@@ -42,7 +42,7 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
     throw error;
   }
 }
-/* eslint-disable-next-line no-unused-vars */
+
 async function waitForTransaction(txHash) {
   const starknet = await connect();
   let receipt = null;
@@ -51,7 +51,7 @@ async function waitForTransaction(txHash) {
       receipt = await starknet.provider.getTransactionReceipt(txHash);
     } catch (error) {
       console.log('Waiting for transaction to be accepted...');
-      await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 5 seconds before trying again
+      await new Promise((resolve) => setTimeout(resolve, 5000));
     }
   }
   console.log('Transaction accepted:', receipt);
@@ -94,7 +94,7 @@ export const handleTransaction = async (connectedWalletId, formData, setError, s
 
     openPositionResponse == openPositionResponse
 
-    // Reset form data
+    
     setTokenAmount('');
   } catch (err) {
     console.error('Failed to create position:', err);
