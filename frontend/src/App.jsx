@@ -19,6 +19,7 @@ import OverviewPage from 'pages/spotnet/overview/Overview';
 import { ActionModal } from 'components/ui/ActionModal';
 import Stake from 'pages/vault/stake/Stake';
 import { notifyError } from 'utils/notification';
+import { Deposit } from './pages/spotnet/dashboard/Deposit';
 
 function App() {
   const { walletId, setWalletId, removeWalletId } = useWalletStore();
@@ -94,6 +95,7 @@ function App() {
           <Route path="/documentation" element={<Documentation />} />
 
           <Route path="/stake" element={<Stake />} />
+          <Route path="/dashboard/deposit/:positionId" element={<DepositPage />} />
         </Routes>
       </main>
       <Footer />
