@@ -43,7 +43,7 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
   }
 }
 
-async function waitForTransaction(txHash) {
+export async function waitForTransaction(txHash) {
   const starknet = await connect();
   let receipt = null;
   while (receipt === null) {
