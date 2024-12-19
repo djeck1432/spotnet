@@ -1,7 +1,13 @@
 .stake-wrapper {
   background: url('../../../../public/background.png') no-repeat;
   background-size: cover;
-  margin-left:200px;
+  background-position: center 39%;
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(100vw - 372px);
 }
 
 

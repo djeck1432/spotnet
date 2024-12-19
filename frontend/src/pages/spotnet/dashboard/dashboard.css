@@ -6,6 +6,12 @@ body {
     Helvetica,
     sans-serif;
 }
+.dashboard {
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  width: 100vw;
+}
 
 .dashboard-wrapper {
   position: relative;
@@ -13,10 +19,11 @@ body {
   background-size: cover;
   background-position: center left;
   min-height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 1rem 0;
+  align-items: center;
+  width: calc(100vw - 372px);
 }
 
 .dashboard-container {
@@ -26,6 +33,7 @@ body {
   gap: 10px;
   padding: 0 24px;
   padding-top: 20px;
+  width: fit-content;
 }
 
 .dashboard-content {

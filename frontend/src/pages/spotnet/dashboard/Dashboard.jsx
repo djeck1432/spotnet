@@ -17,6 +17,8 @@ import { ReactComponent as CollateralIcon } from 'assets/icons/collateral_dynami
 import Collateral from 'components/collateral/Collateral';
 import Card from 'components/Card/Card';
 import { ReactComponent as HealthIcon } from 'assets/icons/health.svg';
+import Sidebar from 'components/ui/Components/Sidebar/Sidebar';
+import {  LucideComputer, VaultIcon } from 'lucide-react';
 
 export default function Component({ telegramId }) {
   const { walletId } = useWalletStore();
@@ -134,8 +136,31 @@ export default function Component({ telegramId }) {
     return '';
   };
 
+  const dashboardItems = [
+    {
+      id: 'dashboard',
+      name: 'Dashboard',
+      link: '/dashboard',
+      icon: <LucideComputer size={16} />
+    },
+    {
+      id: 'd ',
+      name: 'Vault',
+      link: '/vault',
+      icon: <VaultIcon size={16} />
+    }
+  ];
+
   return (
+    <div className='dashboard' >
+            <Sidebar 
+      title={'Dashboard'}
+  items={dashboardItems}
+  className=""
+/>
+
     <div className="dashboard-wrapper">
+
       <div className="dashboard-container">
         {loading && <Spinner loading={loading} />}
         <h1 className="dashboard-title">zkLend Position</h1>
@@ -209,6 +234,7 @@ export default function Component({ telegramId }) {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import './documentation.css';
-import TableOfContents from '../../../components/TableOfContent/TableOfContents';
+//import TableOfContents from '../../../components/TableOfContent/TableOfContents';
 import ScrollButton from '../../../components/scrollButton/ScrollButton';
 import Sections from 'components/Sections';
+import Sidebar from 'components/ui/Components/Sidebar/Sidebar';
 
 const Documentation = () => {
 
@@ -12,9 +13,10 @@ const Documentation = () => {
 
 
   const tableOfContents = [
-    { title: 'Introduction', link: '#introduction' },
+    { id: 'Introduction', name:'Introduction', link: '#introduction' },
     {
-      title: 'Overview',
+      id: 'Overview',
+      name: 'Overview',
       link: '#overview',
       subItems: [
         { title: 'Cosmos Overview', link: '#cosmos-1' },
@@ -23,14 +25,29 @@ const Documentation = () => {
         { title: 'Cosmos Overview', link: '#cosmos-4' }
       ]
     },
-    { title: 'Getting Started', link: '#getting-started' },
-    { title: 'Features Overview', link: '#features' },
-    { title: 'The Hub And Zones', link: '#hub-1' },
-    { title: 'The Hub And Zones', link: '#hub-2' },
-    { title: 'The Hub And Zones', link: '#hub-3' },
-    { title: 'The Hub And Zones', link: '#hub-4' },
-    { title: 'The Hub And Zones', link: '#hub-5' }
+    { name: 'Getting Started', link: '#getting-started' },
+    { name: 'Features Overview', link: '#features' },
+    { name: 'The Hub And Zones', link: '#hub-1' },
+    { name: 'The Hub And Zones', link: '#hub-2' },
+    { name: 'The Hub And Zones', link: '#hub-3' },
+    { name: 'The Hub And Zones', link: '#hub-4' },
+    { name: 'The Hub And Zones', link: '#hub-5' }
   ];
+
+  // const dashboardItems = [
+  //   {
+  //     id: 'dashboard',
+  //     name: 'Dashboard',
+  //     link: '/dashboard',
+  //     icon: <LucideComputer size={16} />
+  //   },
+  //   {
+  //     id: 'd ',
+  //     name: 'Vault',
+  //     link: '/vault',
+  //     icon: <VaultIcon size={16} />
+  //   }
+  // ];
 
   const sectionsData = [
     {
@@ -89,7 +106,8 @@ const Documentation = () => {
 
   return (
     <div className="documentation-page">
-      <TableOfContents tabelTitle={"Table Of Content"} defaultActiveId={"introduction"} headerHeight={80} items={tableOfContents} />
+      {/* <TableOfContents tabelTitle={"Table Of Content"} defaultActiveId={"introduction"} headerHeight={80} items={tableOfContents} /> */}
+      <Sidebar title={'Table of Contents'} items={tableOfContents} className='sidebar-docs-sticky' />
 
       <div className="main-content">
         <h1 className="main-title">zkLend Documentation</h1>
