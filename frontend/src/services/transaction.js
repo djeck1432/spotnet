@@ -1,9 +1,6 @@
 import { connect } from 'starknetkit';
-import { CallData } from 'starknet';
-import { erc20abi } from '../abis/erc20';
-import { abi } from '../abis/abi';
 import { axiosInstance } from '../utils/axios';
-import {checkAndDeployContract} from './contract';
+import { checkAndDeployContract } from './contract';
 
 export async function sendTransaction(loopLiquidityData, contractAddress) {
   try {
@@ -16,20 +13,25 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
       throw new Error('Missing or invalid loop_liquidity_data fields');
     }
     console.log(loopLiquidityData);
-    let approveCalldata = new CallData(erc20abi);
+
+    // Create approve transaction calldata
     const approveTransaction = {
       contractAddress: loopLiquidityData.deposit_data.token,
       entrypoint: 'approve',
-      calldata: approveCalldata.compile('approve', [contractAddress, loopLiquidityData.deposit_data.amount]),
+      calldata: [contractAddress, loopLiquidityData.deposit_data.amount],
     };
-    console.log(loopLiquidityData)
-    const callData = new CallData(abi);
-    const compiled = callData.compile('loop_liquidity', loopLiquidityData);
+
+    console.log(loopLiquidityData);
+
+    // Prepare loop_liquidity parameters
+    const loopLiquidityParams = Object.values(loopLiquidityData).flat();
+    
     const depositTransaction = {
       contractAddress: contractAddress,
       entrypoint: 'loop_liquidity',
-      calldata: compiled,
+      calldata: loopLiquidityParams,
     };
+
     console.log(depositTransaction);
     let result = await starknet.account.execute([approveTransaction, depositTransaction]);
     console.log('Resp: ');
@@ -58,32 +60,42 @@ export async function waitForTransaction(txHash) {
 }
 
 export async function closePosition(transactionData) {
-  const callData = new CallData(abi);
-  const compiled = callData.compile('close_position', transactionData);
-  console.log(compiled);
+  // Flatten the transaction data into an array of parameters
+  const closePositionParams = Object.values(transactionData).flat();
+  
   const starknet = await connect();
   console.log(transactionData.contract_address);
   await starknet.account.execute([
-    { contractAddress: transactionData.contract_address, entrypoint: 'close_position', calldata: compiled },
+    { 
+      contractAddress: transactionData.contract_address, 
+      entrypoint: 'close_position', 
+      calldata: closePositionParams 
+    },
   ]);
 }
 
-export const handleTransaction = async (connectedWalletId, formData, setError, setTokenAmount, setLoading, setSuccessful) => {
-
+export const handleTransaction = async (
+  connectedWalletId, 
+  formData, 
+  setError, 
+  setTokenAmount, 
+  setLoading, 
+  setSuccessful
+) => {
   setLoading(true);
   setError('');
-  try{
+  try {
     await checkAndDeployContract(connectedWalletId);
   } catch (error) {
     console.error('Error deploying contract:', error);
     setError('Error deploying contract. Please try again.');
-    setSuccessful(false)
+    setSuccessful(false);
     setLoading(false);
     return;
   }
+  
   try {
     const response = await axiosInstance.post(`/api/create-position`, formData);
-
     const transactionData = response.data;
     await sendTransaction(transactionData, transactionData.contract_address);
     console.log('Transaction executed successfully');
@@ -92,14 +104,12 @@ export const handleTransaction = async (connectedWalletId, formData, setError, s
       params: { position_id: transactionData.position_id },
     });
 
-    openPositionResponse == openPositionResponse
-
-    
+    openPositionResponse == openPositionResponse;
     setTokenAmount('');
   } catch (err) {
     console.error('Failed to create position:', err);
     setError('Failed to create position. Please try again.');
-    setSuccessful(false)
+    setSuccessful(false);
   } finally {
     setLoading(false);
   }

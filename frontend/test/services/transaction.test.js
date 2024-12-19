@@ -1,5 +1,5 @@
 import { connect } from 'starknetkit';
-import { sendTransaction, closePosition, handleTransaction } from '../../src/services/transaction';
+import { handleTransaction } from '../../src/services/transaction';
 import { axiosInstance } from '../../src/utils/axios';
 import { checkAndDeployContract } from '../../src/services/contract';
 
