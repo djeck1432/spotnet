@@ -6,7 +6,7 @@ import './multiplier.css';
 const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
   const minMultiplier = 1.1;
 
-  const { data, isLoading, error } = useMaxMultiplier();
+  const { data, isLoading } = useMaxMultiplier();
   const [actualValue, setActualValue] = useState(minMultiplier);
   const sliderRef = useRef(null);
   const isDragging = useRef(false);
@@ -104,7 +104,6 @@ const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
   }, [maxMultiplier, actualValue, setSelectedMultiplier]);
 
   if (isLoading) return <div className="slider-skeleton">Loading multiplier data...</div>;
-  if (error) return <div className="error-message">Error loading multiplier data: {error.message}</div>;
 
   return (
     <div className="multiplier-card">

@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { subscribeToNotification, generateTelegramLink } from "services/telegram";
-import { notifyError, notifySuccess } from "utils/notification";
+import { notify } from "components/Notifier/Notifier";
 
 const useTelegramNotification = () => {
     const mutation = useMutation({
@@ -14,10 +14,10 @@ const useTelegramNotification = () => {
             return await subscribeToNotification(telegramId, walletId);
         },
         onSuccess: () => {
-            notifySuccess("Subscribed to notifications successfully!");
+            notify("Subscribed to notifications successfully!", "success");
         },
         onError: (error) => {
-            notifyError(error?.message || "Failed to subscribe. Please try again.");
+            notify(error?.message || "Failed to subscribe. Please try again.", "error");
         },
     });
 

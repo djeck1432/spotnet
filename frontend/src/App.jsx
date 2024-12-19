@@ -13,20 +13,26 @@ import { getTelegramUserWalletId } from 'services/telegram';
 import Documentation from 'pages/spotnet/documentation/Documentation';
 import Withdraw from 'pages/vault/withdraw/Withdraw';
 import { useWalletStore } from 'stores/useWalletStore';
-import { Notifier } from 'components/Notifier/Notifier';
+import { Notifier, notify } from 'components/Notifier/Notifier';
 import { useConnectWallet } from 'hooks/useConnectWallet';
 import OverviewPage from 'pages/spotnet/overview/Overview';
 import { ActionModal } from 'components/ui/ActionModal';
 import Stake from 'pages/vault/stake/Stake';
-import { notifyError } from 'utils/notification';
+import { TELEGRAM_BOT_LINK } from 'utils/constants';
+import { useCheckMobile } from 'hooks/useCheckMobile';
+import PositionHistory from 'pages/spotnet/position_history/PositionHistory';
+
 
 function App() {
   const { walletId, setWalletId, removeWalletId } = useWalletStore();
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const [isMobileRestrictionModalOpen, setisMobileRestrictionModalOpen] = useState(true);
+  const isMobile = useCheckMobile();
+  
+  const disableDesktopOnMobile = process.env.REACT_APP_DISABLE_DESKTOP_ON_MOBILE !== 'false';
 
   const connectWalletMutation = useConnectWallet(setWalletId);
-
 
   const handleConnectWallet = () => {
     connectWalletMutation.mutate();
@@ -47,18 +53,30 @@ function App() {
     setShowModal(false);
   };
 
+
+  const handleisMobileRestrictionModalClose = () => {
+    setisMobileRestrictionModalOpen(false);
+  };
+
+  const openTelegramBot = () => {
+    window.open(TELEGRAM_BOT_LINK, '_blank');
+  };
+
   useEffect(() => {
     if (window.Telegram?.WebApp?.initData) {
-      getTelegramUserWalletId(window.Telegram.WebApp.initDataUnsafe.user.id).then((linked_wallet_id) => {
-        setWalletId(linked_wallet_id);
-        window.Telegram.WebApp.ready();
-      }).catch((error) => {
-        console.error('Error getting Telegram user wallet ID:', error);
-        notifyError('Error loading wallet');
-        window.Telegram.WebApp.ready();
-      });
+      getTelegramUserWalletId(window.Telegram.WebApp.initDataUnsafe.user.id)
+        .then((linked_wallet_id) => {
+          setWalletId(linked_wallet_id);
+          window.Telegram.WebApp.ready();
+        })
+        .catch((error) => {
+          console.error('Error getting Telegram user wallet ID:', error);
+          notify('Error loading wallet', "error");
+          window.Telegram.WebApp.ready();
+        });
     }
   }, [window.Telegram?.WebApp?.initDataUnsafe]);
+
 
   return (
     <div className="App">
@@ -76,14 +94,11 @@ function App() {
           />,
           document.body
         )}
-      <Header
-        onConnectWallet={handleConnectWallet}
-        onLogout={handleLogoutModal}
-      />
+      <Header onConnectWallet={handleConnectWallet} onLogout={handleLogoutModal} />
       <main>
         <Routes>
           <Route index element={<SpotnetApp onConnectWallet={handleConnectWallet} onLogout={handleLogout} />} />
-          <Route  
+          <Route
             path="/login"
             element={walletId ? <Navigate to="/" /> : <Login onConnectWallet={handleConnectWallet} />}
           />
@@ -92,11 +107,23 @@ function App() {
           <Route path="/overview" element={<OverviewPage />} />
           <Route path="/form" element={<Form />} />
           <Route path="/documentation" element={<Documentation />} />
-
+          <Route path="/position-history" element={<PositionHistory />} />
           <Route path="/stake" element={<Stake />} />
         </Routes>
       </main>
       <Footer />
+      {isMobile && disableDesktopOnMobile && (
+        <ActionModal
+          isOpen={isMobileRestrictionModalOpen}
+          title="Mobile website restriction"
+          subTitle="Please, use desktop version or telegram mini-app"
+          content={[]}
+          cancelLabel="Cancel"
+          submitLabel="Open in Telegram"
+          submitAction={openTelegramBot}
+          cancelAction={handleisMobileRestrictionModalClose}
+        />
+      )}
     </div>
   );
 }

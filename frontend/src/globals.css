@@ -49,6 +49,9 @@
   --gray: #83919f;
   --dark-purple: #120721;
   --light-blue: #74d5fd;
+  --status-opened: #1edc9e;
+  --status-closed: #433b5a;
+  --status-pending: #83919f;
   --slider-gray: #393942;
   --light-blue: #88b4fa;
   --thumb-image: url('./assets/icons/slider-thumb.svg');
@@ -63,6 +66,7 @@
   --dark-background: #130713;
   --light-dark-background: #130713;
   --text-gray: #798795;
+  --modal-border: #170f2e;
 }
 
 body {

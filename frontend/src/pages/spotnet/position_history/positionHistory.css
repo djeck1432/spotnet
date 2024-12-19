@@ -1,0 +1,239 @@
+.position-wrapper {
+  background: url('../../../../public/background.png') no-repeat center center;
+  background-size: cover;
+  min-height: 100vh;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.position-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.position-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary);
+  text-align: center;
+  margin: 0;
+}
+
+.position-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.position-top-cards {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 642px;
+}
+
+.position-content-table {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.position-table-title {
+  font-size: 14px;
+  color: var(--primary);
+  margin-bottom: 16px;
+}
+
+.position-table {
+  border: var(--midnight-purple-border);
+  border-radius: 10px;
+}
+
+.position-table table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.position-table .index {
+  color: var(--gray);
+}
+
+.position-table th,
+.position-table td {
+  padding: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--primary);
+}
+
+.position-table th {
+  font-weight: normal;
+  color: #9ca3af;
+  border-bottom: 1px solid rgba(54, 41, 78, 1);
+}
+
+.position-table tr:nth-child(even) {
+  background-color: rgba(18, 7, 33, 0.5);
+}
+
+.token-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.token-icon {
+  width: 24px;
+  height: 24px;
+  background: rgba(32, 19, 56, 1);
+  border-radius: 50%;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.status-cell {
+  font-weight: 600;
+}
+
+.status-cell.status-opened {
+  color: var(--status-opened);
+}
+
+.status-cell.status-closed {
+  color: var(--status-closed);
+}
+
+.status-cell.status-pending {
+  color: var(--status-pending);
+}
+
+.action-button {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.action-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Modal styles */
+.position-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.position-modal-content {
+  background-color: var(--bg);
+  border-radius: 14px;
+  padding: 24px;
+  border: 2px solid var(--modal-border);
+  width: 400px;
+  max-width: 90%;
+}
+
+.position-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.position-modal-p {
+  display: flex;
+  color: var(--primary);
+  gap: 2rem;
+  margin: 0;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.position-modal-p span {
+  display: flex;
+  align-items: center;
+}
+
+.position-modal-p :first-child :first-child {
+  color: var(--status-closed);
+}
+
+.position-close-button {
+  cursor: var(--status-closed);
+  font-size: 1.5rem;
+  margin-left: 1rem;
+}
+
+.modal-divider {
+  border: 0.4px solid var(--gray);
+}
+
+.position-modal-body {
+  display: flex;
+  flex-direction: column;
+  margin-left: 22px;
+}
+
+.position-detail-row p {
+  font-size: 14px;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.position-detail-row span:first-child {
+  color: var(--primary);
+}
+
+.action-column {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .position-table th:nth-child(4),
+  .position-table th:nth-child(6),
+  .position-table th:nth-child(7),
+  .position-table th:nth-child(8),
+  .position-table th:nth-child(9),
+  .position-table td:nth-child(4),
+  .position-table td:nth-child(6),
+  .position-table td:nth-child(7),
+  .position-table td:nth-child(8),
+  .position-table td:nth-child(9) {
+    display: none;
+  }
+
+  .position-table {
+    overflow: hidden;
+  }
+
+  .action-column {
+    display: table-cell;
+  }
+
+  .position-table-title {
+    text-align: center;
+  }
+}

@@ -74,7 +74,7 @@ const WalletSection = ({ onConnectWallet, onLogout }) => {
                       onLogout();
                     }}
                   >
-                    Log out
+                    Disconnect
                   </button>
                 </div>
               )}

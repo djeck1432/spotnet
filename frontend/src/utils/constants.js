@@ -12,6 +12,8 @@ export const USDC_ADDRESS = '0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5
 
 export const ONE_HOUR_IN_MILLISECONDS = 3600000;
 
+export const TELEGRAM_BOT_LINK = 'https://t.me/spotnet_bot';
+
 export function getDeployContractData(walletId) {
   return {
     classHash: CLASS_HASH,

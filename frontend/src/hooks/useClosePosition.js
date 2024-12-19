@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { axiosInstance } from 'utils/axios';
 import { closePosition } from 'services/transaction';
 import { useWalletStore } from 'stores/useWalletStore';
+import { notify } from 'components/Notifier/Notifier';
 
 export const useClosePosition = () => {
   const { walletId } = useWalletStore();
@@ -18,6 +19,7 @@ export const useClosePosition = () => {
     },
     onError: (error) => {
       console.error('Error during closePositionEvent', error);
+      notify(`Error during closePositionEvent: ${error.message}`, 'error')
     },
   });
 };

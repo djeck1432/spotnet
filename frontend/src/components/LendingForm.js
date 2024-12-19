@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTokenBalances, sendTransaction } from 'services/wallet';
-import { notifyError } from 'utils/notification';
 import { axiosInstance } from 'utils/axios';
 import Button from 'components/ui/Button/Button';
 import { useWalletStore } from 'stores /useWalletStore';
+import { notify } from './Notifier/Notifier';
 
 
 const LendingForm = () => {
@@ -29,7 +29,7 @@ const navigate = useNavigate();
       setBalances(tokenBalances);
     } catch (error) {
       console.error('Failed to fetch balances:', error);
-      notifyError('Failed to fetch token balances. Please try again.');
+      notify('Failed to fetch token balances. Please try again.', "error");
     }
   }, [walletId]);
 

@@ -6,10 +6,10 @@ use spotnet::constants::STRK_ADDRESS;
 use spotnet::interfaces::{IDepositDispatcher, IDepositDispatcherTrait};
 use spotnet::types::Claim;
 use starknet::ContractAddress;
+use super::constants::HYPOTHETICAL_OWNER_ADDR;
 
 const ADDRESS_ELIGIBLE_FOR_ZKLEND_REWARDS: felt252 =
     0x020281104e6cb5884dabcdf3be376cf4ff7b680741a7bb20e5e07c26cd4870af;
-const HYPOTHETICAL_OWNER_ADDR: felt252 = 0x56789;
 
 #[test]
 #[fork("MAINNET_FIXED_BLOCK")]

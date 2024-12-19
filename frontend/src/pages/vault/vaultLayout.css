@@ -1,13 +1,3 @@
-.layout {
-  /* display: flex; */
-  /* min-height: 100vh; */
-  /* background: url('../../../public/background.png') no-repeat; */
-  /* background-size: cover; */
-  /* background-position: center 39%; */
-  /* background-repeat: no-repeat; */
-  /* position: relative; */
-}
-
 .sidebar {
   width: 280px;
   background-color: #00000f;
@@ -77,10 +67,16 @@
   padding: 2rem 0;
   position: relative;
 }
-
+@media (min-width: 1024px) {
+  .sidebar {
+    width: 220px;
+    display: block;
+  }
+}
 @media (max-width: 1024px) {
   .sidebar {
     width: 220px;
+    display: none;
   }
 
   .sidebar-title {

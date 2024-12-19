@@ -7,7 +7,6 @@ import BalanceCards from 'components/BalanceCards';
 import MultiplierSelector from 'components/MultiplierSelector';
 import { handleTransaction } from 'services/transaction';
 import Spinner from 'components/spinner/Spinner';
-import { ReactComponent as AlertHexagon } from 'assets/icons/alert_hexagon.svg';
 import './form.css';
 import { createPortal } from 'react-dom';
 import useLockBodyScroll from 'hooks/useLockBodyScroll';
@@ -19,6 +18,7 @@ import { useCheckPosition } from 'hooks/useClosePosition';
 import { useNavigate } from 'react-router-dom';
 import { ActionModal } from 'components/ui/ActionModal';
 import { useHealthFactor } from 'hooks/useHealthRatio';
+import { notify } from 'components/Notifier/Notifier';
 
 const Form = () => {
   const navigate = useNavigate();
@@ -26,9 +26,7 @@ const Form = () => {
   const [tokenAmount, setTokenAmount] = useState('');
   const [selectedToken, setSelectedToken] = useState('ETH');
   const [selectedMultiplier, setSelectedMultiplier] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
   const [successful, setSuccessful] = useState(false);
   
   useLockBodyScroll(successful);
@@ -70,11 +68,9 @@ const Form = () => {
     }
 
     if (tokenAmount === '' || selectedToken === '' || selectedMultiplier === '') {
-      setAlertMessage('Please fill the form');
+      notify("Please fill the form", 'error')
       return;
     }
-
-    setAlertMessage('');
 
     const formData = {
       wallet_id: connectedWalletId,
@@ -82,7 +78,7 @@ const Form = () => {
       amount: tokenAmount,
       multiplier: selectedMultiplier,
     };
-    await handleTransaction(connectedWalletId, formData, setError, setTokenAmount, setLoading, setSuccessful);
+    await handleTransaction(connectedWalletId, formData, setTokenAmount, setLoading, setSuccessful);
   };
 
   const handleCloseModal = () => {
@@ -117,11 +113,6 @@ const Form = () => {
         <div className="form-title">
           <h1>Please submit your leverage details</h1>
         </div>
-        {alertMessage && (
-          <p className="error-message form-alert">
-            {alertMessage} <AlertHexagon className="form-alert-hex" />
-          </p>
-        )}
         <label className="token-select">Select Token</label>
         <TokenSelector selectedToken={selectedToken} setSelectedToken={setSelectedToken} />
         <label>Select Multiplier</label>
@@ -132,13 +123,11 @@ const Form = () => {
         />
         <div className="token-label">
           <label className="token-amount">Token Amount</label>
-          {error && <p className="error-message">{error}</p>}
           <input
             type="number"
             placeholder="Enter Token Amount"
             value={tokenAmount}
             onChange={(e) => setTokenAmount(e.target.value)}
-            className={error ? 'error' : ''}
           />
         </div>
         <div>
