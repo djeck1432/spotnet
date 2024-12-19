@@ -1,0 +1,61 @@
+{
+    "name": "frontend",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+      "@popperjs/core": "^2.11.8",
+      "@tanstack/react-query": "^5.59.16",
+      "@tanstack/react-query-devtools": "^5.60.5",
+      "@testing-library/react": "^13.4.0",
+      "@testing-library/user-event": "^13.5.0",
+      "axios": "^1.7.7",
+      "dotenv": "^16.4.5",
+      "get-starknet": "^3.3.3",
+      "lucide-react": "^0.454.0",
+      "react": "^18.3.1",
+      "react-bootstrap": "^2.10.5",
+      "react-dom": "^18.3.1",
+      "react-router-dom": "^6.27.0",
+      "react-scripts": "^5.0.1",
+      "react-toastify": "^10.0.6",
+      "starknetkit": "^2.6.1",
+      "web-vitals": "^2.1.4",
+      "zustand": "^5.0.1"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "jest",
+      "lint": "eslint .",
+      "format": "prettier --check .",
+      "eject": "react-scripts eject"
+    },
+    "proxy": "http://localhost:8000",
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "devDependencies": {
+      "@babel/preset-env": "^7.26.0",
+      "@tanstack/eslint-plugin-query": "^5.60.1",
+      "@testing-library/jest-dom": "^6.6.2",
+      "@types/jest": "^29.5.14",
+      "babel-jest": "^29.7.0",
+      "eslint": "^8.57.1",
+      "eslint-config-prettier": "^9.1.0",
+      "eslint-config-react-app": "^7.0.1",
+      "eslint-plugin-react": "^7.37.2",
+      "eslint-plugin-react-hooks": "^5.0.0",
+      "globals": "^15.11.0",
+      "jest": "^27.5.1",
+      "prettier": "^3.3.3"
+    }
+  }

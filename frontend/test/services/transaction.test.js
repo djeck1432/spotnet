@@ -7,14 +7,6 @@ jest.mock('starknetkit');
 jest.mock('../../src/utils/axios');
 jest.mock('../../src/services/contract');
 
-jest.mock('starknet', () => ({
-  CallData: class MockCallData {
-    compile(fnName, args) {
-      return Array.isArray(args) ? args : [args];
-    }
-  },
-}));
-
 describe('Transaction Functions', () => {
   const mockTransactionHash = '0xabc123';
   const mockContractAddress = '0xdef456';
@@ -28,6 +20,11 @@ describe('Transaction Functions', () => {
       account: {
         execute: jest.fn().mockResolvedValue({
           transaction_hash: mockTransactionHash,
+        }),
+      },
+      provider: {
+        getTransactionReceipt: jest.fn().mockResolvedValue({
+          status: 'ACCEPTED',
         }),
       },
     };
@@ -109,6 +106,26 @@ describe('Transaction Functions', () => {
 
       checkAndDeployContract.mockResolvedValueOnce();
       axiosInstance.post.mockRejectedValueOnce(mockError);
+
+      await handleTransaction(
+        mockWalletId,
+        mockFormData,
+        mockSetError,
+        mockSetTokenAmount,
+        mockSetLoading,
+        mockSetSuccessful
+      );
+
+      expect(mockSetError).toHaveBeenCalledWith('Failed to create position. Please try again.');
+      expect(mockSetSuccessful).toHaveBeenCalledWith(false);
+      expect(mockSetLoading).toHaveBeenCalledWith(false);
+    });
+
+    it('should handle wallet connection error', async () => {
+      const mockDisconnectedStarknet = {
+        isConnected: false,
+      };
+      connect.mockResolvedValueOnce(mockDisconnectedStarknet);
 
       await handleTransaction(
         mockWalletId,
