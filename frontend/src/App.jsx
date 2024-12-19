@@ -21,6 +21,7 @@ import Stake from 'pages/vault/stake/Stake';
 import { TELEGRAM_BOT_LINK } from 'utils/constants';
 import { useCheckMobile } from 'hooks/useCheckMobile';
 import PositionHistory from 'pages/spotnet/position_history/PositionHistory';
+import WithdrawAll from 'pages/spotnet/dashboard/withdraw-all/WithdrawAll';
 
 
 function App() {
@@ -109,6 +110,7 @@ function App() {
           <Route path="/documentation" element={<Documentation />} />
           <Route path="/position-history" element={<PositionHistory />} />
           <Route path="/stake" element={<Stake />} />
+          <Route path="/dashboard/withdraw-all" element={<WithdrawAll />} />
         </Routes>
       </main>
       <Footer />

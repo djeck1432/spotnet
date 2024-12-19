@@ -67,6 +67,8 @@
   --light-dark-background: #130713;
   --text-gray: #798795;
   --modal-border: #170f2e;
+  --warning-colour:rgba(255, 251, 0, 0.84);
+  --warning-colour-alt: rgb(70, 70, 1);
 }
 
 body {
