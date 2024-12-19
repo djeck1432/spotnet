@@ -26,8 +26,10 @@ def create_users(session: SessionLocal) -> list[User]:
     """
     users = []
     for _ in range(10):
+        wallet_id = fake.unique.uuid4()
+        print('wallet_id:', wallet_id)
         user = User(
-            wallet_id=fake.unique.uuid4(),
+            wallet_id=wallet_id,
             contract_address=fake.address(),
             is_contract_deployed=fake.boolean(),
         )
@@ -49,7 +51,7 @@ def create_positions(session: SessionLocal, users: list[User]) -> None:
         for _ in range(2):
             position = Position(
                 user_id=user.id,
-                token_symbol=fake.random_choices(
+                token_symbol=fake.random_element(
                     elements=[token.name for token in TokenParams.tokens()]
                 ),
                 amount=fake.random_number(digits=5),
@@ -157,8 +159,8 @@ if __name__ == "__main__":
         # Populate the database
         users = create_users(session)
         create_positions(session, users)
-        create_airdrops(session, users)
-        create_telegram_users(session, users)
+        # create_airdrops(session, users)
+        # create_telegram_users(session, users)
         create_vaults(session, users)
 
     logger.info("Database populated with fake data.")

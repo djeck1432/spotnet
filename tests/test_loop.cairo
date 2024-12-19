@@ -1,14 +1,11 @@
 use alexandria_math::fast_power::fast_power;
 use core::panic_with_felt252;
-use ekubo::interfaces::core::{ICoreDispatcher, ICoreDispatcherTrait};
 use ekubo::types::keys::{PoolKey};
 use openzeppelin::access::ownable::interface::{
     OwnableTwoStepABIDispatcherTrait, OwnableTwoStepABIDispatcher
 };
 use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
 
-use pragma_lib::abi::{IPragmaABIDispatcher, IPragmaABIDispatcherTrait};
-use pragma_lib::types::{AggregationMode, DataType, PragmaPricesResponse};
 use snforge_std::cheatcodes::execution_info::account_contract_address::{
     start_cheat_account_contract_address, stop_cheat_account_contract_address
 };
@@ -18,49 +15,17 @@ use snforge_std::cheatcodes::execution_info::block_timestamp::{
 use snforge_std::cheatcodes::execution_info::caller_address::{
     start_cheat_caller_address, stop_cheat_caller_address
 };
-use snforge_std::{declare, DeclareResultTrait, ContractClassTrait};
 use spotnet::constants::ZK_SCALE_DECIMALS;
 use spotnet::interfaces::{
     IDepositDispatcher, IDepositSafeDispatcher, IDepositSafeDispatcherTrait, IDepositDispatcherTrait
 };
-use spotnet::types::{DepositData, EkuboSlippageLimits};
+use spotnet::types::DepositData;
 
 use starknet::{ContractAddress, get_block_timestamp};
+use super::constants::{contracts, tokens, HYPOTHETICAL_OWNER_ADDR, pool_key};
 
 use super::interfaces::{IMarketTestingDispatcher, IMarketTestingDispatcherTrait};
-
-mod contracts {
-    pub const EKUBO_CORE_MAINNET: felt252 =
-        0x00000005dd3d2f4429af886cd1a3b08289dbcea99a294197e9eb43b0e0325b4b;
-
-    pub const ZKLEND_MARKET: felt252 =
-        0x04c0a5193d58f74fbace4b74dcf65481e734ed1714121bdc571da345540efa05;
-
-    pub const PRAGMA_ADDRESS: felt252 =
-        0x02a85bd616f912537c50a49a4076db02c00b29b2cdc8a197ce92ed1837fa875b;
-
-    pub const TREASURY_ADDRESS: felt252 = 0x123; // Mock Address
-}
-
-mod tokens {
-    pub const ETH: felt252 = 0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7;
-    pub const USDC: felt252 = 0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8;
-}
-
-fn deploy_deposit_contract(user: ContractAddress) -> ContractAddress {
-    let deposit_contract = declare("Deposit").unwrap().contract_class();
-    let (deposit_address, _) = deposit_contract
-        .deploy(
-            @array![
-                user.try_into().unwrap(),
-                contracts::EKUBO_CORE_MAINNET,
-                contracts::ZKLEND_MARKET,
-                contracts::TREASURY_ADDRESS
-            ]
-        )
-        .expect('Deploy failed');
-    deposit_address
-}
+use super::utils::{deploy_deposit_contract, get_asset_price_pragma, get_slippage_limits};
 
 fn get_deposit_dispatcher(user: ContractAddress) -> IDepositDispatcher {
     IDepositDispatcher { contract_address: deploy_deposit_contract(user) }
@@ -70,45 +35,19 @@ fn get_safe_deposit_dispatcher(user: ContractAddress) -> IDepositSafeDispatcher 
     IDepositSafeDispatcher { contract_address: deploy_deposit_contract(user) }
 }
 
-fn get_asset_price_pragma(pair: felt252) -> u128 {
-    let oracle_dispatcher = IPragmaABIDispatcher {
-        contract_address: contracts::PRAGMA_ADDRESS.try_into().unwrap()
-    };
-    let output: PragmaPricesResponse = oracle_dispatcher
-        .get_data(DataType::SpotEntry(pair), AggregationMode::Median(()));
-    output.price / 100 // Make 6 decimals wide instead of 8.
-}
-
-fn get_slippage_limits(pool_key: PoolKey) -> EkuboSlippageLimits {
-    let ekubo_core = ICoreDispatcher {
-        contract_address: contracts::EKUBO_CORE_MAINNET.try_into().unwrap()
-    };
-    let sqrt_ratio = ekubo_core.get_pool_price(pool_key).sqrt_ratio;
-    let tolerance = sqrt_ratio * 15 / 100;
-    EkuboSlippageLimits { lower: sqrt_ratio - tolerance, upper: sqrt_ratio + tolerance }
-}
-
 #[test]
 #[fork("MAINNET")]
 fn test_loop_eth_valid() {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x059a943ca214c10234b9a3b61c558ac20c005127d183b86a99a8f3c60a08b4ff
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
 
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
     let pool_price = get_asset_price_pragma('ETH/USD').into();
     let token_disp = ERC20ABIDispatcher { contract_address: eth_addr };
@@ -134,23 +73,16 @@ fn test_loop_eth_valid() {
 #[feature("safe_dispatcher")]
 #[fork("MAINNET")]
 fn test_loop_eth_fuzz(amount: u64) {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x059a943ca214c10234b9a3b61c558ac20c005127d183b86a99a8f3c60a08b4ff
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
+
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
 
     let pool_price = get_asset_price_pragma('ETH/USD').into();
@@ -186,24 +118,16 @@ fn test_loop_eth_fuzz(amount: u64) {
 #[test]
 #[fork("MAINNET")]
 fn test_loop_usdc_valid() {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user = 0x0038925b0bcf4dce081042ca26a96300d9e181b910328db54a6c89e5451503f5
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
 
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
 
     let token_disp = ERC20ABIDispatcher { contract_address: usdc_addr };
@@ -240,24 +164,16 @@ fn test_loop_usdc_valid() {
 #[should_panic(expected: 'Caller is not the owner')]
 #[fork("MAINNET")]
 fn test_loop_unauthorized() {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user = 0x0038925b0bcf4dce081042ca26a96300d9e181b910328db54a6c89e5451503f5
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
 
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
 
     let decimals_sum_power: u128 = fast_power(
@@ -291,24 +207,16 @@ fn test_loop_unauthorized() {
 #[should_panic(expected: 'Open position already exists')]
 #[fork("MAINNET")]
 fn test_loop_position_exists() {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user = 0x0038925b0bcf4dce081042ca26a96300d9e181b910328db54a6c89e5451503f5
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
 
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
 
     let token_disp = ERC20ABIDispatcher { contract_address: usdc_addr };
@@ -355,23 +263,16 @@ fn test_loop_position_exists() {
 #[feature("safe_dispatcher")]
 #[fork("MAINNET")]
 fn test_loop_position_exists_fuzz(amount: u64) {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x059a943ca214c10234b9a3b61c558ac20c005127d183b86a99a8f3c60a08b4ff
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
+
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
 
     let pool_price = get_asset_price_pragma('ETH/USD').into();
@@ -415,24 +316,16 @@ fn test_loop_position_exists_fuzz(amount: u64) {
 #[test]
 #[fork("MAINNET")]
 fn test_close_position_usdc_valid_time_passed() {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x0038925b0bcf4dce081042ca26a96300d9e181b910328db54a6c89e5451503f5
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
 
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
     let quote_token_price = get_asset_price_pragma('ETH/USD').into();
 
@@ -494,24 +387,16 @@ fn test_close_position_usdc_valid_time_passed() {
 #[test]
 #[fork("MAINNET")]
 fn test_close_position_amounts_cleared() {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x0038925b0bcf4dce081042ca26a96300d9e181b910328db54a6c89e5451503f5
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
 
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
     let quote_token_price = get_asset_price_pragma('ETH/USD').into();
 
@@ -570,24 +455,16 @@ fn test_close_position_amounts_cleared() {
 #[test]
 #[fork("MAINNET")]
 fn test_close_position_partial_debt_utilization() {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x0038925b0bcf4dce081042ca26a96300d9e181b910328db54a6c89e5451503f5
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
 
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
     let pool_price = get_asset_price_pragma('ETH/USD').into();
 
@@ -612,7 +489,10 @@ fn test_close_position_partial_debt_utilization() {
     deposit_disp
         .loop_liquidity(
             DepositData {
-                token: eth_addr, amount: 1000000000000000, multiplier: 40, borrow_portion_percent: 98
+                token: eth_addr,
+                amount: 1000000000000000,
+                multiplier: 40,
+                borrow_portion_percent: 98
             },
             pool_key,
             get_slippage_limits(pool_key),
@@ -649,24 +529,16 @@ fn test_close_position_partial_debt_utilization() {
 #[test]
 #[fork("MAINNET")]
 fn test_extra_deposit_valid() {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x0038925b0bcf4dce081042ca26a96300d9e181b910328db54a6c89e5451503f5
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
 
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
     let quote_token_price = get_asset_price_pragma('ETH/USD').into();
 
@@ -722,24 +594,16 @@ fn test_extra_deposit_valid() {
 #[test]
 #[fork("MAINNET")]
 fn test_extra_deposit_supply_token_close_position_fuzz(extra_amount: u32) {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x0038925b0bcf4dce081042ca26a96300d9e181b910328db54a6c89e5451503f5
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
 
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
     let quote_token_price = get_asset_price_pragma('ETH/USD').into();
 
@@ -814,24 +678,16 @@ fn test_extra_deposit_supply_token_close_position_fuzz(extra_amount: u32) {
 #[test]
 #[fork("MAINNET")]
 fn test_withdraw_valid_fuzz(amount: u32) {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x0038925b0bcf4dce081042ca26a96300d9e181b910328db54a6c89e5451503f5
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
 
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
     let quote_token_price = get_asset_price_pragma('ETH/USD').into();
 
@@ -927,13 +783,8 @@ fn test_withdraw_valid_fuzz(amount: u32) {
 #[should_panic(expected: 'Open position not exists')]
 #[fork("MAINNET")]
 fn test_extra_deposit_position_not_exists() {
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x059a943ca214c10234b9a3b61c558ac20c005127d183b86a99a8f3c60a08b4ff
-        .try_into()
-        .unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
 
     let token_disp = ERC20ABIDispatcher { contract_address: eth_addr };
     let deposit_disp = get_deposit_dispatcher(user);
@@ -948,23 +799,16 @@ fn test_extra_deposit_position_not_exists() {
 #[should_panic(expected: 'Deposit amount is zero')]
 #[fork("MAINNET")]
 fn test_extra_deposit_position_zero_amount() {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x059a943ca214c10234b9a3b61c558ac20c005127d183b86a99a8f3c60a08b4ff
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
+
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
 
     let pool_price = get_asset_price_pragma('ETH/USD').into();
@@ -995,23 +839,16 @@ fn test_extra_deposit_position_zero_amount() {
 #[test]
 #[fork("MAINNET")]
 fn test_withdraw_position_open() {
-    let usdc_addr: ContractAddress =
-        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8
-        .try_into()
-        .unwrap();
-    let eth_addr: ContractAddress =
-        0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        .try_into()
-        .unwrap();
-    let user: ContractAddress = 0x059a943ca214c10234b9a3b61c558ac20c005127d183b86a99a8f3c60a08b4ff
-        .try_into()
-        .unwrap();
+    let usdc_addr: ContractAddress = tokens::USDC.try_into().unwrap();
+    let eth_addr: ContractAddress = tokens::ETH.try_into().unwrap();
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
+
     let pool_key = PoolKey {
         token0: eth_addr,
         token1: usdc_addr,
-        fee: 170141183460469235273462165868118016,
-        tick_spacing: 1000,
-        extension: 0.try_into().unwrap()
+        fee: pool_key::FEE,
+        tick_spacing: pool_key::TICK_SPACING,
+        extension: pool_key::EXTENSION.try_into().unwrap()
     };
 
     let pool_price = get_asset_price_pragma('ETH/USD').into();

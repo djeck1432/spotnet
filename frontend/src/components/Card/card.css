@@ -1,9 +1,9 @@
 .card {
   width: 309px;
   height: 101px;
-  background: var(--dark-background);
+  background: var(--bg);
   border: 1px solid var(--light-purple);
-  border-radius: 900px;
+  border-radius: 12px;
   padding-top: 4px;
   padding-right: 24px;
   padding-left: 24px;

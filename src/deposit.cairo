@@ -244,7 +244,7 @@ mod Deposit {
             let mut total_borrowed = 0;
             let mut accumulated = 0;
             let mut deposited = amount;
-            
+
             while (amount + accumulated) * 10 / amount < multiplier.into() {
                 let borrow_capacity = ((deposited
                     * ZK_SCALE_DECIMALS

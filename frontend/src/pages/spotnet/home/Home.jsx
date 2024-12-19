@@ -5,9 +5,9 @@ import StarMaker from '../../../components/StarMaker';
 import { ReactComponent as Decoration } from 'assets/particles/deco.svg';
 import { ReactComponent as Starknet } from 'assets/particles/starknet.svg';
 import { ReactComponent as Rocket } from 'assets/icons/rocket.svg';
-import { notifyWarning } from 'utils/notification';
 import './home.css';
 import { useWalletStore } from 'stores/useWalletStore';
+import { notify } from 'components/Notifier/Notifier';
 
 
 function Home() {
@@ -19,7 +19,7 @@ function Home() {
     if (walletId) {
       navigate('/form');
     } else {
-      notifyWarning('Please connect to your wallet');
+      notify('Please connect to your wallet', "warning");
     }
   };
 

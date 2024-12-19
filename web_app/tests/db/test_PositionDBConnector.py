@@ -72,7 +72,9 @@ def test_get_positions_by_wallet_id_success(
 
     mock_position_db_connector.get_positions_by_wallet_id.return_value = [position_dict]
 
-    positions = mock_position_db_connector.get_positions_by_wallet_id("test_wallet_id")
+    positions = mock_position_db_connector.get_positions_by_wallet_id(
+        "test_wallet_id", 0, 1
+    )
 
     assert len(positions) == 1
     assert positions[0]["id"] == str(sample_position.id)
@@ -272,7 +274,7 @@ def test_get_positions_by_wallet_id_no_user(mock_position_db_connector):
     mock_position_db_connector.get_positions_by_wallet_id.return_value = []
 
     positions = mock_position_db_connector.get_positions_by_wallet_id(
-        "nonexistent_wallet"
+        "nonexistent_wallet", 0, 1
     )
 
     assert positions == []
@@ -282,7 +284,9 @@ def test_get_positions_by_wallet_id_db_error(mock_position_db_connector, sample_
     """Test handling database error when retrieving positions."""
     mock_position_db_connector._get_user_by_wallet_id.return_value = sample_user
 
-    positions = mock_position_db_connector.get_positions_by_wallet_id("test_wallet_id")
+    positions = mock_position_db_connector.get_positions_by_wallet_id(
+        "test_wallet_id", 0, 1
+    )
 
     assert positions == []
 
@@ -328,7 +332,9 @@ def test_get_position_id_by_wallet_id_no_positions(
     mock_position_db_connector.get_positions_by_wallet_id.return_value = []
     mock_position_db_connector.get_position_id_by_wallet_id.return_value = None
 
-    result = mock_position_db_connector.get_position_id_by_wallet_id("test_wallet_id")
+    result = mock_position_db_connector.get_position_id_by_wallet_id(
+        "test_wallet_id", 0, 1
+    )
 
     assert result is None
 

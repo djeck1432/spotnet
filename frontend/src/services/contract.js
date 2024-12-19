@@ -1,6 +1,7 @@
 import { connect } from 'starknetkit';
 import { getDeployContractData } from '../utils/constants';
 import { axiosInstance } from '../utils/axios';
+import { notify, ToastWithLink } from '../components/Notifier/Notifier';
 
 export async function deployContract(walletId) {
   try {
@@ -53,6 +54,7 @@ export async function checkAndDeployContract(walletId) {
       const result = await deployContract(walletId);
       const contractAddress = result.contractAddress;
 
+      notify(ToastWithLink("Contract Deployed Successfully", `https://starkscan.co/tx/${result.transactionHash}`, "Transaction ID"), "success")
       console.log('Contract address:', contractAddress);
 
       

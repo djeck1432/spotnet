@@ -1,12 +1,14 @@
 .stake-card {
   width: 309px;
+  
   background: var(--header-button-bg);
   border: var(--midnight-purple-border);
-  border-radius: 900px;
+  border-radius: 999px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
 }
 
 .stake-card .img {

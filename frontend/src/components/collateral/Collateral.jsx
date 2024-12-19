@@ -14,7 +14,7 @@ function Collateral({ data, startSum, currentSum, getCurrentSumColor }) {
           <span className="currency-name">{data[0]?.currencyName || 'N/A'}</span>
         </div>
         <span>
-          <span className="balance-label">Balance: </span>
+          <span className="balance-label">Position Balance: </span>
           <span className="balance-value">{data[0]?.balance ? Number(data[0].balance).toFixed(8) : '0.00'}</span>
         </span>
         <span>
