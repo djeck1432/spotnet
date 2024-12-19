@@ -11,12 +11,14 @@ body {
   background-size: cover;
   background-position: center 39%;
   min-height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 1rem;
-  padding-top: 24px;
-  transition: all 0.2s ease-in-out
+  align-items: center;
+  /* padding: 1rem;
+  padding-top: 24px; */
+  transition: all 0.2s ease-in-out;
+  width: calc(100vw - 372px);
 
 }
 
@@ -25,7 +27,6 @@ body {
   flex-direction: column;
   justify-content: center;
   gap: 24px;
-  margin-left: 200px;
   transition: all 0.3s ease-in-out
 }
 

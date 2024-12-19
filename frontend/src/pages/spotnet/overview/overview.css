@@ -15,7 +15,7 @@
 .sidebar {
   width: 374px;
   height: calc(100% - 90px);
-  min-height: 115vh;
+  min-height: 125vh;
   top: 50;
   left: 0;
   z-index: 10;

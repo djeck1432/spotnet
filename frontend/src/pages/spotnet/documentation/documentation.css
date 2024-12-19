@@ -1,9 +1,22 @@
+.documentation-page{
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
+  height: 100%;
+}
+
 .documentation-container {
   display: flex;
   min-height: 100vh;
+  height: 100%;
   color: var(--primary);
   position: relative;
-  padding-top: 70px;
+  width: calc(100vw - 372px);
+}
+
+.sidebar-docs-sticky{
+  margin-top: 5.5rem;
+  height: 100vh;
 }
 
 .documentation-container::before {
@@ -22,13 +35,14 @@
 }
 
 .main-content {
-  margin-left: 370px;
+  /* margin-left: 370px; */
   flex: 1;
   background: url('../../../../public/background.png') no-repeat;
   background-size: cover;
   background-position: center 39%;
   position: relative;
   min-height: 100vh;
+  width: calc(100vw - 372px);
 }
 
 .sections-container {
@@ -54,7 +68,6 @@ html {
 
 @media (max-width: 1440px) {
   .main-content {
-    margin-left: 280px;
   }
 }
 
