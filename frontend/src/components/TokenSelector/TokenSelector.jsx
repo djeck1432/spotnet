@@ -11,10 +11,10 @@ const Tokens = [
 
 const TokenSelectorDeposit = ({ selectedToken, setSelectedToken }) => {
   return (
-    <div className="form-token">
+    <div className="token-deposit">
       {Tokens.map((token) => (
-        <div className="token-card" key={token?.id}>
-          <div className="token-container">
+        <div className="token-card-btn" key={token?.id}>
+          <div className="token-container-deposit">
             <input
               type="radio"
               id={token.id}
@@ -25,7 +25,7 @@ const TokenSelectorDeposit = ({ selectedToken, setSelectedToken }) => {
             />
             <label htmlFor={token?.id}>
               <h5>
-                <span className="token-icon">{token?.component}</span> {token?.label}
+                <span className="token-icon-deposit">{token?.component}</span> {token?.label}
               </h5>
             </label>
           </div>

@@ -1,13 +1,5 @@
-body {
-    font-family:
-      'Rethink Sans',
-      -apple-system,
-      Roboto,
-      Helvetica,
-      sans-serif;
-  }
   .deposit-wrapper {
-    background: url('../../../../public/background.png') no-repeat;
+    background: url('../../../../../public/background.png') no-repeat;
     background-size: cover;
     background-position: center 39%;
     min-height: 100vh;
@@ -19,6 +11,8 @@ body {
     transition: all 0.2s ease-in-out;
     padding-bottom:4rem;
   }
+
+
   
   .deposit-container {
     display: flex;
@@ -58,7 +52,7 @@ body {
   }
   
   .deposit-title2 {
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 400;
     color: var(--primary);
     text-align: center;
@@ -84,15 +78,44 @@ body {
     border:none;
   }
 
-  .token-select-dep{
-    color: #83919F;
-    padding:15px 8px;
-    margin-left:2rem;
-  }
+
   .deposit-token{
     border: none;
     border-radius:8px;
     background-color: white;
+  }
+
+  .currency-deposit {
+    position: absolute;
+    color: var(--dark-gray);
+    right: 27%;
+    top: 18%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+    font-size: 16px;
+    line-height: 20.83px;
+    z-index: 999999;
+  }
+
+  .amount-input-deposit {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 2rem auto;
+    text-align: center;
+    font-weight: 600;
+    font-size: 64px;
+  }
+
+  .amount-field-deposit {
+    background: transparent;
+    border: none;
+    color: var(--gray);
+    font-size: 64px;
+    font-weight: 600;
+    outline: none;
+    text-align: center;
+    width: 100%;
   }
 
   
@@ -177,22 +200,7 @@ body {
     height: 16px;
   }
   
-  .deposit-button {
-    position: relative;
-    display: inline-block;
-    font-weight: 600;
-    /* width: 642px;  */
-    width: 100%; 
-    height: 60px;
-    background: none;
-    color: var(--primary);
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-    padding: 16px 24px 16px 24px;
-    z-index: 1;
-    overflow: hidden;
-  }
+
   
   .deposit-button::before {
     content: '';
@@ -247,18 +255,57 @@ body {
     .deposit-container {
       margin-left: 0px;
     }
+
+    .token-select-dep{
+      color: #83919F;
+      padding:20px 10px;
+      
+    }
+
+    .dep-button{
+      display: flex;
+      gap: 8px;
+    }
+
+    .deposit-cancel-button {
+      position: relative;
+   
+      font-weight: 600;
+      /* width: 642px;  */
+      width: 167px; 
+      height: 60px;
+      background: none;
+      color: var(--primary);
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      padding: 16px 24px 16px 24px;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .deposit-button {
+      position: relative;
+ 
+      font-weight: 600;
+      /* width: 642px;  */
+      width: 167px; 
+      height: 60px;
+      background: none;
+      color: var(--primary);
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      padding: 16px 24px 16px 24px;
+      z-index: 1;
+      overflow: hidden;
+    }
   }
   
   @media (max-width: 680px){  
     .deposit-container {
   
-      /* margin-top: -120px;
-      margin-left: 0px; */
     }
-  
-    /* .deposital-title {
-      font-size: 24px;
-    } */
   
     .deposital-title {
       margin: 0;
@@ -501,6 +548,50 @@ body {
   
     .mobile-screen-btns{
       width: 280px;
+    }
+
+
+  }
+
+  @media (min-width:768px) {
+    .token-select-dep{
+      color: #83919F;
+      padding:20px 0px;
+      
+    }
+
+    .deposit-button {
+      position: relative;
+      display: inline-block;
+      font-weight: 600;
+      /* width: 642px;  */
+      width: 100%; 
+      height: 60px;
+      background: none;
+      color: var(--primary);
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      padding: 16px 24px 16px 24px;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .deposit-cancel-button {
+      position: relative;
+      display: none;
+      font-weight: 600;
+      /* width: 642px;  */
+      width: 100%; 
+      height: 60px;
+      background: none;
+      color: var(--primary);
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      padding: 16px 24px 16px 24px;
+      z-index: 1;
+      overflow: hidden;
     }
   }
   

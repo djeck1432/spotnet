@@ -22,7 +22,8 @@ import { TELEGRAM_BOT_LINK } from 'utils/constants';
 import { useCheckMobile } from 'hooks/useCheckMobile';
 import { notifyError } from 'utils/notification';
 import PositionHistory from 'pages/spotnet/position_history/PositionHistory';
-import Add_Deposit from 'pages/spotnet/dashboard/add_deposit';
+import AddDeposit from 'pages/spotnet/dashboard/add-deposit/AddDeposit';
+
 
 
 function App() {
@@ -105,7 +106,7 @@ function App() {
             element={walletId ? <Navigate to="/" /> : <Login onConnectWallet={handleConnectWallet} />}
           />
           <Route path="/dashboard" element={<Dashboard telegramId={window?.Telegram?.WebApp?.initData?.user?.id} />} />
-          <Route path="/add_deposit" element={<Add_Deposit />} />
+          <Route path="/addDeposit" element={<AddDeposit />} />
           <Route path="/withdraw" element={<Withdraw />} />
           <Route path="/overview" element={<OverviewPage />} />
           <Route path="/form" element={<Form />} />
