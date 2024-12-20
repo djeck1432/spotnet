@@ -34,11 +34,8 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
 
     console.log(depositTransaction);
     let result = await starknet.account.execute([approveTransaction, depositTransaction]);
-
     console.log('Resp: ');
     console.log(result);
-    notify(ToastWithLink("Transaction successfully sent", `https://starkscan.co/tx/${result.transaction_hash}`, "Transaction ID"), "success")
-
     return {
       loopTransaction: result.transaction_hash,
     };
@@ -75,8 +72,6 @@ export async function closePosition(transactionData) {
       calldata: closePositionParams 
     },
   ]);
-  notify(ToastWithLink("Close position successfully sent", `https://starkscan.co/tx/${result.transaction_hash}`, "Transaction ID"), "success")
-
 }
 
 export const handleTransaction = async (

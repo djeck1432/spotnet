@@ -32,7 +32,8 @@ describe('Transaction Functions', () => {
     connect.mockResolvedValue(mockStarknet);
   });
 
-  describe('handleTransaction', () => {    
+  describe('handleTransaction', () => {
+    const mockSetError = jest.fn();
     const mockSetTokenAmount = jest.fn();
     const mockSetLoading = jest.fn();
     const mockSetSuccessful = jest.fn();
