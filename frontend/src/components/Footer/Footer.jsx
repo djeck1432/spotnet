@@ -59,7 +59,7 @@ function Footer() {
           Overview
         </NavLink>
         <Link to="/terms">Terms & Conditions</Link>
-        <Link to="/defi">Defi Spring Rewards</Link>
+        <Link to="/springdefi">Defi Spring Rewards</Link>
       </nav>
       <div className="footer-social">
         {socialLinks.map(({ name, href, icon: Icon }) => (

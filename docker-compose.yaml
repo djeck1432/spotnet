@@ -1,4 +1,4 @@
-version: '3.8'
+
 
 networks:
   app_network:
@@ -21,8 +21,6 @@ services:
       - app_network
   backend:
     build: .
-    command:
-      - bash /app/entrypoint.sh
     restart: always
     volumes:
       - ./entrypoint.sh:/app/entrypoint.sh
@@ -36,7 +34,7 @@ services:
       - app_network
 
   db:
-    image: postgres:16
+    image: postgres:14
     container_name: postgres
     restart: always
     environment:
@@ -55,36 +53,5 @@ services:
       timeout: 5s
       retries: 5
 
-  celery:
-    build: .
-    command: celery -A spotnet_tracker.celery_config worker --loglevel=INFO
-    volumes:
-      - .:/app
-    depends_on:
-      - redis
-    networks:
-      - app_network
-
-  celery_beat:
-    build: .
-    command: celery -A spotnet_tracker.celery_config beat --loglevel=INFO
-    volumes:
-      - .:/app
-    depends_on:
-      - redis
-    networks:
-      - app_network
-
-  redis:
-    image: redis:latest
-    restart: always
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - app_network
-
 volumes:
   postgres_data:
-  redis_data:

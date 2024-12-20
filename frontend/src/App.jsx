@@ -16,6 +16,8 @@ import { useWalletStore } from 'stores/useWalletStore';
 import { Notifier, notify } from 'components/Notifier/Notifier';
 import { useConnectWallet } from 'hooks/useConnectWallet';
 import OverviewPage from 'pages/spotnet/overview/Overview';
+import SpringDefiPage from 'pages/spotnet/defi-spring/Defi-spring';
+
 import { ActionModal } from 'components/ui/ActionModal';
 import Stake from 'pages/vault/stake/Stake';
 import { TELEGRAM_BOT_LINK } from 'utils/constants';
@@ -105,6 +107,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard telegramId={window?.Telegram?.WebApp?.initData?.user?.id} />} />
           <Route path="/withdraw" element={<Withdraw />} />
           <Route path="/overview" element={<OverviewPage />} />
+          <Route path="/springdefi" element={<SpringDefiPage />} />
           <Route path="/form" element={<Form />} />
           <Route path="/documentation" element={<Documentation />} />
           <Route path="/position-history" element={<PositionHistory />} />
