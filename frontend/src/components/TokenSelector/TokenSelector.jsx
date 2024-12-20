@@ -2,22 +2,22 @@ import React from 'react';
 import { ReactComponent as ETH } from 'assets/icons/ethereum.svg';
 import { ReactComponent as USDC } from 'assets/icons/borrow_usdc.svg';
 import { ReactComponent as STRK } from 'assets/icons/strk.svg';
-
+import './TokenSelector.css'
 const Tokens = [
   { id: 'ethOption', component: <ETH />, label: 'ETH' },
   { id: 'usdcOption', component: <USDC />, label: 'USDC' },
   { id: 'strkOption', component: <STRK />, label: 'STRK' },
 ];
 
-const TokenSelector = ({ selectedToken, setSelectedToken }) => {
+const TokenSelectorDeposit = ({ selectedToken, setSelectedToken }) => {
   return (
-    <div className="form-token">
+    <div className="token-deposit">
       {Tokens.map((token) => (
-        <div className="" key={token?.id}>
-          <div className="token-container">
+        <div className="token-card-btn" key={token?.id}>
+          <div className="token-container-deposit">
             <input
               type="radio"
-              id={token.itoken-card-btnd}
+              id={token.id}
               checked={selectedToken === token.label}
               name="token-options"
               value={token.label}
@@ -25,7 +25,7 @@ const TokenSelector = ({ selectedToken, setSelectedToken }) => {
             />
             <label htmlFor={token?.id}>
               <h5>
-                <span className="token-icon">{token?.component}</span> {token?.label}
+                <span className="token-icon-deposit">{token?.component}</span> {token?.label}
               </h5>
             </label>
           </div>
@@ -35,4 +35,4 @@ const TokenSelector = ({ selectedToken, setSelectedToken }) => {
   );
 };
 
-export default TokenSelector;
+export default TokenSelectorDeposit;
