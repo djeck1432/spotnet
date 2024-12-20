@@ -3,12 +3,13 @@ This module handles dashboard-related API endpoints.
 """
 
 import collections
+from decimal import Decimal, DivisionByZero
 
 from fastapi import APIRouter
+
 from web_app.api.serializers.dashboard import DashboardResponse
 from web_app.contract_tools.mixins import DashboardMixin, HealthRatioMixin
 from web_app.db.crud import PositionDBConnector
-from decimal import Decimal, DivisionByZero
 
 router = APIRouter()
 position_db_connector = PositionDBConnector()
@@ -40,18 +41,22 @@ async def get_dashboard(wallet_id: str) -> DashboardResponse:
         wallet_id
     )
     default_dashboard_response = DashboardResponse(
-            health_ratio="0",
-            multipliers={},
-            start_dates={},
-            current_sum=0,
-            start_sum=0,
-            borrowed="0",
-            balance="0",
-        )
+        health_ratio="0",
+        multipliers={},
+        start_dates={},
+        current_sum=0,
+        start_sum=0,
+        borrowed="0",
+        balance="0",
+        position_id="0",
+    )
     if not contract_address:
         return default_dashboard_response
 
-    opened_positions = position_db_connector.get_positions_by_wallet_id(wallet_id)
+    # Fetching first 10 positions at the moment
+    opened_positions = position_db_connector.get_positions_by_wallet_id(
+        wallet_id, 0, 10
+    )
 
     # At the moment, we only support one position per wallet
     first_opened_position = (
@@ -91,4 +96,5 @@ async def get_dashboard(wallet_id: str) -> DashboardResponse:
         start_sum=start_sum,
         borrowed=str(start_sum * Decimal(tvl)),
         balance=str(balance),
+        position_id=first_opened_position["id"],
     )

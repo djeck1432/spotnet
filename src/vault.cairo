@@ -5,7 +5,7 @@ mod Vault {
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use openzeppelin::upgrades::UpgradeableComponent;
     use openzeppelin::upgrades::interface::IUpgradeable;
-    use spotnet::interfaces::IVault;
+    use spotnet::interfaces::{IVault, IDepositDispatcher, IDepositDispatcherTrait};
     use spotnet::types::{TokenAmount};
 
     use starknet::ContractAddress;
@@ -30,6 +30,7 @@ mod Vault {
     struct Storage {
         token: ContractAddress,
         amounts: Map<ContractAddress, TokenAmount>,
+        activeContracts: Map<ContractAddress, ContractAddress>,
         #[substorage(v0)]
         ownable: OwnableComponent::Storage,
         #[substorage(v0)]
@@ -45,6 +46,8 @@ mod Vault {
         UpgradeableEvent: UpgradeableComponent::Event,
         LiquidityAdded: LiquidityAdded,
         LiquidityWithdrawn: LiquidityWithdrawn,
+        ContractAdded: ContractAdded,
+        PositionProtected: PositionProtected
     }
 
     #[derive(Drop, starknet::Event)]
@@ -62,6 +65,27 @@ mod Vault {
         user: ContractAddress,
         #[key]
         token: ContractAddress,
+        amount: TokenAmount,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct ContractAdded {
+        #[key]
+        token: ContractAddress,
+        #[key]
+        user: ContractAddress,
+        #[key]
+        deposit_contract: ContractAddress
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct PositionProtected {
+        #[key]
+        token: ContractAddress,
+        #[key]
+        deposit_contract: ContractAddress,
+        #[key]
+        contract_owner: ContractAddress,
         amount: TokenAmount,
     }
 
@@ -108,7 +132,7 @@ mod Vault {
             let user = get_caller_address();
             let vault_contract = get_contract_address();
             let current_amount = self.amounts.entry(user).read();
-    
+
             let token = self.token.read();
             let token_dispatcher = IERC20Dispatcher { contract_address: token };
             assert(
@@ -116,16 +140,16 @@ mod Vault {
                 'Approved amount insufficient'
             );
             assert(token_dispatcher.balance_of(user) >= amount, 'Insufficient balance');
-    
+
             // update new amount
             self.amounts.entry(user).write(current_amount + amount);
-    
+
             // transfer token to vault
             token_dispatcher.transfer_from(user, vault_contract, amount);
-    
+
             self.emit(LiquidityAdded { user, token, amount });
         }
-    
+
         /// Withdraws liquidity from the vault by transferring tokens back to the user.
         ///
         /// # Arguments
@@ -147,14 +171,85 @@ mod Vault {
             let token = self.token.read();
             let current_amount = self.amounts.entry(user).read();
             assert(current_amount >= amount, 'Not enough tokens to withdraw');
-    
+
             // update new amount
             self.amounts.entry(user).write(current_amount - amount);
-    
+
             // transfer token to user
             IERC20Dispatcher { contract_address: token }.transfer(user, amount);
-    
+
             self.emit(LiquidityWithdrawn { user, token, amount });
         }
-    }    
+
+        /// Add deposit contract to vault
+        ///
+        /// # Arguments
+        ///
+        /// * `deposit_contract` - The address of the deposit contract
+        ///
+        /// # Panics
+        ///
+        /// * When deposit contract is equal to zero
+        ///
+        /// # Events
+        ///
+        /// Emits a `ContractAdded` event with:
+        /// * `token` - The address of the token from storage
+        /// * `user` - The address of the user from storage
+        /// * `deposit_contract` - The address of the deposit contract
+        fn add_deposit_contract(ref self: ContractState, deposit_contract: ContractAddress) {
+            let user = get_caller_address();
+            assert(deposit_contract.is_non_zero(), 'Deposit contract is zero');
+            self.activeContracts.entry(user).write(deposit_contract);
+            self.emit(ContractAdded { token: self.token.read(), user, deposit_contract });
+        }
+
+        /// Makes a protect deposit into open zkLend position to control stability
+        ///
+        /// # Arguments
+        ///
+        /// * `deposit_contract` - The address of the deposit contract
+        /// * `user` - The address of the withdrawer
+        /// * `amount` - amount to withdraw
+        ///
+        /// # Panics
+        ///
+        /// * When caller don't equal to user or owner
+        /// * If the current amount is less than the amount to withdraw
+        /// * When deposit contract address is zero
+        /// * When user address is zero
+        ///
+        /// # Events
+        ///
+        /// Emits a `PositionProtected` event with:
+        /// * `token` - The address of the token from storage
+        /// * `deposit_contract` - The address of the deposit contract
+        /// * `contract_owner` - The address of contract owner
+        /// * `amount` - amount to withdraw
+        fn protect_position(
+            ref self: ContractState,
+            deposit_contract: ContractAddress,
+            user: ContractAddress,
+            amount: TokenAmount
+        ) {
+            let token = self.token.read();
+            let caller = get_caller_address();
+            let current_amount = self.amounts.entry(caller).read();
+
+            assert(deposit_contract.is_non_zero(), 'Deposit contract is zero');
+            assert(user.is_non_zero(), 'User address is zero');
+            assert(current_amount >= amount, 'Insufficient balance!');
+            assert(self.ownable.owner() == caller || user == caller, 'Caller must be owner or user');
+
+            // update new amount
+            self.amounts.entry(user).write(current_amount - amount);
+
+            // transfer token to user
+            IERC20Dispatcher { contract_address: token }.approve(deposit_contract, amount);
+
+            IDepositDispatcher { contract_address: deposit_contract }.extra_deposit(token, amount);
+
+            self.emit(PositionProtected { token, deposit_contract, contract_owner: user, amount });
+        }
+    }
 }

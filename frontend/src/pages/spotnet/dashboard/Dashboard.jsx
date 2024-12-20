@@ -12,7 +12,6 @@ import Button from 'components/ui/Button/Button';
 import { useWalletStore } from 'stores/useWalletStore';
 import { ActionModal } from 'components/ui/ActionModal';
 import useTelegramNotification from 'hooks/useTelegramNotification';
-import { ReactComponent as AlertHexagon } from 'assets/icons/alert_hexagon.svg';
 import Borrow from 'components/borrow/Borrow';
 import { ReactComponent as CollateralIcon } from 'assets/icons/collateral_dynamic.svg';
 import Collateral from 'components/collateral/Collateral';
@@ -30,7 +29,7 @@ export default function Component({ telegramId }) {
     data: { health_ratio: '1.5', current_sum: '0.05', start_sum: '0.04', borrowed: '10.0' },
     isLoading: false,
   };
-  const { mutate: closePositionEvent, isLoading: isClosing, error: closePositionError } = useClosePosition(walletId);
+  const { mutate: closePositionEvent, isLoading: isClosing } = useClosePosition(walletId);
   const { data: positionData } = useCheckPosition();
   const { subscribe } = useTelegramNotification();
 
@@ -189,11 +188,6 @@ export default function Component({ telegramId }) {
             >
               {isClosing ? 'Closing...' : 'Redeem'}
             </Button>
-            {closePositionError && (
-              <div className="error-message">
-                Error: {closePositionError.message} <AlertHexagon className="form-alert-hex" />
-              </div>
-            )}
             <Button variant="secondary" size="lg" className="dashboard-btn telegram" onClick={handleOpen}>
               <TelegramIcon className="tab-icon" />
               Enable telegram notification bot

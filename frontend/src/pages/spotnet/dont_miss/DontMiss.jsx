@@ -14,7 +14,7 @@ const DontMiss = () => {
     if (walletId) {
       navigate('/form');
     } else {
-      notify('Please connect to your wallet');
+      notify('Please connect to your wallet', 'warning');
     }
   };
 

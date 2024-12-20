@@ -11,8 +11,9 @@ from typing import TypeVar
 from sqlalchemy import Numeric, cast, func
 from sqlalchemy.exc import SQLAlchemyError
 
+from web_app.db.models import Base, Position, Status, Transaction, User
+
 from .user import UserDBConnector
-from web_app.db.models import Base, Position, Status, User, Transaction
 
 logger = logging.getLogger(__name__)
 ModelType = TypeVar("ModelType", bound=Base)
@@ -59,11 +60,15 @@ class PositionDBConnector(UserDBConnector):
         """
         return self.get_user_by_wallet_id(wallet_id)
 
-    def get_positions_by_wallet_id(self, wallet_id: str) -> list:
+    def get_positions_by_wallet_id(
+        self, wallet_id: str, start: int, limit: int
+    ) -> list:
         """
-        Retrieves all positions for a user by their wallet ID
+        Retrieves paginated positions for a user by their wallet ID
         and returns them as a list of dictionaries.
         :param wallet_id: str
+        :param start: starting index for pagination
+        :param limit: number of records to return
         :return: list of dict
         """
         with self.Session() as db:
@@ -78,6 +83,8 @@ class PositionDBConnector(UserDBConnector):
                         Position.user_id == user.id,
                         Position.status == Status.OPENED.value,
                     )
+                    .offset(start)
+                    .limit(limit)
                     .all()
                 )
                 # Convert positions to a list of dictionaries
@@ -173,7 +180,7 @@ class PositionDBConnector(UserDBConnector):
         :param wallet_id: wallet ID
         :return: Position ID
         """
-        position = self.get_positions_by_wallet_id(wallet_id)
+        position = self.get_positions_by_wallet_id(wallet_id, 0, 1)
         if position:
             return position[0]["id"]
         return None
@@ -236,9 +243,7 @@ class PositionDBConnector(UserDBConnector):
         """
         with self.Session() as db:
             result = (
-                db.query(
-                    User.contract_address, Position.id, Position.token_symbol
-                )
+                db.query(User.contract_address, Position.id, Position.token_symbol)
                 .join(Position, Position.user_id == User.id)
                 .filter(User.wallet_id == wallet_id)
                 .first()
@@ -288,19 +293,16 @@ class PositionDBConnector(UserDBConnector):
             logger.error(f"Error while saving current_price for position: {e}")
 
     def save_transaction(
-        self, 
-        position_id: uuid.UUID, 
-        status: str, 
-        transaction_hash: str
+        self, position_id: uuid.UUID, status: str, transaction_hash: str
     ) -> bool:
         """
         Creates a new transaction record associated with a position.
-        
+
         Args:
             position_id: UUID of the position
             status: Transaction status (opened/closed)
             transaction_hash: Blockchain transaction hash
-            
+
         Returns:
             Transaction object if successful, None if failed
         """
@@ -308,7 +310,7 @@ class PositionDBConnector(UserDBConnector):
             transaction = Transaction(
                 position_id=position_id,
                 status=status,
-                transaction_hash=transaction_hash
+                transaction_hash=transaction_hash,
             )
             return self.write_to_db(transaction)
         except SQLAlchemyError as e:

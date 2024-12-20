@@ -274,3 +274,90 @@ async def test_subscribe_to_notification(
     assert response.status_code == expected_status_code
     if expected_response:
         assert response.json() == expected_response
+
+
+@pytest.mark.asyncio
+@patch("web_app.contract_tools.blockchain_call.CLIENT.withdraw_all")
+@patch("web_app.api.user.user_db.get_contract_address_by_wallet_id")
+@pytest.mark.parametrize(
+    "wallet_id, contract_address, withdrawal_results, expected_status_code, expected_response",
+    [
+        # Positive case - successful withdrawal
+        (
+            "0x27994c503bd8c32525fbdaf9d398bdd4e86757988c64581b055a06c5955ea49",
+            "0x698b63df00be56ba39447c9b9ca576ffd0edba0526d98b3e8e4a902ffcf12f0",
+            {"ETH": "success", "USDT": "success"},
+            200,
+            {
+                "detail": "Successfully initiated withdrawals for all tokens",
+                "results": {"ETH": "success", "USDT": "success"}
+            }
+        ),
+        # Negative case - contract not found
+        (
+            "invalid_wallet_id",
+            None,
+            None,
+            404,
+            {"detail": "Contract not found"}
+        ),
+        # Negative case - empty wallet_id
+        (
+            "",
+            None,
+            None,
+            404,
+            {"detail": "Contract not found"}
+        ),
+        # Edge case - valid wallet but no tokens to withdraw
+        (
+            "0x27994c503bd8c32525fbdaf9d398bdd4e86757988c64581b055a06c5955ea49",
+            "0x698b63df00be56ba39447c9b9ca576ffd0edba0526d98b3e8e4a902ffcf12f0",
+            {},
+            200,
+            {
+                "detail": "Successfully initiated withdrawals for all tokens",
+                "results": {}
+            }
+        ),
+    ],
+)
+async def test_withdraw_all(
+    mock_get_contract_address: MagicMock,
+    mock_withdraw_all: MagicMock,
+    client: client,
+    wallet_id: str,
+    contract_address: str,
+    withdrawal_results: dict,
+    expected_status_code: int,
+    expected_response: dict,
+) -> None:
+    """
+    Test withdraw_all endpoint with various scenarios
+    
+    :param mock_get_contract_address: Mock for get_contract_address_by_wallet_id
+    :param mock_withdraw_all: Mock for CLIENT.withdraw_all
+    :param client: FastAPI test client
+    :param wallet_id: Wallet ID to test
+    :param contract_address: Expected contract address
+    :param withdrawal_results: Mock results from withdrawal operation
+    :param expected_status_code: Expected HTTP status code
+    :param expected_response: Expected response body
+    :return: None
+    """
+    # Configure mocks
+    mock_get_contract_address.return_value = contract_address
+    if withdrawal_results is not None:
+        mock_withdraw_all.return_value = withdrawal_results
+
+    response = client.post(
+        url="/api/withdraw-all",
+        params={"wallet_id": wallet_id},
+    )
+
+    assert response.status_code == expected_status_code
+    assert response.json() == expected_response
+
+    mock_get_contract_address.assert_called_once_with(wallet_id)
+    if contract_address:
+        mock_withdraw_all.assert_called_once_with(contract_address)

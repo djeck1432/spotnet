@@ -98,6 +98,7 @@ async def test_get_dashboard_success():
                 "start_price": "100.0",
                 "amount": "2.0",
                 "token_symbol": "ETH",
+                "id": "0",
             }
         ]
         mock_get_health_ratio_and_tvl.return_value = ("1.2", "1000.0")
@@ -105,15 +106,6 @@ async def test_get_dashboard_success():
             "ETH": 5.0,
             "USDC": 1000.0,
         }
-        # mock_get_zklend_position.return_value = {
-        #     "products": [
-        #         {
-        #             "name": "ZkLend",
-        #             "groups": {"1": {"healthRatio": "1.2"}},
-        #             "positions": [],
-        #         }
-        #     ]
-        # }
         mock_get_current_position_sum.return_value = Decimal("200.0")
         mock_get_start_position_sum.return_value = Decimal("200.0")
 
@@ -133,6 +125,7 @@ async def test_get_dashboard_success():
             "borrowed": "200000.00",
             "balance": "2.020202020202020202020202020",
             "health_ratio": "1.2",
+            "position_id": "0",
         }
 
 
@@ -286,6 +279,7 @@ async def test_empty_positions(
         "borrowed": "0",
         "balance": "0",
         "health_ratio": "0",
+        "position_id": "0",
     }
 
 

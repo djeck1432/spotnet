@@ -6,7 +6,7 @@ import './gasfee.css';
 export default function GasFee() {
     return (
         <div className="main-card-footer">
-            <div className="divider"></div>
+           
             <div className="gas-fee-container">
                 <div className="gas-fee-circle">
                     <SettingIcon className="gas-fee-icon" />

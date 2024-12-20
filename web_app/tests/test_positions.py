@@ -9,6 +9,7 @@ that all edge cases and error scenarios are appropriately handled.
 
 import uuid
 from datetime import datetime
+from decimal import Decimal
 from unittest.mock import Mock, patch
 
 import pytest
@@ -17,6 +18,7 @@ from fastapi.testclient import TestClient
 from httpx import AsyncClient
 
 from web_app.api.main import app
+from web_app.api.position import add_extra_deposit
 
 app.dependency_overrides.clear()
 
@@ -487,3 +489,127 @@ async def test_get_user_positions_no_positions(client: AsyncClient) -> None:
         assert response.status_code == 200
         data = response.json()
         assert data == []
+
+@pytest.mark.parametrize(
+    "position_id, amount, mock_position, expected_response",
+    [
+        (
+            1,
+            "100.0",
+            {
+                "id": 1,
+                "token_symbol": "ETH",
+                "amount": "1000",
+                "status": "opened"
+            },
+            {"detail": "Successfully added extra deposit"}
+        ),
+        (
+            123,
+            "50.5",
+            {
+                "id": 123,
+                "token_symbol": "ETH",
+                "amount": "500",
+                "status": "opened"
+            },
+            {"detail": "Successfully added extra deposit"}
+        ),
+        (
+            999,
+            "75.25",
+            {
+                "id": 999,
+                "token_symbol": "ETH",
+                "amount": "750",
+                "status": "opened"
+            },
+            {"detail": "Successfully added extra deposit"}
+        ),
+    ],
+)
+@pytest.mark.anyio
+async def test_add_extra_deposit_success(
+    client: TestClient,
+    position_id: int,
+    amount: str,
+    mock_position: dict,
+    expected_response: dict,
+) -> None:
+    """
+    Test for successfully adding extra deposit to a position.
+    
+    """
+    with (
+        patch(
+            "web_app.db.crud.PositionDBConnector.get_position_by_id"
+        ) as mock_get_position,
+        patch(
+            "web_app.db.crud.PositionDBConnector.add_extra_deposit_to_position"
+        ) as mock_add_deposit,
+    ):
+        mock_get_position.return_value = mock_position
+        mock_add_deposit.return_value = None
+        
+        response = client.post(
+            f"/api/add-extra-deposit/{position_id}?amount={amount}"
+        )
+        
+        assert response.status_code == 200
+        assert response.json() == expected_response
+        mock_get_position.assert_called_once_with(position_id)
+        mock_add_deposit.assert_called_once_with(mock_position, amount)
+
+
+@pytest.mark.parametrize(
+    "position_id, amount, error_status, error_detail",
+    [
+        (
+            None,
+            "100.0",
+            422,
+            "Position ID is required"
+        ),
+        (
+            1,
+            "",
+            404,
+            "Amount is required"
+        ),
+        (
+            999,
+            "100.0",
+            404,
+            "Position not found"
+        ),
+        (
+            "invalid",
+            "100.0",
+            422,
+            "Invalid position ID format"
+        ),
+    ],
+)
+@pytest.mark.anyio
+async def test_add_extra_deposit_failure(
+    client: TestClient,
+    position_id: int,
+    amount: str,
+    error_status: int,
+    error_detail: str,
+) -> None:
+    """
+    Test various failure scenarios when adding extra deposit to a position.
+    
+    """
+    with patch(
+        "web_app.db.crud.PositionDBConnector.get_position_by_id"
+    ) as mock_get_position:
+        if error_detail == "Position not found":
+            mock_get_position.return_value = None
+            
+        response = client.post(
+            f"/api/add-extra-deposit/{position_id}?amount={amount}"
+        )
+        
+        assert response.status_code == error_status

@@ -44,3 +44,8 @@ class DashboardResponse(BaseModel):
         example="12",
         description="The balance of the position.",
     )
+    position_id: str = Field(
+        ...,
+        example="12",
+        description="The position ID.",
+    )
