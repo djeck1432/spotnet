@@ -7,17 +7,13 @@ body {
     sans-serif;
 }
 .withdraw-wrapper {
-  background: url('../../../public/background.png') no-repeat;
-  background-size: cover;
-  background-position: center 39%;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 1rem;
   padding-top: 24px;
-  transition: all 0.2s ease-in-out
-
+  transition: all 0.2s ease-in-out;
 }
 
 .withdraw-container {
@@ -26,7 +22,7 @@ body {
   justify-content: center;
   gap: 24px;
   margin-left: 200px;
-  transition: all 0.3s ease-in-out
+  transition: all 0.3s ease-in-out;
 }
 
 .withdrawal-title {
@@ -111,7 +107,7 @@ body {
   margin-bottom: 5px;
 }
 
-.withdraw-input{
+.withdraw-input {
   width: 100%;
   height: 60px;
   background: transparent;
@@ -136,7 +132,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 0px 12px 0px ;
+  padding: 6px 0px 12px 0px;
 }
 
 .fee-title {
@@ -169,7 +165,7 @@ body {
   display: inline-block;
   font-weight: 600;
   /* width: 642px;  */
-  width: 100%; 
+  width: 100%;
   height: 60px;
   background: none;
   color: var(--primary);
@@ -207,7 +203,6 @@ body {
   display: none;
 }
 
-
 @media (max-width: 1024px) {
   .withdraw-container {
     width: 642px;
@@ -236,9 +231,8 @@ body {
   }
 }
 
-@media (max-width: 680px){  
+@media (max-width: 680px) {
   .withdraw-container {
-
     /* margin-top: -120px;
     margin-left: 0px; */
   }
@@ -250,8 +244,8 @@ body {
   .withdrawal-title {
     margin: 0;
   }
-  
-  .top-cards-withdraw{
+
+  .top-cards-withdraw {
     width: 500px;
     margin: 0px;
     /* gap: 6px; */
@@ -263,8 +257,7 @@ body {
     padding-top: 0px;
   }
 
-
-  .main-card-withdraw{
+  .main-card-withdraw {
     width: 500px;
     margin: auto;
   }
@@ -273,8 +266,6 @@ body {
     width: 500px;
   }
 }
-
-
 
 @media (max-width: 480px) {
   .withdraw-container {
@@ -328,7 +319,7 @@ body {
     display: none;
   }
 
-  .mobile-screen-btns{
+  .mobile-screen-btns {
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
@@ -340,7 +331,6 @@ body {
 
   .btn {
     width: 50%;
-    
   }
 
   .withdraw-button {
@@ -348,9 +338,9 @@ body {
     font-size: 14px;
     padding: 28px 0px;
     line-height: 19px;
-    margin-right: 10px; 
+    margin-right: 10px;
   }
-  
+
   .cancel-button {
     display: block;
     background: none;
@@ -363,7 +353,6 @@ body {
     line-height: 19px;
     font-weight: 600;
   }
-  
 }
 
 @media (max-width: 425px) {
@@ -378,7 +367,7 @@ body {
   }
 
   .amount-stack-card {
-    padding: .8rem;
+    padding: 0.8rem;
     width: 340px;
     margin: auto;
   }
@@ -407,12 +396,10 @@ body {
     margin: auto;
   }
 
-  .mobile-screen-btns{
+  .mobile-screen-btns {
     width: 340px;
   }
-
 }
-
 
 @media (max-width: 380px) {
   .top-cards-withdraw {
@@ -444,11 +431,10 @@ body {
     margin: auto 26px;
   }
 
-  .mobile-screen-btns{
+  .mobile-screen-btns {
     width: 320px;
   }
 }
-
 
 @media (max-width: 375px) {
   .top-cards-withdraw {
@@ -458,8 +444,7 @@ body {
   .main-card {
     min-height: 200px;
     width: 280px;
-    margin:auto;
-
+    margin: auto;
   }
 
   .amount-stack-card {
@@ -486,7 +471,7 @@ body {
     margin: auto 50px;
   }
 
-  .mobile-screen-btns{
+  .mobile-screen-btns {
     width: 280px;
   }
 }

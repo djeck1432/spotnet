@@ -19,7 +19,7 @@ body {
   text-align: center;
   margin-top: 10px;
   width: 100%;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .center-text-container {

@@ -1,7 +1,4 @@
 .form-content-wrapper {
-  background: url('/public/background.png') no-repeat;
-  background-size: cover;
-  background-position: center 50%;
   display: flex;
   flex-direction: column;
   gap: 30px;

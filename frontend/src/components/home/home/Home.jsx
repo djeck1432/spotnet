@@ -9,9 +9,8 @@ import './home.css';
 import { useWalletStore } from '../../../stores/useWalletStore';
 import { notify } from '../../layout/notifier/Notifier';
 
-
 function Home() {
-      const { walletId } = useWalletStore();
+  const { walletId } = useWalletStore();
 
   const navigate = useNavigate();
 
@@ -19,7 +18,7 @@ function Home() {
     if (walletId) {
       navigate('/form');
     } else {
-      notify('Please connect to your wallet', "warning");
+      notify('Please connect to your wallet', 'warning');
     }
   };
 

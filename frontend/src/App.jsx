@@ -28,7 +28,7 @@ function App() {
   const navigate = useNavigate();
   const [isMobileRestrictionModalOpen, setisMobileRestrictionModalOpen] = useState(true);
   const isMobile = useCheckMobile();
-  
+
   const disableDesktopOnMobile = process.env.REACT_APP_DISABLE_DESKTOP_ON_MOBILE !== 'false';
 
   const connectWalletMutation = useConnectWallet(setWalletId);
@@ -52,7 +52,6 @@ function App() {
     setShowModal(false);
   };
 
-
   const handleisMobileRestrictionModalClose = () => {
     setisMobileRestrictionModalOpen(false);
   };
@@ -70,15 +69,14 @@ function App() {
         })
         .catch((error) => {
           console.error('Error getting Telegram user wallet ID:', error);
-          notify('Error loading wallet', "error");
+          notify('Error loading wallet', 'error');
           window.Telegram.WebApp.ready();
         });
     }
   }, [window.Telegram?.WebApp?.initDataUnsafe]);
 
-
   return (
-    <div className="App">
+    <div className={`${location.pathname === '/' ? 'home' : 'App'}`}>
       <Notifier />
       {showModal &&
         createPortal(

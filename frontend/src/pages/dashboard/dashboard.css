@@ -9,9 +9,6 @@ body {
 
 .dashboard-wrapper {
   position: relative;
-  background: url('../../../public/Form-bg.png') no-repeat;
-  background-size: cover;
-  background-position: center left;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -342,9 +339,6 @@ body {
 
 @media (max-width: 550px) {
   .dashboard-wrapper {
-    background: url('../../../public/dashboardmobile.png') no-repeat;
-    background-size: cover;
-    background-position: 50% 40%;
     height: 100%;
   }
   .dashboard-title {
