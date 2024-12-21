@@ -1,9 +1,15 @@
 import { connect } from 'starknetkit';
+import { CallData } from 'starknet';
 import { handleTransaction } from '../../src/services/transaction';
 import { axiosInstance } from '../../src/utils/axios';
 import { checkAndDeployContract } from '../../src/services/contract';
 
 jest.mock('starknetkit');
+jest.mock('starknet', () => ({
+  CallData: jest.fn().mockImplementation(() => ({
+    compile: jest.fn().mockReturnValue(['mockCompiledCallData'])
+  }))
+}));
 jest.mock('../../src/utils/axios');
 jest.mock('../../src/services/contract');
 
@@ -41,6 +47,7 @@ describe('Transaction Functions', () => {
 
     beforeEach(() => {
       jest.clearAllMocks();
+      CallData.mockClear();
     });
 
     it('should handle successful transaction flow', async () => {
@@ -80,6 +87,7 @@ describe('Transaction Functions', () => {
       expect(mockSetLoading).toHaveBeenCalledWith(false);
       expect(mockSetError).toHaveBeenCalledWith('');
       expect(mockSetSuccessful).not.toHaveBeenCalledWith(false);
+      expect(CallData).toHaveBeenCalledTimes(2); // Once for approve, once for loop_liquidity
     });
 
     it('should handle errors during deployment', async () => {

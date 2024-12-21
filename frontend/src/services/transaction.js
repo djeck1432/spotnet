@@ -1,6 +1,10 @@
 import { connect } from 'starknetkit';
+import { CallData } from 'starknet';
+import { erc20abi } from '../abis/erc20';
+import { abi } from '../abis/abi';
 import { axiosInstance } from '../utils/axios';
 import { checkAndDeployContract } from './contract';
+import { notify, ToastWithLink } from '../components/Notifier/Notifier';
 
 export async function sendTransaction(loopLiquidityData, contractAddress) {
   try {
@@ -19,28 +23,32 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
     }
     console.log(loopLiquidityData);
 
-    // Create approve transaction calldata
+    // Use CallData for approve transaction
+    let approveCalldata = new CallData(erc20abi);
     const approveTransaction = {
       contractAddress: loopLiquidityData.deposit_data.token,
       entrypoint: 'approve',
-      calldata: [contractAddress, loopLiquidityData.deposit_data.amount],
+      calldata: approveCalldata.compile('approve', [contractAddress, loopLiquidityData.deposit_data.amount]),
     };
 
     console.log(loopLiquidityData);
 
-    // Prepare loop_liquidity parameters
-    const loopLiquidityParams = Object.values(loopLiquidityData).flat();
-    
+    // Use CallData for loop_liquidity transaction
+    const callData = new CallData(abi);
+    const compiled = callData.compile('loop_liquidity', loopLiquidityData);
     const depositTransaction = {
       contractAddress: contractAddress,
       entrypoint: 'loop_liquidity',
-      calldata: loopLiquidityParams,
+      calldata: compiled,
     };
 
     console.log(depositTransaction);
     let result = await starknet.account.execute([approveTransaction, depositTransaction]);
+
     console.log('Resp: ');
     console.log(result);
+    notify(ToastWithLink("Transaction successfully sent", `https://starkscan.co/tx/${result.transaction_hash}`, "Transaction ID"), "success");
+    
     return {
       loopTransaction: result.transaction_hash,
     };
@@ -52,10 +60,10 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
 
 export async function waitForTransaction(txHash) {
   const starknet = await connect({
-      include: ['argentX', 'braavos'],
-      modalMode: "canAsk",
-      modalTheme: "light"
-    });
+    include: ['argentX', 'braavos'],
+    modalMode: "canAsk",
+    modalTheme: "light"
+  });
   let receipt = null;
   while (receipt === null) {
     try {
@@ -69,30 +77,31 @@ export async function waitForTransaction(txHash) {
 }
 
 export async function closePosition(transactionData) {
-  // Flatten the transaction data into an array of parameters
-  const closePositionParams = Object.values(transactionData).flat();
-  
+  const callData = new CallData(abi);
+  const compiled = callData.compile('close_position', transactionData);
+
   const starknet = await connect({
     include: ['argentX', 'braavos'],
     modalMode: "canAsk",
     modalTheme: "light"
   });
   console.log(transactionData.contract_address);
-  await starknet.account.execute([
-    { 
-      contractAddress: transactionData.contract_address, 
-      entrypoint: 'close_position', 
-      calldata: closePositionParams 
+  let result = await starknet.account.execute([
+    {
+      contractAddress: transactionData.contract_address,
+      entrypoint: 'close_position',
+      calldata: compiled
     },
   ]);
+  notify(ToastWithLink("Close position successfully sent", `https://starkscan.co/tx/${result.transaction_hash}`, "Transaction ID"), "success");
 }
 
 export const handleTransaction = async (
-  connectedWalletId, 
-  formData, 
-  setError, 
-  setTokenAmount, 
-  setLoading, 
+  connectedWalletId,
+  formData,
+  setError,
+  setTokenAmount,
+  setLoading,
   setSuccessful
 ) => {
   setLoading(true);
@@ -106,7 +115,7 @@ export const handleTransaction = async (
     setLoading(false);
     return;
   }
-  
+
   try {
     const response = await axiosInstance.post(`/api/create-position`, formData);
     const transactionData = response.data;
