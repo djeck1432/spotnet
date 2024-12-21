@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import './globals.css';
-import Header from './components/header/Header';
-import Dashboard from 'pages/spotnet/dashboard/Dashboard';
-import Footer from './components/Footer/Footer';
-import SpotnetApp from 'pages/spotnet/spotnet_app/SpotnetApp';
-import Login from 'pages/Login';
-import Form from 'pages/forms/Form';
+import Header from './components/layout/header/Header';
+import Dashboard from './pages/dashboard/Dashboard';
+import Footer from './components/layout/footer/Footer';
+import SpotnetApp from './pages/spotnet-app/SpotnetApp';
+import Form from './pages/form/Form';
 import { createPortal } from 'react-dom';
-import { logout } from 'services/wallet';
-import { getTelegramUserWalletId } from 'services/telegram';
-import Documentation from 'pages/spotnet/documentation/Documentation';
-import Withdraw from 'pages/vault/withdraw/Withdraw';
-import { useWalletStore } from 'stores/useWalletStore';
-import { Notifier, notify } from 'components/Notifier/Notifier';
-import { useConnectWallet } from 'hooks/useConnectWallet';
-import OverviewPage from 'pages/spotnet/overview/Overview';
-import { ActionModal } from 'components/ui/ActionModal';
-import Stake from 'pages/vault/stake/Stake';
-import { TELEGRAM_BOT_LINK } from 'utils/constants';
-import { useCheckMobile } from 'hooks/useCheckMobile';
-import PositionHistory from 'pages/spotnet/position_history/PositionHistory';
-
+import { logout } from './services/wallet';
+import { getTelegramUserWalletId } from './services/telegram';
+import Documentation from './pages/documentation/Documentation';
+import Withdraw from './pages/withdraw/Withdraw';
+import { useWalletStore } from './stores/useWalletStore';
+import { Notifier, notify } from './components/layout/notifier/Notifier';
+import { useConnectWallet } from './hooks/useConnectWallet';
+import OverviewPage from './pages/overview/Overview';
+import { ActionModal } from './components/ui/action-modal';
+import Stake from './pages/stake/Stake';
+import { TELEGRAM_BOT_LINK } from './utils/constants';
+import { useCheckMobile } from './hooks/useCheckMobile';
+import PositionHistory from './pages/position-history/PositionHistory';
+import WithdrawAll from 'pages/spotnet/dashboard/withdraw-all/WithdrawAll';
 
 function App() {
-  const { walletId, setWalletId, removeWalletId } = useWalletStore();
+  const { setWalletId, removeWalletId } = useWalletStore();
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const [isMobileRestrictionModalOpen, setisMobileRestrictionModalOpen] = useState(true);
@@ -98,10 +97,6 @@ function App() {
       <main>
         <Routes>
           <Route index element={<SpotnetApp onConnectWallet={handleConnectWallet} onLogout={handleLogout} />} />
-          <Route
-            path="/login"
-            element={walletId ? <Navigate to="/" /> : <Login onConnectWallet={handleConnectWallet} />}
-          />
           <Route path="/dashboard" element={<Dashboard telegramId={window?.Telegram?.WebApp?.initData?.user?.id} />} />
           <Route path="/withdraw" element={<Withdraw />} />
           <Route path="/overview" element={<OverviewPage />} />
@@ -109,6 +104,7 @@ function App() {
           <Route path="/documentation" element={<Documentation />} />
           <Route path="/position-history" element={<PositionHistory />} />
           <Route path="/stake" element={<Stake />} />
+          <Route path="/dashboard/withdraw-all" element={<WithdrawAll />} />
         </Routes>
       </main>
       <Footer />

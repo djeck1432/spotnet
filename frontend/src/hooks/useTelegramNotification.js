@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { subscribeToNotification, generateTelegramLink } from "services/telegram";
-import { notify } from "components/Notifier/Notifier";
+import { subscribeToNotification, generateTelegramLink } from "../services/telegram";
+import { notify } from "../components/layout/notifier/Notifier";
 
 const useTelegramNotification = () => {
     const mutation = useMutation({
