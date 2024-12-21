@@ -4,15 +4,15 @@ import Card from 'components/Card/Card';
 import TokenSelectorDeposit from 'components/TokenSelector/TokenSelector';
 import { ReactComponent as HealthIcon } from 'assets/icons/health.svg';
 import { ReactComponent as EthIcon } from 'assets/icons/ethereum.svg';
+import { validateNumberInput } from '../../../../utils/regex';
 import './AddDeposit.css';
 
 export default function AddDeposit() {
-
   const [amount, setAmount] = useState('0');
+  
   const handleAmountChange = (e) => {
     const value = e.target.value;
-    const regex = /^\d*\.?\d*$/;
-    if (regex.test(value)) {
+    if (validateNumberInput(value)) {
       setAmount(value);
     }
   };
@@ -29,9 +29,8 @@ export default function AddDeposit() {
         </div>
         <h1 className="deposit-title2">Pls make a deposit</h1>
         <div className="">
-          <label className="token-select-dep">Select token</label>
+          <label className="token-select-label">Select token</label>
           <TokenSelectorDeposit />
-
         </div>
 
         <div className="amount-input-deposit" aria-labelledby="amount-input-label">
@@ -51,12 +50,10 @@ export default function AddDeposit() {
         </div>
 
         <div className='dep-button'>
-          <button className=" deposit-cancel-button ">Cancel</button>
-          <button className=" deposit-button ">Deposit</button>
+          <button className="deposit-cancel-button">Cancel</button>
+          <button className="deposit-button">Deposit</button>
         </div>
-
-
       </div>
     </div>
-  )
+  );
 }

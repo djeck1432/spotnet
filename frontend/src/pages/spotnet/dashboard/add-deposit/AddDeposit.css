@@ -49,6 +49,7 @@
     gap: 1.5rem;
     width: 642px;
     height: 101px;
+    justify-content: center;
   }
   
   .deposit-title2 {
@@ -230,24 +231,9 @@
   
   
   @media (max-width: 1024px) {
-    .deposit-container {
+     .deposit-container {
       width: 642px;
       margin-left: 0;
-    }
-  
-    .main-card {
-      margin: 0 auto;
-      width: 100px;
-      width: 100%;
-      gap: 20px;
-    }
-  
-    .deposit-button {
-      font-size: 16px;
-      padding: 16px 24px;
-      margin-left: 12px;
-      margin-right: 11px;
-      align-self: center;
     }
   }
   
@@ -256,29 +242,32 @@
       margin-left: 0px;
     }
 
-    .token-select-dep{
+    .token-select-label{
       color: #83919F;
-      padding:20px 10px;
-      
+      padding:20px 0px;
+      margin-left: 6rem;
+    
     }
 
     .dep-button{
       display: flex;
       gap: 8px;
+      justify-content: center;
     }
 
     .deposit-cancel-button {
       position: relative;
-   
       font-weight: 600;
-      /* width: 642px;  */
       width: 167px; 
       height: 60px;
       background: none;
       color: var(--primary);
       font-size: 16px;
       cursor: pointer;
-      border: none;
+      border-radius: 8px;
+      border: 1px solid;
+      border-color: #36294E;
+      border-radius: 8px;
       padding: 16px 24px 16px 24px;
       z-index: 1;
       overflow: hidden;
@@ -286,9 +275,7 @@
 
     .deposit-button {
       position: relative;
- 
       font-weight: 600;
-      /* width: 642px;  */
       width: 167px; 
       height: 60px;
       background: none;
@@ -303,258 +290,35 @@
   }
   
   @media (max-width: 680px){  
-    .deposit-container {
-  
-    }
-  
-    .deposital-title {
-      margin: 0;
-    }
-    
+
     .top-cards-deposit{
       width: 500px;
       margin: 0px;
-      /* gap: 6px; */
+      gap: 6px;
+
     }
   
-    .main-container-deposit {
+     .main-container-deposit {
       width: 500px;
       margin: auto;
       padding-top: 0px;
     }
-  
-  
-    .main-card-deposit{
-      width: 500px;
-      margin: auto;
-    }
-  
-    .deposit-button {
-      width: 500px;
-    }
+      
   }
   
   
   
   @media (max-width: 480px) {
-    .deposit-container {
-      gap: 20px;
-    }
-  
-    .deposital-title {
-      font-size: 20px;
-    }
-  
     .top-cards-deposit {
       width: 380px;
-      gap: 8px;
+      /* gap: 8px; */
       height: 88px;
       margin-top: -6px;
     }
-  
-    .main-container-deposit {
-      width: 500px;
-      margin: 0;
-      padding-top: 0px;
-    }
-  
-    .deposit-title {
-      font-size: 16px;
-    }
-  
-    .main-card-deposit {
-      padding: 0 1.5rem 2.5rem 1.5rem;
-      width: 430px;
-      border: none;
-    }
-  
-    .amount-stack-card {
-      padding: 1rem;
-    }
-  
-    .deposit-input-title {
-      font-size: 12px;
-    }
-  
-    .deposit-input {
-      padding: 2rem 1rem;
-    }
-  
-    .deposit-input::placeholder {
-      font-size: 12px;
-    }
-  
-    .larger-screen-btn {
-      display: none;
-    }
-  
-    .mobile-screen-btns{
-      display: flex;
-      flex-direction: row-reverse;
-      justify-content: center;
-      align-items: center;
-      gap: 4px;
-      width: 400px;
-      margin: 0 auto;
-    }
-  
-    .btn {
-      width: 50%;
-      
-    }
-  
-    .deposit-button {
-      height: 70px;
-      font-size: 14px;
-      padding: 28px 0px;
-      line-height: 19px;
-      margin-right: 10px; 
-    }
-    
-    .cancel-button {
-      display: block;
-      background: none;
-      border: var(--midnight-purple-border);
-      border-radius: 8px;
-      padding: 28px 0px;
-      font-size: 14px;
-      color: var(--primary);
-      text-align: center;
-      line-height: 19px;
-      font-weight: 600;
-    }
-    
-  }
-  
-  @media (max-width: 425px) {
-    .top-cards-deposit {
-      width: 340px;
-      gap: 8px;
-    }
-  
-    .main-card {
-      width: 340px;
-      border: 1px solid;
-    }
-  
-    .amount-stack-card {
-      padding: .8rem;
-      width: 340px;
-      margin: auto;
-    }
-  
-    .deposit-title {
-      font-size: 14px;
-    }
-  
-    .deposit-input {
-      width: 340px;
-      margin: auto 22px;
-    }
-  
-    .deposit-input-title {
-      margin: auto 22px;
-      padding-bottom: 8px;
-    }
-  
-    .divider {
-      width: 340px;
-      margin: 8px 22px;
-    }
-  
-    .settings-fee-container {
-      width: 340px;
-      margin: auto;
-    }
-  
-    .mobile-screen-btns{
-      width: 340px;
-    }
-  
-  }
-  
-  
-  @media (max-width: 380px) {
-    .top-cards-deposit {
-      width: 330px;
-      gap: 8px;
-    }
-  
-    .amount-stack-card {
-      width: 330px;
-      margin: auto;
-    }
-  
-    .deposit-input {
-      width: 330px;
-      margin: auto 28px;
-    }
-  
-    .deposit-input-title {
-      margin: auto 28px;
-    }
-  
-    .divider {
-      width: 330px;
-      margin: 8px 26px;
-    }
-  
-    .settings-fee-container {
-      width: 320px;
-      margin: auto 26px;
-    }
-  
-    .mobile-screen-btns{
-      width: 320px;
-    }
-  }
-  
-  
-  @media (max-width: 375px) {
-    .top-cards-deposit {
-      width: 280px;
-      gap: 8px;
-    }
-    .main-card {
-      min-height: 200px;
-      width: 280px;
-      margin:auto;
-  
-    }
-  
-    .amount-stack-card {
-      width: 280px;
-      margin: auto;
-    }
-  
-    .deposit-input {
-      width: 280px;
-      margin: auto 50px;
-    }
-  
-    .deposit-input-title {
-      margin: auto 50px;
-    }
-  
-    .divider {
-      width: 280px;
-      margin: 8px 50px;
-    }
-  
-    .settings-fee-container {
-      width: 280px;
-      margin: auto 50px;
-    }
-  
-    .mobile-screen-btns{
-      width: 280px;
-    }
-
-
   }
 
   @media (min-width:768px) {
-    .token-select-dep{
+    .token-select-label{
       color: #83919F;
       padding:20px 0px;
       
@@ -564,7 +328,6 @@
       position: relative;
       display: inline-block;
       font-weight: 600;
-      /* width: 642px;  */
       width: 100%; 
       height: 60px;
       background: none;
@@ -581,7 +344,6 @@
       position: relative;
       display: none;
       font-weight: 600;
-      /* width: 642px;  */
       width: 100%; 
       height: 60px;
       background: none;

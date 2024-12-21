@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ReactComponent as ETH } from '../../assets/icons/ethereum.svg';
 import { ReactComponent as USDC } from '../../assets/icons/borrow_usdc.svg';
 import { ReactComponent as STRK } from '../../assets/icons/strk.svg';
-import TokenSelector from 'components/TokenSelector';
 import BalanceCards from 'components/BalanceCards';
 import MultiplierSelector from 'components/MultiplierSelector';
 import { handleTransaction } from 'services/transaction';
@@ -19,6 +18,7 @@ import { useCheckPosition } from 'hooks/useClosePosition';
 import { useNavigate } from 'react-router-dom';
 import { ActionModal } from 'components/ui/ActionModal';
 import { useHealthFactor } from 'hooks/useHealthRatio';
+import TokenSelectorDeposit from 'components/TokenSelector/TokenSelector';
 
 const Form = () => {
   const navigate = useNavigate();
@@ -123,7 +123,7 @@ const Form = () => {
           </p>
         )}
         <label className="token-select">Select Token</label>
-        <TokenSelector selectedToken={selectedToken} setSelectedToken={setSelectedToken} />
+        <TokenSelectorDeposit selectedToken={selectedToken} setSelectedToken={setSelectedToken} />
         <label>Select Multiplier</label>
         <MultiplierSelector
           setSelectedMultiplier={setSelectedMultiplier}
