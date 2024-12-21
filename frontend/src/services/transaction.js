@@ -1,4 +1,4 @@
-import { connect } from 'get-starknet';
+import { connect } from 'starknetkit';
 import { CallData } from 'starknet';
 import { erc20abi } from '../abis/erc20';
 import { abi } from '../abis/abi';
@@ -6,9 +6,15 @@ import { axiosInstance } from '../utils/axios';
 import {checkAndDeployContract} from './contract';
 import { notify, ToastWithLink } from '../components/layout/notifier/Notifier';
 
+
 export async function sendTransaction(loopLiquidityData, contractAddress) {
   try {
-    const starknet = await connect();
+    const starknet = await connect({
+      include: ['argentX', 'braavos'],
+      modalMode: "canAsk",
+      modalTheme: "light"
+    });
+
     if (!starknet.isConnected) {
       throw new Error('Wallet not connected');
     }
@@ -17,13 +23,18 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
       throw new Error('Missing or invalid loop_liquidity_data fields');
     }
     console.log(loopLiquidityData);
+
+    // Use CallData for approve transaction
     let approveCalldata = new CallData(erc20abi);
     const approveTransaction = {
       contractAddress: loopLiquidityData.deposit_data.token,
       entrypoint: 'approve',
       calldata: approveCalldata.compile('approve', [contractAddress, loopLiquidityData.deposit_data.amount]),
     };
-    console.log(loopLiquidityData)
+
+    console.log(loopLiquidityData);
+
+    // Use CallData for loop_liquidity transaction
     const callData = new CallData(abi);
     const compiled = callData.compile('loop_liquidity', loopLiquidityData);
     const depositTransaction = {
@@ -31,13 +42,14 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
       entrypoint: 'loop_liquidity',
       calldata: compiled,
     };
+
     console.log(depositTransaction);
     let result = await starknet.account.execute([approveTransaction, depositTransaction]);
 
     console.log('Resp: ');
     console.log(result);
-    notify(ToastWithLink("Transaction successfully sent", `https://starkscan.co/tx/${result.transaction_hash}`, "Transaction ID"), "success")
-
+    notify(ToastWithLink("Transaction successfully sent", `https://starkscan.co/tx/${result.transaction_hash}`, "Transaction ID"), "success");
+    
     return {
       loopTransaction: result.transaction_hash,
     };
@@ -46,16 +58,20 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
     throw error;
   }
 }
-/* eslint-disable-next-line no-unused-vars */
-async function waitForTransaction(txHash) {
-  const starknet = await connect();
+
+export async function waitForTransaction(txHash) {
+  const starknet = await connect({
+    include: ['argentX', 'braavos'],
+    modalMode: "canAsk",
+    modalTheme: "light"
+  });
   let receipt = null;
   while (receipt === null) {
     try {
       receipt = await starknet.provider.getTransactionReceipt(txHash);
     } catch (error) {
       console.log('Waiting for transaction to be accepted...');
-      await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 5 seconds before trying again
+      await new Promise((resolve) => setTimeout(resolve, 5000));
     }
   }
   console.log('Transaction accepted:', receipt);
@@ -64,31 +80,45 @@ async function waitForTransaction(txHash) {
 export async function closePosition(transactionData) {
   const callData = new CallData(abi);
   const compiled = callData.compile('close_position', transactionData);
-  console.log(compiled);
-  const starknet = await connect();
+
+  const starknet = await connect({
+    include: ['argentX', 'braavos'],
+    modalMode: "canAsk",
+    modalTheme: "light"
+  });
   console.log(transactionData.contract_address);
   let result = await starknet.account.execute([
-    { contractAddress: transactionData.contract_address, entrypoint: 'close_position', calldata: compiled },
+    {
+      contractAddress: transactionData.contract_address,
+      entrypoint: 'close_position',
+      calldata: compiled
+    },
   ]);
-  notify(ToastWithLink("Close position successfully sent", `https://starkscan.co/tx/${result.transaction_hash}`, "Transaction ID"), "success")
-
+  notify(ToastWithLink("Close position successfully sent", `https://starkscan.co/tx/${result.transaction_hash}`, "Transaction ID"), "success");
 }
 
-export const handleTransaction = async (connectedWalletId, formData, setTokenAmount, setLoading, setSuccessful) => {
-
+export const handleTransaction = async (
+  connectedWalletId,
+  formData,
+  setError,
+  setTokenAmount,
+  setLoading,
+  setSuccessful
+) => {
   setLoading(true);
-  try{
+  setError('');
+  try {
     await checkAndDeployContract(connectedWalletId);
   } catch (error) {
     console.error('Error deploying contract:', error);
-    notify('Error deploying contract. Please try again.', 'error')
-    setSuccessful(false)
+    setError('Error deploying contract. Please try again.');
+    setSuccessful(false);
     setLoading(false);
     return;
   }
+
   try {
     const response = await axiosInstance.post(`/api/create-position`, formData);
-
     const transactionData = response.data;
     await sendTransaction(transactionData, transactionData.contract_address);
     console.log('Transaction executed successfully');
@@ -97,14 +127,12 @@ export const handleTransaction = async (connectedWalletId, formData, setTokenAmo
       params: { position_id: transactionData.position_id },
     });
 
-    openPositionResponse == openPositionResponse
-
-    // Reset form data
+    openPositionResponse == openPositionResponse;
     setTokenAmount('');
   } catch (err) {
     console.error('Failed to create position:', err);
-    notify(`Error sending transaction: ${err}`, 'error')
-    setSuccessful(false)
+    setError('Failed to create position. Please try again.');
+    setSuccessful(false);
   } finally {
     setLoading(false);
   }
