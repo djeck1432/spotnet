@@ -7,10 +7,14 @@ export async function deployContract(walletId) {
   try {
     console.log('Connecting to StarkNet wallet...');
     
-    const starknet = await connect();
+    const starknet = await connect({
+      include: ['argentX', 'braavos'],
+      modalMode: "neverAsk",
+      modalTheme: "light"
+    });
 
     
-    if (!starknet || !starknet.isConnected) {
+    if (!starknet ) {
       throw new Error('Wallet not connected');
     }
 

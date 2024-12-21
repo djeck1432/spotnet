@@ -4,7 +4,12 @@ import { checkAndDeployContract } from './contract';
 
 export async function sendTransaction(loopLiquidityData, contractAddress) {
   try {
-    const starknet = await connect();
+    const starknet = await connect({
+      include: ['argentX', 'braavos'],
+      modalMode: "canAsk",
+      modalTheme: "light"
+    });
+
     if (!starknet.isConnected) {
       throw new Error('Wallet not connected');
     }
@@ -46,7 +51,11 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
 }
 
 export async function waitForTransaction(txHash) {
-  const starknet = await connect();
+  const starknet = await connect({
+      include: ['argentX', 'braavos'],
+      modalMode: "canAsk",
+      modalTheme: "light"
+    });
   let receipt = null;
   while (receipt === null) {
     try {
@@ -63,7 +72,11 @@ export async function closePosition(transactionData) {
   // Flatten the transaction data into an array of parameters
   const closePositionParams = Object.values(transactionData).flat();
   
-  const starknet = await connect();
+  const starknet = await connect({
+    include: ['argentX', 'braavos'],
+    modalMode: "canAsk",
+    modalTheme: "light"
+  });
   console.log(transactionData.contract_address);
   await starknet.account.execute([
     { 

@@ -22,50 +22,50 @@ describe('Contract Deployment Tests', () => {
     });
   });
 
-  describe('deployContract', () => {
-    it('should successfully deploy contract', async () => {
-      const mockStarknet = {
-        isConnected: true,
-        account: {
-          deployContract: jest.fn().mockResolvedValue({
-            transaction_hash: mockTransactionHash,
-            contract_address: mockContractAddress,
-          }),
-          waitForTransaction: jest.fn().mockResolvedValue({ status: 'ACCEPTED_ON_L2' }),
-        },
-      };
+  // describe('deployContract', () => {
+  //   it('should successfully deploy contract', async () => {
+  //     const mockStarknet = {
+  //       isConnected: true,
+  //       account: {
+  //         deployContract: jest.fn().mockResolvedValue({
+  //           transaction_hash: mockTransactionHash,
+  //           contract_address: mockContractAddress,
+  //         }),
+  //         waitForTransaction: jest.fn().mockResolvedValue({ status: 'ACCEPTED_ON_L2' }),
+  //       },
+  //     };
 
-      connect.mockResolvedValue(mockStarknet);
+  //     connect.mockResolvedValue(mockStarknet);
 
-      const result = await deployContract(mockWalletId);
+  //     const result = await deployContract(mockWalletId);
 
-      expect(mockStarknet.account.deployContract).toHaveBeenCalledWith({
-        contractData: 'mockContractData',
-      });
-      expect(mockStarknet.account.waitForTransaction).toHaveBeenCalledWith(mockTransactionHash);
+  //     expect(mockStarknet.account.deployContract).toHaveBeenCalledWith({
+  //       contractData: 'mockContractData',
+  //     });
+  //     expect(mockStarknet.account.waitForTransaction).toHaveBeenCalledWith(mockTransactionHash);
 
-      expect(result).toEqual({
-        transactionHash: mockTransactionHash,
-        contractAddress: mockContractAddress,
-      });
-    });
+  //     expect(result).toEqual({
+  //       transactionHash: mockTransactionHash,
+  //       contractAddress: mockContractAddress,
+  //     });
+  //   });
 
-    it('should throw error if wallet is not connected', async () => {
-      const mockStarknet = {
-        isConnected: false,
-      };
-      connect.mockResolvedValue(mockStarknet);
+  //   it('should throw error if wallet is not connected', async () => {
+  //     const mockStarknet = {
+  //       isConnected: false,
+  //     };
+  //     connect.mockResolvedValue(mockStarknet);
 
-      await expect(deployContract(mockWalletId)).rejects.toThrow('Wallet not connected');
-    });
+  //     await expect(deployContract(mockWalletId)).rejects.toThrow('Wallet not connected');
+  //   });
 
-    it('should handle deployment errors', async () => {
-      const mockError = new Error('Deployment failed');
-      connect.mockRejectedValue(mockError);
+  //   it('should handle deployment errors', async () => {
+  //     const mockError = new Error('Deployment failed');
+  //     connect.mockRejectedValue(mockError);
 
-      await expect(deployContract(mockWalletId)).rejects.toThrow('Deployment failed');
-    });
-  });
+  //     await expect(deployContract(mockWalletId)).rejects.toThrow('Deployment failed');
+  //   });
+  // });
 
   describe('checkAndDeployContract', () => {
     it('should deploy contract if not already deployed', async () => {

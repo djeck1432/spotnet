@@ -76,7 +76,11 @@ export function logout() {
 
 export async function getTokenBalances(walletAddress) {
   try {
-    const { wallet } = await connect();
+    const { wallet } =  await connect({
+      include: ['argentX', 'braavos'],
+      modalMode: "canAsk",
+      modalTheme: "light"
+    });
     if (!wallet) {
       throw new Error('Wallet not connected');
     }
@@ -102,8 +106,10 @@ async function getTokenBalance(wallet, walletAddress, tokenAddress) {
       calldata: [walletAddress],
     });
     
+    console.log('response', response);
+    const result = response.result;
     const tokenDecimals = (tokenAddress === USDC_ADDRESS) ? 6 : 18;
-    const balance = BigInt(response[0]).toString();
+    const balance = BigInt(result[0]).toString();
     const readableBalance = (Number(balance) / (10 ** tokenDecimals)).toFixed(4);
     console.log(`Balance for token ${tokenAddress}:`, readableBalance);
     return readableBalance;
