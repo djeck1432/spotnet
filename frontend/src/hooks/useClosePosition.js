@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { axiosInstance } from 'utils/axios';
 import { closePosition } from 'services/transaction';
 import { useWalletStore } from 'stores/useWalletStore';
-import { notify } from 'components/Notifier/Notifier';
+import { notify } from 'components/layout/notifier/Notifier';
 
 export const useClosePosition = () => {
   const { walletId } = useWalletStore();

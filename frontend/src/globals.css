@@ -67,6 +67,9 @@
   --light-dark-background: #130713;
   --text-gray: #798795;
   --modal-border: #170f2e;
+  --warning-colour:#BDC000;
+  --warning-colour-alt: #272A0A;
+  --warning-text-colour: #F0F0F0;
 }
 
 body {

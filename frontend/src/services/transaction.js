@@ -1,6 +1,8 @@
 import { connect } from 'starknetkit';
 import { axiosInstance } from '../utils/axios';
-import { checkAndDeployContract } from './contract';
+import {checkAndDeployContract} from './contract';
+import { notify, ToastWithLink } from '../components/layout/notifier/Notifier';
+
 
 export async function sendTransaction(loopLiquidityData, contractAddress) {
   try {

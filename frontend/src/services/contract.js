@@ -1,7 +1,7 @@
 import { connect } from 'starknetkit';
 import { getDeployContractData } from '../utils/constants';
 import { axiosInstance } from '../utils/axios';
-import { notify, ToastWithLink } from '../components/Notifier/Notifier';
+import { notify, ToastWithLink } from '../components/layout/notifier/Notifier';
 
 export async function deployContract(walletId) {
   try {
