@@ -1,7 +1,22 @@
 .stake-wrapper {
   background: url('../../../../public/background.png') no-repeat;
   background-size: cover;
-  margin-left:200px;
+  background-position: center 39%;
+  min-height: 125vh;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(100vw - 372px);
+  margin-left: 372px;
+}
+
+@media (max-width: 1024px) {
+  .stake-wrapper {
+    width: 100vw;
+    margin-left: 0;
+    justify-content: center;
+  }
 }
 
 
@@ -149,15 +164,15 @@
   margin:auto;
 
 }
-.stake-wrapper {
-  height: 100vh;
+/* .stake-wrapper {
+  height: 120vh;
   overflow-y: auto;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   width: 100vw;
   padding: 5rem 24px; 
-}
+} */
 
 .main-container {
   width: 642px;

@@ -15,7 +15,7 @@
 .sidebar {
   width: 374px;
   height: calc(100% - 90px);
-  min-height: 115vh;
+  min-height: 125vh;
   top: 50;
   left: 0;
   z-index: 10;
@@ -84,9 +84,9 @@
   margin-top: 16px;
 }
 
-@media (max-width: 1440px) {
-  .content {
-    margin-left: 300px;
+@media (max-width: 1024px){
+  .content{
+    margin-left: 0;
   }
 }
 

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import './overview.css';
-import TableOfContents from 'components/TableOfContent/TableOfContents';
 import ScrollButton from 'components/scrollButton/ScrollButton';
 import Sections from 'components/Sections';
+import Sidebar from 'components/ui/Components/Sidebar/Sidebar';
 
 const OverviewPage = () => {
     useEffect(() => {
@@ -10,17 +10,17 @@ const OverviewPage = () => {
     }, []);
 
     const tableOfContents = [
-        { title: 'Welcome', link: '#welcome' },
+        { name: 'Welcome', link: '#welcome' },
         {
             title: 'How it works',
             link: '#how-it-works',
             subItems: [
-                { title: 'Connect Your Wallet', link: '#connect-wallet' },
+                { name: 'Connect Your Wallet', link: '#connect-wallet' },
                 { title: 'Choose A Service', link: '#choose-service' },
                 { title: 'Transact Seamlessly', link: '#transact-seamlessly' },
             ],
         },
-        { title: 'Supported Chains', link: '#supported-chains' },
+        { name: 'Supported Chains', link: '#supported-chains' },
     ];
 
     const sectionsData = [
@@ -67,12 +67,7 @@ const OverviewPage = () => {
     return (
         <div className="overview-container">
             <div>
-                <TableOfContents
-                    tabelTitle={"Content"}
-                    items={tableOfContents}
-                    defaultActiveId="welcome"
-                    headerHeight={80}
-                />
+                <Sidebar items={tableOfContents} className='sidebar-docs-sticky' title={'Overview'}  />
             </div>
 
             <div className='content'>

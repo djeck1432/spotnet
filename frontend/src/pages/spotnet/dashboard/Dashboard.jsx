@@ -17,7 +17,11 @@ import { ReactComponent as CollateralIcon } from 'assets/icons/collateral_dynami
 import Collateral from 'components/collateral/Collateral';
 import Card from 'components/Card/Card';
 import { ReactComponent as HealthIcon } from 'assets/icons/health.svg';
-
+import Sidebar from 'components/ui/Components/Sidebar/Sidebar';
+import clock_icon from 'assets/icons/clock.svg';
+import Computer_icon from 'assets/icons/computer-icon.svg';
+import deposit_icon from 'assets/icons/deposit.svg';
+import withdraw_icon from 'assets/icons/withdraw.svg';
 export default function Component({ telegramId }) {
   const { walletId } = useWalletStore();
   const [isCollateralActive, setIsCollateralActive] = useState(true);
@@ -134,78 +138,109 @@ export default function Component({ telegramId }) {
     return '';
   };
 
+  const dashboardItems = [
+    {
+      id: 'dashboard',
+      name: 'Dashboard',
+      link: '/dashboard',
+      icon: Computer_icon,
+    },
+    {
+      id: 'position_history',
+      name: 'Position History',
+      link: '/position_history',
+      icon: clock_icon,
+    },
+    {
+      id: 'deposit ',
+      name: 'Add Deposit',
+      link: '/deposit',
+      icon: deposit_icon,
+    },
+    {
+      id: 'withdraw ',
+      name: 'Withdraw All',
+      link: '/withdraw',
+      icon: withdraw_icon,
+    },
+  ];
+
   return (
-    <div className="dashboard-wrapper">
-      <div className="dashboard-container">
-        {loading && <Spinner loading={loading} />}
-        <h1 className="dashboard-title">zkLend Position</h1>
-        <div className="dashboard-content">
-          <div className="top-cards-dashboard">
-            <Card label="Health Factor" value={healthFactor} icon={<HealthIcon className="icon" />} />
-            <Card label="Borrow Balance" cardData={cardData} icon={<EthIcon className="icon" />} />
-          </div>
-          <div className="dashboard-info-container">
-            <div className="dashboard-info-card">
-              <div className="tabs">
-                <button
-                  onClick={() => setIsCollateralActive(true)}
-                  className={`tab ${isCollateralActive ? 'active' : ''}`}
-                >
-                  <CollateralIcon className="tab-icon" />
-                  <span className="tab-title">Collateral & Earnings</span>
-                </button>
+    <div className="dashboard">
+      <Sidebar title={'Dashboard'} items={dashboardItems} className="sidebar-docs-sticky" />
 
-                <div className="tab-divider" />
+      <div className="dashboard-wrapper">
+        <div className="dashboard-container">
+          {loading && <Spinner loading={loading} />}
+          <h1 className="dashboard-title">zkLend Position</h1>
+          <div className="dashboard-content">
+            <div className="top-cards-dashboard">
+              <Card label="Health Factor" value={healthFactor} icon={<HealthIcon className="icon" />} />
+              <Card label="Borrow Balance" cardData={cardData} icon={<EthIcon className="icon" />} />
+            </div>
+            <div className="dashboard-info-container">
+              <div className="dashboard-info-card">
+                <div className="tabs">
+                  <button
+                    onClick={() => setIsCollateralActive(true)}
+                    className={`tab ${isCollateralActive ? 'active' : ''}`}
+                  >
+                    <CollateralIcon className="tab-icon" />
+                    <span className="tab-title">Collateral & Earnings</span>
+                  </button>
 
-                <button
-                  onClick={() => setIsCollateralActive(false)}
-                  className={`tab ${!isCollateralActive ? 'active borrow' : ''}`}
-                >
-                  <BorrowIcon className="tab-icon" />
-                  <span className="tab-title">Borrow</span>
-                </button>
-                <div className="tab-indicator-container">
-                  <div className={`tab-indicator ${isCollateralActive ? 'collateral' : 'borrow'}`} />
+                  <div className="tab-divider" />
+
+                  <button
+                    onClick={() => setIsCollateralActive(false)}
+                    className={`tab ${!isCollateralActive ? 'active borrow' : ''}`}
+                  >
+                    <BorrowIcon className="tab-icon" />
+                    <span className="tab-title">Borrow</span>
+                  </button>
+                  <div className="tab-indicator-container">
+                    <div className={`tab-indicator ${isCollateralActive ? 'collateral' : 'borrow'}`} />
+                  </div>
                 </div>
+                {isCollateralActive ? (
+                  <Collateral
+                    getCurrentSumColor={getCurrentSumColor}
+                    startSum={startSum}
+                    currentSum={currentSum}
+                    data={cardData}
+                  />
+                ) : (
+                  <Borrow data={cardData} />
+                )}
               </div>
-              {isCollateralActive ? (
-                <Collateral
-                  getCurrentSumColor={getCurrentSumColor}
-                  startSum={startSum}
-                  currentSum={currentSum}
-                  data={cardData}
+              <Button
+                variant="primary"
+                size="lg"
+                className="dashboard-btn"
+                onClick={() => closePositionEvent()}
+                disabled={isClosing || !hasOpenedPosition}
+              >
+                {isClosing ? 'Closing...' : 'Redeem'}
+              </Button>
+              <Button variant="secondary" size="lg" className="dashboard-btn telegram" onClick={handleOpen}>
+                <TelegramIcon className="tab-icon" />
+                Enable telegram notification bot
+              </Button>
+              {showModal && (
+                <ActionModal
+                  isOpen={showModal}
+                  title="Telegram Notification"
+                  subTitle="Do you want to enable telegram notification bot?"
+                  content={[
+                    'This will allow you to receive quick notifications on your telegram line in realtime. You can disable this setting anytime.',
+                  ]}
+                  cancelLabel="Cancel"
+                  submitLabel="Yes, Sure"
+                  submitAction={handleSubscribe}
+                  cancelAction={handleClose}
                 />
-              ) : (
-                <Borrow data={cardData} />
               )}
             </div>
-            <Button
-              variant="primary"
-              size="lg"
-              className="dashboard-btn"
-              onClick={() => closePositionEvent()}
-              disabled={isClosing || !hasOpenedPosition}
-            >
-              {isClosing ? 'Closing...' : 'Redeem'}
-            </Button>
-            <Button variant="secondary" size="lg" className="dashboard-btn telegram" onClick={handleOpen}>
-              <TelegramIcon className="tab-icon" />
-              Enable telegram notification bot
-            </Button>
-            {showModal && (
-              <ActionModal
-                isOpen={showModal}
-                title="Telegram Notification"
-                subTitle="Do you want to enable telegram notification bot?"
-                content={[
-                  'This will allow you to receive quick notifications on your telegram line in realtime. You can disable this setting anytime.',
-                ]}
-                cancelLabel="Cancel"
-                submitLabel="Yes, Sure"
-                submitAction={handleSubscribe}
-                cancelAction={handleClose}
-              />
-            )}
           </div>
         </div>
       </div>

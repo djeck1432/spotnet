@@ -6,6 +6,26 @@ body {
     Helvetica,
     sans-serif;
 }
+.dashboard {
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  width: calc(100vw - 372px);
+  margin-left: 372px;
+}
+
+@media (max-width: 1024px) {
+  .dashboard {
+    width: 100vw;
+    margin-left: 0;
+    justify-content: center;
+  }
+}
+.sidebar-docs-sticky{
+  margin-top: 5.5rem;
+  height: 100vh;
+  position: fixed;
+}
 
 .dashboard-wrapper {
   position: relative;
@@ -13,10 +33,11 @@ body {
   background-size: cover;
   background-position: center left;
   min-height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 1rem 0;
+  align-items: center;
+  width: calc(100vw - 372px);
 }
 
 .dashboard-container {
@@ -26,6 +47,7 @@ body {
   gap: 10px;
   padding: 0 24px;
   padding-top: 20px;
+  width: fit-content;
 }
 
 .dashboard-content {
