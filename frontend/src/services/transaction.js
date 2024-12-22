@@ -22,9 +22,8 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
     if (!loopLiquidityData.pool_key || !loopLiquidityData.deposit_data) {
       throw new Error('Missing or invalid loop_liquidity_data fields');
     }
-    console.log(loopLiquidityData);
+  
 
-    // Use CallData for approve transaction
     let approveCalldata = new CallData(erc20abi);
     const approveTransaction = {
       contractAddress: loopLiquidityData.deposit_data.token,
