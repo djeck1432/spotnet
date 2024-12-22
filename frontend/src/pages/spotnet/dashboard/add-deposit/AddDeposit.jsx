@@ -1,16 +1,14 @@
 
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import Card from 'components/Card/Card';
 import TokenSelector from 'components/TokenSelector/TokenSelector';
 import { ReactComponent as HealthIcon } from 'assets/icons/health.svg';
 import { ReactComponent as EthIcon } from 'assets/icons/ethereum.svg';
 import { validateNumberInput } from '../../../../utils/regex';
-import { useAddDeposit } from 'hooks/customHook';
+import { useAddDeposit } from 'hooks/useAddDeposit';
 import './AddDeposit.css';
 
 export default function AddDeposit() {
-  const { positionId } = useParams();
   const [amount, setAmount] = useState('0');
   const [selectedToken, setSelectedToken] = useState('STRK');
   
@@ -30,7 +28,6 @@ export default function AddDeposit() {
 
   const handleDeposit = () => {
     addDeposit({
-      positionId,
       amount,
       tokenSymbol: selectedToken,
     }, {
