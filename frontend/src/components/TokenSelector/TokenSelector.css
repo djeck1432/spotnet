@@ -9,6 +9,11 @@
 }
 
 
+  .token-card-btn.selected {
+    border-image: linear-gradient(to right, #74D6FD, #E01DEE) 1;
+  }
+
+
 
 .token-container-deposit {
   background: var(--dark-purple);

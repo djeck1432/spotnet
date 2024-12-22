@@ -11,18 +11,20 @@ const Tokens = [
   { id: 'strkOption', component: <STRK />, label: 'STRK'},
 ];
 
-const TokenSelector = ({ selectedToken, setSelectedToken, onSelect }) => {
+const TokenSelector = ({ selectedToken, setSelectedToken }) => {
   const handleTokenChange = (token) => {
     setSelectedToken(token.label);
-    if (onSelect) {
-      onSelect(token.label);
-    }
   };
 
   return (
     <div className="token-deposit">
       {Tokens.map((token) => (
-        <div className="token-card-btn" key={token.id}>
+        // <div className="token-card-btn" key={token.id}>
+        <div 
+        className={`token-card-btn ${selectedToken === token.label ? 'selected' : ''}`} 
+        key={token.id}
+        onClick={() => handleTokenChange(token)}
+      >
           <div className="token-container-deposit">
             <input
               type="radio"
@@ -31,6 +33,7 @@ const TokenSelector = ({ selectedToken, setSelectedToken, onSelect }) => {
               name="token-options"
               value={token.label}
               onChange={() => handleTokenChange(token)}
+              className="token-radio"
             />
             <label htmlFor={token.id}>
               <h5>

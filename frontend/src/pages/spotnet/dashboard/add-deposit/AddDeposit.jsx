@@ -6,14 +6,15 @@ import TokenSelector from 'components/TokenSelector/TokenSelector';
 import { ReactComponent as HealthIcon } from 'assets/icons/health.svg';
 import { ReactComponent as EthIcon } from 'assets/icons/ethereum.svg';
 import { validateNumberInput } from '../../../../utils/regex';
+import { useAddDeposit } from 'hooks/customHook';
 import './AddDeposit.css';
 
 export default function AddDeposit() {
   const { positionId } = useParams();
   const [amount, setAmount] = useState('0');
   const [selectedToken, setSelectedToken] = useState('STRK');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  
+  const { mutate: addDeposit, isLoading } = useAddDeposit();
 
   const handleAmountChange = (e) => {
     const value = e.target.value;
@@ -25,52 +26,19 @@ export default function AddDeposit() {
   const handleCancel = () => {
     setAmount('0');
     setSelectedToken('STRK');
-    setError(null);
   };
 
-  const handleDeposit = async () => {
-    // if (!positionId) {
-    //   setError('Position ID is required');
-    //   return;
-    // }
-
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const response = await fetch(`/api/add-extra-deposit/${positionId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          position_id: positionId,
-          amount: parseFloat(amount),
-          token_symbol: selectedToken,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log('Deposit successful:', data);
-      
-      // Reset form after successful deposit
-      setAmount('0');
-      setSelectedToken('STRK');
-      
-      // Success notification
-      alert('Deposit successful!'); 
-
-    } catch (err) {
-      setError(err.message);
-      console.error('Error making deposit:', err);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleDeposit = () => {
+    addDeposit({
+      positionId,
+      amount,
+      tokenSymbol: selectedToken,
+    }, {
+      onSuccess: () => {
+        setAmount('0');
+        setSelectedToken('STRK');
+      },
+    });
   };
 
   return (
@@ -108,12 +76,6 @@ export default function AddDeposit() {
             {selectedToken}
           </span>
         </div>
-
-        {error && (
-          <div className="error-message" role="alert">
-            {error}
-          </div>
-        )}
 
         <div className='dep-button'>
           <button 

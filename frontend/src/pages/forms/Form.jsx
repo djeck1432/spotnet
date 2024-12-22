@@ -18,7 +18,7 @@ import { useCheckPosition } from 'hooks/useClosePosition';
 import { useNavigate } from 'react-router-dom';
 import { ActionModal } from 'components/ui/ActionModal';
 import { useHealthFactor } from 'hooks/useHealthRatio';
-import TokenSelectorDeposit from 'components/TokenSelector/TokenSelector';
+import TokenSelector from 'components/TokenSelector/TokenSelector';
 
 const Form = () => {
   const navigate = useNavigate();
@@ -123,7 +123,7 @@ const Form = () => {
           </p>
         )}
         <label className="token-select">Select Token</label>
-        <TokenSelectorDeposit selectedToken={selectedToken} setSelectedToken={setSelectedToken} />
+        <TokenSelector selectedToken={selectedToken} setSelectedToken={setSelectedToken} />
         <label>Select Multiplier</label>
         <MultiplierSelector
           setSelectedMultiplier={setSelectedMultiplier}

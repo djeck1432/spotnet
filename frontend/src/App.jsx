@@ -106,7 +106,7 @@ function App() {
             element={walletId ? <Navigate to="/" /> : <Login onConnectWallet={handleConnectWallet} />}
           />
           <Route path="/dashboard" element={<Dashboard telegramId={window?.Telegram?.WebApp?.initData?.user?.id} />} />
-          <Route path="/addDeposit" element={<AddDeposit />} />
+          <Route path="/add-deposit" element={<AddDeposit />} />
           <Route path="/withdraw" element={<Withdraw />} />
           <Route path="/overview" element={<OverviewPage />} />
           <Route path="/form" element={<Form />} />

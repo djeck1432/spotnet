@@ -178,6 +178,4 @@ cython_debug/
 #.idea/
 
 node_modules/
-frontend/src/components/TokenSelector.jsx
-frontend/src/components/TokenSelector.jsx
-frontend/src/pages/spotnet/dashboard/add_deposit.jsx
+
