@@ -90,7 +90,7 @@ describe('Wallet Services', () => {
     });
 
     it('should throw error when StarkNet object is not found', async () => {
-      connect.mockResolvedValue(null);
+      connect.mockResolvedValue({ wallet: null });
 
       await expect(connectWallet()).rejects.toThrow('Failed to connect to wallet');
     });

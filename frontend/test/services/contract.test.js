@@ -1,9 +1,11 @@
-import { connect } from 'get-starknet';
+import { connect } from 'starknetkit';
 import { axiosInstance } from '../../src/utils/axios';
 import { deployContract, checkAndDeployContract } from '../../src/services/contract';
 import { getDeployContractData } from '../../src/utils/constants';
 
-jest.mock('get-starknet');
+jest.mock('starknetkit', () => ({
+  connect: jest.fn(),
+}));
 jest.mock('../../src/utils/axios');
 jest.mock('../../src/utils/constants');
 
@@ -24,13 +26,15 @@ describe('Contract Deployment Tests', () => {
     it('should successfully deploy contract', async () => {
       jest.setTimeout(10000);
       const mockStarknet = {
-        isConnected: true,
-        account: {
-          deployContract: jest.fn().mockResolvedValue({
-            transaction_hash: mockTransactionHash,
-            contract_address: mockContractAddress,
-          }),
-          waitForTransaction: jest.fn().mockResolvedValue(true),
+        wallet: {
+          isConnected: true,
+          account: {
+            deployContract: jest.fn().mockResolvedValue({
+              transaction_hash: mockTransactionHash,
+              contract_address: mockContractAddress,
+            }),
+            waitForTransaction: jest.fn().mockResolvedValue(true),
+          },
         },
       };
       connect.mockResolvedValue(mockStarknet);
@@ -38,10 +42,10 @@ describe('Contract Deployment Tests', () => {
       const result = await deployContract(mockWalletId);
 
       expect(connect).toHaveBeenCalled();
-      expect(mockStarknet.account.deployContract).toHaveBeenCalledWith({
+      expect(mockStarknet.wallet.account.deployContract).toHaveBeenCalledWith({
         contractData: 'mockContractData',
       });
-      expect(mockStarknet.account.waitForTransaction).toHaveBeenCalledWith(mockTransactionHash);
+      expect(mockStarknet.wallet.account.waitForTransaction).toHaveBeenCalledWith(mockTransactionHash);
 
       expect(result).toEqual({
         transactionHash: mockTransactionHash,
@@ -51,7 +55,9 @@ describe('Contract Deployment Tests', () => {
 
     it('should throw error if wallet is not connected', async () => {
       const mockStarknet = {
-        isConnected: false,
+        wallet: {
+          isConnected: false,
+        },
       };
       connect.mockResolvedValue(mockStarknet);
 
@@ -73,13 +79,15 @@ describe('Contract Deployment Tests', () => {
       });
 
       const mockStarknet = {
-        isConnected: true,
-        account: {
-          deployContract: jest.fn().mockResolvedValue({
-            transaction_hash: mockTransactionHash,
-            contract_address: mockContractAddress,
-          }),
-          waitForTransaction: jest.fn().mockResolvedValue(true),
+        wallet: {
+          isConnected: true,
+          account: {
+            deployContract: jest.fn().mockResolvedValue({
+              transaction_hash: mockTransactionHash,
+              contract_address: mockContractAddress,
+            }),
+            waitForTransaction: jest.fn().mockResolvedValue(true),
+          },
         },
       };
       connect.mockResolvedValue(mockStarknet);
@@ -90,7 +98,7 @@ describe('Contract Deployment Tests', () => {
 
       expect(axiosInstance.get).toHaveBeenCalledWith(`/api/check-user?wallet_id=${mockWalletId}`);
       expect(connect).toHaveBeenCalled();
-      expect(mockStarknet.account.deployContract).toHaveBeenCalledWith({
+      expect(mockStarknet.wallet.account.deployContract).toHaveBeenCalledWith({
         contractData: 'mockContractData',
       });
       expect(axiosInstance.post).toHaveBeenCalledWith(`/api/update-user-contract`, {
@@ -128,13 +136,15 @@ describe('Contract Deployment Tests', () => {
       });
 
       const mockStarknet = {
-        isConnected: true,
-        account: {
-          deployContract: jest.fn().mockResolvedValue({
-            transaction_hash: mockTransactionHash,
-            contract_address: mockContractAddress,
-          }),
-          waitForTransaction: jest.fn().mockResolvedValue(true),
+        wallet: {
+          isConnected: true,
+          account: {
+            deployContract: jest.fn().mockResolvedValue({
+              transaction_hash: mockTransactionHash,
+              contract_address: mockContractAddress,
+            }),
+            waitForTransaction: jest.fn().mockResolvedValue(true),
+          },
         },
       };
       connect.mockResolvedValue(mockStarknet);
