@@ -1,5 +1,5 @@
 import { connect } from 'starknetkit';
-// import { InjectedConnector } from 'starknetkit/injected';
+import { InjectedConnector } from 'starknetkit/injected';
 import { getDeployContractData } from '../utils/constants';
 import { axiosInstance } from '../utils/axios';
 import { notify, ToastWithLink } from '../components/layout/notifier/Notifier';
@@ -8,12 +8,13 @@ export async function deployContract(walletId) {
   try {
     // Connect to Starknet wallet
     const { wallet } = await connect({
-      // connectors: [
-      //   new InjectedConnector({ options: { id: 'argentX' } }),
-      //   new InjectedConnector({ options: { id: 'braavos' } }),
-      // ],
-      modalMode: 'alwaysAsk',
+      connectors: [
+        new InjectedConnector({ options: { id: 'argentX' } }),
+        new InjectedConnector({ options: { id: 'braavos' } }),
+      ],
+      modalMode: 'neverAsk',
     });
+    await wallet.enable();
 
     if (!wallet.isConnected) {
       throw new Error('Wallet not connected');

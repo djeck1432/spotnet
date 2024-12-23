@@ -6,6 +6,14 @@ import { getDeployContractData } from '../../src/utils/constants';
 jest.mock('starknetkit', () => ({
   connect: jest.fn(),
 }));
+jest.mock(
+  'starknetkit/injected',
+  () => ({
+    InjectedConnector: jest.fn(),
+  }),
+  { virtual: true }
+);
+
 jest.mock('../../src/utils/axios');
 jest.mock('../../src/utils/constants');
 
@@ -35,6 +43,7 @@ describe('Contract Deployment Tests', () => {
             }),
             waitForTransaction: jest.fn().mockResolvedValue(true),
           },
+          enable: jest.fn(),
         },
       };
       connect.mockResolvedValue(mockStarknet);
@@ -57,6 +66,7 @@ describe('Contract Deployment Tests', () => {
       const mockStarknet = {
         wallet: {
           isConnected: false,
+          enable: jest.fn(),
         },
       };
       connect.mockResolvedValue(mockStarknet);
@@ -88,6 +98,7 @@ describe('Contract Deployment Tests', () => {
             }),
             waitForTransaction: jest.fn().mockResolvedValue(true),
           },
+          enable: jest.fn(),
         },
       };
       connect.mockResolvedValue(mockStarknet);
@@ -145,6 +156,7 @@ describe('Contract Deployment Tests', () => {
             }),
             waitForTransaction: jest.fn().mockResolvedValue(true),
           },
+          enable: jest.fn(),
         },
       };
       connect.mockResolvedValue(mockStarknet);

@@ -1,5 +1,5 @@
 import { connect } from 'starknetkit';
-// import { InjectedConnector } from 'starknetkit/injected';
+import { InjectedConnector } from 'starknetkit/injected';
 import { CallData } from 'starknet';
 import { erc20abi } from '../abis/erc20';
 import { abi } from '../abis/abi';
@@ -10,12 +10,13 @@ import { notify, ToastWithLink } from '../components/layout/notifier/Notifier';
 export async function sendTransaction(loopLiquidityData, contractAddress) {
   try {
     const { wallet } = await connect({
-      // connectors: [
-      //   new InjectedConnector({ options: { id: 'argentX' } }),
-      //   new InjectedConnector({ options: { id: 'braavos' } }),
-      // ],
-      modalMode: 'alwaysAsk',
+      connectors: [
+        new InjectedConnector({ options: { id: 'argentX' } }),
+        new InjectedConnector({ options: { id: 'braavos' } }),
+      ],
+      modalMode: 'neverAsk',
     });
+    await wallet.enable();
 
     if (!wallet.isConnected) {
       throw new Error('Wallet not connected');
@@ -64,12 +65,13 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
 /* eslint-disable-next-line no-unused-vars */
 async function waitForTransaction(txHash) {
   const { wallet } = await connect({
-    // connectors: [
-    //   new InjectedConnector({ options: { id: 'argentX' } }),
-    //   new InjectedConnector({ options: { id: 'braavos' } }),
-    // ],
-    modalMode: 'alwaysAsk',
+    connectors: [
+      new InjectedConnector({ options: { id: 'argentX' } }),
+      new InjectedConnector({ options: { id: 'braavos' } }),
+    ],
+    modalMode: 'neverAsk',
   });
+  await wallet.enable();
 
   let receipt = null;
   while (receipt === null) {
@@ -89,12 +91,13 @@ export async function closePosition(transactionData) {
   console.log(compiled);
 
   const { wallet } = await connect({
-    // connectors: [
-    //   new InjectedConnector({ options: { id: 'argentX' } }),
-    //   new InjectedConnector({ options: { id: 'braavos' } }),
-    // ],
-    modalMode: 'alwaysAsk',
+    connectors: [
+      new InjectedConnector({ options: { id: 'argentX' } }),
+      new InjectedConnector({ options: { id: 'braavos' } }),
+    ],
+    modalMode: 'neverAsk',
   });
+  await wallet.enable();
 
   console.log(transactionData.contract_address);
   let result = await wallet.account.execute([

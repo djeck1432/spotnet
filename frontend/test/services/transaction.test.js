@@ -8,6 +8,14 @@ jest.mock('starknetkit', () => ({
 }));
 jest.mock('../../src/utils/axios');
 
+jest.mock(
+  'starknetkit/injected',
+  () => ({
+    InjectedConnector: jest.fn(),
+  }),
+  { virtual: true }
+);
+
 jest.mock('starknet', () => ({
   CallData: class MockCallData {
     constructor() {
@@ -36,6 +44,7 @@ describe('Transaction Functions', () => {
             transaction_hash: mockTransactionHash,
           }),
         },
+        enable: jest.fn(),
         provider: {
           getTransactionReceipt: jest.fn().mockResolvedValue({
             status: 'ACCEPTED',
@@ -72,7 +81,7 @@ describe('Transaction Functions', () => {
     });
 
     it('should throw error if wallet is not connected', async () => {
-      connect.mockResolvedValueOnce({ wallet: { isConnected: false } });
+      connect.mockResolvedValueOnce({ wallet: { isConnected: false, enable: jest.fn() } });
 
       await expect(sendTransaction(validLoopLiquidityData, mockContractAddress)).rejects.toThrow(
         'Wallet not connected'
@@ -95,6 +104,7 @@ describe('Transaction Functions', () => {
           account: {
             execute: jest.fn().mockRejectedValue(mockError),
           },
+          enable: jest.fn(),
         },
       });
 
@@ -133,6 +143,7 @@ describe('Transaction Functions', () => {
           account: {
             execute: jest.fn().mockRejectedValue(mockError),
           },
+          enable: jest.fn(),
         },
       });
 

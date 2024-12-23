@@ -4,7 +4,16 @@ import { ETH_ADDRESS, STRK_ADDRESS, USDC_ADDRESS } from '../../src/utils/constan
 
 jest.mock('starknetkit', () => ({
   connect: jest.fn(),
+  disconnect: jest.fn(),
 }));
+
+jest.mock(
+  'starknetkit/injected',
+  () => ({
+    InjectedConnector: jest.fn(),
+  }),
+  { virtual: true }
+);
 
 describe('Wallet Services', () => {
   beforeEach(() => {
@@ -30,6 +39,7 @@ describe('Wallet Services', () => {
           provider: {
             callContract: jest.fn().mockResolvedValue({ result: ['1'] }),
           },
+          enable: jest.fn(),
         },
       };
 
@@ -47,6 +57,7 @@ describe('Wallet Services', () => {
           provider: {
             callContract: jest.fn().mockResolvedValue({ result: ['0'] }),
           },
+          enable: jest.fn(),
         },
       };
 
@@ -60,7 +71,7 @@ describe('Wallet Services', () => {
     });
 
     it('should throw an error if wallet is not connected', async () => {
-      const mockStarknet = { wallet: { isConnected: false } };
+      const mockStarknet = { wallet: { isConnected: false, enable: jest.fn() } };
 
       connect.mockResolvedValue(mockStarknet);
 
@@ -82,9 +93,11 @@ describe('Wallet Services', () => {
 
       const address = await connectWallet();
 
-      expect(connect).toHaveBeenCalledWith({
-        modalMode: 'alwaysAsk',
-      });
+      expect(connect).toHaveBeenCalledWith(
+        expect.objectContaining({
+          modalMode: 'alwaysAsk',
+        })
+      );
       expect(mockStarknet.wallet.enable).toHaveBeenCalled();
       expect(address).toBe('0x123');
     });
@@ -124,6 +137,7 @@ describe('Wallet Services', () => {
               return balances[contractAddress];
             }),
           },
+          enable: jest.fn(),
         },
       };
 
@@ -139,7 +153,7 @@ describe('Wallet Services', () => {
     });
 
     it('should throw an error if wallet is not connected', async () => {
-      const mockStarknet = { wallet: { isConnected: false } };
+      const mockStarknet = { wallet: { isConnected: false, enable: jest.fn() } };
 
       connect.mockResolvedValue(mockStarknet);
 
@@ -177,7 +191,7 @@ describe('Wallet Services', () => {
   });
 
   describe('logout', () => {
-    it('should clear wallet ID from local storage', () => {
+    it('should clear wallet ID from local storage', async () => {
       const mockRemoveItem = jest.fn();
       Object.defineProperty(window, 'localStorage', {
         value: {
@@ -186,7 +200,7 @@ describe('Wallet Services', () => {
         writable: true,
       });
 
-      logout();
+      await logout();
 
       expect(mockRemoveItem).toHaveBeenCalledWith('wallet_id');
     });
