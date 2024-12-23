@@ -1,4 +1,5 @@
-import { connect } from 'get-starknet';
+import { connect } from 'starknetkit';
+// import { InjectedConnector } from 'starknetkit/injected';
 import { CallData } from 'starknet';
 import { erc20abi } from '../abis/erc20';
 import { abi } from '../abis/abi';
@@ -8,8 +9,15 @@ import { notify, ToastWithLink } from '../components/layout/notifier/Notifier';
 
 export async function sendTransaction(loopLiquidityData, contractAddress) {
   try {
-    const starknet = await connect();
-    if (!starknet.isConnected) {
+    const { wallet } = await connect({
+      // connectors: [
+      //   new InjectedConnector({ options: { id: 'argentX' } }),
+      //   new InjectedConnector({ options: { id: 'braavos' } }),
+      // ],
+      modalMode: 'alwaysAsk',
+    });
+
+    if (!wallet.isConnected) {
       throw new Error('Wallet not connected');
     }
 
@@ -32,7 +40,7 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
       calldata: compiled,
     };
     console.log(depositTransaction);
-    let result = await starknet.account.execute([approveTransaction, depositTransaction]);
+    let result = await wallet.account.execute([approveTransaction, depositTransaction]);
 
     console.log('Resp: ');
     console.log(result);
@@ -55,11 +63,18 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
 }
 /* eslint-disable-next-line no-unused-vars */
 async function waitForTransaction(txHash) {
-  const starknet = await connect();
+  const { wallet } = await connect({
+    // connectors: [
+    //   new InjectedConnector({ options: { id: 'argentX' } }),
+    //   new InjectedConnector({ options: { id: 'braavos' } }),
+    // ],
+    modalMode: 'alwaysAsk',
+  });
+
   let receipt = null;
   while (receipt === null) {
     try {
-      receipt = await starknet.provider.getTransactionReceipt(txHash);
+      receipt = await wallet.provider.getTransactionReceipt(txHash);
     } catch (error) {
       console.log('Waiting for transaction to be accepted...');
       await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 5 seconds before trying again
@@ -72,9 +87,17 @@ export async function closePosition(transactionData) {
   const callData = new CallData(abi);
   const compiled = callData.compile('close_position', transactionData);
   console.log(compiled);
-  const starknet = await connect();
+
+  const { wallet } = await connect({
+    // connectors: [
+    //   new InjectedConnector({ options: { id: 'argentX' } }),
+    //   new InjectedConnector({ options: { id: 'braavos' } }),
+    // ],
+    modalMode: 'alwaysAsk',
+  });
+
   console.log(transactionData.contract_address);
-  let result = await starknet.account.execute([
+  let result = await wallet.account.execute([
     { contractAddress: transactionData.contract_address, entrypoint: 'close_position', calldata: compiled },
   ]);
   notify(
