@@ -7,4 +7,5 @@ from .base import *
 from .deposit import *
 from .position import *
 from .telegram import *
+from .transaction import *
 from .user import *

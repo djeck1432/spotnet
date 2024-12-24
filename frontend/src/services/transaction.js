@@ -101,11 +101,11 @@ export const handleTransaction = async (connectedWalletId, formData, setTokenAmo
     const response = await axiosInstance.post(`/api/create-position`, formData);
 
     const transactionData = response.data;
-    await sendTransaction(transactionData, transactionData.contract_address);
+    const { loopTransaction: transaction_hash } = await sendTransaction(transactionData, transactionData.contract_address);
     console.log('Transaction executed successfully');
 
     const openPositionResponse = await axiosInstance.get(`/api/open-position`, {
-      params: { position_id: transactionData.position_id },
+      params: { position_id: transactionData.position_id, transaction_hash },
     });
 
     openPositionResponse == openPositionResponse;

@@ -17,10 +17,11 @@ from web_app.api.serializers.transaction import (
 )
 from web_app.contract_tools.constants import TokenMultipliers, TokenParams
 from web_app.contract_tools.mixins import DashboardMixin, DepositMixin, PositionMixin
-from web_app.db.crud import PositionDBConnector
+from web_app.db.crud import PositionDBConnector, TransactionDBConnector
 
 router = APIRouter()  # Initialize the router
 position_db_connector = PositionDBConnector()  # Initialize the PositionDBConnector
+transaction_db_connector = TransactionDBConnector()
 
 # Constants
 PAGINATION_STEP = 10
@@ -164,7 +165,7 @@ async def close_position(position_id: str) -> str:
     summary="Open a position",
     response_description="Returns the positions status",
 )
-async def open_position(position_id: str) -> str:
+async def open_position(position_id: str, transaction_hash: str) -> str:
     """
     Open a position.
     :param position_id: contract address
@@ -175,7 +176,18 @@ async def open_position(position_id: str) -> str:
         raise HTTPException(status_code=404, detail="Position not found")
 
     current_prices = await DashboardMixin.get_current_prices()
-    position_status = position_db_connector.open_position(position_id, current_prices)
+    position_status = position_db_connector.open_position(
+        position_id,
+        current_prices
+    )
+    
+    if transaction_hash:
+        transaction_db_connector.create_transaction(
+            position_id,
+            transaction_hash,
+            position_status
+        )
+        
     return position_status
 
 

@@ -163,7 +163,7 @@ describe('Transaction Functions', () => {
       expect(mockSetLoading).toHaveBeenCalledWith(true);
       expect(axiosInstance.post).toHaveBeenCalledWith('/api/create-position', mockFormData);
       expect(axiosInstance.get).toHaveBeenCalledWith('/api/open-position', {
-        params: { position_id: mockTransactionData.position_id },
+        params: { position_id: mockTransactionData.position_id, transaction_hash: mockTransactionHash },
       });
       expect(mockSetTokenAmount).toHaveBeenCalledWith('');
       expect(mockSetLoading).toHaveBeenCalledWith(false);
