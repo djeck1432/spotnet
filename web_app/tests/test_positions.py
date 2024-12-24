@@ -57,7 +57,6 @@ async def test_open_position_missing_position_data(
     assert response.status_code == 404
     assert response.json() == {"detail": "Position not found"}
 
-
 @pytest.mark.anyio
 async def test_close_position_success(client: TestClient) -> None:
     """
@@ -67,20 +66,22 @@ async def test_close_position_success(client: TestClient) -> None:
     Returns:
         None
     """
-    position_id = str(uuid.uuid4())
+    position_id = str(uuid.uuid4())  
+    transaction_hash = "0xabc123"
     with patch(
         "web_app.db.crud.PositionDBConnector.close_position"
     ) as mock_close_position:
         mock_close_position.return_value = "Position successfully closed"
-        response = client.get(f"/api/close-position?position_id={position_id}")
-        assert response.is_success
+        
+        response = client.get(
+            f"/api/close-position?position_id={position_id}&transaction_hash={transaction_hash}"
+        )
+        
+        assert response.status_code == 200
         assert response.json() == "Position successfully closed"
 
-
 @pytest.mark.anyio
-async def test_close_position_invalid_position_id(
-    client: TestClient,
-) -> None:
+async def test_close_position_invalid_position_id(client: TestClient) -> None:
     """
     Test for attempting to close a position using an invalid position ID,
     which should return a 404 error.
@@ -89,14 +90,16 @@ async def test_close_position_invalid_position_id(
     Returns:
         None
     """
-    invalid_position_id = "invalid_position_id"
+    invalid_position_id = str(uuid.uuid4())
     with patch(
         "web_app.db.crud.PositionDBConnector.close_position"
     ) as mock_close_position:
         mock_close_position.side_effect = HTTPException(
             status_code=404, detail="Position not Found"
         )
-        response = client.get(f"/api/close-position?position_id={invalid_position_id}")
+        response = client.get(
+            f"/api/close-position?position_id={invalid_position_id}&transaction_hash=0xabc123"
+        )
         assert response.status_code == 404
         assert response.json() == {"detail": "Position not Found"}
 
