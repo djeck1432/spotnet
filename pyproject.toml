@@ -38,7 +38,7 @@ pragma-sdk = "^2.4.6"
 [tool.poetry.group.dev.dependencies]
 black = "24.8.0"
 isort = "5.13.2"
-
+pre-commit = "4.0.1"
 
 [build-system]
 requires = ["poetry-core"]

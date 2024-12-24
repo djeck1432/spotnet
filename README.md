@@ -248,3 +248,16 @@ Run command to create migration file
 ```bash
 alembic -c web_app/alembic.ini revision --autogenerate -m "migration message"
 ```
+
+## Pre-commit Setup
+
+To ensure code quality, install pre-commit hooks locally:
+
+1. Install pre-commit:
+   ```bash
+   pip install pre-commit
+   ```
+2. Install hooks:
+   ```bash
+   pre-commit install
+   ```
