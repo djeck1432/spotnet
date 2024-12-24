@@ -97,6 +97,42 @@ class PositionDBConnector(UserDBConnector):
                 logger.error(f"Failed to retrieve positions: {str(e)}")
                 return []
 
+    def get_all_positions_by_wallet_id(
+        self, wallet_id: str, start: int, limit: int
+    ) -> list:
+        """
+        Retrieves paginated positions for a user by their wallet ID
+        and returns them as a list of dictionaries.
+        :param wallet_id: str
+        :param start: starting index for pagination
+        :param limit: number of records to return
+        :return: list of dict
+        """
+        with self.Session() as db:
+            user = self._get_user_by_wallet_id(wallet_id)
+            if not user:
+                return []
+
+            try:
+                positions = (
+                    db.query(Position)
+                    .filter(
+                        Position.user_id == user.id,
+                    )
+                    .offset(start)
+                    .limit(limit)
+                    .all()
+                )
+                # Convert positions to a list of dictionaries
+                positions_dict = [
+                    self._position_to_dict(position) for position in positions
+                ]
+                return positions_dict
+
+            except SQLAlchemyError as e:
+                logger.error(f"Failed to retrieve positions: {str(e)}")
+                return []
+
     def has_opened_position(self, wallet_id: str) -> bool:
         """
         Checks if a user has any opened positions.

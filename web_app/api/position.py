@@ -230,7 +230,7 @@ async def get_user_positions(wallet_id: str, start: Optional[int] = None) -> lis
 
     start_index = max(0, start) if start is not None else 0
 
-    positions = position_db_connector.get_positions_by_wallet_id(
+    positions = position_db_connector.get_all_positions_by_wallet_id(
         wallet_id, start_index, PAGINATION_STEP
     )
     return positions
