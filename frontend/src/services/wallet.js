@@ -4,7 +4,6 @@ import { ETH_ADDRESS, STRK_ADDRESS, USDC_ADDRESS } from '../utils/constants';
 import { ReactComponent as ETH } from 'assets/icons/ethereum.svg';
 import { ReactComponent as USDC } from 'assets/icons/borrow_usdc.svg';
 import { ReactComponent as STRK } from 'assets/icons/strk.svg';
-import { InjectedConnector } from 'starknetkit/injected';
 
 const CRM_TOKEN_ADDRESS = '0x051c4b1fe3bf6774b87ad0b15ef5d1472759076e42944fff9b9f641ff13e5bbe';
 
@@ -17,10 +16,6 @@ export const checkForCRMToken = async (walletAddress) => {
 
   try {
     const { wallet } = await connect({
-      connectors: [
-        new InjectedConnector({ options: { id: 'argentX' } }),
-        new InjectedConnector({ options: { id: 'braavos' } }),
-      ],
       modalMode: 'neverAsk',
     });
     await wallet.enable();
@@ -54,10 +49,6 @@ export const connectWallet = async () => {
     console.log('Attempting to connect to wallet...');
 
     const { wallet } = await connect({
-      connectors: [
-        new InjectedConnector({ options: { id: 'argentX' } }),
-        new InjectedConnector({ options: { id: 'braavos' } }),
-      ],
       modalMode: 'alwaysAsk',
     });
 
@@ -89,10 +80,6 @@ export async function logout() {
 export async function getTokenBalances(walletAddress) {
   try {
     const { wallet } = await connect({
-      connectors: [
-        new InjectedConnector({ options: { id: 'argentX' } }),
-        new InjectedConnector({ options: { id: 'braavos' } }),
-      ],
       modalMode: 'neverAsk',
     });
     await wallet.enable();
