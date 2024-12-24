@@ -72,5 +72,7 @@ pub trait IVault<TContractState> {
         user: ContractAddress,
         amount: TokenAmount
     );
+    fn return_liquidity(ref self: TContractState, user: ContractAddress, amount: TokenAmount);
+    fn get_vault_token(self: @TContractState) -> ContractAddress;
 }
 

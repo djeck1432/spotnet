@@ -1,5 +1,4 @@
-use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
-use openzeppelin_token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
+use openzeppelin::token::erc20::interface::{IERC20DispatcherTrait, ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
 use snforge_std::cheatcodes::execution_info::caller_address::{
     start_cheat_caller_address, stop_cheat_caller_address
 };
@@ -267,5 +266,84 @@ fn test_protect_position_user_address_is_zero() {
 
     start_cheat_caller_address(suite.vault.contract_address, user);
     suite.vault.protect_position(deposit_address, user, user_amount);
+    stop_cheat_caller_address(suite.vault.contract_address);
+}
+
+#[test]
+fn test_get_vault_token(){
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
+    let token: ContractAddress = deploy_erc20_mock();
+    let suite = setup_test_suite(user, token);
+    start_cheat_caller_address(suite.vault.contract_address, user);
+    assert(suite.vault.get_vault_token() == token, 'Vault token mismatch');
+    stop_cheat_caller_address(suite.vault.contract_address);
+}
+
+#[test]
+#[should_panic(expected: ('Vault token mismatch',))]
+fn test_get_vault_token_fail(){
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
+    let suite = setup_test_suite(user, deploy_erc20_mock());
+    start_cheat_caller_address(suite.vault.contract_address, user);
+    assert(suite.vault.get_vault_token() == tokens::ETH.try_into().unwrap(), 'Vault token mismatch');
+    stop_cheat_caller_address(suite.vault.contract_address);
+}
+
+#[test]
+fn test_return_liquidity(){
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
+    let user2: ContractAddress = MOCK_USER.try_into().unwrap();
+    let amount: u256 = 100;
+    let withdrawn_amount: u256 = 50;
+    let suite = setup_test_suite(user, deploy_erc20_mock());
+    setup_user(@suite, user, amount);
+
+    start_cheat_caller_address(suite.vault.contract_address, user);
+    suite.vault.store_liquidity(amount);
+    stop_cheat_caller_address(suite.vault.contract_address);
+
+    start_cheat_caller_address(suite.vault.contract_address, user);
+    suite.vault.return_liquidity(user2, withdrawn_amount);
+    stop_cheat_caller_address(suite.vault.contract_address);
+
+    let excpected_amount_user: felt252 = (amount-withdrawn_amount).try_into().unwrap();
+
+    assert_vault_amount(suite.vault.contract_address, user, excpected_amount_user);
+}
+
+#[test]
+#[should_panic(expected: ('Approved amount insufficient',))]
+fn test_return_liquidity_approved_amount_insufficient(){
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
+    let user2: ContractAddress = MOCK_USER.try_into().unwrap();
+    let amount: u256 = 100;
+    let withdrawn_amount: u256 = 50;
+    let suite = setup_test_suite(user, deploy_erc20_mock());
+
+    start_cheat_caller_address(suite.vault.contract_address, user);
+    suite.vault.store_liquidity(amount);
+    stop_cheat_caller_address(suite.vault.contract_address);
+
+    start_cheat_caller_address(suite.vault.contract_address, user);
+    suite.vault.return_liquidity(user2, withdrawn_amount);
+    stop_cheat_caller_address(suite.vault.contract_address);
+}
+
+#[test]
+#[should_panic(expected: ('Not enough tokens to withdraw',))]
+fn test_return_liquidity_not_enough_tokens(){
+    let user: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
+    let user2: ContractAddress = MOCK_USER.try_into().unwrap();
+    let amount: u256 = 100;
+    let withdrawn_amount: u256 = 150;
+    let suite = setup_test_suite(user, deploy_erc20_mock());
+    setup_user(@suite, user, amount);
+
+    start_cheat_caller_address(suite.vault.contract_address, user);
+    suite.vault.store_liquidity(amount);
+    stop_cheat_caller_address(suite.vault.contract_address);
+
+    start_cheat_caller_address(suite.vault.contract_address, user);
+    suite.vault.return_liquidity(user2, withdrawn_amount);
     stop_cheat_caller_address(suite.vault.contract_address);
 }

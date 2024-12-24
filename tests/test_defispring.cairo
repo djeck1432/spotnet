@@ -1,4 +1,4 @@
-use openzeppelin_token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
+use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
 use snforge_std::{
     declare, DeclareResultTrait, replace_bytecode, store, cheat_account_contract_address, CheatSpan
 };
