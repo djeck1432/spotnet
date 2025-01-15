@@ -17,6 +17,7 @@ export const checkForCRMToken = async (walletAddress) => {
 
   try {
     const wallet = await getWallet();
+    console.log(wallet, "walllllley")
 
     console.log('Checking CRM token balance for wallet:', wallet);
     const response = await wallet.provider.callContract({
@@ -44,8 +45,8 @@ export const getWallet = async () => {
   }
 
   console.log('No wallet found. Attempting to connect...');
-  const wallet = await connectWallet()
-  return wallet;
+  const _ = await connectWallet()
+  return globalWallet;
 };
 
 export const connectWallet = async () => {
