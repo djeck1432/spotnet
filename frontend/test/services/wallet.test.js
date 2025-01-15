@@ -50,7 +50,7 @@ describe('Wallet Services', () => {
     });
 
     it('should return false and alert if wallet lacks CRM tokens', async () => {
-      process.env.IS_DEV = 'false';
+      process.env.REACT_APP_IS_DEV = 'false';
       const mockStarknet = {
         wallet: {
           isConnected: true,
@@ -96,7 +96,7 @@ describe('Wallet Services', () => {
       expect(connect).toHaveBeenCalledWith(
         expect.objectContaining({
           modalMode: 'alwaysAsk',
-          modalTheme: 'light'
+          modalTheme: 'light',
         })
       );
       expect(mockStarknet.wallet.enable).toHaveBeenCalled();

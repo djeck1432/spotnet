@@ -44,7 +44,8 @@ export const getWallet = async () => {
   }
 
   console.log('No wallet found. Attempting to connect...');
-  return await connectWallet(); // Fallback to connectWallet if not already connected
+  const wallet = await connectWallet()
+  return wallet;
 };
 
 export const connectWallet = async () => {
