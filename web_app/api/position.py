@@ -342,3 +342,14 @@ async def get_extra_deposits_data(position_id: UUID):
     
     deposits = position_db_connector.get_extra_deposits_data(position_id)
     return deposits
+
+@router.get("/api/get-extra-deposits-data/{position_id}")
+async def get_extra_deposits(position_id: UUID) -> Dict[str, str]:
+    """
+    Get all extra deposits for a position
+    """
+    position = position_db_connector.get_position_by_id(position_id)
+    if not position:
+        raise HTTPException(status_code=404, detail="Position not found")
+        
+    return position_db_connector.get_extra_deposits_data(position_id)
