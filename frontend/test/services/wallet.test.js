@@ -50,7 +50,7 @@ describe('Wallet Services', () => {
     });
 
     it('should return false and alert if wallet lacks CRM tokens', async () => {
-      process.env.REACT_APP_IS_DEV = 'false';
+      process.env.IS_DEV = 'false';
       const mockStarknet = {
         wallet: {
           isConnected: true,
@@ -75,7 +75,7 @@ describe('Wallet Services', () => {
 
       connect.mockResolvedValue(mockStarknet);
 
-      await expect(checkForCRMToken('0x123')).rejects.toThrow('Wallet not connected');
+      await expect(checkForCRMToken('0x123')).rejects.toThrow('Wallet connection failed');
     });
   });
 
@@ -158,7 +158,7 @@ describe('Wallet Services', () => {
 
       connect.mockResolvedValue(mockStarknet);
 
-      await expect(getTokenBalances('0x123')).rejects.toThrow('Wallet not connected');
+      await expect(getTokenBalances('0x123')).rejects.toThrow('Wallet connection failed');
     });
   });
 

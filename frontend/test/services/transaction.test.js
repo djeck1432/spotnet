@@ -84,7 +84,7 @@ describe('Transaction Functions', () => {
       connect.mockResolvedValueOnce({ wallet: { isConnected: false, enable: jest.fn() } });
 
       await expect(sendTransaction(validLoopLiquidityData, mockContractAddress)).rejects.toThrow(
-        'Wallet not connected'
+        'Wallet connection failed'
       );
     });
 

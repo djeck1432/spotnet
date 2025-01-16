@@ -71,7 +71,7 @@ describe('Contract Deployment Tests', () => {
       };
       connect.mockResolvedValue(mockStarknet);
 
-      await expect(deployContract(mockWalletId)).rejects.toThrow('Wallet not connected');
+      await expect(deployContract(mockWalletId)).rejects.toThrow('Wallet connection failed');
     });
 
     it('should handle deployment errors correctly', async () => {

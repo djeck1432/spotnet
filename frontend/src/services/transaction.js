@@ -1,4 +1,4 @@
-import { getWallet } from './wallet';
+import { connectWallet, getWallet } from './wallet';
 import { CallData } from 'starknet';
 import { erc20abi } from '../abis/erc20';
 import { abi } from '../abis/abi';
@@ -8,6 +8,7 @@ import { notify, ToastWithLink } from '../components/layout/notifier/Notifier';
 
 export async function sendTransaction(loopLiquidityData, contractAddress) {
   try {
+    await connectWallet();
     const wallet = await getWallet();
 
     if (!loopLiquidityData.pool_key || !loopLiquidityData.deposit_data) {
@@ -53,6 +54,7 @@ export async function sendTransaction(loopLiquidityData, contractAddress) {
 
 export async function sendExtraDepositTransaction(deposit_data, userContractAddress) {
   try {
+    await connectWallet();
     const wallet = await getWallet();
 
     // Prepare calldata
@@ -110,6 +112,7 @@ export async function sendExtraDepositTransaction(deposit_data, userContractAddr
 
 /* eslint-disable-next-line no-unused-vars */
 async function waitForTransaction(txHash) {
+  await connectWallet();
   const wallet = await getWallet();
 
   let receipt = null;
@@ -127,6 +130,7 @@ async function waitForTransaction(txHash) {
 export async function closePosition(transactionData) {
   const callData = new CallData(abi);
   const compiled = callData.compile('close_position', transactionData);
+  await connectWallet();
   const wallet = await getWallet();
 
   let result = await wallet.account.execute([
