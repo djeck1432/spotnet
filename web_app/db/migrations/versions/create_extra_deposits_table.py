@@ -9,6 +9,10 @@ from uuid import uuid4
 from datetime import datetime
 
 def upgrade():
+    """
+    Create extra_deposits table with UUID primary key, token symbol, amount,
+    timestamp and position foreign key reference.
+    """
     op.create_table(
         'extra_deposits',
         sa.Column('id', sa.UUID(), nullable=False, default=uuid4),
@@ -22,4 +26,7 @@ def upgrade():
     )
 
 def downgrade():
+    """
+    Remove extra_deposits table from the database.
+    """
     op.drop_table('extra_deposits') 
