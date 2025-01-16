@@ -93,7 +93,7 @@ class PositionDBConnector(UserDBConnector):
                     .limit(limit)
                     .all()
                 )
-                # Convert positions to a list of dictionaries
+            
                 positions_dict = [
                     self._position_to_dict(position) for position in positions
                 ]
@@ -130,7 +130,7 @@ class PositionDBConnector(UserDBConnector):
                     .limit(limit)
                     .all()
                 )
-                # Convert positions to a list of dictionaries
+              
                 return [
                     self._position_to_dict(position) for position in positions
                 ]
@@ -182,7 +182,7 @@ class PositionDBConnector(UserDBConnector):
             logger.error(f"User with wallet ID {wallet_id} not found")
             return None
 
-        # Check if a position with status 'pending' already exists for this user
+       
         with self.Session() as session:
             existing_position = (
                 session.query(Position)
@@ -192,27 +192,27 @@ class PositionDBConnector(UserDBConnector):
                 .one_or_none()
             )
 
-            # If a pending position exists, update its values
+        
             if existing_position:
                 existing_position.token_symbol = token_symbol
                 existing_position.amount = amount
                 existing_position.multiplier = multiplier
                 existing_position.start_price = PositionDBConnector.START_PRICE
-                session.commit()  # Commit the changes to the database
-                session.refresh(existing_position)  # Refresh to get updated values
+                session.commit() 
+                session.refresh(existing_position) 
                 return existing_position
 
-            # Create a new position since none with 'pending' status exists
+         
             position = Position(
                 user_id=user.id,
                 token_symbol=token_symbol,
                 amount=amount,
                 multiplier=multiplier,
-                status=Status.PENDING.value,  # Set status as 'pending' by default
+                status=Status.PENDING.value, 
                 start_price=PositionDBConnector.START_PRICE,
             )
 
-            # Write the new position to the database
+       
             position = self.write_to_db(position)
             return position
 
@@ -309,7 +309,7 @@ class PositionDBConnector(UserDBConnector):
         """
         with self.Session() as db:
             try:
-                # Group by token symbol and sum amounts
+             
                 token_amounts = (
                     db.query(
                         Position.token_symbol,
@@ -319,7 +319,7 @@ class PositionDBConnector(UserDBConnector):
                     .group_by(Position.token_symbol)
                     .all()
                 )
-                # Convert to dictionary
+           
                 return {token: Decimal(str(amount)) for token, amount in token_amounts}
 
             except SQLAlchemyError as e:
@@ -373,7 +373,7 @@ class PositionDBConnector(UserDBConnector):
         """
         with self.Session() as db:
             try:
-                # Fetch the position by ID
+              
                 position = db.query(Position).filter(Position.id == position_id).first()
 
                 if not position:
@@ -407,7 +407,7 @@ class PositionDBConnector(UserDBConnector):
                     .all()
                 )
 
-                # Convert ORM objects to dictionaries for return
+         
                 return [
                     {
                         "user_id": position.user_id,
@@ -464,7 +464,7 @@ class PositionDBConnector(UserDBConnector):
                 session.commit()
             except IntegrityError:
                 session.rollback()
-                # Update existing deposit
+           
                 existing_deposit = (
                     session.query(ExtraDeposit)
                     .filter(
@@ -498,7 +498,7 @@ class PositionDBConnector(UserDBConnector):
                 existing_deposit.amount = str(new_amount)
                 existing_deposit.added_at = datetime.utcnow()
             else:
-                # Create new deposit
+            
                 new_deposit = ExtraDeposit(
                     token_symbol=token_symbol,
                     amount=amount,
