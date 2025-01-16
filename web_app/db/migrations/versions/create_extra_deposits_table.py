@@ -1,8 +1,7 @@
 """create extra deposits table
 
 Revision ID: create_extra_deposits
-Revises: <previous_revision_id>
-Create Date: 2024-01-16
+
 """
 from alembic import op
 import sqlalchemy as sa
