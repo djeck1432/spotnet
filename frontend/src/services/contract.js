@@ -6,7 +6,6 @@ import { notify, ToastWithLink } from '../components/layout/notifier/Notifier';
 export async function deployContract(walletId) {
   try {
     // Connect to Starknet wallet
-    await connectWallet();
     const wallet = await getWallet();
 
     // Prepare the deploy contract transaction object
