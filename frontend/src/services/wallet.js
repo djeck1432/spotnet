@@ -16,7 +16,6 @@ export const checkForCRMToken = async (walletAddress) => {
   }
 
   try {
-    await connectWallet();
     const wallet = await getWallet();
 
     console.log('Checking CRM token balance for wallet:', wallet);
@@ -45,7 +44,12 @@ export const getWallet = async () => {
   }
 
   console.log('No wallet found. Attempting to connect...');
-  return await connectWallet(); // Fallback to connectWallet if not already connected
+ const address =  await connectWallet(); // Fallback to connectWallet if not already connected
+ if (!address) {
+    throw new Error('Wallet not connected');
+ }
+ return globalWallet;
+ 
 };
 
 export const connectWallet = async () => {
@@ -85,7 +89,6 @@ export function logout() {
 
 export async function getTokenBalances(walletAddress) {
   try {
-    await connectWallet();
     const wallet = await getWallet();
     console.log("Wallet info", wallet);
 

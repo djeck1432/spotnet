@@ -1,10 +1,22 @@
 import { connect } from 'starknetkit';
-import { checkForCRMToken, connectWallet, getTokenBalances, getBalances, logout } from '../../src/services/wallet';
+import {
+  checkForCRMToken,
+  connectWallet,
+  getTokenBalances,
+  getBalances,
+  logout,
+  getWallet,
+} from '../../src/services/wallet';
 import { ETH_ADDRESS, STRK_ADDRESS, USDC_ADDRESS } from '../../src/utils/constants';
 
 jest.mock('starknetkit', () => ({
   connect: jest.fn(),
   disconnect: jest.fn(),
+}));
+
+jest.mock('../../src/services/wallet', () => ({
+  ...jest.requireActual('../../src/services/wallet'),
+  getWallet: jest.fn(),
 }));
 
 jest.mock(
@@ -17,22 +29,32 @@ jest.mock(
 
 describe('Wallet Services', () => {
   beforeEach(() => {
+    // Reset mocks and global state for each test
     jest.clearAllMocks();
+    process.env.REACT_APP_IS_DEV = 'false'; // Reset environment variable
+    global.alert = jest.fn(); // Reset global alert function
+
+    // Reset specific mocks if needed
+    getWallet.mockReset();
+    connect.mockReset();
   });
 
   afterEach(() => {
+    // Ensure no module state is persisted between tests
     jest.resetModules();
+
+    // Optionally, reset other global or environment states here
+    process.env.REACT_APP_IS_DEV = undefined;
   });
 
   describe('checkForCRMToken', () => {
     it('should return true in development mode', async () => {
-      process.env.REACT_APP_IS_DEV = 'true';
+      process.env.REACT_APP_IS_DEV = 'true'; // Mock env var for this test
       const result = await checkForCRMToken('0x123');
       expect(result).toBe(true);
     });
 
     it('should validate CRM token and return true if wallet has tokens', async () => {
-      process.env.REACT_APP_IS_DEV = 'false';
       const mockStarknet = {
         wallet: {
           isConnected: true,
@@ -40,9 +62,11 @@ describe('Wallet Services', () => {
             callContract: jest.fn().mockResolvedValue({ result: ['1'] }),
           },
           enable: jest.fn(),
+          selectedAddress: '0x123',
         },
       };
 
+      getWallet.mockResolvedValue(mockStarknet.wallet);
       connect.mockResolvedValue(mockStarknet);
 
       const result = await checkForCRMToken('0x123');
@@ -50,7 +74,6 @@ describe('Wallet Services', () => {
     });
 
     it('should return false and alert if wallet lacks CRM tokens', async () => {
-      process.env.IS_DEV = 'false';
       const mockStarknet = {
         wallet: {
           isConnected: true,
@@ -58,11 +81,13 @@ describe('Wallet Services', () => {
             callContract: jest.fn().mockResolvedValue({ result: ['0'] }),
           },
           enable: jest.fn(),
+          selectedAddress: '0x123',
         },
       };
 
       global.alert = jest.fn();
 
+      getWallet.mockResolvedValue(mockStarknet.wallet);
       connect.mockResolvedValue(mockStarknet);
 
       const result = await checkForCRMToken('0x123');
@@ -71,13 +96,15 @@ describe('Wallet Services', () => {
     });
 
     it('should throw an error if wallet is not connected', async () => {
-      const mockStarknet = { wallet: { isConnected: false, enable: jest.fn() } };
+      const mockStarknet = { wallet: { isConnected: false, enable: jest.fn(), selectedAddress: '0x123' } };
 
+      getWallet.mockResolvedValue(mockStarknet.wallet);
       connect.mockResolvedValue(mockStarknet);
 
       await expect(checkForCRMToken('0x123')).rejects.toThrow('Wallet connection failed');
     });
   });
+
 
   describe('connectWallet', () => {
     it('should successfully connect wallet and return address', async () => {
@@ -96,7 +123,7 @@ describe('Wallet Services', () => {
       expect(connect).toHaveBeenCalledWith(
         expect.objectContaining({
           modalMode: 'alwaysAsk',
-          modalTheme: 'light'
+          modalTheme: 'light',
         })
       );
       expect(mockStarknet.wallet.enable).toHaveBeenCalled();
@@ -142,6 +169,7 @@ describe('Wallet Services', () => {
         },
       };
 
+      getWallet.mockResolvedValue(mockStarknet.wallet);
       connect.mockResolvedValue(mockStarknet);
 
       const balances = await getTokenBalances('0x123');
@@ -156,6 +184,7 @@ describe('Wallet Services', () => {
     it('should throw an error if wallet is not connected', async () => {
       const mockStarknet = { wallet: { isConnected: false, enable: jest.fn() } };
 
+      getWallet.mockResolvedValue(mockStarknet.wallet);
       connect.mockResolvedValue(mockStarknet);
 
       await expect(getTokenBalances('0x123')).rejects.toThrow('Wallet connection failed');
