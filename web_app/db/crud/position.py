@@ -451,30 +451,23 @@ class PositionDBConnector(UserDBConnector):
 
     def add_extra_deposit_to_position(self, position: Position, amount: str) -> None:
         """
-        Add extra deposit to a position
+        Add extra deposit to a position using update_on_conflict.
         """
         with self.Session() as session:
-            extra_deposit = ExtraDeposit(
+            stmt = insert(ExtraDeposit).values(
                 token_symbol=position.token_symbol,
                 amount=amount,
-                position_id=position.id
+                position_id=position.id,
+                added_at=datetime.utcnow()
+            ).on_conflict_do_update(
+                index_elements=['token_symbol', 'position_id'],
+                set_={
+                    'amount': ExtraDeposit.amount + cast(amount, String),
+                    'added_at': datetime.utcnow()
+                }
             )
-            session.add(extra_deposit)
-            try:
-                session.commit()
-            except IntegrityError:
-                session.rollback()
-           
-                existing_deposit = (
-                    session.query(ExtraDeposit)
-                    .filter(
-                        ExtraDeposit.position_id == position.id,
-                        ExtraDeposit.token_symbol == position.token_symbol
-                    )
-                    .one()
-                )
-                existing_deposit.amount = str(Decimal(existing_deposit.amount) + Decimal(amount))
-                session.commit()
+            session.execute(stmt)
+            session.commit()
 
     def add_extra_deposit(self, token_symbol: str, amount: str, position_id: UUID) -> None:
         """

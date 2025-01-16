@@ -305,30 +305,6 @@ async def get_user_positions(wallet_id: str, start: Optional[int] = None) -> lis
     )
     return positions
 
-@router.post("/api/add-deposit")
-async def add_deposit(deposit_data: AddPositionDepositData) -> Dict:
-    """
-    Add or update an extra deposit for a position.
-    """
-    position = position_db_connector.get_position_by_id(deposit_data.position_id)
-    if not position:
-        raise HTTPException(status_code=404, detail="Position not found")
-        
-    position_db_connector.add_extra_deposit(
-        deposit_data.token_symbol,
-        deposit_data.amount,
-        deposit_data.position_id
-    )
-    
-    if deposit_data.transaction_hash:
-        transaction_db_connector.create_transaction(
-            deposit_data.position_id,
-            deposit_data.transaction_hash,
-            status=TransactionStatus.EXTRA_DEPOSIT.value
-        )
-    
-    return {"status": "success"}
-
 @router.get(
     "/api/get-extra-deposits-data/{position_id}",
     tags=["Position Operations"],
