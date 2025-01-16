@@ -462,7 +462,11 @@ class PositionDBConnector(UserDBConnector):
             ).on_conflict_do_update(
                 index_elements=['token_symbol', 'position_id'],
                 set_={
-                    'amount': ExtraDeposit.amount + cast(amount, String),
+                    'amount': func.cast(
+                        func.cast(ExtraDeposit.amount, Numeric) + 
+                        func.cast(amount, Numeric),
+                        String
+                    ),
                     'added_at': datetime.utcnow()
                 }
             )

@@ -304,22 +304,3 @@ async def get_user_positions(wallet_id: str, start: Optional[int] = None) -> lis
         wallet_id, start_index, PAGINATION_STEP
     )
     return positions
-
-@router.get(
-    "/api/get-extra-deposits-data/{position_id}",
-    tags=["Position Operations"],
-    summary="Get extra deposits for a position",
-    response_description="Returns the extra deposits data"
-)
-async def get_extra_deposits_data(position_id: UUID):
-    """
-    Get all extra deposits for a position.
-    ### Parameters:
-    - **position_id**: The position ID.
-    """
-    position = position_db_connector.get_position_by_id(position_id)
-    if not position:
-        raise HTTPException(status_code=404, detail="Position not found")
-    
-    deposits = position_db_connector.get_extra_deposits_data(position_id)
-    return deposits
