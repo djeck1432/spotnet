@@ -194,6 +194,11 @@ class Transaction(Base):
     )
 
 class ExtraDeposit(Base):
+    """
+    SQLAlchemy model for extra deposits associated with positions.
+    Tracks additional deposits made to existing positions with unique
+    constraints on token symbol and position combinations.
+    """
     __tablename__ = "extra_deposits"
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)

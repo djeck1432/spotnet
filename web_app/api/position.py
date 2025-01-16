@@ -208,6 +208,17 @@ async def open_position(position_id: str, transaction_hash: str) -> str:
     response_description="Returns the result of extra deposit",
 )
 async def get_add_deposit_data(position_id: UUID, amount: str, token_symbol: str):
+    """
+    Prepare data for adding an extra deposit to a position.
+    
+    Args:
+        position_id: UUID of the position
+        amount: Amount of tokens to deposit
+        token_symbol: Symbol of the token being deposited
+        
+    Returns:
+        Dict containing deposit data with token address and amount
+    """
     if not amount:
         raise HTTPException(status_code=400, detail="Amount is required")
     

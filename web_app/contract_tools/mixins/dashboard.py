@@ -106,6 +106,15 @@ class DashboardMixin:
 
     @classmethod
     async def get_current_position_sum(cls, position: dict) -> Decimal:
+        """
+        Calculate the total position value including extra deposits.
+        
+        Args:
+            position: Position object containing base amount and token information
+            
+        Returns:
+            Decimal representing total position value including extra deposits
+        """
         total_amount = Decimal(position.amount)
         extra_deposits = position_db_connector.get_extra_deposits_data(position.id)
         
