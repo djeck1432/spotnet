@@ -469,27 +469,7 @@ class PositionDBConnector(UserDBConnector):
             session.execute(stmt)
             session.commit()
 
-    def add_extra_deposit(self, token_symbol: str, amount: str, position_id: UUID) -> None:
-        """
-        Add or update an extra deposit for a position.
-        If deposit exists for token_symbol, update amount instead of creating new.
-        """
-        with self.Session() as session:
-            stmt = insert(ExtraDeposit).values(
-                token_symbol=token_symbol,
-                amount=amount,
-                position_id=position_id,
-                added_at=datetime.utcnow()
-            ).on_conflict_do_update(
-                index_elements=['token_symbol', 'position_id'],
-                set_={
-                    'amount': ExtraDeposit.amount + cast(amount, String),
-                    'added_at': datetime.utcnow()
-                }
-            )
-            session.execute(stmt)
-            session.commit()
-
+    
     def get_extra_deposits_data(self, position_id: UUID) -> Dict[str, str]:
         """
         Get all extra deposits for a position.
