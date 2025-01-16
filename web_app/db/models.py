@@ -7,6 +7,7 @@ between the data entities.
 
 from enum import Enum as PyEnum
 from uuid import uuid4
+from datetime import datetime
 
 from sqlalchemy import (
     DECIMAL,
@@ -18,6 +19,7 @@ from sqlalchemy import (
     NUMERIC,
     String,
     Float,
+    UniqueConstraint,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
@@ -189,4 +191,17 @@ class Transaction(Base):
         nullable=False, 
         default=func.now(), 
         onupdate=func.now()
+    )
+
+class ExtraDeposit(Base):
+    __tablename__ = "extra_deposits"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    token_symbol = Column(String, nullable=False)
+    amount = Column(String, nullable=False)
+    added_at = Column(DateTime, default=datetime.utcnow)
+    position_id = Column(UUID(as_uuid=True), ForeignKey("position.id"))
+    
+    __table_args__ = (
+        UniqueConstraint('token_symbol', 'position_id', name='uix_token_position'),
     )

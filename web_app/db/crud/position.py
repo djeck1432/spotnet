@@ -6,12 +6,14 @@ import logging
 import uuid
 from datetime import datetime
 from decimal import Decimal
-from typing import TypeVar
+from typing import TypeVar, Dict, Optional, List, Union
+from uuid import UUID
 
 from sqlalchemy import Numeric, cast, func
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import IntegrityError
 
-from web_app.db.models import Base, Position, Status, Transaction, User
+from web_app.db.models import Base, Position, Status, Transaction, User, ExtraDeposit
 
 from .user import UserDBConnector
 
@@ -449,10 +451,74 @@ class PositionDBConnector(UserDBConnector):
 
     def add_extra_deposit_to_position(self, position: Position, amount: str) -> None:
         """
-        Adds extra deposit to a position in the database.
-        :param position: Position
-        :param amount: str
-        :return: None
+        Add extra deposit to a position
         """
-        position.amount = str(Decimal(position.amount) + Decimal(amount))
-        self.write_to_db(position)
+        with self.Session() as session:
+            extra_deposit = ExtraDeposit(
+                token_symbol=position.token_symbol,
+                amount=amount,
+                position_id=position.id
+            )
+            session.add(extra_deposit)
+            try:
+                session.commit()
+            except IntegrityError:
+                session.rollback()
+                # Update existing deposit
+                existing_deposit = (
+                    session.query(ExtraDeposit)
+                    .filter(
+                        ExtraDeposit.position_id == position.id,
+                        ExtraDeposit.token_symbol == position.token_symbol
+                    )
+                    .one()
+                )
+                existing_deposit.amount = str(Decimal(existing_deposit.amount) + Decimal(amount))
+                session.commit()
+
+    def add_extra_deposit(self, token_symbol: str, amount: str, position_id: UUID) -> None:
+        """
+        Add or update an extra deposit for a position.
+        """
+        with self.Session() as session:
+            existing_deposit = (
+                session.query(ExtraDeposit)
+                .filter(
+                    ExtraDeposit.position_id == position_id,
+                    ExtraDeposit.token_symbol == token_symbol
+                )
+                .one_or_none()
+            )
+            
+            if existing_deposit:
+                # Update existing deposit amount
+                existing_amount = Decimal(existing_deposit.amount)
+                new_amount = existing_amount + Decimal(amount)
+                existing_deposit.amount = str(new_amount)
+                existing_deposit.added_at = datetime.utcnow()
+            else:
+                # Create new deposit
+                new_deposit = ExtraDeposit(
+                    token_symbol=token_symbol,
+                    amount=amount,
+                    position_id=position_id
+                )
+                session.add(new_deposit)
+            
+            session.commit()
+
+    def get_extra_deposits_data(self, position_id: UUID) -> Dict[str, str]:
+        """
+        Get all extra deposits for a position.
+        Returns a dictionary of token_symbol: amount pairs.
+        """
+        with self.Session() as session:
+            deposits = (
+                session.query(ExtraDeposit)
+                .filter(ExtraDeposit.position_id == position_id)
+                .all()
+            )
+            return {
+                deposit.token_symbol: deposit.amount 
+                for deposit in deposits
+            }
