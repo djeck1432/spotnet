@@ -51,7 +51,7 @@ class DashboardMixin:
                         )
                         symbol = TokenParams.get_token_symbol(address_with_leading_zero)
                         if symbol:
-                            # Convert to Decimal for precise calculations
+                      
                             prices[symbol] = Decimal(str(current_price))
                 except (AttributeError, TypeError, ValueError) as e:
                     logger.debug(f"Error parsing price for {address}: {str(e)}")
@@ -104,23 +104,17 @@ class DashboardMixin:
             logger.error(f"Error calculating sum: {e}")
             return Decimal(0)
 
-    @staticmethod
-    def get_current_position_sum(position: Position, current_prices: Dict[str, float]) -> Decimal:
-        """
-        Calculate total position value including extra deposits
-        """
-        # Base position amount
+    @classmethod
+    async def get_current_position_sum(cls, position: dict) -> Decimal:
         total_amount = Decimal(position.amount)
-        
-        # Add extra deposits
         extra_deposits = position_db_connector.get_extra_deposits_data(position.id)
+        
         for token, amount in extra_deposits.items():
-            if token in current_prices:
+            if token in cls.current_prices:
                 deposit_amount = Decimal(amount)
                 if token != position.token_symbol:
-                    # Convert to position token value
-                    deposit_amount *= Decimal(current_prices[token])
-                    deposit_amount /= Decimal(current_prices[position.token_symbol])
+                    deposit_amount *= Decimal(cls.current_prices[token])
+                    deposit_amount /= Decimal(cls.current_prices[position.token_symbol])
                 total_amount += deposit_amount
         
         return total_amount

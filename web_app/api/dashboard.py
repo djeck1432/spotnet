@@ -53,12 +53,12 @@ async def get_dashboard(wallet_id: str) -> DashboardResponse:
     if not contract_address:
         return default_dashboard_response
 
-    # Fetching first 10 positions at the moment
+
     opened_positions = position_db_connector.get_positions_by_wallet_id(
         wallet_id
     )
 
-    # At the moment, we only support one position per wallet
+
     first_opened_position = (
         opened_positions[0]
         if opened_positions
@@ -67,7 +67,7 @@ async def get_dashboard(wallet_id: str) -> DashboardResponse:
     if not first_opened_position:
         return default_dashboard_response
     try:
-        # Fetch zkLend position for the wallet ID
+    
         health_ratio, tvl = await HealthRatioMixin.get_health_ratio_and_tvl(
             contract_address
         )

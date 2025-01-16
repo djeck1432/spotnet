@@ -482,30 +482,19 @@ class PositionDBConnector(UserDBConnector):
         If deposit exists for token_symbol, update amount instead of creating new.
         """
         with self.Session() as session:
-            existing_deposit = (
-                session.query(ExtraDeposit)
-                .filter(
-                    ExtraDeposit.position_id == position_id,
-                    ExtraDeposit.token_symbol == token_symbol
-                )
-                .one_or_none()
+            stmt = insert(ExtraDeposit).values(
+                token_symbol=token_symbol,
+                amount=amount,
+                position_id=position_id,
+                added_at=datetime.utcnow()
+            ).on_conflict_do_update(
+                index_elements=['token_symbol', 'position_id'],
+                set_={
+                    'amount': ExtraDeposit.amount + cast(amount, String),
+                    'added_at': datetime.utcnow()
+                }
             )
-            
-            if existing_deposit:
-                # Update existing deposit amount
-                existing_amount = Decimal(existing_deposit.amount)
-                new_amount = existing_amount + Decimal(amount)
-                existing_deposit.amount = str(new_amount)
-                existing_deposit.added_at = datetime.utcnow()
-            else:
-            
-                new_deposit = ExtraDeposit(
-                    token_symbol=token_symbol,
-                    amount=amount,
-                    position_id=position_id
-                )
-                session.add(new_deposit)
-            
+            session.execute(stmt)
             session.commit()
 
     def get_extra_deposits_data(self, position_id: UUID) -> Dict[str, str]:
