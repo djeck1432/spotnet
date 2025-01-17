@@ -25,7 +25,7 @@ from web_app.db.crud import PositionDBConnector, TransactionDBConnector
 from web_app.db.models import TransactionStatus
 
 router = APIRouter()  # Initialize the router
-position_db_connector = PositionDBConnector()  # Initialize the PositionDBConnector
+position_db_connector = PositionDBConnector()  
 transaction_db_connector = TransactionDBConnector()
 
 # Constants

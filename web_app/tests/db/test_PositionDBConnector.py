@@ -265,6 +265,18 @@ def test_delete_all_user_positions_success(mock_scoped_session_call):
     mock_session.commit.assert_called_once()
 
 
+def test_get_extra_deposits_data_success(mock_db_session, mock_extra_deposit):
+    """Test successfully retrieving extra deposits data"""
+    position_id = uuid.uuid4()
+    mock_db_session.query.return_value.filter.return_value.all.return_value = [mock_extra_deposit]
+    
+    position_connector = PositionDBConnector()
+    result = position_connector.get_extra_deposits_data(position_id)
+    
+    assert result == {mock_extra_deposit.token_symbol: mock_extra_deposit.amount}
+    mock_db_session.query.assert_called_once()
+
+
 ### Negative Test Cases ###
 
 

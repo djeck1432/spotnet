@@ -84,3 +84,28 @@ def mock_position_db_connector() -> None:
     """
     mock_position_connector = MagicMock(spec=PositionDBConnector)
     yield mock_position_connector
+
+
+@pytest.fixture
+def mock_extra_deposit():
+    """Fixture for mocking ExtraDeposit instances"""
+    return ExtraDeposit(
+        id=uuid.uuid4(),
+        token_symbol="ETH",
+        amount="1.0",
+        position_id=uuid.uuid4()
+    )
+
+
+@pytest.fixture
+def mock_db_session(monkeypatch):
+    """Fixture for mocking database session"""
+    mock_session = MagicMock()
+    mock_session.__enter__.return_value = mock_session
+    mock_session.__exit__.return_value = None
+    
+    def mock_get_session():
+        return mock_session
+    
+    monkeypatch.setattr("web_app.db.crud.position.Session", mock_get_session)
+    return mock_session
