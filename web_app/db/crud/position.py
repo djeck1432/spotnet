@@ -497,3 +497,31 @@ class PositionDBConnector(UserDBConnector):
                 deposit.token_symbol: deposit.amount 
                 for deposit in deposits
             }
+
+    def get_current_position_sum(
+        self, 
+        position_id: UUID, 
+        current_prices: Dict[str, Decimal]
+    ) -> Decimal:
+        """
+        Calculates the sum of the current prices for a position.
+
+        :param position_id: UUID of the position
+        :param current_prices: Dictionary of token symbols and their current prices
+        :return: Decimal sum of the current prices
+        """
+        with self.Session() as db:
+            try:
+                position = db.query(Position).filter(Position.id == position_id).first()
+                if not position:
+                    return Decimal(0)
+
+                current_price = current_prices.get(position.token_symbol)
+                if not current_price:
+                    return Decimal(0)
+
+                return Decimal(str(position.amount)) * current_price
+
+            except SQLAlchemyError as e:
+                logger.error(f"Error calculating current position sum: {str(e)}")
+                return Decimal(0)

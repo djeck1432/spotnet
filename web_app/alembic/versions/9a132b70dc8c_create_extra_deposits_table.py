@@ -28,10 +28,20 @@ def upgrade():
     if "extra_deposits" not in inspector.get_table_names():
         op.create_table(
             'extra_deposits',
-            sa.Column('id', sa.UUID(), server_default=sa.text('uuid_generate_v4()'), nullable=False),
+            sa.Column(
+                'id', 
+                sa.UUID(), 
+                server_default=sa.text('uuid_generate_v4()'), 
+                nullable=False
+            ),
             sa.Column('token_symbol', sa.String(), nullable=False),
             sa.Column('amount', sa.String(), nullable=False),
-            sa.Column('added_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
+            sa.Column(
+                'added_at', 
+                sa.DateTime(), 
+                server_default=sa.text('CURRENT_TIMESTAMP'), 
+                nullable=False
+            ),
             sa.Column('position_id', sa.UUID(), nullable=False),
             sa.ForeignKeyConstraint(['position_id'], ['position.id'], ),
             sa.PrimaryKeyConstraint('id'),
