@@ -7,6 +7,7 @@ from typing import Optional, Dict
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Request
+from sqlalchemy import insert
 
 from web_app.api.serializers.position import (
     AddPositionDepositData,
@@ -75,7 +76,7 @@ async def create_position_with_transaction_data(
     ### Returns:
     The created position's details and transaction data.
     """
-    # Create a new position in the database
+  
     position = position_db_connector.create_position(
         form_data.wallet_id,
         form_data.token_symbol,
@@ -86,7 +87,7 @@ async def create_position_with_transaction_data(
     if form_data.token_symbol == TokenParams.USDC.name:
         borrowing_token = TokenParams.ETH.address
 
-    # Get the transaction data for the deposit
+  
     deposit_data = await DepositMixin.get_transaction_data(
         form_data.token_symbol,
         form_data.amount,
@@ -242,20 +243,12 @@ async def get_add_deposit_data(position_id: UUID, amount: str, token_symbol: str
         }                   
     }
 
-@router.post(
-    "/api/add-extra-deposit/{position_id}",
-    tags=["Position Operations"],
-    summary="Add extra deposit to a user position",
-    response_description="Returns the result of extra deposit",
-)
+@router.post("/api/add-extra-deposit/{position_id}")
 async def add_extra_deposit(position_id: UUID, data: AddPositionDepositData):
     """
-    This endpoint adds extra deposit to a user position.
-    ### Parameters:
-    - **position_id**: The position ID.
-    - **amount**: The amount of the token being deposited.
-    - **token_symbol**: The symbol of the token being deposited.
-    - **transaction_hash**: The transaction hash for the extra deposit.
+    Add extra deposit to a user position.
+    All deposits are now handled through ExtraDeposit table,
+    regardless of token type.
     """
     if not data.amount:
         raise HTTPException(status_code=400, detail="Amount is required")
@@ -267,15 +260,19 @@ async def add_extra_deposit(position_id: UUID, data: AddPositionDepositData):
     if not position:
         raise HTTPException(status_code=404, detail="Position not found")
     
-    if data.token_symbol == position.token_symbol:
-        position_db_connector.add_extra_deposit_to_position(position, data.amount)
+  
+    position_db_connector.add_extra_deposit_to_position(
+        position,
+        data.token_symbol,
+        data.amount
+    )
 
-    if data.transaction_hash:
-        transaction_db_connector.create_transaction(
-            position_id,
-            data.transaction_hash,
-            status=TransactionStatus.EXTRA_DEPOSIT.value
-        )
+
+    transaction_db_connector.create_transaction(
+        position_id,
+        data.transaction_hash,
+        status=TransactionStatus.EXTRA_DEPOSIT.value
+    )
     
     return {"detail": "Successfully added extra deposit"}
 

@@ -760,14 +760,16 @@ async def test_add_extra_deposit_transaction_success(
         assert response.status_code == 200
         assert response.json() == expected_response
         
-        # FIXME: temp fix
-        # if data["token_symbol"] == mock_position["token_symbol"]:
-            # mock_add_extra_deposit.assert_called_once_with(mock_position_obj, data["amount"])
-        # mock_create_transaction.assert_called_once_with(
-        #     mock_position["id"],
-        #     data["transaction_hash"],
-        #     status=TransactionStatus.EXTRA_DEPOSIT.value
-        # )
+        mock_add_extra_deposit.assert_called_once_with(
+            mock_position_obj,
+            data["token_symbol"],
+            data["amount"]
+        )
+        mock_create_transaction.assert_called_once_with(
+            mock_position["id"],
+            data["transaction_hash"],
+            status=TransactionStatus.EXTRA_DEPOSIT.value
+        )
 
 
 @pytest.mark.parametrize(

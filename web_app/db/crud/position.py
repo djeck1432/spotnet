@@ -9,7 +9,7 @@ from decimal import Decimal
 from typing import TypeVar, Dict, Optional, List, Union
 from uuid import UUID
 
-from sqlalchemy import Numeric, cast, func
+from sqlalchemy import Numeric, cast, func, insert, String
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.exc import IntegrityError
 
@@ -449,28 +449,36 @@ class PositionDBConnector(UserDBConnector):
             except SQLAlchemyError as e:
                 logger.error(f"Error deleting positions for user {user_id}: {str(e)}")
 
-    def add_extra_deposit_to_position(self, position: Position, amount: str) -> None:
+    def add_extra_deposit_to_position(self, position: Position, token_symbol: str, amount: str) -> None:
         """
-        Add extra deposit to a position using update_on_conflict.
+        Add or update an extra deposit for a position.
+        If the token already exists for this position, update its amount.
+        Otherwise, create a new extra deposit entry.
         """
         with self.Session() as session:
-            stmt = insert(ExtraDeposit).values(
-                token_symbol=position.token_symbol,
-                amount=amount,
-                position_id=position.id,
-                added_at=datetime.utcnow()
-            ).on_conflict_do_update(
-                index_elements=['token_symbol', 'position_id'],
-                set_={
-                    'amount': func.cast(
-                        func.cast(ExtraDeposit.amount, Numeric) + 
-                        func.cast(amount, Numeric),
-                        String
-                    ),
-                    'added_at': datetime.utcnow()
-                }
+            existing_deposit = (
+                session.query(ExtraDeposit)
+                .filter(
+                    ExtraDeposit.position_id == position.id,
+                    ExtraDeposit.token_symbol == token_symbol
+                )
+                .first()
             )
-            session.execute(stmt)
+            
+            if existing_deposit:
+              
+                current_amount = Decimal(existing_deposit.amount)
+                new_amount = current_amount + Decimal(amount)
+                existing_deposit.amount = str(new_amount)
+            else:
+              
+                new_deposit = ExtraDeposit(
+                    token_symbol=token_symbol,
+                    amount=amount,
+                    position_id=position.id
+                )
+                session.add(new_deposit)
+            
             session.commit()
 
     
