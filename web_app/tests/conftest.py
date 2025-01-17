@@ -107,5 +107,5 @@ def mock_db_session(monkeypatch):
     def mock_get_session():
         return mock_session
     
-    monkeypatch.setattr("web_app.db.crud.position.Session", mock_get_session)
+    monkeypatch.setattr("sqlalchemy.orm.Session", mock_get_session)
     return mock_session

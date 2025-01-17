@@ -12,6 +12,7 @@ from uuid import UUID
 from sqlalchemy import Numeric, cast, func, insert, String
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 from web_app.db.models import Base, Position, Status, Transaction, User, ExtraDeposit
 
