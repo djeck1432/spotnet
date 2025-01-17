@@ -449,7 +449,10 @@ class PositionDBConnector(UserDBConnector):
             except SQLAlchemyError as e:
                 logger.error(f"Error deleting positions for user {user_id}: {str(e)}")
 
-    def add_extra_deposit_to_position(self, position: Position, token_symbol: str, amount: str) -> None:
+    def add_extra_deposit_to_position(self,
+                                       position: Position,
+                                         token_symbol: str,
+                                         amount: str) -> None:
         """
         Add or update an extra deposit for a position.
         If the token already exists for this position, update its amount.
