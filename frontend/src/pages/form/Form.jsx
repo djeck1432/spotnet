@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TokenSelector from 'components/ui/token-selector/TokenSelector';
 import BalanceCards from 'components/ui/balance-cards/BalanceCards';
 import MultiplierSelector from 'components/ui/multiplier-selector/MultiplierSelector';
-import { handleTransaction } from 'services/transaction';
+import { useTransactionHandler } from 'services/transaction';
 import Spinner from 'components/ui/spinner/Spinner';
 import './form.css';
 import { Button } from 'components/ui/custom-button/Button';
@@ -17,10 +17,11 @@ import { notify } from '../../components/layout/notifier/Notifier';
 const Form = () => {
   const navigate = useNavigate();
   const { walletId, setWalletId } = useWalletStore();
+  const { handleTransaction, isLoading } = useTransactionHandler();
   const [tokenAmount, setTokenAmount] = useState('');
   const [selectedToken, setSelectedToken] = useState('ETH');
   const [selectedMultiplier, setSelectedMultiplier] = useState('');
-  const [loading, setLoading] = useState(false);
+  //const [loading, setLoading] = useState(false);
 
   const [isClosePositionOpen, setClosePositionOpen] = useState(false);
   const connectWalletMutation = useConnectWallet(setWalletId);
@@ -42,6 +43,7 @@ const Form = () => {
     e.preventDefault();
 
     let connectedWalletId = walletId;
+    console.log('wallet id', connectedWalletId);
     if (!connectedWalletId) {
       connectWalletHandler();
       return;
@@ -64,7 +66,7 @@ const Form = () => {
       amount: tokenAmount,
       multiplier: selectedMultiplier,
     };
-    await handleTransaction(connectedWalletId, formData, setTokenAmount, setLoading);
+    await handleTransaction(connectedWalletId, formData, setTokenAmount);
   };
 
   const handleCloseModal = () => {
@@ -128,7 +130,7 @@ const Form = () => {
           </Button>
         </div>
       </form>
-      <Spinner loading={loading} />
+      <Spinner loading={isLoading} />
     </div>
   );
 };

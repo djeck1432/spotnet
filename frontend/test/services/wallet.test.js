@@ -1,193 +1,119 @@
-import { connect } from 'starknetkit';
-import { checkForCRMToken, connectWallet, getTokenBalances, getBalances, logout } from '../../src/services/wallet';
-import { ETH_ADDRESS, STRK_ADDRESS, USDC_ADDRESS } from '../../src/utils/constants';
+import { useAccount, useBalance, useConnect, useDisconnect } from '@starknet-react/core';
+import { useCRMToken, useWalletConnection, useTokenBalance, useAllTokenBalances } from '../../src/services/wallet';
+import { ETH_ADDRESS} from '../../src/utils/constants';
 
-jest.mock('starknetkit', () => ({
-  connect: jest.fn(),
-  disconnect: jest.fn(),
+jest.mock('@starknet-react/core', () => ({
+  useAccount: jest.fn(),
+  useBalance: jest.fn(),
+  useConnect: jest.fn(),
+  useDisconnect: jest.fn(),
 }));
 
-jest.mock(
-  'starknetkit/injected',
-  () => ({
-    InjectedConnector: jest.fn(),
-  }),
-  { virtual: true }
-);
+jest.mock('assets/icons/ethereum.svg', () => ({
+  ReactComponent: 'ETH'
+}));
+jest.mock('assets/icons/borrow_usdc.svg', () => ({
+  ReactComponent: 'USDC'
+}));
+jest.mock('assets/icons/strk.svg', () => ({
+  ReactComponent: 'STRK'
+}));
 
 describe('Wallet Services', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  afterEach(() => {
-    jest.resetModules();
-  });
-
-  describe('checkForCRMToken', () => {
-    it('should return true in development mode', async () => {
+  describe('useCRMToken', () => {
+    it('should return true in development mode', () => {
       process.env.REACT_APP_IS_DEV = 'true';
-      const result = await checkForCRMToken('0x123');
-      expect(result).toBe(true);
+      useAccount.mockReturnValue({ address: '0x123', isConnected: true });
+      useBalance.mockReturnValue({ data: { formatted: '1.0' }, isLoading: false, error: null });
+
+      const result = useCRMToken();
+      expect(result.hasCRMToken).toBe(true);
     });
 
-    it('should validate CRM token and return true if wallet has tokens', async () => {
+    it('should return true when wallet has CRM tokens', () => {
       process.env.REACT_APP_IS_DEV = 'false';
-      const mockStarknet = {
-        wallet: {
-          isConnected: true,
-          provider: {
-            callContract: jest.fn().mockResolvedValue({ result: ['1'] }),
-          },
-          enable: jest.fn(),
-        },
-      };
+      useAccount.mockReturnValue({ address: '0x123', isConnected: true });
+      useBalance.mockReturnValue({ data: { formatted: '1.0' }, isLoading: false, error: null });
 
-      connect.mockResolvedValue(mockStarknet);
-
-      const result = await checkForCRMToken('0x123');
-      expect(result).toBe(true);
+      const result = useCRMToken();
+      expect(result.hasCRMToken).toBe(true);
     });
 
-    it('should return false and alert if wallet lacks CRM tokens', async () => {
-      process.env.IS_DEV = 'false';
-      const mockStarknet = {
-        wallet: {
-          isConnected: true,
-          provider: {
-            callContract: jest.fn().mockResolvedValue({ result: ['0'] }),
-          },
-          enable: jest.fn(),
-        },
-      };
+    it('should return false when wallet has no CRM tokens', () => {
+      process.env.REACT_APP_IS_DEV = 'false';
+      useAccount.mockReturnValue({ address: '0x123', isConnected: true });
+      useBalance.mockReturnValue({ data: { formatted: '0.0' }, isLoading: false, error: null });
 
       global.alert = jest.fn();
 
-      connect.mockResolvedValue(mockStarknet);
-
-      const result = await checkForCRMToken('0x123');
-      expect(result).toBe(false);
+      const result = useCRMToken();
+      expect(result.hasCRMToken).toBe(false);
       expect(global.alert).toHaveBeenCalledWith('Beta testing is allowed only for users who hold the CRM token.');
     });
   });
 
-  describe('connectWallet', () => {
-    it('should successfully connect wallet and return address', async () => {
-      const mockStarknet = {
-        wallet: {
-          enable: jest.fn(),
-          isConnected: true,
-          selectedAddress: '0x123',
-        },
-      };
-
-      connect.mockResolvedValue(mockStarknet);
-
-      const address = await connectWallet();
-
-      expect(connect).toHaveBeenCalledWith(
-        expect.objectContaining({
-          modalMode: 'alwaysAsk',
-          modalTheme: 'light'
-        })
-      );
-      expect(mockStarknet.wallet.enable).toHaveBeenCalled();
-      expect(address).toBe('0x123');
-    });
-
-    it('should throw error when StarkNet object is not found', async () => {
-      connect.mockResolvedValue({ wallet: null });
-
-      await expect(connectWallet()).rejects.toThrow('Failed to connect to wallet');
-    });
-
-    it('should throw error when wallet connection fails', async () => {
-      const mockStarknet = {
-        wallet: {
-          enable: jest.fn(),
-          isConnected: false,
-        },
-      };
-
-      connect.mockResolvedValue(mockStarknet);
-
-      await expect(connectWallet()).rejects.toThrow('Wallet connection failed');
-    });
-  });
-
-  describe('getTokenBalances', () => {
-    it('should fetch all token balances successfully', async () => {
-      const mockStarknet = {
-        wallet: {
-          isConnected: true,
-          provider: {
-            callContract: jest.fn().mockImplementation(({ contractAddress }) => {
-              const balances = {
-                [ETH_ADDRESS]: { result: ['1000000000000000000'] },
-                [USDC_ADDRESS]: { result: ['2000000'] },
-                [STRK_ADDRESS]: { result: ['3000000000000000000'] },
-              };
-              return balances[contractAddress];
-            }),
-          },
-          enable: jest.fn(),
-        },
-      };
-
-      connect.mockResolvedValue(mockStarknet);
-
-      const balances = await getTokenBalances('0x123');
-
-      expect(balances).toEqual({
-        ETH: '1.0000',
-        USDC: '2.0000',
-        STRK: '3.0000',
+  describe('useWalletConnection', () => {
+    it('should handle wallet connection successfully', async () => {
+      const mockConnect = jest.fn();
+      const mockConnector = { id: 'testConnector' };
+      
+      useConnect.mockReturnValue({ 
+        connect: mockConnect,
+        connectors: [mockConnector]
       });
+      useAccount.mockReturnValue({ 
+        address: '0x123', 
+        isConnected: true,
+        account: {}
+      });
+      useDisconnect.mockReturnValue({ disconnect: jest.fn() });
+
+      const { connectWallet } = useWalletConnection();
+      await connectWallet(mockConnector);
+
+      expect(mockConnect).toHaveBeenCalledWith({ connector: mockConnector });
     });
   });
 
-  describe('getBalances', () => {
-    it('should update balances state with token balances', async () => {
-      const mockSetBalances = jest.fn();
-      const mockWalletId = '0x123';
-      const mockTokenBalances = [
-        { name: 'ETH', balance: '1.0000', icon: 'ETH-icon' },
-        { name: 'USDC', balance: '2.0000', icon: 'USDC-icon' },
-        { name: 'STRK', balance: '3.0000', icon: 'STRK-icon' },
-      ];
-
-      jest.spyOn(require('../../src/services/wallet'), 'getTokenBalances').mockResolvedValue(mockTokenBalances);
-
-      await getBalances(mockWalletId, mockSetBalances);
-      await mockSetBalances(mockTokenBalances);
-
-      expect(mockSetBalances).toHaveBeenCalledWith(mockTokenBalances);
-    });
-
-    it('should not fetch balances if wallet ID is not provided', async () => {
-      const mockSetBalances = jest.fn();
-      const mockGetTokenBalances = jest.spyOn(require('../../src/services/wallet'), 'getTokenBalances');
-
-      await getBalances(null, mockSetBalances);
-
-      expect(mockGetTokenBalances).not.toHaveBeenCalled();
-      expect(mockSetBalances).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('logout', () => {
-    it('should clear wallet ID from local storage', async () => {
-      const mockRemoveItem = jest.fn();
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          removeItem: mockRemoveItem,
-        },
-        writable: true,
+  describe('useTokenBalance', () => {
+    it('should return formatted balance when connected', () => {
+      useAccount.mockReturnValue({ address: '0x123', isConnected: true });
+      useBalance.mockReturnValue({ 
+        data: { formatted: '1.2345' },
+        isLoading: false 
       });
 
-      await logout();
+      const result = useTokenBalance(ETH_ADDRESS);
+      expect(result.balance).toBe('1.23');
+    });
 
-      expect(mockRemoveItem).toHaveBeenCalledWith('wallet_id');
+    it('should return zero balance when not connected', () => {
+      useAccount.mockReturnValue({ address: null, isConnected: false });
+
+      const result = useTokenBalance(ETH_ADDRESS);
+      expect(result.balance).toBe('0.0000');
+    });
+  });
+
+  describe('useAllTokenBalances', () => {
+    it('should return all token balances', () => {
+      useAccount.mockReturnValue({ address: '0x123', isConnected: true });
+      useBalance
+        .mockReturnValueOnce({ data: { formatted: '1.0' }, isLoading: false })
+        .mockReturnValueOnce({ data: { formatted: '2.0' }, isLoading: false })
+        .mockReturnValueOnce({ data: { formatted: '3.0' }, isLoading: false });
+
+      const result = useAllTokenBalances();
+
+      expect(result).toEqual([
+        { icon: expect.any(Object), title: 'ETH', balance: '1.0', isLoading: false },
+        { icon: expect.any(Object), title: 'USDC', balance: '2.0', isLoading: false },
+        { icon: expect.any(Object), title: 'STRK', balance: '3.0', isLoading: false }
+      ]);
     });
   });
 });

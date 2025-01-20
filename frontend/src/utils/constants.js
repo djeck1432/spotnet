@@ -1,3 +1,5 @@
+
+
 export const CONTRACT_ADDRESS = '0x041a78e741e5af2fec34b695679bc6891742439f7afb8484ecd7766661ad02bf';
 export const CLASS_HASH = '0x035ae0fe6ca00fcc8020a6c64503f38bfaf3481ae9a6c8b7daec2f899df735fa';
 export const UNIQUE = '0x0';
@@ -15,10 +17,11 @@ export const ONE_HOUR_IN_MILLISECONDS = 3600000;
 export const TELEGRAM_BOT_LINK = 'https://t.me/spotnet_bot';
 
 export function getDeployContractData(walletId) {
+  console.log('walletid', walletId)
   return {
     classHash: CLASS_HASH,
     salt: `0x${Math.floor(Math.random() * 1e16).toString(16)}`, // Generate random salt
     unique: false,
-    constructorCalldata: [walletId, EKUBO_ADDRESS, ZKLEND_ADDRESS, TREASURY_ADDRESS],
+    constructorCalldata: [ walletId, EKUBO_ADDRESS, ZKLEND_ADDRESS, TREASURY_ADDRESS],
   };
 }

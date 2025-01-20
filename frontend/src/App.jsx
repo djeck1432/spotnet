@@ -7,7 +7,6 @@ import Footer from './components/layout/footer/Footer';
 import SpotnetApp from './pages/spotnet-app/SpotnetApp';
 import Form from './pages/form/Form';
 import { createPortal } from 'react-dom';
-import { logout } from './services/wallet';
 import { getTelegramUserWalletId } from './services/telegram';
 import Documentation from './pages/documentation/Documentation';
 import TermsAndConditionsPage from './pages/terms-and-conditions/TermsAndConditions';
@@ -25,9 +24,11 @@ import PositionHistory from './pages/position-history/PositionHistory';
 import WithdrawAll from 'pages/spotnet/dashboard/withdraw-all/WithdrawAll';
 import { DefiSpringPage } from 'pages/spotnet/defi-spring/DefiSpring';
 import { AddDeposit } from 'pages/add-deposit/AddDeposit';
+import { useDisconnect } from '@starknet-react/core';
 
 function App() {
   const { setWalletId, removeWalletId } = useWalletStore();
+  const { disconnect } = useDisconnect()
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,7 +44,7 @@ function App() {
   };
 
   const handleLogout = () => {
-    logout();
+   disconnect();
     removeWalletId();
     closeModal();
     navigate('/');

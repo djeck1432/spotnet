@@ -1,18 +1,20 @@
 import { useMutation } from '@tanstack/react-query';
 import { axiosInstance } from 'utils/axios';
 import { notify } from 'components/layout/notifier/Notifier';
-import { getWallet } from '../services/wallet';
 import { sendExtraDepositTransaction } from '../services/transaction';
+import { useWalletConnection } from 'services/wallet';
 
 export const useAddDeposit = () => {
+  const {address, account} =  useWalletConnection()
   const mutation = useMutation({
     mutationFn: async ({ positionId, amount, tokenSymbol }) => {
       if (!positionId || positionId === '0') {
         return notify('No position found', 'error');
       }
       // Get wallet and check/deploy contract
-      const wallet = await getWallet();
-      const walletId = wallet.selectedAddress;
+      const walletId = address;
+   
+      
       const { data: contractAddress } = await axiosInstance.get(`/api/get-user-contract?wallet_id=${walletId}`);
 
       // Prepare extra deposit data
@@ -24,7 +26,7 @@ export const useAddDeposit = () => {
       });
 
       // Send transaction
-      const { transaction_hash } = await sendExtraDepositTransaction(prepare_data.deposit_data, contractAddress);
+      const { transaction_hash } = await sendExtraDepositTransaction(account, prepare_data.deposit_data, contractAddress);
 
       // Send transaction hash to backend
       return await axiosInstance.post(`/api/add-extra-deposit/${positionId}`, {

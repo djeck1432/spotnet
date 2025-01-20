@@ -1,16 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
 import { notify } from '../components/layout/notifier/Notifier';
-import { connectWallet, checkForCRMToken } from '../services/wallet';
+import { useWalletConnection, useCRMToken } from '../services/wallet';
 
 export const useConnectWallet = (setWalletId) => {
+  const {connectWallet} = useWalletConnection()
+  const walletAddress = connectWallet();
+  const hasCRMToken = useCRMToken();
   return useMutation({
     mutationFn: async () => {
-      const walletAddress = await connectWallet();
 
       if (!walletAddress) {
         throw new Error('Failed to connect wallet');
       }
-      const hasCRMToken = await checkForCRMToken(walletAddress);
+      
       if (!hasCRMToken) {
         throw new Error('Wallet does not have CRM token');
       }
@@ -19,6 +21,7 @@ export const useConnectWallet = (setWalletId) => {
     },
     onSuccess: (walletAddress) => {
       setWalletId(walletAddress);
+      notify('Wallet connected')
     },
     onError: (error) => {
       console.error('Wallet connection failed:', error);

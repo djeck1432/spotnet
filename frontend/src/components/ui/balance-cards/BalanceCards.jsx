@@ -1,56 +1,63 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';  // Add useEffect
 import { useMatchMedia } from 'hooks/useMatchMedia';
-import { getBalances } from '../../../services/wallet';
-import { useWalletStore } from 'stores/useWalletStore';
+import { useAllTokenBalances } from '../../../services/wallet';
 import { ReactComponent as ETH } from '../../../assets/icons/ethereum.svg';
 import { ReactComponent as USDC } from '../../../assets/icons/borrow_usdc.svg';
 import { ReactComponent as STRK } from '../../../assets/icons/strk.svg';
 import './balanceCards.css';
+import Spinner from '../spinner/Spinner';
 
 const BalanceCards = ({ className }) => {
-  const { walletId } = useWalletStore();
-
+  const [loading, setLoading] = useState(true);
   const isMobile = useMatchMedia('(max-width: 768px)');
+  const balanceData = useAllTokenBalances();
 
   useEffect(() => {
-    getBalances(walletId, setBalances);
-  }, [walletId]);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 3 seconds
 
-  const [balances, setBalances] = useState([
-    { icon: <ETH />, title: 'ETH', balance: '0.00' },
-    { icon: <USDC />, title: 'USDC', balance: '0.00' },
-    { icon: <STRK />, title: 'STRK', balance: '0.00' },
-  ]);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const balanceItems = [
+    { icon: <ETH />, title: 'ETH' },
+    { icon: <USDC />, title: 'USDC' },
+    { icon: <STRK />, title: 'STRK' },
+  ];
 
   return (
     <div className={`balance-card ${className}`}>
-      <div className="balance-container">
-        {balances.map((balance) =>
-          isMobile ? (
-            <div className="balance-item" key={balance.title}>
-              <div className="title-container">
-                <label htmlFor="icon" className="balance-title">
-                  <span className="token-icon">{balance.icon}</span>
+      {loading && (
+        <Spinner loading={loading} />
+      )}
+        <div className="balance-container">
+          {balanceItems.map((item, index) =>
+            isMobile ? (
+              <div className="balance-item" key={item.title}>
+                <div className="title-container">
+                  <label htmlFor="icon" className="balance-title">
+                    <span className="token-icon">{item.icon}</span>
+                  </label>
+                  <label htmlFor={item.title}>
+                    <span className="balance-text">{item.title} Balance</span>
+                  </label>
+                </div>
+                <label htmlFor={item.title}>{balanceData[index]?.balance || '0.00'}</label>
+              </div>
+            ) : (
+              <div className="balance-item" key={item.title}>
+                <label htmlFor={item.title} className={'balance-title'}>
+                  <span className="token-icon blend">{item.icon}</span>
+                  <span className="balance-text">{item.title} Balance</span>
                 </label>
-                <label htmlFor={balance.title}>
-                  <span className="balance-text">{balance.title} Balance</span>
+                <label htmlFor={item.title}>
+                  <span className="balance-amount">{balanceData[index]?.balance || '0.00'}</span>
                 </label>
               </div>
-              <label htmlFor={balance.title}>{balance.balance}</label>
-            </div>
-          ) : (
-            <div className="balance-item" key={balance.title}>
-              <label htmlFor={balance.title} className={'balance-title'}>
-                <span className="token-icon blend">{balance.icon}</span>
-                <span className="balance-text">{balance.title} Balance</span>
-              </label>
-              <label htmlFor={balance.title}>
-                <span className="balance-amount">{balance.balance}</span>
-              </label>
-            </div>
-          )
-        )}
-      </div>
+            )
+          )}
+        </div>
     </div>
   );
 };
