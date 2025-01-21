@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TokenSelector from 'components/ui/token-selector/TokenSelector';
 import BalanceCards from 'components/ui/balance-cards/BalanceCards';
 import MultiplierSelector from 'components/ui/multiplier-selector/MultiplierSelector';
-import { handleTransaction } from 'services/transaction';
+import { useTransaction } from 'services/transaction';
 import Spinner from 'components/ui/spinner/Spinner';
 import './form.css';
 import { Button } from 'components/ui/custom-button/Button';
@@ -31,6 +31,8 @@ const Form = () => {
     tokenAmount,
     selectedMultiplier
   );
+
+  const { handleTransaction } = useTransaction();
 
   const connectWalletHandler = () => {
     if (!walletId) {

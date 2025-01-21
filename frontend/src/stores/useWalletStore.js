@@ -11,3 +11,16 @@ export const useWalletStore = create((set) => ({
     set({ walletId: undefined });
   },
 }));
+
+export const useAccountStore = create((set) => ({
+  account: localStorage.getItem('account'),
+  setAccount: (account) => 
+    {
+      localStorage.setItem('account', account);
+      set({ account });
+    },
+    removeAccount: () => {
+    localStorage.removeItem('account');
+    set({ account: null });
+  },
+}));

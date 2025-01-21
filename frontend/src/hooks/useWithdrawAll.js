@@ -1,9 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import { axiosInstance } from 'utils/axios';
 import { notify } from 'components/layout/notifier/Notifier';
-import { sendWithdrawAllTransaction } from "../services/transaction";
+import { useTransaction } from "../services/transaction";
 
 const useWithdrawAll = () => {
+  const { sendWithdrawAllTransaction } = useTransaction();
   const mutation = useMutation({
     mutationFn: async (walletId) => {
       if (!walletId) throw new Error('Wallet ID is required.');

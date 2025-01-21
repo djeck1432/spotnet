@@ -1,8 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import { notify } from '../components/layout/notifier/Notifier';
-import { connectWallet, checkForCRMToken } from '../services/wallet';
+import { useConnectWallet1, useCRMToken } from '../services/wallet';
 
 export const useConnectWallet = (setWalletId) => {
+  const connectWallet = useConnectWallet1();
+  const checkForCRMToken = useCRMToken();
   return useMutation({
     mutationFn: async () => {
       const walletAddress = await connectWallet();
