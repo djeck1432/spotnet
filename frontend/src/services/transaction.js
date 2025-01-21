@@ -4,7 +4,7 @@ import { abi } from '../abis/abi';
 import { axiosInstance } from '../utils/axios';
 import { checkAndDeployContract } from './contract';
 import { notify, ToastWithLink } from '../components/layout/notifier/Notifier';
-import { useAccountStore } from 'stores/useWalletStore';
+import { useAccountStore } from '../stores/useWalletStore';
 
 export const useTransaction = () => {
 

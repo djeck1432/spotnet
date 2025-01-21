@@ -6,7 +6,7 @@ import { ETH_ADDRESS, STRK_ADDRESS, USDC_ADDRESS } from '../utils/constants';
 import { ReactComponent as ETH } from 'assets/icons/ethereum.svg';
 import { ReactComponent as USDC } from 'assets/icons/borrow_usdc.svg';
 import { ReactComponent as STRK } from 'assets/icons/strk.svg';
-import { useAccountStore } from 'stores/useWalletStore';
+import { useAccountStore } from '../stores/useWalletStore';
 
 const CRM_TOKEN_ADDRESS = "0x051c4b1fe3bf6774b87ad0b15ef5d1472759076e42944fff9b9f641ff13e5bbe";
 let globalWallet = null;
@@ -48,7 +48,7 @@ export const useCRMToken = () => {
 }
 
 
-export const useConnectWallet1 = () => {
+export const useWalletConnect = () => {
   const { connect: starknetConnect, connectors } = useConnect();
   const { starknetkitConnectModal } = useStarknetkitConnectModal({ connectors });
   const { account } = useAccount();

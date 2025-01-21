@@ -9,7 +9,7 @@ module.exports = {
     '^src/(.*)$': ['<rootDir>/src/$1'],
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(axios|starknetkit)/)', // Ignore transforming node_modules
+    'node_modules/(?!(axios|starknetkit|@starknet-react|eventemitter3)/)', // Ignore transforming node_modules
   ],
 
   testEnvironment: 'jsdom', // Use node as the test environment

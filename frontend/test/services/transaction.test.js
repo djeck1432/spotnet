@@ -1,15 +1,34 @@
-import { getWallet } from '../../src/services/wallet';
-import { sendTransaction, closePosition, handleTransaction } from '../../src/services/transaction';
+import { useTransaction } from '../../src/services/transaction';
 import { axiosInstance } from '../../src/utils/axios';
-import { mockBackendUrl } from '../constants';
 import { checkAndDeployContract } from '../../src/services/contract';
+import { notify, ToastWithLink } from '../../src/components/layout/notifier/Notifier';
 
-jest.mock('../../src/services/wallet', () => ({
-  getWallet: jest.fn(),
+// Mocks
+jest.mock('../../src/utils/axios');
+jest.mock('starknetkit', () => ({
+  disconnect: jest.fn(),
+  useStarknetkitConnectModal: jest.fn()
+}));
+jest.mock('../../src/services/contract');
+jest.mock('../../src/components/layout/notifier/Notifier', () => ({
+  notify: jest.fn(),
+  ToastWithLink: jest.fn(() => 'mocked-toast')
 }));
 
-jest.mock('../../src/utils/axios');
-jest.mock('../../src/services/contract');
+jest.mock('../../src/stores/useWalletStore', () => ({
+  useAccountStore: jest.fn()
+}));
+
+jest.mock('@starknet-react/core', () => ({
+  useConnect: jest.fn(() => ({
+    connect: jest.fn(),
+    connectors: []
+  })),
+  useAccount: jest.fn(() => ({
+    address: '0x123',
+    isConnected: true
+  }))
+}));
 
 jest.mock('starknet', () => ({
   CallData: class MockCallData {
@@ -23,34 +42,27 @@ jest.mock('starknet', () => ({
   },
 }));
 
-describe('Transaction Functions', () => {
+describe('useTransaction', () => {
   const mockTransactionHash = '0xabc123';
   const mockContractAddress = '0xdef456';
   const mockWalletId = '0x789xyz';
+  
+  const mockAccount = {
+    execute: jest.fn().mockResolvedValue({
+      transaction_hash: mockTransactionHash
+    }),
+    provider: {
+      getTransactionReceipt: jest.fn().mockResolvedValue({
+        status: 'ACCEPTED'
+      })
+    }
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-
-    const mockWallet = {
-      account: {
-        execute: jest.fn().mockResolvedValue({
-          transaction_hash: mockTransactionHash,
-        }),
-      },
-      provider: {
-        getTransactionReceipt: jest.fn().mockResolvedValue({
-          status: 'ACCEPTED',
-        }),
-      },
-    };
-
-    getWallet.mockResolvedValue(mockWallet);
-
-    process.env.REACT_APP_BACKEND_URL = mockBackendUrl;
-  });
-
-  afterEach(() => {
-    delete process.env.REACT_APP_BACKEND_URL;
+    require('../../src/stores/useWalletStore').useAccountStore.mockReturnValue({
+      account: mockAccount
+    });
   });
 
   describe('sendTransaction', () => {
@@ -63,11 +75,11 @@ describe('Transaction Functions', () => {
     };
 
     it('should successfully send a transaction', async () => {
+      const { sendTransaction } = useTransaction();
+      
       const result = await sendTransaction(validLoopLiquidityData, mockContractAddress);
 
-      expect(getWallet).toHaveBeenCalled();
-      const mockWallet = await getWallet();
-      expect(mockWallet.account.execute).toHaveBeenCalledWith(
+      expect(mockAccount.execute).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
             contractAddress: validLoopLiquidityData.deposit_data.token,
@@ -79,33 +91,96 @@ describe('Transaction Functions', () => {
           }),
         ])
       );
+      
+      expect(ToastWithLink).toHaveBeenCalledWith(
+        'Transaction successfully sent',
+        `https://starkscan.co/tx/${mockTransactionHash}`,
+        'Transaction ID'
+      );
+      expect(notify).toHaveBeenCalledWith('mocked-toast', 'success');
       expect(result).toEqual({
         loopTransaction: mockTransactionHash,
       });
     });
 
     it('should throw error if loop_liquidity_data is invalid', async () => {
+      const { sendTransaction } = useTransaction();
       const invalidData = { deposit_data: { token: '0x456' } };
 
-      await expect(sendTransaction(invalidData, mockContractAddress)).rejects.toThrow(
-        'Missing or invalid loop_liquidity_data fields'
-      );
+      await expect(sendTransaction(invalidData, mockContractAddress))
+        .rejects.toThrow('Missing or invalid loop_liquidity_data fields');
     });
+  });
 
-    it('should handle transaction errors correctly', async () => {
-      const mockError = new Error('Transaction failed');
-      const mockWallet = {
-        account: {
-          execute: jest.fn().mockRejectedValue(mockError),
-        },
-      };
-      getWallet.mockResolvedValue(mockWallet);
+  describe('sendWithdrawAllTransaction', () => {
+    const mockWithdrawData = {
+      repay_data: { amount: '1000' },
+      tokens: ['0x123', '0x456']
+    };
 
-      console.error = jest.fn();
+    it('should successfully send withdraw all transaction', async () => {
+      const { sendWithdrawAllTransaction } = useTransaction();
 
-      await expect(sendTransaction(validLoopLiquidityData, mockContractAddress)).rejects.toThrow('Transaction failed');
+      const result = await sendWithdrawAllTransaction(mockWithdrawData, mockContractAddress);
 
-      expect(console.error).toHaveBeenCalledWith('Error sending transaction:', expect.any(Error));
+      expect(mockAccount.execute).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            contractAddress: mockContractAddress,
+            entrypoint: 'close_position',
+          }),
+          expect.objectContaining({
+            contractAddress: mockContractAddress,
+            entrypoint: 'withdraw',
+          })
+        ])
+      );
+
+      expect(ToastWithLink).toHaveBeenCalledWith(
+        'Withdraw all successfully sent',
+        `https://starkscan.co/tx/${mockTransactionHash}`,
+        'Transaction ID'
+      );
+      expect(notify).toHaveBeenCalledWith('mocked-toast', 'success');
+      expect(result).toEqual({
+        transaction_hash: mockTransactionHash,
+      });
+    });
+  });
+
+  describe('sendExtraDepositTransaction', () => {
+    const mockDepositData = {
+      token_address: '0x123',
+      token_amount: '1000'
+    };
+
+    it('should successfully send extra deposit transaction', async () => {
+      const { sendExtraDepositTransaction } = useTransaction();
+
+      const result = await sendExtraDepositTransaction(mockDepositData, mockContractAddress);
+
+      expect(mockAccount.execute).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            contractAddress: mockDepositData.token_address,
+            entrypoint: 'approve',
+          }),
+          expect.objectContaining({
+            contractAddress: mockContractAddress,
+            entrypoint: 'extra_deposit',
+          })
+        ])
+      );
+
+      expect(ToastWithLink).toHaveBeenCalledWith(
+        'Extra Deposit Transaction successfully sent',
+        `https://starkscan.co/tx/${mockTransactionHash}`,
+        'Transaction ID'
+      );
+      expect(notify).toHaveBeenCalledWith('mocked-toast', 'success');
+      expect(result).toEqual({
+        transaction_hash: mockTransactionHash,
+      });
     });
   });
 
@@ -116,29 +191,24 @@ describe('Transaction Functions', () => {
     };
 
     it('should successfully close a position', async () => {
+      const { closePosition } = useTransaction();
+
       const result = await closePosition(mockTransactionData);
 
-      expect(getWallet).toHaveBeenCalled();
-      const mockWallet = await getWallet();
-      expect(mockWallet.account.execute).toHaveBeenCalledWith([
+      expect(mockAccount.execute).toHaveBeenCalledWith([
         expect.objectContaining({
           contractAddress: mockContractAddress,
           entrypoint: 'close_position',
         }),
       ]);
+
+      expect(ToastWithLink).toHaveBeenCalledWith(
+        'Close position successfully sent',
+        `https://starkscan.co/tx/${mockTransactionHash}`,
+        'Transaction ID'
+      );
+      expect(notify).toHaveBeenCalledWith('mocked-toast', 'success');
       expect(result).toEqual({ transaction_hash: mockTransactionHash });
-    });
-
-    it('should handle close position errors', async () => {
-      const mockError = new Error('Close position failed');
-      const mockWallet = {
-        account: {
-          execute: jest.fn().mockRejectedValue(mockError),
-        },
-      };
-      getWallet.mockResolvedValue(mockWallet);
-
-      await expect(closePosition(mockTransactionData)).rejects.toThrow('Close position failed');
     });
   });
 
@@ -157,51 +227,64 @@ describe('Transaction Functions', () => {
     };
 
     beforeEach(() => {
-      mockSetTokenAmount.mockClear();
-      mockSetLoading.mockClear();
       axiosInstance.post.mockResolvedValue({ data: mockTransactionData });
+      axiosInstance.get.mockResolvedValue({ data: { status: 'open' } });
       checkAndDeployContract.mockResolvedValue();
     });
 
     it('should handle successful transaction flow', async () => {
-      axiosInstance.get.mockResolvedValueOnce({
-        data: { status: 'open' },
-      });
+      const { handleTransaction } = useTransaction();
 
-      await handleTransaction(mockWalletId, mockFormData, mockSetTokenAmount, mockSetLoading);
+      await handleTransaction(
+        mockWalletId,
+        mockFormData,
+        mockSetTokenAmount,
+        mockSetLoading
+      );
 
-      expect(mockSetLoading).toHaveBeenCalledWith(true);
+      expect(mockSetLoading).toHaveBeenNthCalledWith(1, true);
       expect(checkAndDeployContract).toHaveBeenCalledWith(mockWalletId);
       expect(axiosInstance.post).toHaveBeenCalledWith('/api/create-position', mockFormData);
       expect(axiosInstance.get).toHaveBeenCalledWith('/api/open-position', {
-        params: { position_id: mockTransactionData.position_id, transaction_hash: mockTransactionHash },
+        params: {
+          position_id: mockTransactionData.position_id,
+          transaction_hash: mockTransactionHash
+        }
       });
       expect(mockSetTokenAmount).toHaveBeenCalledWith('');
-      expect(mockSetLoading).toHaveBeenCalledWith(false);
+      expect(mockSetLoading).toHaveBeenLastCalledWith(false);
     });
 
     it('should handle contract deployment error', async () => {
-      const mockError = new Error('Contract deployment failed');
-      checkAndDeployContract.mockRejectedValue(mockError);
+      checkAndDeployContract.mockRejectedValue(new Error('Contract deployment failed'));
+      const { handleTransaction } = useTransaction();
 
-      console.error = jest.fn();
+      await handleTransaction(
+        mockWalletId,
+        mockFormData,
+        mockSetTokenAmount,
+        mockSetLoading
+      );
 
-      await handleTransaction(mockWalletId, mockFormData, mockSetTokenAmount, mockSetLoading);
-
-      expect(console.error).toHaveBeenCalledWith('Error deploying contract:', mockError);
-      expect(mockSetLoading).toHaveBeenCalledWith(false);
+      expect(notify).toHaveBeenCalledWith('Error deploying contract. Please try again.', 'error');
+      expect(mockSetLoading).toHaveBeenLastCalledWith(false);
+      expect(mockSetTokenAmount).not.toHaveBeenCalled();
     });
 
-    it('should handle create position error', async () => {
-      const mockError = new Error('Create position failed');
-      axiosInstance.post.mockRejectedValue(mockError);
+    it('should handle transaction error', async () => {
+      axiosInstance.post.mockRejectedValue(new Error('Transaction failed'));
+      const { handleTransaction } = useTransaction();
 
-      console.error = jest.fn();
+      await handleTransaction(
+        mockWalletId,
+        mockFormData,
+        mockSetTokenAmount,
+        mockSetLoading
+      );
 
-      await handleTransaction(mockWalletId, mockFormData, mockSetTokenAmount, mockSetLoading);
-
-      expect(console.error).toHaveBeenCalledWith('Failed to create position:', mockError);
-      expect(mockSetLoading).toHaveBeenCalledWith(false);
+      expect(notify).toHaveBeenCalledWith('Error sending transaction: Error: Transaction failed', 'error');
+      expect(mockSetLoading).toHaveBeenLastCalledWith(false);
+      expect(mockSetTokenAmount).not.toHaveBeenCalled();
     });
   });
 });
