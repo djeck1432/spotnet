@@ -4,16 +4,19 @@ Seed data for initializing the database with predefined values.
 
 import logging
 from decimal import Decimal
+from typing import List
 
 from faker import Faker
+from sqlalchemy.orm import Session
 
 from web_app.contract_tools.constants import TokenParams
 from web_app.db.database import SessionLocal
 from web_app.db.models import (
     AirDrop,
     Position,
+    ExtraDeposit,
     Status,
-    TelegramUser,
+    TelegramUser ,
     Transaction,
     TransactionStatus,
     User,
@@ -21,108 +24,128 @@ from web_app.db.models import (
 )
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(_name_)
 
 # Initialize Faker
 fake = Faker()
 
 
-def create_users(session: SessionLocal) -> list[User]:
+def create_users(session: Session) -> List[User ]:
     """
     Create and save a list of fake users to the database.
-    Args:
-        session (Session): SQLAlchemy session object.
-    Returns:
-        list[User]: A list of User objects added to the database.
     """
     users = []
     for _ in range(10):
-        wallet_id = fake.unique.uuid4()
-        print("wallet_id:", wallet_id)
+        wallet_id = str(fake.unique.uuid4())
         user = User(
             wallet_id=wallet_id,
             contract_address=fake.address(),
             is_contract_deployed=fake.boolean(),
         )
-        users.append(user)
-    session.add_all(users)
+        session.add(user)
+    
     session.commit()
+    
+    # Retrieve users after commit
+    users = session.query(User).all()
+    
+    for user in users:
+        logger.info(f"Created user: {user.id} with wallet_id: {user.wallet_id}")
+    
     return users
 
 
-def create_positions(session: SessionLocal, users: list[User]) -> list[Position]:
+def create_positions(session: Session, users: List[User ]) -> List[Position]:
     """
     Create and save fake position records associated with given users.
-    Args:
-        session (Session): SQLAlchemy session object.
-        users (list): List of User objects to associate with positions.
     """
     positions = []
     for user in users:
+        logger.info(f"Creating positions for user: {user.id}")
         for _ in range(2):
             position = Position(
                 user_id=user.id,
                 token_symbol=fake.random_element(
                     elements=[token.name for token in TokenParams.tokens()]
                 ),
-                amount=fake.random_number(digits=5),
-                multiplier=fake.random_int(min=1, max=10),
-                start_price=Decimal(
+                amount=str(fake.random_number(digits=5)),
+                multiplier=str(fake.random_int(min=1, max=10)),
+                start_price=str(
                     fake.pydecimal(left_digits=5, right_digits=2, positive=True)
                 ),
                 status=fake.random_element(
                     elements=[status.value for status in Status]
                 ),
                 is_protection=fake.boolean(),
-                liquidation_bonus=fake.pyfloat(min_value=0.0, max_value=1.0),
+                liquidation_bonus=str(fake.pyfloat(min_value=0.0, max_value=1.0)),
                 is_liquidated=fake.boolean(),
                 datetime_liquidation=fake.date_time_this_decade(),
             )
-            positions.append(position)
-    if positions:
-        session.bulk_save_objects(positions)
-        session.commit()
-        logger.info(f"Created {len(positions)} positions for {len(users)} users.")
-    else:
-        logger.info("No positions created.")
+            session.add(position)
+    
+    session.commit()
+    
+    # Retrieve positions after commit
+    positions = session.query(Position).filter(Position.user_id.in_([user.id for user in users])).all()
+    
+    for position in positions:
+        logger.info(f"Created position: {position.id} for user {position.user_id}")
+    
     return positions
 
 
-def create_airdrops(session: SessionLocal, users: list[User]) -> None:
+def create_extra_deposits(session: Session, positions: List[Position]) -> None:
+    """
+    Create and save fake extra deposit records associated with given positions.
+    """
+    extra_deposits = []
+    for position in positions:
+        for _ in range(3):  # Create 3 extra deposits for each position
+            extra_deposit = ExtraDeposit(
+                position_id=position.id,
+                token_symbol=fake.random_element(
+                    elements=[token.name for token in TokenParams.tokens()]
+                ),
+                amount=str(
+                    fake.pydecimal(left_digits=5, right_digits=2, positive=True)
+                ),
+            )
+            # Check for uniqueness before adding
+            if not any(ed.position_id == extra_deposit.position_id and ed.token_symbol == extra_deposit.token_symbol for ed in extra_deposits):
+                extra_deposits.append(extra_deposit)
+    
+    session.bulk_save_objects(extra_deposits)
+    logger.info(f"Created {len(extra_deposits)} extra deposits for {len(positions)} positions.")
+
+
+def create_airdrops(session: Session, users: List[User ]) -> None:
     """
     Create and save fake airdrop records for each user.
-    Args:
-        session (Session): SQLAlchemy session object.
-        users (list): List of User objects to associate with airdrops.
     """
-    airdrops = []
     for user in users:
         for _ in range(2):
             airdrop = AirDrop(
                 user_id=user.id,
-                amount=Decimal(
+                amount=str(
                     fake.pydecimal(left_digits=5, right_digits=2, positive=True)
                 ),
-                is_claimed=fake.boolean(),
+                is_claimed=fake.boolean (),
                 claimed_at=fake.date_time_this_decade() if fake.boolean() else None,
             )
-            airdrops.append(airdrop)
-    if airdrops:
-        session.bulk_save_objects(airdrops)
-        session.commit()
+            session.add(airdrop)
+    
+    session.commit()
+    logger.info(f"Created airdrops for {len(users)} users.")
 
 
-def create_telegram_users(session: SessionLocal, users: list[User]) -> None:
+def create_telegram_users(session: Session, users: List[User  ]) -> None:
     """
     Create and save fake Telegram user records to the database.
-    Args:
-        session (Session): SQLAlchemy session object.
     """
-    telegram_users = []
     for user in users:
         for _ in range(2):
-            telegram_user = TelegramUser(
-                telegram_id=fake.unique.uuid4(),
+            telegram_user = TelegramUser (
+                telegram_id=str(fake.unique.uuid4()),
                 username=fake.user_name(),
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
@@ -130,72 +153,81 @@ def create_telegram_users(session: SessionLocal, users: list[User]) -> None:
                 photo_url=fake.image_url(),
                 is_allowed_notification=fake.boolean(),
             )
-            telegram_users.append(telegram_user)
-    session.bulk_save_objects(telegram_users)
+            session.add(telegram_user)
+    
     session.commit()
-    logger.info(f"Created {len(telegram_users)} Telegram users.")
+    logger.info(f"Created Telegram users for {len(users)} users.")
 
 
-def create_vaults(session: SessionLocal, users: list[User]) -> None:
+def create_vaults(session: Session, users: List[User  ]) -> None:
     """
     Create and save fake vault records for each user.
-    Args:
-        session (Session): SQLAlchemy session object.
-        users (list): List of User objects to associate with vaults.
     """
-    vaults = []
     for user in users:
         for _ in range(2):
             vault = Vault(
                 user_id=user.id,
-                symbol=fake.random_choices(
+                symbol=fake.random_element(
                     elements=[token.name for token in TokenParams.tokens()]
                 ),
-                amount=str(
-                    fake.random_number(digits=5)
-                ),  # Amount stored as string in model
+                amount=str(fake.random_number(digits=5)),
             )
-            vaults.append(vault)
-
-    if vaults:
-        session.bulk_save_objects(vaults)
-        session.commit()
-        logger.info(f"Created {len(vaults)} vaults for {len(users)} users.")
-    else:
-        logger.info("No vaults created.")
+            session.add(vault)
+    
+    session.commit()
+    logger.info(f"Created vaults for {len(users)} users.")
 
 
-def create_transaction(session: SessionLocal, positions: list[Position]) -> None:
+def create_transactions(session: Session, positions: List[Position]) -> None:
     """
     Create and save fake transaction records to the database.
-    Args:
-        session (Session): SQLAlchemy session object.
-        positions (list): List of Position objects to associate with transactions.
     """
-    transactions = []
-    transaction_statuses = [status.value for status in TransactionStatus]
+    transaction_count = 0
     for position in positions:
-        for i in range(len(transaction_statuses)):
+        transaction_statuses = [status.value for status in TransactionStatus]
+        for status in transaction_statuses:
             transaction = Transaction(
                 position_id=position.id,
-                status=transaction_statuses[i],
-                transaction_hash=fake.unique.uuid4(),
+                status=status,
+                transaction_hash=str(fake.unique.uuid4()),
             )
-            transactions.append(transaction)
-    session.add_all(transactions)
+            session.add(transaction)
+            transaction_count += 1
+    
     session.commit()
-    logger.info(f"Created {len(transactions)} transactions.")
+    logger.info(f"Created {transaction_count} transactions for {len(positions)} positions.")
 
 
-if __name__ == "__main__":
-    # Start a new session for seeding data
-    with SessionLocal() as session:
-        # Populate the database
-        users = create_users(session)
-        positions = create_positions(session, users)
-        # create_airdrops(session, users)
-        # create_telegram_users(session, users)
-        create_vaults(session, users)
-        create_transaction(session, positions)
+def seed_database():
+    """
+    Main function to seed the entire database.
+    """
+    try:
+        # Create a new session
+        session = SessionLocal()
+        
+        try:
+            # Seed data in a specific order
+            users = create_users(session)
+            positions = create_positions(session, users)
+            create_extra_deposits(session, positions)
+            create_airdrops(session, users)
+            create_telegram_users(session, users)
+            create_vaults(session, users)
+            create_transactions(session, positions)
 
-    logger.info("Database populated with fake data.")
+            logger.info("Database seeding completed successfully.")
+        
+        except Exception as e:
+            logger.error(f"Error during database seeding: {e}", exc_info=True)
+            session.rollback()
+        
+        finally:
+            session.close()
+    
+    except Exception as e:
+        logger.error(f"Error creating session: {e}", exc_info=True)
+
+
+if _name_ == "_main_":
+    seed_database()
