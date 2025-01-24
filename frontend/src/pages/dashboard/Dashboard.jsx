@@ -167,83 +167,88 @@ export default function Component({ telegramId }) {
   ];
 
   return (
-    <div className="dashboard">
-      <Sidebar items={dashboardItems} />
-      <div className="dashboard-wrapper">
-        <div className="dashboard-container">
-          {loading && <Spinner loading={loading} />}
-          <h1 className="dashboard-title">zkLend Position</h1>
-          <div className="dashboard-content">
-            <div className="top-cards-dashboard">
-              <Card label="Health Factor" value={healthFactor} icon={<HealthIcon className="icon" />} />
-              <Card label="Borrow Balance" cardData={cardData} icon={<EthIcon className="icon" />} />
-            </div>
-            <div className="dashboard-info-container">
-              <div className="dashboard-info-card">
-                <div className="tabs">
-                  <button
-                    onClick={() => setIsCollateralActive(true)}
-                    className={`tab ${isCollateralActive ? 'active' : ''}`}
-                  >
-                    <CollateralIcon className="tab-icon" />
-                    <span className="tab-title">Collateral & Earnings</span>
-                  </button>
+    <div className="dashboard flex min-h-screen w-[calc(100vw-372px)] ml-[372px]">
+  <Sidebar items={dashboardItems} />
 
-                  <div className="tab-divider" />
-
-                  <button
-                    onClick={() => setIsCollateralActive(false)}
-                    className={`tab ${!isCollateralActive ? 'active borrow' : ''}`}
-                  >
-                    <BorrowIcon className="tab-icon" />
-                    <span className="tab-title">Borrow</span>
-                  </button>
-                  <div className="tab-indicator-container">
-                    <div className={`tab-indicator ${isCollateralActive ? 'collateral' : 'borrow'}`} />
-                  </div>
-                </div>
-                {isCollateralActive ? (
-                  <Collateral
-                    getCurrentSumColor={getCurrentSumColor}
-                    startSum={startSum}
-                    currentSum={currentSum}
-                    data={cardData}
-                  />
-                ) : (
-                  <Borrow data={cardData} />
-                )}
-              </div>
-              <Button
-                className="redeem-btn"
-                variant="primary"
-                size="lg"
-                onClick={() => closePositionEvent()}
-                disabled={isClosing || !hasOpenedPosition}
+  <div className="dashboard-wrapper flex justify-center items-center w-[calc(100vw-735px)] h-full">
+    <div className="dashboard-container flex flex-col justify-center gap-2.5 p-6 pt-5 mx-24 h-full">
+      {loading && <Spinner loading={loading} />}
+      <h1 className="dashboard-title text-center text-[32px] font-semibold text-second-primary">
+        zkLend Position
+      </h1>
+      <div className="dashboard-content flex flex-col items-center justify-center w-[642px] gap-6 rounded-2xl py-4 text-second-primary">
+        <div className="top-cards-dashboard flex justify-between gap-2 p-0 m-0 w-[642px] h-[101px]">
+          <Card label="Health Factor" value={healthFactor} icon={<HealthIcon className="icon" />} />
+          <Card label="Borrow Balance" cardData={cardData} icon={<EthIcon className="icon" />} />
+        </div>
+        <div className="dashboard-info-container grid gap-6">
+          <div className="dashboard-info-card bg-transparent border border-light-purple rounded-lg w-[642px] h-[318px] p-4">
+            <div className="tabs flex justify-between relative items-center">
+              <button
+                onClick={() => setIsCollateralActive(true)}
+                className={`tab flex-1 text-center py-2 text-gray-500 cursor-pointer border-none bg-none text-lg font-semibold flex items-center justify-center ${isCollateralActive ? 'text-nav-button-hover' : ''}`}
               >
-                {isClosing ? 'Closing...' : 'Redeem'}
-              </Button>
-              <Button variant="secondary" size="lg" className="dashboard-btn telegram" onClick={handleOpen}>
-                <TelegramIcon className="tab-icon" />
-                Enable telegram notification bot
-              </Button>
-              {showModal && (
-                <ActionModal
-                  isOpen={showModal}
-                  title="Telegram Notification"
-                  subTitle="Do you want to enable telegram notification bot?"
-                  content={[
-                    'This will allow you to receive quick notifications on your telegram line in realtime. You can disable this setting anytime.',
-                  ]}
-                  cancelLabel="Cancel"
-                  submitLabel="Yes, Sure"
-                  submitAction={handleSubscribe}
-                  cancelAction={handleClose}
-                />
-              )}
+                <CollateralIcon className="tab-icon mr-2" />
+                <span className="tab-title text-lg font-semibold">Collateral & Earnings</span>
+              </button>
+
+              <div className="tab-divider w-[3px] h-[18px] rounded-lg bg-border-color mx-4" />
+
+              <button
+                onClick={() => setIsCollateralActive(false)}
+                className={`tab flex-1 text-center py-2 text-gray-500 cursor-pointer border-none bg-none text-lg font-semibold flex items-center justify-center ${!isCollateralActive ? 'text-[#ff35d3]' : ''}`}
+              >
+                <BorrowIcon className="tab-icon mr-2" />
+                <span className="tab-title text-lg font-semibold">Borrow</span>
+              </button>
+              <div className="tab-indicator-container absolute bottom-[-16px] left-0 w-[calc(100%-20px)] h-[1px] overflow-hidden">
+                <div className={`tab-indicator absolute bottom-0 left-0 w-full h-full transition-transform ease-in-out duration-300 ${isCollateralActive ? 'bg-gradient-to-r from-[#49abd2] to-transparent' : 'bg-gradient-to-r from-transparent to-[#ff35d3]'}`} />
+              </div>
             </div>
+            {isCollateralActive ? (
+              <Collateral
+                getCurrentSumColor={getCurrentSumColor}
+                startSum={startSum}
+                currentSum={currentSum}
+                data={cardData}
+              />
+            ) : (
+              <Borrow data={cardData} />
+            )}
           </div>
+          <Button
+            className="redeem-btn w-full"
+            variant="primary"
+            size="lg"
+            onClick={() => closePositionEvent()}
+            disabled={isClosing || !hasOpenedPosition}
+          >
+            {isClosing ? 'Closing...' : 'Redeem'}
+          </Button>
+          <Button variant="secondary" size="lg" className="dashboard-btn telegram" onClick={handleOpen}>
+            <TelegramIcon className="tab-icon" />
+            Enable telegram notification bot
+          </Button>
+
+          {showModal && (
+            <ActionModal
+              isOpen={showModal}
+              title="Telegram Notification"
+              subTitle="Do you want to enable telegram notification bot?"
+              content={[
+                'This will allow you to receive quick notifications on your telegram line in realtime. You can disable this setting anytime.',
+              ]}
+              cancelLabel="Cancel"
+              submitLabel="Yes, Sure"
+              submitAction={handleSubscribe}
+              cancelAction={handleClose}
+            />
+          )}
         </div>
       </div>
     </div>
+  </div>
+</div>
+
   );
 }
