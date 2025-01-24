@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --text-font: 'Rethink Sans', sans-serif;
@@ -115,5 +119,55 @@ a.svelte-1mtuslq.svelte-1mtuslq {
     background-size: cover;
     background-position: 50% 40%;
     height: 100%;
+  }
+} */
+
+
+@import url('https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Inter:wght@100..900&family=Open+Sans:wght@300..800&family=Rethink+Sans:wght@400..800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Tailwind configuration in tailwind.config.js */
+:root {
+  --backdrop-filter: blur(12px);
+  --card-box-shadow: inset 4px 4px 9px 0 rgba(153, 234, 255, 0.25), 0 4px 4px 0 rgba(0, 0, 0, 0.15);
+  --thumb-image: url('./assets/icons/slider-thumb.svg');
+}
+
+body {
+  @apply overflow-x-hidden;
+}
+
+main {
+  @apply overflow-hidden;
+}
+
+* {
+  @apply m-0 p-0 box-border font-sans;
+}
+
+a {
+  @apply no-underline;
+}
+
+li {
+  @apply list-none;
+}
+
+a.svelte-1mtuslq.svelte-1mtuslq {
+  @apply hidden;
+}
+
+.App {
+  @apply min-h-screen bg-cover bg-center;
+  background-image: url('../public/desktop-background.png');
+}
+
+@media (max-width: 768px) {
+  .App {
+    background-image: url('../public/mobile-background.png');
+    @apply bg-center h-auto;
   }
 }

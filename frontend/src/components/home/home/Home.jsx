@@ -53,7 +53,7 @@ function Home() {
   ];
 
   return (
-    <div className="home">
+    <div className="relative flex flex-col justify-center text-secondary text-center w-full pointer-events-auto">
       <div className="container">
         <div>
           {decorationData.map((decoration, index) => (
