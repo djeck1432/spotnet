@@ -22,3 +22,9 @@ export function getDeployContractData(walletId) {
     constructorCalldata: [walletId, EKUBO_ADDRESS, ZKLEND_ADDRESS, TREASURY_ADDRESS],
   };
 }
+
+export const DASHBOARD_TABS = {
+  COLLATERAL: 'collateral',
+  BORROW: 'borrow',
+  DEPOSITED: 'deposited',
+};

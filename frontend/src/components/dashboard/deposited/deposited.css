@@ -1,0 +1,86 @@
+.tab-content {
+  text-align: left;
+  width: 580px;
+  height: 190px;
+  padding: 0px 40px 0 20px;
+  margin: 16px auto 0;
+}
+
+.tab-content p {
+  margin: 0;
+}
+
+.deposited-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+}
+
+.deposited-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.currency-name {
+  color: var(--warning-text-color);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.currency-value {
+  color: var(--gray);
+}
+
+.info-divider {
+  height: 3px;
+  width: 100%;
+  border-radius: 8px;
+  background-color: var(--border-color);
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  background: var(--border-color);
+  border-radius: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+}
+
+@media (max-width: 768px) {
+  .icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 4px;
+    padding: 3px;
+  }
+
+  .tab-content {
+    width: 100%;
+    height: auto;
+    padding: 16px;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-content {
+    width: fit-content;
+    font-size: 14px;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+}

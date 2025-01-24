@@ -22,10 +22,12 @@ import clockIcon from 'assets/icons/clock.svg';
 import computerIcon from 'assets/icons/computer-icon.svg';
 import depositIcon from 'assets/icons/deposit.svg';
 import withdrawIcon from 'assets/icons/withdraw.svg';
+import Deposited from 'components/dashboard/deposited/Deposited';
+import DashboardTabs from 'components/dashboard/dashboard-tab/DashboardTabs';
+import { DASHBOARD_TABS } from 'utils/constants';
 
 export default function Component({ telegramId }) {
   const { walletId } = useWalletStore();
-  const [isCollateralActive, setIsCollateralActive] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const handleOpen = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -39,6 +41,7 @@ export default function Component({ telegramId }) {
   const { subscribe } = useTelegramNotification();
 
   const hasOpenedPosition = positionData?.has_opened_position;
+  const { COLLATERAL, BORROW, DEPOSITED } = DASHBOARD_TABS;
 
   const handleSubscribe = () => subscribe({ telegramId, walletId });
 
@@ -63,6 +66,7 @@ export default function Component({ telegramId }) {
   const [startSum, setStartSum] = useState(0);
   const [currentSum, setCurrentSum] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState(COLLATERAL);
 
   useEffect(() => {
     console.log('Fetching data for walletId:', walletId);
@@ -166,6 +170,8 @@ export default function Component({ telegramId }) {
     },
   ];
 
+  const depositedData = { eth: 1, strk: 12, usdc: 4, usdt: 9 };
+
   return (
     <div className="dashboard">
       <Sidebar items={dashboardItems} />
@@ -180,38 +186,20 @@ export default function Component({ telegramId }) {
             </div>
             <div className="dashboard-info-container">
               <div className="dashboard-info-card">
-                <div className="tabs">
-                  <button
-                    onClick={() => setIsCollateralActive(true)}
-                    className={`tab ${isCollateralActive ? 'active' : ''}`}
-                  >
-                    <CollateralIcon className="tab-icon" />
-                    <span className="tab-title">Collateral & Earnings</span>
-                  </button>
+                <DashboardTabs activeTab={activeTab} switchTab={setActiveTab} />
 
-                  <div className="tab-divider" />
-
-                  <button
-                    onClick={() => setIsCollateralActive(false)}
-                    className={`tab ${!isCollateralActive ? 'active borrow' : ''}`}
-                  >
-                    <BorrowIcon className="tab-icon" />
-                    <span className="tab-title">Borrow</span>
-                  </button>
-                  <div className="tab-indicator-container">
-                    <div className={`tab-indicator ${isCollateralActive ? 'collateral' : 'borrow'}`} />
-                  </div>
-                </div>
-                {isCollateralActive ? (
+                {activeTab === COLLATERAL && (
                   <Collateral
                     getCurrentSumColor={getCurrentSumColor}
                     startSum={startSum}
                     currentSum={currentSum}
                     data={cardData}
                   />
-                ) : (
-                  <Borrow data={cardData} />
                 )}
+
+                {activeTab === BORROW && <Borrow data={cardData} />}
+
+                {activeTab === DEPOSITED && <Deposited data={depositedData} />}
               </div>
               <Button
                 className="redeem-btn"
