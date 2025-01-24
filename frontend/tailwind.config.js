@@ -6,6 +6,10 @@ module.exports = {
     extend: {
       colors: {
         midnightPurple: '#4B0082',
+        'light-purple':  "var(--light-purple)", 
+        'dark-purple': 'var(--dark-purple)',
+        'secondary': "var(--secondary)",  
+        'midnight-purple-border': "var(--midnight-purple-border)"
       },
     },
   },

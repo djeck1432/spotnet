@@ -23,33 +23,45 @@ const BalanceCards = ({ className }) => {
   ]);
 
   return (
-    <div className={`balance-card ${className}`}>
-      <div className="balance-container">
-        {balances.map((balance) =>
-          isMobile ? (
-            <div className="balance-item" key={balance.title}>
-              <div className="title-container">
-                <label htmlFor="icon" className="balance-title">
-                  <span className="token-icon">{balance.icon}</span>
-                </label>
-                <label htmlFor={balance.title}>
-                  <span className="balance-text">{balance.title} Balance</span>
+    <div>
+      <div className={` ${className} w-full mt-5`}>
+        <div className="flex justify-between w-full gap-4">
+          {balances.map((balance) =>
+            isMobile ? (
+              <div
+                className="flex flex-col items-center w-[198px] h-auto rounded-lg border border-light-purple bg-dark-purple p-4"
+                key={balance.title}
+              >
+                <div className="flex items-center justify-center w-auto">
+                  <label htmlFor="icon" className="flex items-center text-base">
+                    <span className="flex items-center justify-center text-xl rounded-full bg-[hsla(261,49%,15%,1)] mr-1">
+                      {balance.icon}
+                    </span>
+                  </label>
+                  <label htmlFor={balance.title} className="text-xl font-semibold">
+                    <span className="text-secondary">{balance.title} Balance</span>
+                  </label>
+                </div>
+                <label htmlFor={balance.title} className="text-sm text-secondary">
+                  {balance.balance}
                 </label>
               </div>
-              <label htmlFor={balance.title}>{balance.balance}</label>
-            </div>
-          ) : (
-            <div className="balance-item" key={balance.title}>
-              <label htmlFor={balance.title} className={'balance-title'}>
-                <span className="token-icon blend">{balance.icon}</span>
-                <span className="balance-text">{balance.title} Balance</span>
-              </label>
-              <label htmlFor={balance.title}>
-                <span className="balance-amount">{balance.balance}</span>
-              </label>
-            </div>
-          )
-        )}
+            ) : (
+              <div
+                className="flex flex-col items-center w-[198px] h-[101px] rounded-lg border-1 border-light-purple bg-dark-purple p-4"
+                key={balance.title}
+              >
+                <div className="flex items-center gap-x-4">
+                  <div className="w-4 h-4 text-lg">
+                    <span> {balance.icon}</span>
+                  </div>
+                  <p className="text-secondary">{balance.title} Balance</p>
+                </div>
+                <p className="text-2xl font-semibold text-white">{balance.balance}</p>
+              </div>
+            )
+          )}
+        </div>
       </div>
     </div>
   );
