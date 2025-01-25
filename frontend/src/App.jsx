@@ -34,7 +34,7 @@ function App() {
   const [isMobileRestrictionModalOpen, setisMobileRestrictionModalOpen] = useState(true);
   const isMobile = useCheckMobile();
 
-  const disableDesktopOnMobile = process.env.REACT_APP_DISABLE_DESKTOP_ON_MOBILE !== 'false';
+  const disableDesktopOnMobile = import.meta.env.VITE_DISABLE_DESKTOP_ON_MOBILE !== 'false';
 
   const connectWalletMutation = useConnectWallet(setWalletId);
 
