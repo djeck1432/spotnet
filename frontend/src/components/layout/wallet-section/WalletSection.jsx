@@ -37,26 +37,26 @@ const WalletSection = ({ onConnectWallet, onLogout }) => {
   }, []);
 
   return (
-    <div className="wallet-section">
+    <div className="relative">
       {/* Wallet Container */}
       {(isMobile || walletId) && (
-        <div className="wallet-container" ref={menuRef}>
+        <div className="relative" ref={menuRef}>
           {/* rendering walletId on big screens only */}
           {walletId && !isMobile && (
-            <span className="wallet-id">{`${walletId.slice(0, 4)}...${walletId.slice(-4)}`}</span>
+            <span className="text-sm font-semibold text-gray-500">{`${walletId.slice(0, 4)}...${walletId.slice(-4)}`}</span>
           )}
 
           {/* three dots menu */}
-          <span className="menu-dots" onClick={toggleMenu}>
+          <span className="cursor-pointer w-11 h-11 text-2xl font-bold border-none rounded-full border bg-footer-divider-bg flex items-center justify-center" onClick={toggleMenu}>
             &#x22EE;
           </span>
 
           {/* dropdown-menu */}
           {isMenuOpen && (
-            <div className="menu-dropdown">
-              {/* Connect Wallet button for mob screens */}
+            <div className="absolute top-[200%] right-[10%] transform bg-primary-color border rounded-lg shadow-lg p-4 w-80 mt-2 z-10">
+              {/* Connect Wallet button for mobile screens */}
               {isMobile && !walletId && (
-                <Button className="connect-btn" onClick={onConnectWallet}>
+                <Button className="w-full" onClick={onConnectWallet}>
                   <span>Connect Wallet</span>
                 </Button>
               )}
@@ -65,10 +65,10 @@ const WalletSection = ({ onConnectWallet, onLogout }) => {
               {walletId && (
                 <div>
                   <div>
-                    <span className="wallet-id">{`${walletId.slice(0, 4)}...${walletId.slice(-4)}`}</span>
+                    <span className="text-sm font-semibold text-gray-500">{`${walletId.slice(0, 4)}...${walletId.slice(-4)}`}</span>
                   </div>
                   <button
-                    className="logout-button"
+                    className="w-full mt-4 bg-red-500 text-white py-2 rounded-md"
                     onClick={() => {
                       setIsMenuOpen(false);
                       onLogout();

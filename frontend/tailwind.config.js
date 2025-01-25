@@ -91,6 +91,10 @@ module.exports = {
         'midnight-purple-border': '1px',
         'midnight-purple-hover-border': '1px',
       },
+      zIndex: {
+        '9999': '9999',
+        '100': '100',
+      },
     },
   },
   plugins: [

@@ -189,15 +189,6 @@
   background: var(--second-gradient);
 }
 
-.Toastify__toast {
-  margin-top: 90px;
-}
-
-.Toastify__toast-body {
-  font-size: 16px;
-  font-weight: 600;
-}
-
 @media (max-width: 1024px) {
   .nav-items {
     display: none;

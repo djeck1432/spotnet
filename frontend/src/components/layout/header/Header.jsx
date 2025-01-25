@@ -6,12 +6,11 @@ import WalletSection from '../wallet-section/WalletSection';
 import NavigationLinks from '../navigation-links/NavigationLinks';
 import useLockBodyScroll from '../../../hooks/useLockBodyScroll';
 import MobDropdownMenu from '../mob-dropdown-menu/MobDropdownMenu';
-import './header.css';
 import '../../../globals.css';
 
 function Header({ onConnectWallet, onLogout }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation(); // Getting object of currant route
+  const location = useLocation();
 
   const makeNavStick = [
     '/overview',
@@ -25,19 +24,16 @@ function Header({ onConnectWallet, onLogout }) {
     '/defispring',
   ].includes(location.pathname);
 
-  // Blocking screen scroll if menu is open
   useLockBodyScroll(isMenuOpen);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Closing menu is case route change
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
-  // Closing menu in case of screen size change
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1024) {
@@ -56,16 +52,16 @@ function Header({ onConnectWallet, onLogout }) {
   };
 
   return (
-    <nav className={makeNavStick ? 'header-nav-sticky' : 'header-nav'}>
-      <div className="list-items">
+    <nav className={`flex items-center justify-center w-full h-[90px] bg-header-bg backdrop-blur-lg border-b border-[#300734] z-[9999] ${makeNavStick ? 'fixed top-0' : 'relative'}`}>
+      <div className="flex items-center justify-between w-full px-[30px] relative">
         <div className="logo">
           <NavLink to="/">
-            <Logo />
+            <Logo className="mt-[9px] w-[300px] h-auto" />
           </NavLink>
         </div>
         {/* desktop navigation */}
         <NavigationLinks onNavClick={handleNavClick} />
-        <div className="menu-section">
+        <div className="flex items-center gap-2">
           <div className="dropdown">
             <MobDropdownMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
           </div>

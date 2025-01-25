@@ -66,8 +66,8 @@ function Home() {
                   : ''}
                 `}
               style={{
-                top: `${decoration.top}%`,
-                left: `${decoration.left}%`,
+                top: `${decoration.top}vh`,
+                left: `${decoration.left}vw`,
               }}
             />
           ))}
@@ -88,7 +88,7 @@ function Home() {
 
           <Starknet className="absolute top-0 right-5 -z-1 w-[15px] md:w-[15px] lg:w-[30px] h-auto" />
         </div>
-        <div className="mt-[100px] flex justify-center items-center flex-col">
+        <div className="2xl:mt-[150px] flex justify-center items-center flex-col">
           <h2
             className="font-text text-primary mx-auto text-center leading-[95%]
   text-[35px] sm:text-[35px] md:text-[40px] lg:text-[45px] xl:text-[70px]

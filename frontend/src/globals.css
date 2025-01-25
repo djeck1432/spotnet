@@ -172,6 +172,57 @@ a.svelte-1mtuslq.svelte-1mtuslq {
   }
 }
 
-html {
-  font-size: 100%;
+/* styles */
+
+.header-nav {
+  @apply flex items-center justify-center w-full h-[90px] bg-header-bg backdrop-blur-lg border-b border-[#300734] z-[9999];
+}
+
+.header-nav-sticky {
+  @apply fixed top-0 flex items-center justify-center w-full h-[90px] bg-header-bg backdrop-blur-lg border-b border-[#300734] z-[100];
+}
+
+.list-items {
+  @apply flex items-center justify-between w-full px-[30px] relative;
+}
+
+.logo svg {
+  @apply mt-[9px] w-[300px] h-auto;
+}
+
+.nav-items {
+  @apply flex gap-4 items-center absolute left-1/2 transform -translate-x-1/2;
+}
+
+.nav-items a {
+  @apply text-secondary font-normal text-[16px] leading-[150%] capitalize transition-colors duration-300;
+}
+
+.nav-items a:hover {
+  @apply text-nav-button-hover;
+}
+
+.nav-items a.active-link {
+  @apply text-nav-button-hover font-semibold;
+}
+
+.wallet-container {
+  @apply relative flex items-center justify-between w-[274px] h-[57px] px-[24px] text-[24px] text-white;
+}
+
+.menu-dropdown {
+  @apply flex flex-col justify-start items-center absolute top-[80px] right-0 w-[300px] rounded-[10px] bg-header-button-bg transition-all duration-300 p-[16px];
+}
+
+.logout-button {
+  @apply flex items-center justify-center relative bg-none border-0 text-primary font-semibold text-[15px] cursor-pointer w-[250px] h-[50px] rounded-[900px];
+}
+
+.Toastify__toast {
+  margin-top: 90px;
+}
+
+.Toastify__toast-body {
+  font-size: 16px;
+  font-weight: 600;
 }
