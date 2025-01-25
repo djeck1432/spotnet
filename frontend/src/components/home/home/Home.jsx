@@ -88,7 +88,7 @@ function Home() {
 
           <Starknet className="absolute top-0 right-5 -z-1 w-[15px] md:w-[15px] lg:w-[30px] h-auto" />
         </div>
-        <div className="flex justify-center items-center flex-col">
+        <div className="mt-[100px] flex justify-center items-center flex-col">
           <h2
             className="font-text text-primary mx-auto text-center leading-[95%]
   text-[35px] sm:text-[35px] md:text-[40px] lg:text-[45px] xl:text-[70px]
@@ -108,7 +108,7 @@ function Home() {
         </div>
 
         <button
-          className="bg-button-gradient border-none rounded-lg h-[60px] w-[400px] text-xl font-text font-bold transition-colors duration-[1.3s] mt-5 z-10 pointer-events-auto "
+          className="bg-button-gradient hover:bg-button-gradient-hover border-none rounded-lg h-[60px] w-[400px] text-xl font-text font-bold transition-colors duration-[1.3s] mt-5 z-10 pointer-events-auto "
           onClick={handleLaunchApp}
         >
           <div className="flex justify-center items-center">
@@ -116,6 +116,7 @@ function Home() {
             <Rocket className="w-6 h-6 ml-2" />
           </div>
         </button>
+        <span className="block mt-[100px]"></span>
         <div className="bg-main-gradient mt-[100px] h-[100px] w-[60%] m-0 rounded-t-[2000px] blur-[100px] -z-1 absolute left-1/2 -translate-x-1/2 bottom-[-50px]"></div>
       </div>
     </div>

@@ -44,8 +44,8 @@ const About = () => {
       <StarMaker starData={starData} />
       <h1 className="text-center font-semibold text-4xl text-white mt-20 mb-36">How it works</h1>
       <div className="flex flex-wrap gap-8 justify-center">
-        <div className="absolute bg-main-gradient blur-[90px] w-64 h-52 top-[12%] left-[-2%]"></div>
-        <div className="absolute bg-main-gradient blur-[95px] w-72 h-64 bottom-[-20%] right-[-3%]"></div>
+        <div className="absolute bg-main-gradient blur-[90px] w-64 h-52 top-[16%] left-[-2%]"></div>
+        <div className="absolute bg-main-gradient blur-[95px] w-64 h-52 bottom-[-20%] right-[-3%]"></div>
         {CardData.map((card, index) => (
           <div
             key={index}

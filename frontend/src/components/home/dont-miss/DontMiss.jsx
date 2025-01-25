@@ -46,7 +46,7 @@ const DontMiss = () => {
 
       <div className="relative mt-8">
         <button
-          className="bg-main-gradient text-white font-bold py-3 px-12 rounded-lg flex items-center justify-center"
+          className="bg-main-gradient hover:bg-button-gradient-hover text-white font-bold py-3 px-12 rounded-lg flex items-center justify-center"
           onClick={handleLaunchApp}
         >
           <div className="flex items-center gap-3">
