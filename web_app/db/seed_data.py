@@ -188,6 +188,8 @@ def create_transaction(session: SessionLocal, positions: list[Position]) -> None
     logger.info(f"Created {len(transactions)} transactions.")
 
 
+
+
 def create_extra_deposits(session: SessionLocal, positions: list[Position]) -> None:
     """
     Create and save extra deposit records that are associated with positions.
@@ -203,10 +205,9 @@ def create_extra_deposits(session: SessionLocal, positions: list[Position]) -> N
                 token_symbol=fake.random_element(
                     elements=[token.name for token in TokenParams.tokens()]
                 ),
-                amount=Decimal(
+                amount=String(
                     fake.pydecimal(left_digits=5, right_digits=2, positive=True)
-                ),
-                is_confirmed=fake.boolean()
+                )
             )
             extra_deposits.append(extra_deposit)
     
@@ -216,6 +217,7 @@ def create_extra_deposits(session: SessionLocal, positions: list[Position]) -> N
         logger.info(f"Created {len(extra_deposits)} extra deposits for {len(positions)} positions.")
     else:
         logger.info("No extra deposits created.")
+
 
 
 if __name__ == "__main__":
