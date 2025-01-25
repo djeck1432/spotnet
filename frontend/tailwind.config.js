@@ -4,6 +4,15 @@ module.exports = {
   content: ['./src/**/*.{html,js,ts,jsx,tsx}'], // Update paths based on your project
   theme: {
     extend: {
+      animation: {
+        scroll: 'scroll 13s linear infinite',
+      },
+      keyframes: {
+        scroll: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+      },
       colors: {
         primary: '#fff',
         'dashboard-bg': 'rgba(11, 12, 16, 1)',

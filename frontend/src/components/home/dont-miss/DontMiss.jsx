@@ -27,7 +27,7 @@ const DontMiss = () => {
   return (
     <div className="flex flex-col items-center justify-center mt-16 mb-64 relative">
       <div className="text-center">
-        <h1 className="text-4xl font-semibold text-primary">Don&apos;t miss out</h1>
+        <h1 className="text-4xl font-semibold text-white">Don&apos;t miss out</h1>
         <p className="text-lg font-normal text-secondary mt-2">Investing wisely would be the smartest move you&apos;ll make!</p>
       </div>
 
@@ -46,11 +46,11 @@ const DontMiss = () => {
 
       <div className="relative mt-8">
         <button
-          className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold py-3 px-12 rounded-lg flex items-center justify-center"
+          className="bg-main-gradient text-white font-bold py-3 px-12 rounded-lg flex items-center justify-center"
           onClick={handleLaunchApp}
         >
           <div className="flex items-center gap-3">
-            <span>Launch App</span>
+            <span className='text-black'>Launch App</span>
             <Rocket className="w-5 h-5" />
           </div>
         </button>
