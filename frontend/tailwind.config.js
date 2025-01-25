@@ -59,7 +59,7 @@ module.exports = {
       backgroundImage: {
         app: "url('../public/desktop-background.png')",
         'app-mobile': "url('../public/mobile-background.png')",
-        gradient: 'linear-gradient(73deg, #74d6fd 1.13%, #e01dee 103.45%)',
+        'main-gradient': 'linear-gradient(73deg, #74d6fd 1.13%, #e01dee 103.45%)',
         'button-gradient': 'linear-gradient(55deg, #74d6fd 0%, #e01dee 100%)',
         'button-gradient-hover': 'linear-gradient(55deg, #74d6fd 0%, #74d6fd 100%)',
         'button-gradient-active': 'linear-gradient(55deg, #58c4ef 0%, #58c4ef 100%)',

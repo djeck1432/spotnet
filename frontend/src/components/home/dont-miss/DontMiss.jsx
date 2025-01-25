@@ -10,6 +10,7 @@ import { useWalletStore } from '../../../stores/useWalletStore';
 const DontMiss = () => {
   const { walletId } = useWalletStore();
   const navigate = useNavigate();
+
   const handleLaunchApp = async () => {
     if (walletId) {
       navigate('/form');
@@ -24,31 +25,36 @@ const DontMiss = () => {
   ];
 
   return (
-    <div className="dont-miss__container">
-      <div className="text-container">
-        <h1 className="miss-title">Don&apos;t miss out</h1>
-        <p className="miss-description">Investing wisely would be the smartest move you&apos;ll make!</p>
+    <div className="flex flex-col items-center justify-center mt-16 mb-64 relative">
+      <div className="text-center">
+        <h1 className="text-4xl font-semibold text-primary">Don&apos;t miss out</h1>
+        <p className="text-lg font-normal text-secondary mt-2">Investing wisely would be the smartest move you&apos;ll make!</p>
       </div>
 
       {starData.map((star, index) => (
         <Star
           key={index}
-          className="miss-star"
+          className="absolute"
           style={{
-            '--star-top': `${star.top}%`,
-            '--star-left': `${star.left}%`,
-            '--star-size': `${star.size}%`,
+            top: `${star.top}%`,
+            left: `${star.left}%`,
+            width: `${star.size}%`,
+            height: `${star.size}%`,
           }}
         />
       ))}
-      <div className="miss-button">
-        <button className="launch-button" onClick={handleLaunchApp}>
-          <div className="btn-elements">
-            <span className="button-text">Launch App</span>
-            <Rocket className="rocket-icon" />
+
+      <div className="relative mt-8">
+        <button
+          className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold py-3 px-12 rounded-lg flex items-center justify-center"
+          onClick={handleLaunchApp}
+        >
+          <div className="flex items-center gap-3">
+            <span>Launch App</span>
+            <Rocket className="w-5 h-5" />
           </div>
         </button>
-        <Hand className="hand-icon" />
+        <Hand className="absolute right-[-2.5rem] top-6 w-32 h-32 md:w-28 md:h-28 lg:w-36 lg:h-36" />
       </div>
     </div>
   );

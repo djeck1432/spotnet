@@ -171,3 +171,7 @@ a.svelte-1mtuslq.svelte-1mtuslq {
     @apply bg-center h-auto;
   }
 }
+
+html {
+  font-size: 100%;
+}

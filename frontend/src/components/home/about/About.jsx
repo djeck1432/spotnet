@@ -4,7 +4,6 @@ import { ReactComponent as BorrowUSDC } from '../../../assets/icons/borrow_usdc.
 import { ReactComponent as EkuboSwap } from '../../../assets/icons/ekubo_swap.svg';
 import { ReactComponent as Repeat } from '../../../assets/icons/repeats.svg';
 import StarMaker from '../../layout/star-maker/StarMaker';
-import './about.css';
 
 const CardData = [
   {
@@ -39,29 +38,27 @@ const About = () => {
     { top: 85, left: 10, size: 10 },
     { top: 7, left: 80, size: 8 },
   ];
+
   return (
-    <div className="about-container">
+    <div className="relative flex flex-col items-center justify-between w-full bg-primary mb-80">
       <StarMaker starData={starData} />
-      <h1 className="about-title">How it works</h1>
-      <div className="card-container flex">
-        <div className="cards-gradient">
-          <div className="card-gradient"></div>
-          <div className="card-gradient"></div>
-        </div>
+      <h1 className="text-center font-semibold text-4xl text-primary my-16">How it works</h1>
+      <div className="flex flex-wrap gap-8 justify-center">
+        <div className="absolute bg-gradient-to-r from-blue-500 to-purple-500 blur-xl rounded-full w-56 h-52 top-0 left-[50%] -translate-x-[50%]"></div>
+        <div className="absolute bg-gradient-to-r from-blue-500 to-purple-500 blur-xl rounded-full w-56 h-52 bottom-0 right-[10%]"></div>
         {CardData.map((card, index) => (
-          <div key={index} className="card-about flex">
-            <div className="card-number flex">
-              <h2>{card.number}</h2>
+          <div
+            key={index}
+            className="relative flex flex-col gap-4 w-72 h-92 bg-gradient-to-b from-blue-100 to-blue-200 rounded-2xl border border-gray-300 shadow-xl backdrop-blur-xl p-4"
+          >
+            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-16 h-16 flex items-center justify-center bg-primary border border-gray-300 rounded-lg">
+              <h2 className="text-lg font-bold text-gray-800">{card.number}</h2>
             </div>
-            <div className="card-icon-about">
-              <card.icon />
+            <div className="flex justify-center items-center w-28 h-28 mx-auto">
+              <card.icon className="w-full h-full" />
             </div>
-            <div className="card-title">
-              <h4>{card.title}</h4>
-            </div>
-            <div className="card-description">
-              <h6>{card.description}</h6>
-            </div>
+            <h4 className="text-center text-xl font-medium text-gray-800">{card.title}</h4>
+            <h6 className="text-center text-lg font-light text-gray-600">{card.description}</h6>
           </div>
         ))}
       </div>

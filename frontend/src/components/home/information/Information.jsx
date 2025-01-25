@@ -1,4 +1,3 @@
-import './information.css';
 import React, { useEffect, useState } from 'react';
 import StarMaker from '../../layout/star-maker/StarMaker';
 import { axiosInstance } from 'utils/axios';
@@ -50,21 +49,21 @@ const Information = () => {
   };
 
   return (
-    <div className="information">
-      <div className="card-info__container">
-        <div className="card-info flex">
-          <h1>TVL</h1>
-          <h3 className={loading ? 'loading-text' : ''}>
+    <div className="flex items-center justify-center">
+      <div className="relative w-full max-w-6xl flex justify-around mt-48 mb-36">
+        <div className="flex flex-col gap-4 w-96 h-64 bg-gradient-to-br from-gray-700 to-gray-900 rounded-2xl border border-gray-600 shadow-lg backdrop-blur-lg text-white">
+          <h1 className="text-2xl font-semibold text-center text-gray-300 mt-2">TVL</h1>
+          <h3 className={`text-3xl font-bold text-center ${loading ? 'animate-pulse' : ''}`}>
             {loading ? 'Loading...' : error ? `Error: ${error}` : formatCurrency(data.total_opened_amount)}
           </h3>
         </div>
-        <div className="infos">
-          <div className="card-gradient"></div>
-          <div className="card-gradient"></div>
-        </div>
-        <div className="card-info flex">
-          <h1>Users</h1>
-          <h3 className={loading ? 'loading-text' : ''}>
+
+        <div className="absolute top-20 left-[-330px] w-56 h-52 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 blur-3xl"></div>
+        <div className="absolute bottom-20 right-[-450px] w-80 h-52 rounded-full bg-gradient-to-r from-blue-500 to-green-500 blur-3xl"></div>
+
+        <div className="flex flex-col gap-4 w-96 h-64 bg-gradient-to-br from-gray-700 to-gray-900 rounded-2xl border border-gray-600 shadow-lg backdrop-blur-lg text-white">
+          <h1 className="text-2xl font-semibold text-center text-gray-300 mt-2">Users</h1>
+          <h3 className={`text-3xl font-bold text-center ${loading ? 'animate-pulse' : ''}`}>
             {loading ? 'Loading...' : error ? `Error: ${error}` : data.unique_users}
           </h3>
         </div>
