@@ -1,22 +1,33 @@
-# Dockerfile.nginx
-
-# Stage 1: Build the React app
+# Stage 1: Build the Vite app
 FROM node:20-alpine AS build
 
+# Set the working directory inside the container
 WORKDIR /app
-COPY . /app
 
-RUN yarn
+# Copy package.json and yarn.lock first to leverage Docker's caching
+COPY package.json yarn.lock ./
+
+# Install dependencies (including Vite)
+RUN yarn install
+
+# Copy the rest of the application files
+COPY . .
+
+# Build the Vite app
 RUN yarn build
 
-# Stage 2: Set up Nginx to serve the built app
+# Stage 2: Serve the built app using Nginx
 FROM nginx:alpine
 
-COPY --from=build /app/build /usr/share/nginx/html
+# Copy the built files from the previous stage to the Nginx HTML directory
+COPY --from=build /app/dist /usr/share/nginx/html
 
+# Remove the default Nginx config file and replace it with your custom one
 RUN rm /etc/nginx/conf.d/default.conf
-COPY spotnet.conf /etc/nginx/conf.d
+COPY spotnet.conf /etc/nginx/conf.d/
 
+# Expose port 80 for HTTP traffic
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
 
+# Start Nginx in the foreground
+CMD ["nginx", "-g", "daemon off;"]

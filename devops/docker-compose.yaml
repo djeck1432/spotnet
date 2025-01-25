@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 networks:
   app_network:
@@ -19,6 +19,19 @@ services:
       - backend
     networks:
       - app_network
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - app_network
+    command: ["yarn", "run", "dev"]
+
   backend:
     build: ..
     command: ["bash", "/app/entrypoint.sh"]
@@ -49,7 +62,7 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5

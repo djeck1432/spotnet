@@ -27,13 +27,13 @@ describe('Wallet Services', () => {
 
   describe('checkForCRMToken', () => {
     it('should return true in development mode', async () => {
-      process.env.REACT_APP_IS_DEV = 'true';
+      import.meta.env.VITE_IS_DEV = 'true';
       const result = await checkForCRMToken('0x123');
       expect(result).toBe(true);
     });
 
     it('should validate CRM token and return true if wallet has tokens', async () => {
-      process.env.REACT_APP_IS_DEV = 'false';
+      import.meta.env.VITE_IS_DEV = 'false';
       const mockStarknet = {
         wallet: {
           isConnected: true,
@@ -51,7 +51,7 @@ describe('Wallet Services', () => {
     });
 
     it('should return false and alert if wallet lacks CRM tokens', async () => {
-      process.env.IS_DEV = 'false';
+      import.meta.env.VITE_IS_DEV = 'false';
       const mockStarknet = {
         wallet: {
           isConnected: true,
@@ -129,7 +129,7 @@ describe('Wallet Services', () => {
 
         const mockGetItem = jest.fn().mockReturnValue(connectorId);
         const mockSetItem = jest.fn();
-        
+
         Object.defineProperty(window, 'localStorage', {
           value: {
             getItem: mockGetItem,
@@ -138,7 +138,7 @@ describe('Wallet Services', () => {
         });
 
         const wallet = await getWallet();
-        
+
         expect(mockGetItem).toHaveBeenCalledWith('starknetLastConnectedWallet');
 
         expect(connect).toHaveBeenCalledWith(
@@ -158,7 +158,7 @@ describe('Wallet Services', () => {
         expect(wallet.selectedAddress).toBe(expectedAddress);
       });
     })
-    
+
     it('should return wallet object if wallet is not choosen before', async () => {
       const mockStarknet = {
         wallet: {
@@ -171,7 +171,7 @@ describe('Wallet Services', () => {
       connect.mockResolvedValue(mockStarknet);
 
       const mockGetItem = jest.fn().mockReturnValue(null);
-      
+
       Object.defineProperty(window, 'localStorage', {
         value: {
           getItem: mockGetItem,
@@ -180,7 +180,7 @@ describe('Wallet Services', () => {
       });
 
       const wallet = await getWallet();
-      
+
       expect(mockGetItem).toHaveBeenCalledWith('starknetLastConnectedWallet');
 
       expect(connect).toHaveBeenCalledWith(
