@@ -1,12 +1,10 @@
 """
 This module contains the leaderboard database operations.
 """
-
 import logging
 from typing import List
 from sqlalchemy import func, case
 from sqlalchemy.exc import SQLAlchemyError
-
 from web_app.db.models import Position, Status
 from web_app.db.crud.position import PositionDBConnector
 from web_app.api.serializers.leaderboard import TokenPositionStatistic
@@ -55,7 +53,7 @@ class LeaderboardCRUD(PositionDBConnector):
                     .group_by(Position.token_symbol)
                     .all()
                 )
-
+                
                 # Convert query results to response model
                 return [
                     TokenPositionStatistic(
@@ -65,9 +63,14 @@ class LeaderboardCRUD(PositionDBConnector):
                         closed_positions=closed_positions or 0,
                         liquidated_positions=liquidated_positions or 0
                     )
-                    for token_symbol, total_positions, opened_positions, closed_positions, liquidated_positions in stats
+                    for (
+                        token_symbol,
+                        total_positions,
+                        opened_positions,
+                        closed_positions,
+                        liquidated_positions
+                    ) in stats
                 ]
-
             except SQLAlchemyError as e:
                 logger.error(f"Error retrieving position token statistics: {str(e)}")
                 return []
