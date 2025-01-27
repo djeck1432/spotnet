@@ -67,7 +67,7 @@ export const AddDeposit = () => {
       <TokenSelector
         selectedToken={selectedToken}
         setSelectedToken={setSelectedToken}
-        className="rounded-lg bg-white"
+        className="rounded-lg"
       />
       <div
         className="relative mx-auto mt-8 mb-6 max-w-md w-36 text-center font-semibold text-4xl"

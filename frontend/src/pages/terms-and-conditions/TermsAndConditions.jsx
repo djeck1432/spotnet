@@ -61,7 +61,7 @@ const TermsAndConditionsPage = () => {
   ];
 
   return (
-    <div className="flex min-h-screen relative pt-16 bg-white text-primary">
+    <div className="flex min-h-screen relative pt-16 text-primary">
       <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_85%_15%,rgba(255,255,255,.25)_1px,transparent_1px),radial-gradient(circle_at_15%_85%,rgba(255,255,255,.25)_1px,transparent_1px),radial-gradient(circle_at_75%_75%,rgba(255,255,255,.25)_1px,transparent_1px)] bg-[length:100px_100px] pointer-events-none z-0"></div>
 
       <div className="lg:ml-[370px] flex-1 bg-cover bg-center relative min-h-screen" style={{

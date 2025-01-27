@@ -155,7 +155,7 @@ export default function DashboardPage({ telegramId }) {
         />
       </div>
       <div className="mt-6 flex flex-col gap-4">
-        <div className="p-4 bg-white rounded-2xl shadow-md">
+        <div className="p-4 rounded-2xl shadow-md">
           <DashboardTabs activeTab={activeTab} switchTab={setActiveTab} />
 
           {activeTab === COLLATERAL && (
