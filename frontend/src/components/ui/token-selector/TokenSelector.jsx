@@ -16,9 +16,9 @@ const TokenSelector = ({ selectedToken, setSelectedToken, className }) => {
   };
 
   return (
-    <div className={`token-selector-container ${className}`}>
-      <span className="token-select-label">Select Token</span>
-      <div className="token-options">
+    <div className={`flex flex-col gap-2 w-full ${className}`}>
+      <span className="text-gray">Select Token</span>
+      <div className="flex justify-center items-center">
         {Tokens.map((token) => (
           <div
             className={`token-card-btn ${selectedToken === token.label ? 'selected' : ''}`}

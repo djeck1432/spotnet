@@ -5,25 +5,20 @@ import './multiplier.css';
 
 const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
   const minMultiplier = 1.1;
-
   const { data, isLoading } = useMaxMultiplier();
   const [actualValue, setActualValue] = useState(minMultiplier);
   const sliderRef = useRef(null);
   const isDragging = useRef(false);
 
-  const maxMultiplier = useMemo(() => {
-    return data?.[selectedToken] || 5.0;
-  }, [data, selectedToken]);
+  const maxMultiplier = useMemo(() => data?.[selectedToken] || 5.0, [data, selectedToken]);
 
   const marks = useMemo(() => {
-    const marksArray = [];
-    for (let i = Math.ceil(minMultiplier); i <= Math.floor(maxMultiplier); i++) {
-      marksArray.push(i);
-    }
+    const marksArray = Array.from(
+      { length: Math.floor(maxMultiplier) - Math.ceil(minMultiplier) + 1 },
+      (_, i) => i + Math.ceil(minMultiplier)
+    );
     marksArray.unshift(minMultiplier);
-    if (!marksArray.includes(maxMultiplier)) {
-      marksArray.push(maxMultiplier);
-    }
+    if (!marksArray.includes(maxMultiplier)) marksArray.push(maxMultiplier);
     return marksArray;
   }, [minMultiplier, maxMultiplier]);
 
@@ -32,16 +27,13 @@ const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
       const rect = sliderRef.current.getBoundingClientRect();
       const percentage = sliderPosition / rect.width;
       const value = percentage * (maxMultiplier - minMultiplier) + minMultiplier;
-      return Math.max(minMultiplier, Math.min(maxMultiplier, parseFloat(value.toFixed(1))));
+      return Math.min(maxMultiplier, Math.max(minMultiplier, parseFloat(value.toFixed(1))));
     },
     [maxMultiplier, minMultiplier]
   );
 
   const calculateSliderPercentage = useCallback(
-    (value) => {
-      const percentage = ((value - minMultiplier) / (maxMultiplier - minMultiplier)) * 100;
-      return Math.min(Math.max(percentage, 0), 100);
-    },
+    (value) => ((value - minMultiplier) / (maxMultiplier - minMultiplier)) * 100,
     [maxMultiplier, minMultiplier]
   );
 
@@ -51,9 +43,8 @@ const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
       if (!slider) return;
 
       const rect = slider.getBoundingClientRect();
-      const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+      const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
       const newValue = mapSliderToValue(x);
-
       setActualValue(newValue);
       setSelectedMultiplier(newValue.toFixed(1));
     },
@@ -95,12 +86,9 @@ const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
   }, [handleDrag]);
 
   useEffect(() => {
-    if (actualValue > maxMultiplier) {
-      setActualValue(maxMultiplier);
-      setSelectedMultiplier(maxMultiplier.toFixed(1));
-    } else {
-      setSelectedMultiplier(actualValue.toFixed(1));
-    }
+    const boundedValue = Math.min(actualValue, maxMultiplier);
+    setActualValue(boundedValue);
+    setSelectedMultiplier(boundedValue.toFixed(1));
   }, [maxMultiplier, actualValue, setSelectedMultiplier]);
 
   if (isLoading) return <div className="slider-skeleton">Loading multiplier data...</div>;
@@ -110,20 +98,21 @@ const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
       <div className="slider-container">
         <div className="slider-with-tooltip">
           <div className="multiplier-slider-container">
-            <div className="slider" ref={sliderRef} onMouseDown={handleMouseDown} onTouchStart={handleTouchStart}>
+            <div
+              className="slider"
+              ref={sliderRef}
+              onMouseDown={handleMouseDown}
+              onTouchStart={handleTouchStart}
+            >
               <div className="slider-track">
                 <div
                   className="slider-range"
-                  style={{
-                    width: `${calculateSliderPercentage(actualValue)}%`,
-                  }}
-                ></div>
+                  style={{ width: `${calculateSliderPercentage(actualValue)}%` }}
+                />
               </div>
               <div
                 className="slider-thumb"
-                style={{
-                  left: `${calculateSliderPercentage(actualValue)}%`,
-                }}
+                style={{ left: `${calculateSliderPercentage(actualValue)}%` }}
               >
                 <div className="tooltip">{actualValue.toFixed(1)}</div>
                 <img src={sliderThumb} className="cursor" alt="slider thumb" draggable="false" />

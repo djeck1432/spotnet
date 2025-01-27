@@ -5,11 +5,9 @@ import { useWalletStore } from 'stores/useWalletStore';
 import { ReactComponent as ETH } from '../../../assets/icons/ethereum.svg';
 import { ReactComponent as USDC } from '../../../assets/icons/borrow_usdc.svg';
 import { ReactComponent as STRK } from '../../../assets/icons/strk.svg';
-import './balanceCards.css';
 
 const BalanceCards = ({ className }) => {
   const { walletId } = useWalletStore();
-
   const isMobile = useMatchMedia('(max-width: 768px)');
 
   useEffect(() => {
@@ -23,30 +21,34 @@ const BalanceCards = ({ className }) => {
   ]);
 
   return (
-    <div className={`balance-card ${className}`}>
-      <div className="balance-container">
+    <div className={`mt-5 ${className}`}>
+      <div className="flex flex-wrap justify-between gap-1 overflow-x-auto scrollbar-none md:flex-nowrap">
         {balances.map((balance) =>
           isMobile ? (
-            <div className="balance-item" key={balance.title}>
-              <div className="title-container">
-                <label htmlFor="icon" className="balance-title">
-                  <span className="token-icon">{balance.icon}</span>
-                </label>
-                <label htmlFor={balance.title}>
-                  <span className="balance-text">{balance.title} Balance</span>
-                </label>
+            <div
+              className="flex flex-col flex-1 items-center justify-center rounded-lg border border-bg-footer-divider-bg bg-dark-purple py-3.5 sm:gap-1"
+              key={balance.title}
+            >
+              <div className="flex w-max items-center gap-2">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-dark-purple-light text-secondary">
+                  {balance.icon}
+                </span>
+                <span className="text-sm text-secondary">{balance.title} Balance</span>
               </div>
-              <label htmlFor={balance.title}>{balance.balance}</label>
+              <span className="text-lg font-semibold text-secondary">{balance.balance}</span>
             </div>
           ) : (
-            <div className="balance-item" key={balance.title}>
-              <label htmlFor={balance.title} className={'balance-title'}>
-                <span className="token-icon blend">{balance.icon}</span>
-                <span className="balance-text">{balance.title} Balance</span>
-              </label>
-              <label htmlFor={balance.title}>
-                <span className="balance-amount">{balance.balance}</span>
-              </label>
+            <div
+              className="flex flex-col flex-1 items-center justify-center rounded-lg border border-bg-footer-divider-bg bg-dark-purple p-6 sm:gap-2"
+              key={balance.title}
+            >
+              <div className="flex items-center gap-2">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[hsla(261, 49%, 15%, 1)] text-secondary filter-grayscale">
+                  {balance.icon}
+                </span>
+                <span className="text-sm text-secondary">{balance.title} Balance</span>
+              </div>
+              <span className="text-2xl font-semibold text-secondary">{balance.balance}</span>
             </div>
           )
         )}

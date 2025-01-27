@@ -4,7 +4,6 @@ import BalanceCards from 'components/ui/balance-cards/BalanceCards';
 import MultiplierSelector from 'components/ui/multiplier-selector/MultiplierSelector';
 import { handleTransaction } from 'services/transaction';
 import Spinner from 'components/ui/spinner/Spinner';
-import './form.css';
 import { Button } from 'components/ui/custom-button/Button';
 import { useWalletStore } from '../../stores/useWalletStore';
 import { useConnectWallet } from '../../hooks/useConnectWallet';
@@ -76,9 +75,8 @@ const Form = () => {
   };
 
   return (
-    <div className="form-content-wrapper">
-      <BalanceCards className="balance-card" />
-
+    <div className="flex flex-col gap-8 items-center pt-4 pb-4 font-sans min-h-screen">
+      <BalanceCards className="w-full max-w-2xl" />
 
       {isClosePositionOpen && (
         <ActionModal
@@ -96,37 +94,41 @@ const Form = () => {
           cancelAction={handleCloseModal}
         />
       )}
-      <form className="form-container" onSubmit={handleSubmit}>
-        <div className="form-title">
-          <h1>Please submit your leverage details</h1>
+      <form
+        className="flex flex-col gap-4 w-full max-w-2xl p-4"
+        onSubmit={handleSubmit}
+      >
+        <div className="text-center">
+          <h1 className="text-xl font-normal text-white text-center mb-4">Please submit your leverage details</h1>
         </div>
 
         <TokenSelector
           selectedToken={selectedToken}
           setSelectedToken={setSelectedToken}
-          className="form-token-selector"
+          className=""
         />
-        <label>Select Multiplier</label>
+        <label className="text-gray text-lg">Select Multiplier</label>
         <MultiplierSelector
           setSelectedMultiplier={setSelectedMultiplier}
           selectedToken={selectedToken}
           sliderValue={selectedMultiplier}
         />
-        <div className="token-label">
-          <label className="token-amount">Token Amount</label>
+        <div className="flex flex-col gap-2 mt-11">
+          <label className="text-gray text-lg">Token Amount</label>
           <input
             type="number"
             placeholder="Enter Token Amount"
             value={tokenAmount}
             onChange={(e) => setTokenAmount(e.target.value)}
+            className="border mt-2 bg-transparent border-footer-divider-bg rounded-[50px] px-7 py-4 text-gray focus:outline-none"
           />
         </div>
         <div>
-          <div className="form-health-factor">
+          <div className="flex justify-end items-center gap-2 text-lg text-gray">
             <p>Estimated Health Factor Level:</p>
             <p>{isHealthFactorLoading ? 'Loading...' : healthFactor}</p>
           </div>
-          <Button variant="secondary" size="lg" type="submit" className="form-button">
+          <Button variant="secondary" size="lg" type="submit" className="w-full mt-4">
             Submit
           </Button>
         </div>
