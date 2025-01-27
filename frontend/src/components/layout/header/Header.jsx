@@ -54,11 +54,9 @@ function Header({ onConnectWallet, onLogout }) {
     setIsMenuOpen(false);
   };
 
-
   const openModal = () => {
     setIsModalOpen(true);
   };
-
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -66,31 +64,29 @@ function Header({ onConnectWallet, onLogout }) {
 
   return (
     <>
-    <nav className={`flex items-center justify-center w-full h-[90px] bg-header-bg backdrop-blur-lg border-b border-[#300734] z-[9999] ${makeNavStick ? 'fixed top-0' : 'relative'}`}>
-      <div className="flex items-center justify-between w-full px-[30px] relative">
-        <div className="logo">
-          <NavLink to="/">
-            <Logo className="mt-[9px] w-[300px] h-auto" />
-          </NavLink>
-        </div>
-        {/* desktop navigation */}
-        <NavigationLinks onNavClick={handleNavClick} />
-        <div className="flex items-center gap-2">
-          <div className="dropdown">
-            <MobDropdownMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+      <nav
+        className={`flex items-center justify-center w-full h-[90px] bg-header-bg backdrop-blur-lg border-b border-[#300734] z-[9999] ${makeNavStick ? 'fixed top-0' : 'relative'}`}
+      >
+        <div className="flex items-center justify-between w-full px-[30px] relative">
+          <div className="logo">
+            <NavLink to="/">
+              <Logo className="mt-[9px] w-[300px] h-auto" />
+            </NavLink>
           </div>
-          <WalletSection onConnectWallet={onConnectWallet} onLogout={onLogout} />
+          {/* desktop navigation */}
+          <NavigationLinks onNavClick={handleNavClick} />
+          <div className="flex items-center gap-2">
+            <div className="dropdown">
+              <MobDropdownMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+            </div>
+            <WalletSection onConnectWallet={onConnectWallet} onLogout={onLogout} />
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
 
-     
       {!isModalOpen && <ReportBugButton onClick={openModal} />}
 
-    
-      {isModalOpen && (
-        <ReportBugModal onClose={closeModal} />
-      )}
+      {isModalOpen && <ReportBugModal onClose={closeModal} />}
     </>
   );
 }
