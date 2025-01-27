@@ -1,7 +1,7 @@
 const plugin = require('tailwindcss/plugin');
 
 module.exports = {
-  content: ['./src/**/*.{html,js,ts,jsx,tsx}'], // Update paths based on your project
+  content: ['./src/**/*.{html,js,ts,jsx,tsx}'],
   theme: {
     extend: {
       animation: {
@@ -92,49 +92,9 @@ module.exports = {
         'midnight-purple-hover-border': '1px',
       },
       zIndex: {
-        '9999': '9999',
-        '100': '100',
+        9999: '9999',
+        100: '100',
       },
     },
   },
-  plugins: [
-    plugin(function ({ addBase, addComponents }) {
-      // Add Base styles
-      addBase({
-        body: {
-          overflowX: 'hidden',
-        },
-        main: {
-          overflow: 'hidden',
-        },
-        '*': {
-          margin: '0',
-          padding: '0',
-          boxSizing: 'border-box',
-          fontFamily: "var(--font-family, 'Open Sans', sans-serif)",
-        },
-        a: {
-          textDecoration: 'none',
-        },
-        li: {
-          listStyleType: 'none',
-        },
-      });
-
-      // Add Custom Components
-      addComponents({
-        '.app': {
-          '@apply min-h-screen bg-cover bg-center': {},
-          backgroundImage: "url('../public/desktop-background.png')",
-        },
-        '@media (max-width: 768px)': {
-          '.app': {
-            backgroundImage: "url('../public/mobile-background.png')",
-            backgroundPosition: '50% 40%',
-            height: '100%',
-          },
-        },
-      });
-    }),
-  ],
 };
