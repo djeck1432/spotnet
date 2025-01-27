@@ -53,7 +53,7 @@ const WalletSection = ({ onConnectWallet, onLogout }) => {
 
           {/* dropdown-menu */}
           {isMenuOpen && (
-            <div className="absolute top-[200%] right-[10%] transform bg-primary-color border rounded-lg shadow-lg p-4 w-80 mt-2 z-10">
+            <div className="absolute top-[200%] right-[10%] transform bg-primary-color border rounded-lg shadow-lg px-4 py-3 w-80 mt-2 z-10">
               {/* Connect Wallet button for mobile screens */}
               {isMobile && !walletId && (
                 <Button className="w-full" onClick={onConnectWallet}>

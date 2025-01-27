@@ -26,12 +26,12 @@ function Footer() {
   ];
 
   return (
-    <footer className="px-20 md:px-16 sm:px-8 bg-gray-900 h-24 flex items-center justify-between relative z-10">
-      <div className="text-gray-400 text-sm sm:hidden">
+    <footer className="px-20 md:px-16 sm:px-8 bg-footer-bg-color h-24 flex items-center justify-between relative z-10">
+      <div className="text-secondary text-sm hidden lg:flex">
         <p>Copyright© Spotnet {new Date().getFullYear()}</p>
       </div>
 
-      <nav className="flex gap-4 text-gray-400 sm:hidden">
+      <nav className="lg:flex gap-4 text-secondary hidden">
         {[
           { path: '/documentation', label: 'Documentation' },
           { path: '/overview', label: 'Overview' },
@@ -42,7 +42,7 @@ function Footer() {
             key={path}
             to={path}
             className={({ isActive }) =>
-              isActive ? 'text-blue-500 scale-105 transition-transform' : 'hover:scale-105 transition-transform'
+              isActive ? 'text-secondary scale-105 transition-transform' : 'hover:scale-105 transition-transform'
             }
             onClick={(e) => {
               if (window.location.pathname === path) {
@@ -56,7 +56,7 @@ function Footer() {
         ))}
       </nav>
 
-      <div className="flex gap-6 items-center justify-center sm:hidden">
+      <div className="hidden lg:flex gap-6 items-center justify-center">
         {socialLinks.map(({ name, href, icon: Icon }) => (
           <a key={name} href={href} target="_blank" rel="noopener noreferrer" aria-label={name}>
             <Icon className="w-6 h-6 transition-transform hover:scale-110" />
@@ -64,13 +64,13 @@ function Footer() {
         ))}
       </div>
 
-      <div className="hidden sm:flex items-center justify-between w-full px-4 py-4">
+      <div className="flex lg:hidden items-center justify-between w-full px-4 py-4">
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>
             isActive
-              ? 'text-blue-500 font-semibold'
-              : 'text-gray-400 hover:text-blue-500 transition-colors'
+              ? 'text-brand font-semibold'
+              : 'text-secondary hover:text-brand transition-colors'
           }
         >
           <div className="flex flex-col items-center">
@@ -85,8 +85,8 @@ function Footer() {
           to="/form"
           className={({ isActive }) =>
             isActive
-              ? 'text-blue-500 font-semibold'
-              : 'text-gray-400 hover:text-blue-500 transition-colors'
+              ? 'text-brand font-semibold'
+              : 'text-secondary hover:text-brand transition-colors'
           }
         >
           <div className="flex flex-col items-center">
