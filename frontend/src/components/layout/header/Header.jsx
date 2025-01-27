@@ -81,7 +81,8 @@ function Header({ onConnectWallet, onLogout }) {
           </div>
           <WalletSection onConnectWallet={onConnectWallet} onLogout={onLogout} />
         </div>
-      </nav>
+      </div>
+    </nav>
 
      
       {!isModalOpen && <ReportBugButton onClick={openModal} />}
