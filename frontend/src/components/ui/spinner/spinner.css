@@ -7,7 +7,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--spinner-bgn);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 9999;
 }
 
@@ -18,7 +18,7 @@
   padding: 12px 34px;
   width: 250px;
   height: 68px;
-  background: var(--spinner-content);
+  background: #393939;
 }
 
 .spinner-border {
@@ -28,10 +28,10 @@
 }
 
 .loading-text {
-  font-family: var(--text-font);
+  font-family: 'Rethink Sans';
   font-weight: 600;
   font-size: 28px;
-  color: var(--primary);
+  color: #fff;
 }
 
 @media (max-width: 1440px) {

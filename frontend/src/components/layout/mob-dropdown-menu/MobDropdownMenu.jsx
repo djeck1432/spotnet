@@ -22,10 +22,10 @@ function MobDropdownMenu() {
       >
         <ArrowDownIcon className="w-5 h-5" />
       </button>
-      <ul className="dropdown-menu absolute w-80 bg-primary-color/40 rounded-2xl shadow-lg p-6 top-20 left-1/2 transform -translate-x-1/2">
+      <ul className="dropdown-menu absolute w-96 bg-primary-color/80 rounded-2xl shadow-lg p-6 top-40 left-[100%] transform -translate-x-1/2 z-50">
         {menuItems.map((item) => (
-          <li key={item.id} className="mb-4">
-            <a className="flex items-center p-4 bg-header-button-bg text-second-primary hover:text-white rounded-xl z-50">
+          <li key={item.id} className="mb-4 z-50">
+            <a className="flex items-center p-4 bg-header-button-bg text-second-primary hover:text-white rounded-xl z-50 cursor-pointer">
               {item.icon}
               {item.text}
             </a>

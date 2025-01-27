@@ -65,7 +65,7 @@
   background: transparent;
   color: white;
   cursor: pointer;
-  border: var(--midnight-purple-border);
+  border: 1px solid #201338;
   padding: 16px 24px 16px 24px;
   z-index: 1;
   overflow: hidden;
@@ -85,7 +85,7 @@
 }
 
 .button--secondary:hover:not(:disabled) {
-  border: var(--midnight-purple-hover-border);
+  border: 1px solid #36294e;
 }
 
 @media (max-width: 768px) {
