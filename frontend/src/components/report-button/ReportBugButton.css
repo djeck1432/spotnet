@@ -1,0 +1,33 @@
+.report-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: fixed;
+  right: 30px;
+  top: 125px;
+  z-index: 10;
+  height: 46px;
+  background: #11061e;
+  border: 1px solid #36294e;
+  border-radius: 12px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.report-button:hover {
+  background: linear-gradient(to right, rgba(147, 51, 234, 0.3), rgba(59, 130, 246, 0.3));
+}
+
+.bug-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.bug-text {
+  color: #e7ecf0;
+  font-family: Open Sans;
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: 13px;
+}

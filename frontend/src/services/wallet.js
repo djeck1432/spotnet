@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect, disconnect } from 'starknetkit';
+import { InjectedConnector } from 'starknetkit/injected';
 import { ETH_ADDRESS, STRK_ADDRESS, USDC_ADDRESS } from '../utils/constants';
 import { ReactComponent as ETH } from 'assets/icons/ethereum.svg';
 import { ReactComponent as USDC } from 'assets/icons/borrow_usdc.svg';
 import { ReactComponent as STRK } from 'assets/icons/strk.svg';
 
 const CRM_TOKEN_ADDRESS = "0x051c4b1fe3bf6774b87ad0b15ef5d1472759076e42944fff9b9f641ff13e5bbe";
-let globalWallet = null;
 
 // Check if the connected wallet holds the CRM token
 export const checkForCRMToken = async (walletAddress) => {
@@ -16,9 +16,7 @@ export const checkForCRMToken = async (walletAddress) => {
   }
 
   try {
-    const { wallet } = await connect({
-      modalMode: "neverAsk",
-    });
+    const wallet = await getWallet();
 
     console.log('Checking CRM token balance for wallet:', wallet);
     const response = await wallet.provider.callContract({
@@ -40,9 +38,22 @@ export const checkForCRMToken = async (walletAddress) => {
   }
 };
 
+export const getConnectors = () => !localStorage.getItem("starknetLastConnectedWallet") ? [
+  new InjectedConnector({ options: { id: "argentX" }}),
+  new InjectedConnector({ options: { id: "braavos" }}),
+] : [
+  new InjectedConnector({ options: { id: localStorage.getItem("starknetLastConnectedWallet") }}),
+];
+
 export const getWallet = async () => {
-  if (globalWallet && globalWallet.isConnected) {
-    return globalWallet;
+  const { wallet } = await connect({
+    connectors: getConnectors(),
+    modalMode: "neverAsk",
+  });
+
+  if (wallet && wallet.isConnected) {
+    await wallet.enable();
+    return wallet;
   }
 
   console.log('No wallet found. Attempting to connect...');
@@ -54,8 +65,9 @@ export const connectWallet = async () => {
     console.log('Attempting to connect to wallet...');
 
     const { wallet } = await connect({
+      connectors: getConnectors(),
       modalMode: "alwaysAsk",
-      modalTheme: "light",
+      modalTheme: "dark"
     });
 
     if (!wallet) {
@@ -66,10 +78,8 @@ export const connectWallet = async () => {
     await wallet.enable();
 
     if (wallet.isConnected) {
-      const address = wallet.selectedAddress;
-      globalWallet = wallet;
-      console.log('Wallet successfully connected. Address:', address);
-      return address;
+      console.log('Wallet successfully connected. Address:', wallet.selectedAddress);
+      return wallet;
     } else {
       throw new Error('Wallet connection failed');
     }
@@ -86,9 +96,7 @@ export function logout() {
 
 export async function getTokenBalances(walletAddress) {
   try {
-    const { wallet } = await connect({
-      modalMode: "neverAsk",
-    });
+    const wallet = await getWallet();
     console.log("Wallet info", wallet);
 
     const tokenBalances = {

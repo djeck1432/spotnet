@@ -1,5 +1,6 @@
 import { connect } from 'starknetkit';
-import { checkForCRMToken, connectWallet, getTokenBalances, getBalances, logout } from '../../src/services/wallet';
+import { InjectedConnector } from 'starknetkit/injected';
+import { checkForCRMToken, connectWallet, getTokenBalances, getBalances, logout, getWallet, getConnectors } from '../../src/services/wallet';
 import { ETH_ADDRESS, STRK_ADDRESS, USDC_ADDRESS } from '../../src/utils/constants';
 
 jest.mock('starknetkit', () => ({
@@ -10,7 +11,7 @@ jest.mock('starknetkit', () => ({
 jest.mock(
   'starknetkit/injected',
   () => ({
-    InjectedConnector: jest.fn(),
+    InjectedConnector: jest.fn().mockImplementation((options) => options),
   }),
   { virtual: true }
 );
@@ -71,6 +72,140 @@ describe('Wallet Services', () => {
     });
   });
 
+  describe('getConnectors', () => {
+    it('should return connectors array with injected connectors', () => {
+      const mockGetItem = jest.fn();
+      Object.defineProperty(window, 'localStorage', {
+        value: {
+          getItem: mockGetItem.mockReturnValue(null),
+        },
+        writable: true,
+      });
+
+      const connectors = getConnectors();
+
+      expect(connectors).toEqual([
+        new InjectedConnector({ options: { id: 'argentX' } }),
+        new InjectedConnector({ options: { id: 'braavos' } }),
+      ]);
+    });
+
+    ['argentX', 'braavos'].forEach((connector) => {
+      it(`should return connectors array with injected connectors from local storage (${connector})`, () => {
+        const mockGetItem = jest.fn();
+        Object.defineProperty(window, 'localStorage', {
+          value: {
+            getItem: mockGetItem.mockReturnValue(connector),
+          },
+          writable: true,
+        });
+
+        const connectors = getConnectors();
+
+        expect(connectors).toEqual([
+          new InjectedConnector({ options: { id: connector } }),
+        ]);
+      })
+    });
+  });
+
+  describe('getWallet', () => {
+    const testCases = [
+      { connectorId: 'argentX', expectedAddress: '0x123' },
+      { connectorId: 'braavos', expectedAddress: '0x456' },
+    ];
+
+    testCases.forEach(({ connectorId, expectedAddress }) => {
+      it(`should return wallet object if wallet is connected with ${connectorId}`, async () => {
+        const mockStarknet = {
+          wallet: {
+            isConnected: true,
+            enable: jest.fn(),
+            selectedAddress: expectedAddress,
+          },
+        };
+
+        connect.mockResolvedValue(mockStarknet);
+
+        const mockGetItem = jest.fn().mockReturnValue(connectorId);
+        const mockSetItem = jest.fn();
+        
+        Object.defineProperty(window, 'localStorage', {
+          value: {
+            getItem: mockGetItem,
+          },
+          writable: true,
+        });
+
+        const wallet = await getWallet();
+        
+        expect(mockGetItem).toHaveBeenCalledWith('starknetLastConnectedWallet');
+
+        expect(connect).toHaveBeenCalledWith(
+          expect.objectContaining({
+            connectors: expect.arrayContaining([
+              expect.objectContaining({
+                options: expect.objectContaining({
+                  id: connectorId,
+                }),
+              }),
+            ]),
+            modalMode: 'neverAsk',
+          })
+        );
+        expect(wallet.isConnected).toBe(true);
+        expect(wallet.enable).toHaveBeenCalled();
+        expect(wallet.selectedAddress).toBe(expectedAddress);
+      });
+    })
+    
+    it('should return wallet object if wallet is not choosen before', async () => {
+      const mockStarknet = {
+        wallet: {
+          isConnected: true,
+          enable: jest.fn(),
+          selectedAddress: '0x123',
+        },
+      };
+
+      connect.mockResolvedValue(mockStarknet);
+
+      const mockGetItem = jest.fn().mockReturnValue(null);
+      
+      Object.defineProperty(window, 'localStorage', {
+        value: {
+          getItem: mockGetItem,
+        },
+        writable: true,
+      });
+
+      const wallet = await getWallet();
+      
+      expect(mockGetItem).toHaveBeenCalledWith('starknetLastConnectedWallet');
+
+      expect(connect).toHaveBeenCalledWith(
+        expect.objectContaining({
+          connectors: expect.arrayContaining([
+            expect.objectContaining({
+              options: expect.objectContaining({
+                id: 'argentX'
+              }),
+            }),
+            expect.objectContaining({
+              options: expect.objectContaining({
+                id: 'braavos'
+              }),
+            }),
+          ]),
+          modalMode: 'neverAsk'
+        })
+      );
+      expect(wallet.isConnected).toBe(true);
+      expect(wallet.enable).toHaveBeenCalled();
+      expect(wallet.selectedAddress).toBe('0x123');
+    });
+  });
+
   describe('connectWallet', () => {
     it('should successfully connect wallet and return address', async () => {
       const mockStarknet = {
@@ -83,16 +218,18 @@ describe('Wallet Services', () => {
 
       connect.mockResolvedValue(mockStarknet);
 
-      const address = await connectWallet();
+      const wallet = await connectWallet();
 
       expect(connect).toHaveBeenCalledWith(
         expect.objectContaining({
+          connectors: expect.any(Array),
           modalMode: 'alwaysAsk',
-          modalTheme: 'light'
+          modalTheme: 'dark'
         })
       );
       expect(mockStarknet.wallet.enable).toHaveBeenCalled();
-      expect(address).toBe('0x123');
+      expect(wallet.selectedAddress).toBe('0x123');
+      expect(wallet.isConnected).toBe(true);
     });
 
     it('should throw error when StarkNet object is not found', async () => {

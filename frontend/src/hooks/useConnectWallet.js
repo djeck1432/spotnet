@@ -5,7 +5,8 @@ import { connectWallet, checkForCRMToken } from '../services/wallet';
 export const useConnectWallet = (setWalletId) => {
   return useMutation({
     mutationFn: async () => {
-      const walletAddress = await connectWallet();
+      const wallet = await connectWallet();
+      const walletAddress = wallet.selectedAddress;
 
       if (!walletAddress) {
         throw new Error('Failed to connect wallet');

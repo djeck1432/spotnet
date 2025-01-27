@@ -56,6 +56,7 @@ body {
 }
 
 .dashboard-title {
+  margin-top: 1rem;
   font-size: 32px;
   font-weight: 600;
   color: var(--second-primary);
@@ -182,13 +183,6 @@ body {
 }
 
 @media (max-width: 768px) {
-  .dashboard-content {
-    width: 100%;
-    max-width: 100%;
-    padding: 0.5rem 0;
-    gap: 16px;
-  }
-
   .top-cards-dashboard {
     width: 500px;
     flex-direction: row;
@@ -240,6 +234,7 @@ body {
   .balance-value,
   .current-sum-red {
     font-size: 14px;
+    color: #ff0000;
   }
 
   .lucide-up-icon {
@@ -256,6 +251,7 @@ body {
 
   .current-sum-green {
     font-size: 14px;
+    color: #60af77;
   }
 
   .icon {
@@ -271,21 +267,10 @@ body {
 }
 
 @media (max-width: 550px) {
-  .dashboard-container {
-    width: 550px;
-  }
-
   .dashboard-title {
     font-size: 18px;
     font-weight: 600;
     line-height: 21.79px;
-  }
-
-  .dashboard-content {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
   }
 
   .dashboard-info-container {
