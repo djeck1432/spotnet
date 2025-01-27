@@ -1,15 +1,14 @@
 import React from 'react';
-import './stakeCard.css';
 
 export default function StakeCard({ icon = 1, title, value }) {
   return (
-    <div className="stake-card">
-      <div className="card-header">
-        <img src={icon} className="card-icon" />
-        <span className="label">{title}</span>
+    <div className="w-72 bg-header-button-bg border-midnight-purple-border rounded-full flex flex-col justify-center items-center">
+      <div className="flex items-center gap-4">
+        <img src={icon} alt="icon" className="w-8 h-8" />
+        <span className="text-sm font-semibold">{title}</span>
       </div>
-      <div className="card-value">
-        <span className="top-card-value">{value}</span>
+      <div className="mt-4">
+        <span className="text-xl font-semibold">{value}</span>
       </div>
     </div>
   );

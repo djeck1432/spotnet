@@ -31,13 +31,11 @@ const Documentation = () => {
       content: [
         {
           type: 'text',
-          value:
-            'Welcome to Spotnet documentation.',
+          value: 'Welcome to Spotnet documentation.',
         },
         {
           type: 'text',
-          value:
-            'Spotnet is a decentralized platform designed to help users easily amplify their investments in digital assets like ETH. \n This documentation provides a comprehensive guide on using SpotNet and making the most of its features.',
+          value: 'Spotnet is a decentralized platform designed to help users easily amplify their investments in digital assets like ETH. \n This documentation provides a comprehensive guide on using SpotNet and making the most of its features.',
         },
       ],
     },
@@ -45,11 +43,9 @@ const Documentation = () => {
       id: 'overview',
       title: 'Overview',
       content: [
-
         {
           type: 'text',
-          value:
-            'What is Spotnet?',
+          value: 'What is Spotnet?',
         },
         {
           type: 'text',
@@ -162,12 +158,11 @@ const Documentation = () => {
       id: 'getting-started',
       title: 'Getting Started: Setting Up Your Wallet',
       content: [
-        
         {
           type: 'text',
           value: 'To get started with Spotnet and fully leverage its features, you’ll need to set up a compatible Web3 wallet. Follow the steps below to set up your wallet and connect it to Spotnet:',
         },
-      
+
         {
           type: 'text',
           value: 'Download a Compatible Web3 Wallet',
@@ -202,20 +197,18 @@ const Documentation = () => {
             "After funding your wallet, go to the Spotnet platform and look for the “Connect Wallet” button, typically found in the top-right corner of the homepage. Select your wallet type (e.g., MetaMask, WalletConnect) and follow the prompts to authorize the connection. Your wallet will ask for permission to connect with Spotnet; confirm this request to allow your wallet to interact with the platform. If you’re using a wallet like MetaMask that doesn’t support Starknet by default, you may need to manually add the Starknet network by selecting “Custom RPC” in your wallet settings and entering the necessary network details. Once connected, you'll have full access to Spotnet’s features.",
           ],
         },
-        
-
-
-
       ],
     },
   ];
 
   return (
-    <div className="documentation-page">
+    <div className="flex w-[calc(100vw-372px)] min-h-screen relative ml-[372px]">
       <Sidebar title="Table of Contents" items={tableOfContents} />
 
-      <div className="main-content">
-        <h1 className="main-title">Spotnet Documentation</h1>
+      <div className="flex-1 relative min-h-screen w-[calc(100vw-372px)] p-6 pt-0">
+        <h1 className="text-4xl font-bold mt-24 mb-12 ml-10 text-transparent bg-clip-text bg-white">
+          Spotnet Documentation
+        </h1>
         <Sections sections={sectionsData} />
       </div>
 

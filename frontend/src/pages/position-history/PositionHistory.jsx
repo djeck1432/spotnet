@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../DashboardLayout';
-import './positionHistory.css';
 import { ReactComponent as HealthIcon } from '../../assets/icons/health.svg';
 import { ReactComponent as EthIcon } from '../../assets/icons/ethereum.svg';
 import { ReactComponent as StrkIcon } from '../../assets/icons/strk.svg';
@@ -20,133 +19,127 @@ function PositionHistory() {
   const { data: tableData, isPending } = usePositionHistoryTable();
   const { data: cardData } = useDashboardData();
 
-  const [ filteredTableData, setFilteredTableData ] = useState(tableData);
+  const [filteredTableData, setFilteredTableData] = useState(tableData);
   const positionsOnPage = 10;
 
   const getFilteredData = (data, page, itemsPerPage) => {
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     return data.slice(start, end);
-  }
-  
+  };
+
   useEffect(() => {
-    if (!isPending && tableData)
-      setFilteredTableData(getFilteredData(tableData, currentPage, positionsOnPage));
+    if (!isPending && tableData) setFilteredTableData(getFilteredData(tableData, currentPage, positionsOnPage));
   }, [currentPage, isPending]);
 
   const tokenIconMap = {
-    STRK: <StrkIcon className="token-icon" />,
-    USDC: <UsdIcon className="token-icon" />,
-    ETH: <EthIcon className="token-icon" />,
+    STRK: <StrkIcon className="w-6 h-6 bg-[#201338] rounded-full p-1" />,
+    USDC: <UsdIcon className="w-6 h-6 bg-[#201338] rounded-full p-1" />,
+    ETH: <EthIcon className="w-6 h-6 bg-[#201338] rounded-full p-1" />,
   };
 
   const statusStyles = {
-    opened: 'status-opened',
-    closed: 'status-closed',
-    pending: 'status-pending',
+    opened: 'text-green-500',
+    closed: 'text-red-500',
+    pending: 'text-yellow-500',
   };
 
   return (
     <DashboardLayout title="Position History">
-      <div className="position-content">
-        <div className="position-top-cards">
+      <div className="flex flex-col items-center gap-6">
+        <div className="flex justify-center gap-4 w-full max-w-[642px]">
           <Card
             label="Health Factor"
             value={cardData?.health_ratio || '0.00'}
-            icon={<HealthIcon className="icon" />}
+            icon={<HealthIcon className="w-6 h-6" />}
           />
           <Card
             label="Borrow Balance"
             cardData={cardData?.borrowed || '0.00'}
-            icon={<EthIcon className="icon" />}
+            icon={<EthIcon className="w-6 h-6" />}
           />
         </div>
-      </div>
 
-      <div className="position-content-table">
-        <div className="position-table-title">
-          <p>Position History</p>
-        </div>
-
-        <div className="position-table">
-          {isPending ? (
-            <div className="spinner-container">
-              <Spinner loading={isPending} />
-            </div>
-          ) : (
-            <table className="text-white">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Token</th>
-                  <th>Amount</th>
-                  <th>Created At</th>
-                  <th>Status</th>
-                  <th>Start Price</th>
-                  <th>Multiplier</th>
-                  <th>Liquidated</th>
-                  <th>Closed At</th>
-                  <th className="action-column">
-                    <img src={filterIcon} alt="filter-icon" draggable="false" />
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {!tableData || tableData.length === 0 || !filteredTableData ? (
+        <div className="w-full max-w-[1000px] mx-auto">
+          <div className="text-primary text-sm mb-4 pl-2">Position History</div>
+          <div className="border border-[#201338] rounded-xl">
+            {isPending ? (
+              <div className="flex justify-center py-4">
+                <Spinner loading={isPending} />
+              </div>
+            ) : (
+              <table className="w-full table-separate text-white">
+                <thead>
                   <tr>
-                    <td colSpan="10">No opened positions</td>
+                    <th></th>
+                    <th>Token</th>
+                    <th>Amount</th>
+                    <th>Created At</th>
+                    <th>Status</th>
+                    <th>Start Price</th>
+                    <th>Multiplier</th>
+                    <th>Liquidated</th>
+                    <th>Closed At</th>
+                    <th className="w-10">
+                      <img src={filterIcon} alt="filter-icon" className="cursor-pointer" />
+                    </th>
                   </tr>
-                ) : (
-                  filteredTableData.map((data, index) => (
-                    <tr key={data.id}>
-                      <td className="index">{index + 1}.</td>
-                      <td>
-                        <div className="token-cell">
-                          {tokenIconMap[data.token_symbol]}
-                          <span className="token-symbol">{data.token_symbol.toUpperCase()}</span>
-                        </div>
-                      </td>
-                      <td>{data.amount}</td>
-                      <td>{data.created_at}</td>
-                      <td className={`status-cell ${statusStyles[data.status.toLowerCase()] || ''}`}>
-                        {data.status}
-                      </td>
-                      <td>{data.start_price}</td>
-                      <td>{data.multiplier}</td>
-                      <td>{data.is_liquidated}</td>
-                      <td>{data.closed_at}</td>
-                      <td className="action-column">
-                        <span className="action-button" onClick={() => setSelectedPosition({ data, index })}>
-                          &#x22EE;
-                        </span>
-                      </td>
+                </thead>
+
+                <tbody>
+                  {!tableData || tableData.length === 0 || !filteredTableData ? (
+                    <tr>
+                      <td colSpan="10" className="text-center py-4">No opened positions</td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          )}
+                  ) : (
+                    filteredTableData.map((data, index) => (
+                      <tr key={data.id} className="even:bg-[#120721]">
+                        <td className="text-gray-500">{index + 1}.</td>
+                        <td>
+                          <div className="flex items-center justify-center gap-2">
+                            {tokenIconMap[data.token_symbol]}
+                            <span className="text-primary">{data.token_symbol.toUpperCase()}</span>
+                          </div>
+                        </td>
+                        <td>{data.amount}</td>
+                        <td>{data.created_at}</td>
+                        <td className={`font-semibold ${statusStyles[data.status.toLowerCase()] || ''}`}>{data.status}</td>
+                        <td>{data.start_price}</td>
+                        <td>{data.multiplier}</td>
+                        <td>{data.is_liquidated}</td>
+                        <td>{data.closed_at}</td>
+                        <td className="text-center">
+                          <span className="cursor-pointer text-primary hover:bg-opacity-10 p-1 rounded transition-all" onClick={() => setSelectedPosition({ data, index })}>
+                            &#x22EE;
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
-      </div>
 
-      <PositionPagination
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        isPending={isPending}
-        tableData={tableData}
-        positionsOnPage={positionsOnPage}
-      />
-
-      {selectedPosition && (
-        <PositionHistoryModal
-          position={selectedPosition.data}
-          onClose={() => setSelectedPosition(null)}
-          tokenIcon={tokenIconMap}
-          statusStyles={statusStyles}
-          index={selectedPosition.index + 1}
+        <PositionPagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          isPending={isPending}
+          tableData={tableData}
+          positionsOnPage={positionsOnPage}
         />
-      )}
+
+        {selectedPosition && (
+          <PositionHistoryModal
+            position={selectedPosition.data}
+            onClose={() => setSelectedPosition(null)}
+            tokenIcon={tokenIconMap}
+            statusStyles={statusStyles}
+            index={selectedPosition.index + 1}
+          />
+        )}
+      </div>
     </DashboardLayout>
   );
 }

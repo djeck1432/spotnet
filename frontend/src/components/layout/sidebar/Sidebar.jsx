@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import './sidebar.css';
 import { SidebarItem } from './SidebarItem';
 
 const Sidebar = ({ title, items, className = '' }) => {
@@ -55,10 +54,12 @@ const Sidebar = ({ title, items, className = '' }) => {
     const isActive = activeItemId === item.id;
     const isExpanded = expandedItems[item.id];
     const hasChildren = item.children && item.children.length > 0;
-    const itemClass = `sidebar-item ${isActive ? 'active' : ''} ${level > 0 ? 'nested' : ''}`;
+    const itemClass = `w-full flex items-center p-[12.5px] text-sm text-gray-400 hover:text-yellow-400 cursor-pointer ${
+      isActive ? 'text-yellow-400' : ''
+    } ${level > 0 ? 'pl-2' : ''}`;
 
     return (
-      <div key={item.id} className="sidebar-item-wrapper">
+      <div key={item.id} className="w-full">
         {item.link.startsWith('#') ? (
           <button onClick={() => handleItemClick(item)} className={itemClass}>
             <SidebarItem item={item} isExpanded={isExpanded} hasChildren={hasChildren} isNested={level > 0} />
@@ -70,18 +71,18 @@ const Sidebar = ({ title, items, className = '' }) => {
         )}
 
         {hasChildren && isExpanded && (
-          <div className="nested-items">{item.children.map((child) => renderSidebarItem(child, level + 1))}</div>
+          <div className="ml-4">{item.children.map((child) => renderSidebarItem(child, level + 1))}</div>
         )}
       </div>
     );
   };
 
   return (
-    <div className={`sidebar ${className}`}>
-      <nav className="sidebar-nav">
+    <div className={`bg-black border-r border-[#300734] fixed top-[5.5rem] left-0 h-screen w-1/5 ${className} hidden lg:block`}>
+      <nav className="flex flex-col p-6 pt-0">
         {title && (
-          <div className="sidebar-title">
-            <h2>{title}</h2>
+          <div className="pb-2 mb-3 border-b border-[#9333ea]">
+            <h2 className="text-sm font-normal text-[#83919f]">{title}</h2>
           </div>
         )}
         {items.map((item) => renderSidebarItem(item))}

@@ -1,5 +1,4 @@
 import React from 'react';
-import './dashboardTabs.css';
 import { ReactComponent as DepositIcon } from '../../../assets/icons/deposited_dynamic.svg';
 import { ReactComponent as CollateralIcon } from '../../../assets/icons/collateral_dynamic.svg';
 import { ReactComponent as BorrowIcon } from '../../../assets/icons/borrow_dynamic.svg';
@@ -27,24 +26,34 @@ function DashboardTabs({ activeTab, switchTab }) {
   ];
 
   return (
-    <div className="tabs">
+    <div className="flex relative items-center overflow-x-auto pb-4 border-b border-[#36294e]">
       {tabConfig.map((tab, index) => (
         <React.Fragment key={tab.key}>
           <button
             type="button"
             onClick={() => switchTab(tab.key)}
-            className={`tab ${activeTab === tab.key ? 'active' : ''}`}
+            className={`flex-1 text-center py-2 cursor-pointer flex items-center justify-center ${activeTab === tab.key ? 'text-[#6c5b92]' : 'text-gray-500'}`}
           >
-            <tab.Icon className="tab-icon" />
-            <span className="tab-title">{tab.title}</span>
+            <tab.Icon className="mr-2" />
+            <span className="text-sm font-semibold">{tab.title}</span>
           </button>
 
-          {index < tabConfig.length - 1 && <div className="tab-divider"></div>}
+          {index < tabConfig.length - 1 && <div className="w-[3px] h-[18px] rounded-lg bg-gray-300 mx-4"></div>}
         </React.Fragment>
       ))}
 
-      <div className="tab-indicator-container">
-        <div className={`tab-indicator ${activeTab}`} />
+      <div className="absolute bottom-[-16px] left-0 w-full h-[1px] bg-[#e0d0e6] overflow-hidden">
+        <div
+          className={`absolute bottom-0 left-0 h-full transition-transform duration-300 ease-in-out transform ${
+            activeTab === COLLATERAL
+              ? 'w-[180px] bg-[#6c5b92]'
+              : activeTab === BORROW
+              ? 'w-[155px] bg-[#6c5b92] left-[38%]'
+              : activeTab === DEPOSITED
+              ? 'w-[155px] bg-[#6c5b92] left-[78%]'
+              : ''
+          }`}
+        />
       </div>
     </div>
   );

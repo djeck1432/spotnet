@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import './terms-and-conditions.css';
+import './terms-and-conditions.css'; // You can still keep this if you have any global styles
 import ScrollButton from 'components/ui/scroll-button/ScrollButton';
 import Sections from 'components/layout/sections/Sections';
 import Sidebar from 'components/layout/sidebar/Sidebar';
@@ -61,14 +61,20 @@ const TermsAndConditionsPage = () => {
   ];
 
   return (
-    <div className="overview-container">
-      <div>
+    <div className="flex min-h-screen relative pt-16 bg-white text-primary">
+      <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_85%_15%,rgba(255,255,255,.25)_1px,transparent_1px),radial-gradient(circle_at_15%_85%,rgba(255,255,255,.25)_1px,transparent_1px),radial-gradient(circle_at_75%_75%,rgba(255,255,255,.25)_1px,transparent_1px)] bg-[length:100px_100px] pointer-events-none z-0"></div>
+
+      <div className="lg:ml-[370px] flex-1 bg-cover bg-center relative min-h-screen" style={{
+        backgroundImage: `radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+        radial-gradient(circle at 15% 85%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.25) 1px, transparent 1px)`
+      }}>
         <Sidebar items={tableOfContents} title={'Content'} />
       </div>
 
-      <div className="content">
-        <h1 className="content-title">Terms & Conditions</h1>
-        <div className="section">
+      <div className="content flex-grow relative">
+        <h1 className="text-5xl font-bold text-transparent bg-white bg-clip-text mt-24 mb-12 ml-10">Terms & Conditions</h1>
+        <div className="ml-5">
           <Sections sections={sectionsData} />
         </div>
       </div>

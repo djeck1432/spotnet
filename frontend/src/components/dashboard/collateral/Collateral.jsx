@@ -1,36 +1,37 @@
 import React from 'react';
-import './collateral.css';
 import { ReactComponent as CollateralIcon } from 'assets/icons/collateral_dynamic.svg';
 import { TrendingDown, TrendingUp } from 'lucide-react';
 
 function Collateral({ data, startSum, currentSum, getCurrentSumColor }) {
   return (
-    <div className="collateral-tab-content">
-      <div className="balance-info">
-        <div className="currency-info">
+    <div className="font-normal text-left w-fit h-fit p-1 pl-5 pt-0">
+      <div className="flex flex-col gap-2 w-fit h-fit">
+        <div className="flex items-center">
           {React.createElement(data[0]?.currencyIcon || CollateralIcon, {
-            className: 'icon',
+            className: 'w-8 h-8 mr-2 bg-border-color rounded-full flex items-center justify-center p-2',
           })}
-          <span className="currency-name">{data[0]?.currencyName || 'N/A'}</span>
+          <span className="text-2xl text-second-primary">{data[0]?.currencyName || 'N/A'}</span>
         </div>
         <span>
-          <span className="balance-label">Position Balance: </span>
-          <span className="balance-value">{data[0]?.balance ? Number(data[0].balance).toFixed(8) : '0.00'}</span>
+          <span className="text-gray text-base font-normal">Position Balance: </span>
+          <span className="text-second-primary ml-1">{data[0]?.balance ? Number(data[0].balance).toFixed(8) : '0.00'}</span>
         </span>
         <span>
-          <span className="balance-label">Start sum: </span>
-          <span className="balance-value">
-            <span className="currency-symbol">$</span>
-            {startSum ? Number(startSum).toFixed(2) : '0.00'}
+          <span className="text-gray text-base font-normal">Start sum: </span>
+          <span className="text-second-primary ml-1">
+            <span className="mr-1">$</span>{startSum ? Number(startSum).toFixed(2) : '0.00'}
           </span>
         </span>
         <span>
-          <span className="balance-label">Current sum: </span>
-          <span className={currentSum >= 0 ? 'current-sum-green' : getCurrentSumColor()}>
-            <span className="currency-symbol">$</span>
-            {currentSum ? Number(currentSum).toFixed(8) : '0.00'}
-            {currentSum > startSum && currentSum !== 0 && <TrendingUp className="lucide-up-icon" />}
-            {currentSum < startSum && currentSum !== 0 && <TrendingDown className="lucide-down-icon" />}
+          <span className="text-gray text-base font-normal">Current sum: </span>
+          <span className={`${currentSum >= 0 ? 'text-second-primary' : getCurrentSumColor()} ml-1`}>
+            <span className="mr-1">$</span>{currentSum ? Number(currentSum).toFixed(8) : '0.00'}
+            {currentSum > startSum && currentSum !== 0 && (
+              <TrendingUp className="text-collateral-color w-6 h-6 ml-2" />
+            )}
+            {currentSum < startSum && currentSum !== 0 && (
+              <TrendingDown className="text-borrow-color w-5 h-5 ml-2" />
+            )}
           </span>
         </span>
       </div>

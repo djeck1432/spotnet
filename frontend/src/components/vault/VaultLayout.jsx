@@ -1,6 +1,5 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import './vaultLayout.css';
 import Sidebar from 'components/layout/sidebar/Sidebar';
 
 export function VaultLayout({ children }) {
@@ -11,7 +10,7 @@ export function VaultLayout({ children }) {
       link: '/',
     },
     {
-      id: 'stake ',
+      id: 'stake',
       name: 'Stake',
       link: '/stake',
     },
@@ -21,10 +20,11 @@ export function VaultLayout({ children }) {
       link: '/withdraw',
     },
   ];
+  
   return (
-    <div className="layout">
+    <div className="flex">
       <Sidebar title="Vault" items={vaultItems} />
-      <main>
+      <main className="flex-1 p-8 relative w-full">
         {children}
         <Outlet />
       </main>

@@ -5,15 +5,23 @@ export const SidebarItem = ({ item: { icon, name }, isExpanded, hasChildren, isN
   return (
     <>
       {isNested ? (
-        <span className="item-bullet" />
+        <span className="bg-[#9333ea] w-[6px] h-[6px] rounded-full mr-2" />
       ) : (
-        <span className="item-icon">
-          <img className={`item-icon-image--${!icon ? 'sm' : 'lg'}`} src={icon || addSquare} alt={name} />
+        <span className="mr-2 flex items-center">
+          <img
+            className={`${
+              !icon ? 'w-4 h-4' : 'w-6 h-6'
+            }`}
+            src={icon || addSquare}
+            alt={name}
+          />
         </span>
       )}
-      <span className="item-name">{name}</span>
+      <span className="flex-1">{name}</span>
       {hasChildren && (
-        <span className="expand-icon">{isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</span>
+        <span className="ml-2">
+          {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        </span>
       )}
     </>
   );

@@ -63,8 +63,6 @@ export default function DashboardPage({ telegramId }) {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(COLLATERAL);
 
-  // ... (keep existing useEffect logic from the previous implementation)
-
   useEffect(() => {
     console.log('Fetching data for walletId:', walletId);
   }, [walletId]);
@@ -106,7 +104,6 @@ export default function DashboardPage({ telegramId }) {
         }
       }
 
-      // Update card data using the new data structure
       const updatedCardData = [
         {
           title: 'Collateral & Earnings',
@@ -135,8 +132,8 @@ export default function DashboardPage({ telegramId }) {
   }, [walletId, data, isLoading]);
 
   const getCurrentSumColor = () => {
-    if (currentSum > startSum) return 'current-sum-green';
-    if (currentSum < startSum) return 'current-sum-red';
+    if (currentSum > startSum) return 'text-green-500';
+    if (currentSum < startSum) return 'text-red-500';
     return '';
   };
 
@@ -145,12 +142,20 @@ export default function DashboardPage({ telegramId }) {
   return (
     <DashboardLayout>
       {loading && <Spinner loading={loading} />}
-      <div className="top-cards-dashboard">
-        <Card label="Health Factor" value={healthFactor} icon={<HealthIcon className="icon" />} />
-        <Card label="Borrow Balance" cardData={cardData} icon={<EthIcon className="icon" />} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Card
+          label="Health Factor"
+          value={healthFactor}
+          icon={<HealthIcon className="w-6 h-6" />}
+        />
+        <Card
+          label="Borrow Balance"
+          cardData={cardData}
+          icon={<EthIcon className="w-6 h-6" />}
+        />
       </div>
-      <div className="dashboard-info-container">
-        <div className="dashboard-info-card">
+      <div className="mt-6 flex flex-col gap-4">
+        <div className="p-4 bg-white rounded-2xl shadow-md">
           <DashboardTabs activeTab={activeTab} switchTab={setActiveTab} />
 
           {activeTab === COLLATERAL && (
@@ -167,7 +172,7 @@ export default function DashboardPage({ telegramId }) {
           {activeTab === DEPOSITED && <Deposited data={depositedData} />}
         </div>
         <Button
-          className="redeem-btn"
+          className="w-full sm:w-auto py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           variant="primary"
           size="lg"
           onClick={() => closePositionEvent()}
@@ -175,8 +180,13 @@ export default function DashboardPage({ telegramId }) {
         >
           {isClosing ? 'Closing...' : 'Redeem'}
         </Button>
-        <Button variant="secondary" size="lg" className="dashboard-btn telegram" onClick={handleOpen}>
-          <TelegramIcon className="tab-icon" />
+        <Button
+          variant="secondary"
+          size="lg"
+          className="w-full sm:w-auto py-2 px-4 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+          onClick={handleOpen}
+        >
+          <TelegramIcon className="w-5 h-5 mr-2" />
           Enable telegram notification bot
         </Button>
         {showModal && (

@@ -1,12 +1,11 @@
 import React from 'react';
-import './section.css';
 
 const Section = ({ id, title, content }) => {
   const renderContent = (item, index) => {
     switch (item.type) {
       case 'text':
         return (
-          <p key={index} className="section-text">
+          <p key={index} className="text-base leading-relaxed mb-6 opacity-90 text-primary">
             {item.value.split('\n').map((text, i) => (
               <React.Fragment key={i}>
                 {text}
@@ -17,17 +16,19 @@ const Section = ({ id, title, content }) => {
         );
       case 'list':
         return (
-          <ul key={index} className="feature-list">
+          <ul key={index} className="list-none pl-6 mb-6">
             {item.items.map((listItem, i) => (
-              <li key={i}>• {listItem}</li>
+              <li key={i} className="mb-3 opacity-90 text-primary flex items-start gap-2">
+                • {listItem}
+              </li>
             ))}
           </ul>
         );
       case 'orderedList':
         return (
-          <ol key={index} className="setup-steps">
+          <ol key={index} className="list-none pl-6 mb-6">
             {item.items.map((listItem, i) => (
-              <li key={i}>
+              <li key={i} className="mb-3 opacity-90 text-primary flex items-start gap-2">
                 {i + 1}. {listItem}
               </li>
             ))}
@@ -39,8 +40,10 @@ const Section = ({ id, title, content }) => {
   };
 
   return (
-    <section id={id} className="documentation-section">
-      <h2 className="section-title">• {title}</h2>
+    <section id={id} className="mb-16 relative scroll-mt-20">
+      <h2 className="text-xl font-semibold mb-6 text-primary flex items-center gap-2">
+        • {title}
+      </h2>
       {content.map((item, index) => renderContent(item, index))}
     </section>
   );

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import './defi-spring.css';
 import ScrollButton from 'components/ui/scroll-button/ScrollButton';
 import Sections from 'components/layout/sections/Sections';
 import Sidebar from 'components/layout/sidebar/Sidebar';
@@ -98,11 +97,20 @@ export const DefiSpringPage = () => {
   ];
 
   return (
-    <div className="documentation-page">
+    <div className="flex min-h-screen relative pt-1">
       <Sidebar title="Content" items={tableOfContents} />
 
-      <div className="main-content">
-        <h1 className="main-title">Defi Spring Documentation</h1>
+      <div
+        className="flex-1 bg-cover bg-center bg-no-repeat relative min-h-screen px-7 md:px-4 py-6 md:py-10"
+        style={{
+          backgroundImage: `radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 15% 85%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.25) 1px, transparent 1px)`,
+        }}
+      >
+        <h1 className="text-white text-4xl font-bold mb-12 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-800 to-black md:text-3xl md:mb-8 ml-10">
+          DeFi Spring Documentation
+        </h1>
         <Sections sections={sectionsData} />
       </div>
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import { ReactComponent as ArrowLeftIcon } from '../../assets/icons/arrow-left.svg';
 import { ReactComponent as ArrowRightIcon } from '../../assets/icons/arrow-right.svg';
-import './positionPagination.css';
 
 export default function PositionPagination({ currentPage, setCurrentPage, isPending, tableData, positionsOnPage }) {
   const pagesCount = (totalItems, itemsPerPage) => Math.ceil(totalItems / itemsPerPage);
@@ -15,31 +14,35 @@ export default function PositionPagination({ currentPage, setCurrentPage, isPend
   };
 
   return (
-    <div className="position-pagination">
+    <div className="flex justify-center items-center gap-12 mt-[-16px]">
       <div
-        className={`pagination-button button-prev ${currentPage == 1 ? "disabled" : ""}`}
+        className={`flex justify-center items-center w-6 h-6 rounded-full cursor-pointer ${currentPage === 1 ? 'bg-[#2e1b3d] cursor-default' : 'bg-[#5b3c8f]'} ${isPending ? 'cursor-default' : ''}`}
         onClick={() => setPage(currentPage - 1)}
+        aria-label="Previous Page"
       >
-        <ArrowLeftIcon />
+        <ArrowLeftIcon className={`${currentPage === 1 ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`} />
       </div>
-      <div className="pagination-pages-container">
-        {!isPending && tableData ?
+
+      <div className="flex items-center justify-center gap-4">
+        {!isPending && tableData ? 
           range(pagesCount(tableData.length, positionsOnPage)).map((page) => (
             <div
-              className={`pagination-page-number ${currentPage == page ? "page-selected" : ""}`}
               key={page}
+              className={`text-xs font-normal cursor-pointer ${currentPage === page ? 'font-semibold text-[#5b3c8f]' : 'text-[#413547]'}`}
               onClick={() => setPage(page)}
             >
               {page}
             </div>
           )) : null}
       </div>
+
       <div
-        className={`pagination-button button-next ${(tableData && currentPage == pagesCount(tableData.length, positionsOnPage)) ? "disabled" : ""}`}
+        className={`flex justify-center items-center w-6 h-6 rounded-full cursor-pointer ${currentPage === pagesCount(tableData.length, positionsOnPage) ? 'bg-[#2e1b3d] cursor-default' : 'bg-[#5b3c8f]'} ${isPending ? 'cursor-default' : ''}`}
         onClick={() => setPage(currentPage + 1)}
+        aria-label="Next Page"
       >
-        <ArrowRightIcon />
+        <ArrowRightIcon className={`${currentPage === pagesCount(tableData.length, positionsOnPage) ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`} />
       </div>
     </div>
-  )
+  );
 }
