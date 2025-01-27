@@ -1,47 +1,4 @@
-.deposit {
-  min-height: 100vh;
-  display: flex;
-  width: calc(100vw - 372px);
-  margin-left: 372px;
-}
-
-@media (max-width: 1024px) {
-  .deposit {
-    width: 100%;
-    margin-left: 0;
-    justify-content: center;
-  }
-}
-
-.deposit-wrapper {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: calc(100vw - 735px);
-}
-
-.deposit-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 32px;
-  padding: 0 26px;
-  padding-top: 20px;
-  width: fit-content;
-  margin: 100px 0 50px 0;
-}
-
-.deposit-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #ffffff;
-  text-align: center;
-  margin-bottom: 0;
-}
-
-.main-container-deposit {
+/* .main-container-deposit {
   gap: 2px;
   padding-top: 24px;
   border-radius: 8px;
@@ -52,7 +9,7 @@
 
   flex-direction: column;
   align-items: center;
-}
+} */
 .top-cards-deposit {
   display: flex;
   gap: 0.5rem;
@@ -219,21 +176,10 @@
 }
 
 @media (max-width: 768px) {
-  .deposit-wrapper {
-    padding-top: 24px;
-  }
 
-  .deposit-title {
-    font-size: 16px;
-  }
 
   .deposit-title2 {
     margin-top: 0px;
-  }
-
-  .deposit-container {
-    margin-left: 0;
-    gap: 20px;
   }
 }
 
@@ -266,9 +212,7 @@
     height: 88px;
     margin-top: -6px;
   }
-  .deposit-container {
-    margin: 50px 0 50px 0;
-  }
+  
 
   @media (max-width: 420px) {
     .top-cards-deposit,

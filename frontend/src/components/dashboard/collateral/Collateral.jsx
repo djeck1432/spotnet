@@ -5,7 +5,7 @@ import { TrendingDown, TrendingUp } from 'lucide-react';
 
 function Collateral({ data, startSum, currentSum, getCurrentSumColor }) {
   return (
-    <div className="tab-content">
+    <div className="collateral-tab-content">
       <div className="balance-info">
         <div className="currency-info">
           {React.createElement(data[0]?.currencyIcon || CollateralIcon, {
@@ -26,7 +26,7 @@ function Collateral({ data, startSum, currentSum, getCurrentSumColor }) {
         </span>
         <span>
           <span className="balance-label">Current sum: </span>
-          <span className={currentSum === 0 ? 'current-sum-green' : getCurrentSumColor()}>
+          <span className={currentSum >= 0 ? 'current-sum-green' : getCurrentSumColor()}>
             <span className="currency-symbol">$</span>
             {currentSum ? Number(currentSum).toFixed(8) : '0.00'}
             {currentSum > startSum && currentSum !== 0 && <TrendingUp className="lucide-up-icon" />}

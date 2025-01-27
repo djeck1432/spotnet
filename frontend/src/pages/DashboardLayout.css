@@ -1,0 +1,406 @@
+body {
+  font-family:
+    'Rethink Sans',
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+}
+
+.dashboard {
+  min-height: 100vh;
+  display: flex;
+  width: calc(100vw - 372px);
+  margin-left: 372px;
+}
+
+@media (max-width: 1024px) {
+  .dashboard {
+    width: 100vw;
+    margin-left: 0;
+    justify-content: center;
+  }
+}
+
+.dashboard-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(100vw - 735px);
+  height: 100%;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 24px;
+  padding-top: 20px;
+  margin: 100px 0 50px 0;
+  height: 100%;
+}
+
+.dashboard-content {
+  width: 100%;
+  gap: 24px;
+  border-radius: 20px;
+  padding: 1rem 0;
+  color: var(--second-primary);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--second-primary);
+  text-align: center;
+}
+
+.top-cards-dashboard {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0px;
+  margin: 0px;
+  width: 642px;
+  height: 101px;
+}
+
+.dashboard-error {
+  color: var(--error-color);
+}
+
+.dashboard-info-card {
+  background: transparent;
+  border: 1px solid var(--light-purple);
+  border-radius: 8px;
+  width: 642px;
+  height: 318px;
+  padding: 16px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.telegram-button {
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+  width: 642px;
+  height: 60px;
+  background: none;
+  color: var(--second-primary);
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  padding: 16px 24px 16px 24px;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.telegram-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50px;
+  padding: 2px;
+  background: var(--blue-pink-gradient);
+  -webkit-mask:
+    var(--second-primary) content-box,
+    var(--second-primary);
+  mask:
+    var(--second-primary) content-box,
+    var(--second-primary);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index: -1;
+}
+
+.error-message {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--error-color);
+  font-size: 15px;
+  color: var(--black);
+  margin-bottom: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-alert-hex {
+  margin-left: auto;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  background: var(--border-color);
+  border-radius: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+}
+
+.tab-icon {
+  margin-right: 0.5rem;
+}
+
+.dashboard-info-container {
+  display: grid;
+  gap: 24px;
+}
+
+@media (max-width: 1300px) {
+  .dashboard-info-container {
+    justify-items: center;
+    width: 528px;
+  }
+
+  .dashboard-info-card {
+    width: 528px;
+  }
+
+  .dashboard-btn {
+    width: 100%;
+  }
+
+  .redeem-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-content {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.5rem 0;
+    gap: 16px;
+  }
+
+  .top-cards-dashboard {
+    width: 500px;
+    flex-direction: row;
+    height: auto;
+    margin: 0px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 4px;
+    padding: 3px;
+  }
+
+  .tab-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+  }
+
+  .dashboard-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: 55px;
+  }
+
+  .dashboard-info-card {
+    height: fit-content;
+    border-radius: 16px;
+    padding: 16px 24px;
+    min-height: 215px;
+    width: 500px;
+  }
+
+  .balance-info {
+    width: 100%;
+    height: auto;
+  }
+
+  .dashboard-title {
+    font-size: 24px;
+  }
+
+  .balance-label,
+  .balance-value,
+  .current-sum-red {
+    font-size: 14px;
+  }
+
+  .lucide-up-icon {
+    width: 22px;
+    height: 22px;
+    margin-left: 6px;
+  }
+
+  .lucide-down-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 6px;
+  }
+
+  .current-sum-green {
+    font-size: 14px;
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 4px;
+    padding: 3px;
+  }
+
+  .redeem-btn {
+    width: 500px;
+  }
+}
+
+@media (max-width: 550px) {
+  .dashboard-container {
+    width: 550px;
+  }
+
+  .dashboard-title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 21.79px;
+  }
+
+  .dashboard-content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dashboard-info-container {
+    display: grid;
+    gap: 30px;
+    padding-bottom: 40px;
+  }
+
+  .dashboard-info-container {
+    width: 100%;
+  }
+
+  .dashboard-info-card {
+    margin: 0px auto;
+    width: 400px;
+    border-radius: 8px;
+    gap: 0;
+  }
+
+  .redeem-btn {
+    width: 400px;
+  }
+
+  .dashboard-btn {
+    width: 100%;
+  }
+
+  .top-cards-dashboard {
+    width: 400px;
+    gap: 8px;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .telegram {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-info-container {
+    width: 100%;
+  }
+
+  .dashboard-info-card {
+    width: 380px;
+  }
+
+  .redeem-btn {
+    width: 380px;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .dashboard-btn {
+    font-size: 14px;
+    height: 50px;
+  }
+
+  .top-cards-dashboard {
+    width: 380px;
+    padding: 0px;
+    margin: 0px;
+    gap: 8px;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .balance-info {
+    width: fit-content;
+  }
+}
+
+@media (max-width: 400px) {
+  .dashboard-info-card {
+    width: 350px;
+  }
+
+  .dashboard-info-container {
+    width: 100%;
+  }
+
+  .top-cards-dashboard {
+    width: 350px;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .redeem-btn {
+    width: 350px;
+  }
+}
+
+@media (max-width: 350px) {
+  .dashboard-info-card {
+    width: 320px;
+  }
+
+  .top-cards-dashboard {
+    width: 320px;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .redeem-btn {
+    width: 320px;
+  }
+
+  .dashboard-btn {
+    height: 45px;
+  }
+}

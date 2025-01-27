@@ -1,6 +1,6 @@
 .tab-content {
   text-align: left;
-  width: 580px;
+  width: 100%;
   height: 190px;
   padding: 0px 40px 0 20px;
   margin: 16px auto 0;
@@ -10,11 +10,36 @@
   margin: 0;
 }
 
+.collateral-tab-content,
+.borrow-tab-content {
+  text-align: left;
+  width: 100%;
+  height: 190px;
+  margin: 16px auto 0;
+}
+
+.collateral-tab-content,
+.borrow-tab-content p {
+  margin: 0;
+}
+
+.deposited-tab-content p {
+  margin: 0;
+}
+
 .deposited-info {
   display: flex;
   flex-direction: column;
   gap: 8px;
   justify-content: center;
+}
+
+.deposited-tab-content {
+  text-align: left;
+  width: 100%;
+  height: 190px;
+  padding: 0px 40px 0 20px;
+  margin: 16px auto 0;
 }
 
 .deposited-item {
@@ -71,12 +96,37 @@
     padding: 16px;
     margin-top: 0;
   }
+
+  .collateral-tab-content,
+  .borrow-tab-content {
+    width: 100%;
+    height: auto;
+    margin-top: 0;
+  }
+
+  .deposited-tab-content {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    margin-top: 0;
+  }
 }
 
 @media (max-width: 480px) {
   .tab-content {
-    width: fit-content;
     font-size: 14px;
+    padding: 0px 0px 0px 0px;
+  }
+
+  .collateral-tab-content,
+  .borrow-tab-content {
+    font-size: 14px;
+    padding: 15px 0px 0 0px;
+  }
+
+  .deposited-tab-content {
+    font-size: 14px;
+    padding: 15px 0px 0 0px;
   }
 
   .icon {

@@ -7,8 +7,11 @@ import NavigationLinks from '../navigation-links/NavigationLinks';
 import useLockBodyScroll from '../../../hooks/useLockBodyScroll';
 import MobDropdownMenu from '../mob-dropdown-menu/MobDropdownMenu';
 import '../../../globals.css';
+import { ReportBugButton } from 'components/report-button/ReportBugButton';
+import { ReportBugModal } from 'components/report-modal/ReportBugModal';
 
 function Header({ onConnectWallet, onLogout }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -51,7 +54,18 @@ function Header({ onConnectWallet, onLogout }) {
     setIsMenuOpen(false);
   };
 
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
+    <>
     <nav className={`flex items-center justify-center w-full h-[90px] bg-header-bg backdrop-blur-lg border-b border-[#300734] z-[9999] ${makeNavStick ? 'fixed top-0' : 'relative'}`}>
       <div className="flex items-center justify-between w-full px-[30px] relative">
         <div className="logo">
@@ -67,8 +81,16 @@ function Header({ onConnectWallet, onLogout }) {
           </div>
           <WalletSection onConnectWallet={onConnectWallet} onLogout={onLogout} />
         </div>
-      </div>
-    </nav>
+      </nav>
+
+     
+      {!isModalOpen && <ReportBugButton onClick={openModal} />}
+
+    
+      {isModalOpen && (
+        <ReportBugModal onClose={closeModal} />
+      )}
+    </>
   );
 }
 

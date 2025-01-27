@@ -5,7 +5,7 @@ import { ReactComponent as UsdIcon } from '../../../assets/icons/usdc-icon.svg';
 
 function Deposited({ data }) {
   return (
-    <div className="tab-content">
+    <div className="deposited-tab-content">
       <div className="deposited-info">
         <div className="deposited-item">
           <div className="currency-name">

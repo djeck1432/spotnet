@@ -18,6 +18,7 @@ from web_app.db.models import (
     TransactionStatus,
     User,
     Vault,
+    ExtraDeposit
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -86,6 +87,34 @@ def create_positions(session: SessionLocal, users: list[User]) -> list[Position]
     else:
         logger.info("No positions created.")
     return positions
+
+def create_extra_deposits(session: SessionLocal, positions: list[Position]) -> None:
+    """
+    Create and save fake extra deposit records associated with given positions.
+    Args:
+        session (Session): SQLAlchemy session object.
+        positions (list): List of Position objects to associate with extra deposits.
+    """
+    extra_deposits = []
+    for position in positions:
+        num_deposits = fake.random_int(min=0, max=3)
+        for _ in range(num_deposits):
+            extra_deposit = ExtraDeposit(
+                position_id=position.id,
+                token_symbol=position.token_symbol,  
+                amount=str(  
+                    fake.random_number(digits=5)  
+                ),
+                added_at=fake.date_time_this_decade(),  
+            )
+            extra_deposits.append(extra_deposit)
+    
+    if extra_deposits:
+        session.bulk_save_objects(extra_deposits)
+        session.commit()
+        logger.info(f"Created {len(extra_deposits)} extra deposits for {len(positions)} positions.")
+    else:
+        logger.info("No extra deposits created.")
 
 
 def create_airdrops(session: SessionLocal, users: list[User]) -> None:
@@ -193,6 +222,7 @@ if __name__ == "__main__":
         # Populate the database
         users = create_users(session)
         positions = create_positions(session, users)
+        create_extra_deposits(session, positions)
         # create_airdrops(session, users)
         # create_telegram_users(session, users)
         create_vaults(session, users)

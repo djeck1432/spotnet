@@ -1,3 +1,4 @@
+import React from 'react';
 import './dashboardTabs.css';
 import { ReactComponent as DepositIcon } from '../../../assets/icons/deposited_dynamic.svg';
 import { ReactComponent as CollateralIcon } from '../../../assets/icons/collateral_dynamic.svg';
@@ -7,26 +8,40 @@ import { DASHBOARD_TABS } from 'utils/constants';
 function DashboardTabs({ activeTab, switchTab }) {
   const { COLLATERAL, BORROW, DEPOSITED } = DASHBOARD_TABS;
 
+  const tabConfig = [
+    {
+      key: COLLATERAL,
+      Icon: CollateralIcon,
+      title: 'Collateral & Earnings',
+    },
+    {
+      key: BORROW,
+      Icon: BorrowIcon,
+      title: 'Borrow',
+    },
+    {
+      key: DEPOSITED,
+      Icon: DepositIcon,
+      title: 'Deposited',
+    },
+  ];
+
   return (
     <div className="tabs">
-      <button onClick={() => switchTab(COLLATERAL)} className={`tab ${activeTab === COLLATERAL ? 'active' : ''}`}>
-        <CollateralIcon className="tab-icon" />
-        <span className="tab-title">Collateral & Earnings</span>
-      </button>
+      {tabConfig.map((tab, index) => (
+        <React.Fragment key={tab.key}>
+          <button
+            type="button"
+            onClick={() => switchTab(tab.key)}
+            className={`tab ${activeTab === tab.key ? 'active' : ''}`}
+          >
+            <tab.Icon className="tab-icon" />
+            <span className="tab-title">{tab.title}</span>
+          </button>
 
-      <div className="tab-divider" />
-
-      <button onClick={() => switchTab(BORROW)} className={`tab ${activeTab === BORROW ? 'active' : ''}`}>
-        <BorrowIcon className="tab-icon" />
-        <span className="tab-title">Borrow</span>
-      </button>
-
-      <div className="tab-divider" />
-
-      <button onClick={() => switchTab(DEPOSITED)} className={`tab ${activeTab === DEPOSITED ? 'active' : ''}`}>
-        <DepositIcon className="tab-icon" />
-        <span className="tab-title">Deposited</span>
-      </button>
+          {index < tabConfig.length - 1 && <div className="tab-divider"></div>}
+        </React.Fragment>
+      ))}
 
       <div className="tab-indicator-container">
         <div className={`tab-indicator ${activeTab}`} />

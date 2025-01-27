@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './dashboard.css';
+import DashboardLayout from '../DashboardLayout';
 import { ReactComponent as EthIcon } from '../../assets/icons/ethereum.svg';
 import { ReactComponent as StrkIcon } from '../../assets/icons/strk.svg';
 import { ReactComponent as UsdIcon } from '../../assets/icons/usd_coin.svg';
@@ -17,16 +17,11 @@ import { ReactComponent as CollateralIcon } from '../../assets/icons/collateral_
 import Collateral from '../../components/dashboard/collateral/Collateral';
 import Card from '../../components/ui/card/Card';
 import { ReactComponent as HealthIcon } from '../../assets/icons/health.svg';
-import Sidebar from 'components/layout/sidebar/Sidebar';
-import clockIcon from 'assets/icons/clock.svg';
-import computerIcon from 'assets/icons/computer-icon.svg';
-import depositIcon from 'assets/icons/deposit.svg';
-import withdrawIcon from 'assets/icons/withdraw.svg';
 import Deposited from 'components/dashboard/deposited/Deposited';
 import DashboardTabs from 'components/dashboard/dashboard-tab/DashboardTabs';
 import { DASHBOARD_TABS } from 'utils/constants';
 
-export default function Component({ telegramId }) {
+export default function DashboardPage({ telegramId }) {
   const { walletId } = useWalletStore();
   const [showModal, setShowModal] = useState(false);
   const handleOpen = () => setShowModal(true);
@@ -67,6 +62,8 @@ export default function Component({ telegramId }) {
   const [currentSum, setCurrentSum] = useState(0);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(COLLATERAL);
+
+  // ... (keep existing useEffect logic from the previous implementation)
 
   useEffect(() => {
     console.log('Fetching data for walletId:', walletId);
@@ -143,95 +140,60 @@ export default function Component({ telegramId }) {
     return '';
   };
 
-  const dashboardItems = [
-    {
-      id: 'dashboard',
-      name: 'Dashboard',
-      link: '/dashboard',
-      icon: computerIcon,
-    },
-    {
-      id: 'position_history',
-      name: 'Position History',
-      link: '/dashboard/position-history',
-      icon: clockIcon,
-    },
-    {
-      id: 'deposit ',
-      name: 'Add Deposit',
-      link: '/dashboard/deposit',
-      icon: depositIcon,
-    },
-    {
-      id: 'withdraw ',
-      name: 'Withdraw All',
-      link: '/dashboard/withdraw',
-      icon: withdrawIcon,
-    },
-  ];
-
   const depositedData = { eth: 1, strk: 12, usdc: 4, usdt: 9 };
 
   return (
-    <div className="dashboard">
-      <Sidebar items={dashboardItems} />
-      <div className="dashboard-wrapper">
-        <div className="dashboard-container">
-          {loading && <Spinner loading={loading} />}
-          <h1 className="dashboard-title">zkLend Position</h1>
-          <div className="dashboard-content">
-            <div className="top-cards-dashboard">
-              <Card label="Health Factor" value={healthFactor} icon={<HealthIcon className="icon" />} />
-              <Card label="Borrow Balance" cardData={cardData} icon={<EthIcon className="icon" />} />
-            </div>
-            <div className="dashboard-info-container">
-              <div className="dashboard-info-card">
-                <DashboardTabs activeTab={activeTab} switchTab={setActiveTab} />
-
-                {activeTab === COLLATERAL && (
-                  <Collateral
-                    getCurrentSumColor={getCurrentSumColor}
-                    startSum={startSum}
-                    currentSum={currentSum}
-                    data={cardData}
-                  />
-                )}
-
-                {activeTab === BORROW && <Borrow data={cardData} />}
-
-                {activeTab === DEPOSITED && <Deposited data={depositedData} />}
-              </div>
-              <Button
-                className="redeem-btn"
-                variant="primary"
-                size="lg"
-                onClick={() => closePositionEvent()}
-                disabled={isClosing || !hasOpenedPosition}
-              >
-                {isClosing ? 'Closing...' : 'Redeem'}
-              </Button>
-              <Button variant="secondary" size="lg" className="dashboard-btn telegram" onClick={handleOpen}>
-                <TelegramIcon className="tab-icon" />
-                Enable telegram notification bot
-              </Button>
-              {showModal && (
-                <ActionModal
-                  isOpen={showModal}
-                  title="Telegram Notification"
-                  subTitle="Do you want to enable telegram notification bot?"
-                  content={[
-                    'This will allow you to receive quick notifications on your telegram line in realtime. You can disable this setting anytime.',
-                  ]}
-                  cancelLabel="Cancel"
-                  submitLabel="Yes, Sure"
-                  submitAction={handleSubscribe}
-                  cancelAction={handleClose}
-                />
-              )}
-            </div>
-          </div>
-        </div>
+    <DashboardLayout>
+      {loading && <Spinner loading={loading} />}
+      <div className="top-cards-dashboard">
+        <Card label="Health Factor" value={healthFactor} icon={<HealthIcon className="icon" />} />
+        <Card label="Borrow Balance" cardData={cardData} icon={<EthIcon className="icon" />} />
       </div>
-    </div>
+      <div className="dashboard-info-container">
+        <div className="dashboard-info-card">
+          <DashboardTabs activeTab={activeTab} switchTab={setActiveTab} />
+
+          {activeTab === COLLATERAL && (
+            <Collateral
+              getCurrentSumColor={getCurrentSumColor}
+              startSum={startSum}
+              currentSum={currentSum}
+              data={cardData}
+            />
+          )}
+
+          {activeTab === BORROW && <Borrow data={cardData} />}
+
+          {activeTab === DEPOSITED && <Deposited data={depositedData} />}
+        </div>
+        <Button
+          className="redeem-btn"
+          variant="primary"
+          size="lg"
+          onClick={() => closePositionEvent()}
+          disabled={isClosing || !hasOpenedPosition}
+        >
+          {isClosing ? 'Closing...' : 'Redeem'}
+        </Button>
+        <Button variant="secondary" size="lg" className="dashboard-btn telegram" onClick={handleOpen}>
+          <TelegramIcon className="tab-icon" />
+          Enable telegram notification bot
+        </Button>
+        {showModal && (
+          <ActionModal
+            isOpen={showModal}
+            title="Telegram Notification"
+            subTitle="Do you want to enable telegram notification bot?"
+            content={[
+              'This will allow you to receive quick notifications on your telegram line in realtime. You can disable this setting anytime.',
+            ]}
+            cancelLabel="Cancel"
+            submitLabel="Yes, Sure"
+            submitAction={handleSubscribe}
+            cancelAction={handleClose}
+          />
+        )}
+      </div>
+    </DashboardLayout>
   );
 }

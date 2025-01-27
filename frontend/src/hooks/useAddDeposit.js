@@ -16,7 +16,7 @@ export const useAddDeposit = () => {
       const { data: contractAddress } = await axiosInstance.get(`/api/get-user-contract?wallet_id=${walletId}`);
 
       // Prepare extra deposit data
-      const {data: prepare_data} = await axiosInstance.get(`/api/get-add-deposit-data/${positionId}`, {
+      const { data: prepare_data } = await axiosInstance.get(`/api/get-add-deposit-data/${positionId}`, {
         params: {
           amount: amount,
           token_symbol: tokenSymbol

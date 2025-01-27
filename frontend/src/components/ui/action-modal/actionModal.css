@@ -57,6 +57,7 @@
   max-width: 400px;
   margin: 0 auto 16px;
   font-family: var(--font-family);
+
   &.no-content {
     padding: 55px 0;
   }
@@ -128,6 +129,7 @@
     font-size: 20px;
     margin-bottom: 12px;
     margin: 0 auto 10px;
+
     &.no-content {
       padding: 68px 0;
     }
@@ -169,6 +171,7 @@
     font-size: 14px;
     margin-bottom: 12px;
     margin: 0 auto 10px;
+
     &.no-content {
       padding: 43px 0;
     }

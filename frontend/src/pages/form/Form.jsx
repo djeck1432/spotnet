@@ -78,6 +78,8 @@ const Form = () => {
   return (
     <div className="form-content-wrapper">
       <BalanceCards className="balance-card" />
+
+
       {isClosePositionOpen && (
         <ActionModal
           isOpen={isClosePositionOpen}
@@ -98,6 +100,7 @@ const Form = () => {
         <div className="form-title">
           <h1>Please submit your leverage details</h1>
         </div>
+
         <TokenSelector
           selectedToken={selectedToken}
           setSelectedToken={setSelectedToken}
