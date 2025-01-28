@@ -1,4 +1,3 @@
-import './dontMiss.css';
 import React from 'react';
 import { ReactComponent as Rocket } from '../../../assets/icons/rocket.svg';
 import { ReactComponent as Hand } from '../../../assets/images/hand.svg';

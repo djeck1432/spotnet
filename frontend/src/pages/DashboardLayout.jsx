@@ -38,7 +38,7 @@ export default function DashboardLayout({ children, title = 'zkLend Position' })
       <Sidebar items={dashboardItems} />
       <div className="relative flex justify-center items-center w-[calc(100vw-735px)] h-full">
         <div className="flex flex-col justify-center gap-2.5 px-6 pt-5 my-24 h-full">
-          <h1 className="text-2xl font-semibold text-center text-secondary">
+          <h1 className="text-2xl font-semibold text-center text-white">
             {title}
           </h1>
           <div className="flex flex-col items-center justify-center gap-6 p-4 w-full rounded-xl text-secondary text-center">

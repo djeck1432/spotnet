@@ -225,3 +225,29 @@ a.svelte-1mtuslq.svelte-1mtuslq {
   font-size: 16px;
   font-weight: 600;
 }
+
+.border-gradient-mask {
+  position: relative;
+  border: none; /* Remove the default border */
+}
+
+.border-gradient-mask::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px; /* Border thickness */
+  border-radius: inherit;
+  background: linear-gradient(90deg, #49abd2 0%, #e01dee 100%);
+  -webkit-mask: 
+    conic-gradient(#000 0 0) content-box exclude,
+    conic-gradient(#000 0 0);
+  mask: 
+    conic-gradient(#000 0 0) content-box exclude,
+    conic-gradient(#000 0 0);
+  z-index: 0;
+}
+
+.border-gradient-mask > * {
+  position: relative;
+  z-index: 10;
+}

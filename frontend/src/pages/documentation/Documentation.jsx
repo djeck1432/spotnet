@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import './documentation.css';
 import ScrollButton from 'components/ui/scroll-button/ScrollButton';
 import Sections from 'components/layout/sections/Sections';
 import Sidebar from 'components/layout/sidebar/Sidebar';

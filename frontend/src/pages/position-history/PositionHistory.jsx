@@ -55,61 +55,62 @@ function PositionHistory() {
           />
           <Card
             label="Borrow Balance"
-            cardData={cardData?.borrowed || '0.00'}
+            value={cardData?.borrowed || '0.00'}
             icon={<EthIcon className="w-6 h-6" />}
           />
         </div>
 
         <div className="w-full max-w-[1000px] mx-auto">
-          <div className="text-primary text-sm mb-4 pl-2">Position History</div>
-          <div className="border border-[#201338] rounded-xl">
+          <div className="text-white text-[16px] mb-4 pl-2">Position History</div>
+          <div className="border-x border-y border-light-purple rounded-xl overflow-hidden mb-2">
             {isPending ? (
               <div className="flex justify-center py-4">
                 <Spinner loading={isPending} />
               </div>
             ) : (
-              <table className="w-full table-separate text-white">
-                <thead>
+              <table className="w-full table-auto text-left text-sm text-secondary">
+                <thead className="bg-[#120721] text-gray uppercase text-xs border-b border-light-purple px-2">
                   <tr>
-                    <th></th>
-                    <th>Token</th>
-                    <th>Amount</th>
-                    <th>Created At</th>
-                    <th>Status</th>
-                    <th>Start Price</th>
-                    <th>Multiplier</th>
-                    <th>Liquidated</th>
-                    <th>Closed At</th>
-                    <th className="w-10">
+                    <th className="py-4 px-2 pl-4">Token</th>
+                    <th className="py-4 px-2">Amount</th>
+                    <th className="py-4 px-2">Created At</th>
+                    <th className="py-4 px-2">Status</th>
+                    <th className="py-4 px-2">Start Price</th>
+                    <th className="py-4 px-2">Multiplier</th>
+                    <th className="py-4 px-2">Liquidated</th>
+                    <th className="py-4 px-2">Closed At</th>
+                    <th className="py-4 px-2 pr-4 w-10">
                       <img src={filterIcon} alt="filter-icon" className="cursor-pointer" />
                     </th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {!tableData || tableData.length === 0 || !filteredTableData ? (
+                  {!tableData || tableData?.length === 0 || !filteredTableData ? (
                     <tr>
                       <td colSpan="10" className="text-center py-4">No opened positions</td>
                     </tr>
                   ) : (
                     filteredTableData.map((data, index) => (
-                      <tr key={data.id} className="even:bg-[#120721]">
-                        <td className="text-gray-500">{index + 1}.</td>
-                        <td>
-                          <div className="flex items-center justify-center gap-2">
+                      <tr key={data.id} className="even:bg-[#1c0f2a]">
+                        <td className="py-2.5 px-2">
+                          <div className="flex items-center gap-2">
                             {tokenIconMap[data.token_symbol]}
-                            <span className="text-primary">{data.token_symbol.toUpperCase()}</span>
+                            <span className="text-primary font-medium">{data.token_symbol.toUpperCase()}</span>
                           </div>
                         </td>
-                        <td>{data.amount}</td>
-                        <td>{data.created_at}</td>
-                        <td className={`font-semibold ${statusStyles[data.status.toLowerCase()] || ''}`}>{data.status}</td>
-                        <td>{data.start_price}</td>
-                        <td>{data.multiplier}</td>
-                        <td>{data.is_liquidated}</td>
-                        <td>{data.closed_at}</td>
-                        <td className="text-center">
-                          <span className="cursor-pointer text-primary hover:bg-opacity-10 p-1 rounded transition-all" onClick={() => setSelectedPosition({ data, index })}>
+                        <td className="py-4 px-2">{data.amount}</td>
+                        <td className="py-4 px-2">{data.created_at}</td>
+                        <td className={`py-4 px-2 font-semibold ${statusStyles[data.status.toLowerCase()] || ''}`}>{data.status}</td>
+                        <td className="py-4 px-2">{data.start_price}</td>
+                        <td className="py-4 px-2">{data.multiplier}</td>
+                        <td className="py-4 px-2">{data.is_liquidated}</td>
+                        <td className="py-4 px-2">{data.closed_at}</td>
+                        <td className="py-4 px-2 text-center">
+                          <span
+                            className="cursor-pointer text-primary hover:bg-opacity-10 p-1 rounded transition-all"
+                            onClick={() => setSelectedPosition({ data, index })}
+                          >
                             &#x22EE;
                           </span>
                         </td>

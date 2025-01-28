@@ -22,7 +22,7 @@ const BalanceCards = ({ className }) => {
 
   return (
     <div className={`mt-5 ${className}`}>
-      <div className="flex flex-wrap justify-between gap-3 overflow-x-auto scrollbar-none md:flex-nowrap">
+      <div className="flex flex-wrap justify-between gap-4 overflow-x-auto scrollbar-none md:flex-nowrap">
         {balances.map((balance) =>
           isMobile ? (
             <div

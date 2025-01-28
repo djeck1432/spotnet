@@ -48,7 +48,7 @@ export const AddDeposit = () => {
   return (
     <DashboardLayout title="Add Deposit">
       <div className="flex flex-col items-center justify-center gap-2 pt-6 text-center">
-        <div className="flex w-full max-w-3xl justify-center gap-2">
+        <div className="flex w-full max-w-3xl justify-center gap-4">
           <Card
             label="Health Factor"
             value={dashboardData?.health_ratio}
@@ -61,7 +61,7 @@ export const AddDeposit = () => {
           />
         </div>
       </div>
-      <h1 className="text-2xl font-normal text-primary text-center mt-8 mb-0">
+      <h1 className="text-xl font-normal text-white text-center mt-8 mb-0">
         Please make a deposit
       </h1>
       <TokenSelector
@@ -79,14 +79,14 @@ export const AddDeposit = () => {
           value={amount}
           onChange={handleAmountChange}
           pattern="^\d*\.?\d*$"
-          className="w-full bg-transparent text-gray-700 outline-none text-center"
+          className="w-full bg-transparent text-gray outline-none text-center text-6xl"
           aria-describedby="currency-symbol"
           placeholder="0.00"
           disabled={isLoading}
         />
         <span
           id="currency-symbol"
-          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-gray-400 text-lg"
+          className="absolute top-0 right-0 -translate-y-3/4 translate-x-3/4 text-secondary text-lg"
         >
           {selectedToken}
         </span>

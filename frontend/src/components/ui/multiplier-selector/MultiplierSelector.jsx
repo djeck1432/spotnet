@@ -1,7 +1,6 @@
 import React, { useMemo, useCallback, useState, useRef, useEffect } from 'react';
 import { useMaxMultiplier } from '../../../hooks/useMaxMultiplier';
 import sliderThumb from '../../../assets/icons/slider_thumb.svg';
-import './multiplier.css';
 
 const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
   const minMultiplier = 1.1;
@@ -91,47 +90,53 @@ const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
     setSelectedMultiplier(boundedValue.toFixed(1));
   }, [maxMultiplier, actualValue, setSelectedMultiplier]);
 
-  if (isLoading) return <div className="slider-skeleton">Loading multiplier data...</div>;
+  if (isLoading) return <div className="w-full text-gray">Loading multiplier data...</div>;
 
   return (
-    <div className="multiplier-card">
-      <div className="slider-container">
-        <div className="slider-with-tooltip">
-          <div className="multiplier-slider-container">
+    <div className="w-full pt-12">
+      <div className="relative w-full">
+        <div className="relative w-11/12 mx-auto">
+          <div
+            className="relative h-2 bg-gray-300 rounded-full cursor-pointer"
+            ref={sliderRef}
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
+          >
             <div
-              className="slider"
-              ref={sliderRef}
-              onMouseDown={handleMouseDown}
-              onTouchStart={handleTouchStart}
+              className="ml-2.5 absolute h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+              style={{ width: `${calculateSliderPercentage(actualValue)}%` }}
+            />
+            <div
+              className="ml-2.5 absolute top-1/2 transform -translate-y-1/2 -translate-x-1/2"
+              style={{ left: `${calculateSliderPercentage(actualValue)}%` }}
             >
-              <div className="slider-track">
-                <div
-                  className="slider-range"
-                  style={{ width: `${calculateSliderPercentage(actualValue)}%` }}
-                />
+              <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-blue-900 text-white text-xs p-1.5 rounded shadow-md">
+                {actualValue.toFixed(1)}
+                <div className="absolute bottom-[-6px] left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-blue-900" />
               </div>
-              <div
-                className="slider-thumb"
-                style={{ left: `${calculateSliderPercentage(actualValue)}%` }}
-              >
-                <div className="tooltip">{actualValue.toFixed(1)}</div>
-                <img src={sliderThumb} className="cursor" alt="slider thumb" draggable="false" />
-              </div>
+              <img
+                src={sliderThumb}
+                alt="slider thumb"
+                className="w-8 h-8"
+                draggable="false"
+              />
             </div>
           </div>
-          <div className="mark-container">
+          <div className="flex justify-between mt-4">
             {marks.map((mark, index) => (
               <div
                 key={index}
-                className={`mark-item ${actualValue === mark ? 'active' : ''}`}
-                style={{
-                  left: `${calculateSliderPercentage(mark)}%`,
-                  position: 'absolute',
-                  transform: 'translateX(-50%)',
-                }}
+                className="flex flex-col items-center"
+                style={{ left: `${calculateSliderPercentage(mark)}%` }}
               >
-                <div className="marker" />
-                <span className="mark-label">{`x${mark}`}</span>
+                <div
+                  className={`w-1 h-3 rounded-full ${actualValue === mark ? 'bg-brand' : 'bg-gray'}`}
+                />
+                <span
+                  className={`text-xs mt-1 ${actualValue === mark ? 'text-blue-500' : 'text-gray'}`}
+                >
+                  x{mark}
+                </span>
               </div>
             ))}
           </div>

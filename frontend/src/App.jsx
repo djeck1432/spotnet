@@ -89,7 +89,7 @@ function App() {
         location.pathname === '/'
           ? 'relative flex flex-col justify-center text-secondary text-center w-full pointer-events-auto'
           : isNarrowSidebar
-            ? 'bg-[url("../public/desktop-background.png")] bg-no-repeat bg-cover min-h-screen bg-center pl-[60px]'
+            ? 'bg-[url("../public/desktop-background.png")] bg-no-repeat bg-cover min-h-screen bg-center'
             : 'bg-[url("../public/desktop-background.png")] bg-no-repeat bg-cover min-h-screen bg-center'
       }`}
     >

@@ -132,8 +132,8 @@ export default function DashboardPage({ telegramId }) {
   }, [walletId, data, isLoading]);
 
   const getCurrentSumColor = () => {
-    if (currentSum > startSum) return 'text-green-500';
-    if (currentSum < startSum) return 'text-red-500';
+    if (currentSum > startSum) return 'text-success-color';
+    if (currentSum < startSum) return 'text-error-color';
     return '';
   };
 
@@ -142,7 +142,7 @@ export default function DashboardPage({ telegramId }) {
   return (
     <DashboardLayout>
       {loading && <Spinner loading={loading} />}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="flex items-center gap-4">
         <Card
           label="Health Factor"
           value={healthFactor}
@@ -155,7 +155,7 @@ export default function DashboardPage({ telegramId }) {
         />
       </div>
       <div className="mt-6 flex flex-col gap-4">
-        <div className="p-4 rounded-2xl shadow-md">
+        <div className="p-4 rounded-2xl border-x border-y border-light-purple shadow-md">
           <DashboardTabs activeTab={activeTab} switchTab={setActiveTab} />
 
           {activeTab === COLLATERAL && (
@@ -172,7 +172,7 @@ export default function DashboardPage({ telegramId }) {
           {activeTab === DEPOSITED && <Deposited data={depositedData} />}
         </div>
         <Button
-          className="w-full sm:w-auto py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          className="w-full sm:w-auto py-2 px-4 text-white rounded-lg"
           variant="primary"
           size="lg"
           onClick={() => closePositionEvent()}
@@ -183,11 +183,11 @@ export default function DashboardPage({ telegramId }) {
         <Button
           variant="secondary"
           size="lg"
-          className="w-full sm:w-auto py-2 px-4 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+          className="w-full flex items-center justify-center gap-2 sm:w-auto py-2 px-4 text-lg text-white rounded-lg"
           onClick={handleOpen}
         >
-          <TelegramIcon className="w-5 h-5 mr-2" />
-          Enable telegram notification bot
+          <TelegramIcon className="w-5 h-5 mr-2 inline" />
+          <span>Enable telegram notification bot</span>
         </Button>
         {showModal && (
           <ActionModal

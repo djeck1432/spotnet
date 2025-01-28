@@ -26,31 +26,31 @@ function DashboardTabs({ activeTab, switchTab }) {
   ];
 
   return (
-    <div className="flex relative items-center overflow-x-auto pb-4 border-b border-[#36294e]">
+    <div className="flex relative items-center pb-2 border-b border-light-purple">
       {tabConfig.map((tab, index) => (
         <React.Fragment key={tab.key}>
           <button
             type="button"
             onClick={() => switchTab(tab.key)}
-            className={`flex-1 text-center py-2 cursor-pointer flex items-center justify-center ${activeTab === tab.key ? 'text-[#6c5b92]' : 'text-gray-500'}`}
+            className={`flex-1 text-center py-2 cursor-pointer flex items-center justify-center ${activeTab === tab.key ? 'text-brand' : 'text-gray'}`}
           >
             <tab.Icon className="mr-2" />
-            <span className="text-sm font-semibold">{tab.title}</span>
+            <span className="text-lg font-semibold">{tab.title}</span>
           </button>
 
-          {index < tabConfig.length - 1 && <div className="w-[3px] h-[18px] rounded-lg bg-gray-300 mx-4"></div>}
+          {index < tabConfig.length - 1 && <div className="w-[3px] h-[18px] rounded-lg bg-gray mx-4"></div>}
         </React.Fragment>
       ))}
 
-      <div className="absolute bottom-[-16px] left-0 w-full h-[1px] bg-[#e0d0e6] overflow-hidden">
+      <div className="absolute bottom-[-16px] left-0 w-full h-[1px] overflow-hidden">
         <div
           className={`absolute bottom-0 left-0 h-full transition-transform duration-300 ease-in-out transform ${
             activeTab === COLLATERAL
-              ? 'w-[180px] bg-[#6c5b92]'
+              ? 'w-[180px] bg-blue-pink-gradient-alt2'
               : activeTab === BORROW
-              ? 'w-[155px] bg-[#6c5b92] left-[38%]'
+              ? 'w-[155px] bg-blue-pink-gradient-alt2 left-[38%]'
               : activeTab === DEPOSITED
-              ? 'w-[155px] bg-[#6c5b92] left-[78%]'
+              ? 'w-[155px] bg-blue-pink-gradient-alt2 left-[78%]'
               : ''
           }`}
         />

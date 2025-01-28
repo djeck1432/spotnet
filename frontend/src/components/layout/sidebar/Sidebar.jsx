@@ -54,8 +54,8 @@ const Sidebar = ({ title, items, className = '' }) => {
     const isActive = activeItemId === item.id;
     const isExpanded = expandedItems[item.id];
     const hasChildren = item.children && item.children.length > 0;
-    const itemClass = `w-full flex items-center p-[12.5px] text-sm text-gray-400 hover:text-yellow-400 cursor-pointer ${
-      isActive ? 'text-yellow-400' : ''
+    const itemClass = `w-full flex items-center p-[12.5px] text-gray hover:text-white cursor-pointer ${
+      isActive ? 'text-white' : ''
     } ${level > 0 ? 'pl-2' : ''}`;
 
     return (
@@ -79,7 +79,7 @@ const Sidebar = ({ title, items, className = '' }) => {
 
   return (
     <div className={`bg-black border-r border-[#300734] fixed top-[5.5rem] left-0 h-screen w-1/5 ${className} hidden lg:block`}>
-      <nav className="flex flex-col p-6 pt-0">
+      <nav className="flex flex-col p-8 pt-8">
         {title && (
           <div className="pb-2 mb-3 border-b border-[#9333ea]">
             <h2 className="text-sm font-normal text-[#83919f]">{title}</h2>

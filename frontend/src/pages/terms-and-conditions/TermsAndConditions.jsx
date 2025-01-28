@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import './terms-and-conditions.css'; // You can still keep this if you have any global styles
 import ScrollButton from 'components/ui/scroll-button/ScrollButton';
 import Sections from 'components/layout/sections/Sections';
 import Sidebar from 'components/layout/sidebar/Sidebar';

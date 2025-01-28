@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./ReportBugModal.css";
 import telegramIcon from "../../assets/icons/telegram.svg";
 import { Button } from "components/ui/custom-button/Button";
 import { useWalletStore } from "stores/useWalletStore";
@@ -19,7 +18,7 @@ export function ReportBugModal({ onClose }) {
                 className="relative rounded-md w-full max-w-xl bg-[#120721] p-6"
                 onClick={(e) => e.stopPropagation()}
                 onSubmit={handleSubmit}
-            >
+            >yarn start 
                 <div className="space-y-6">
                     <div className="text-center">
                         <h3 className="text-[#798795] text-lg font-normal pb-2 border-b border-[#22153A]">

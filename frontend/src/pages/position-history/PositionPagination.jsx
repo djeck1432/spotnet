@@ -7,7 +7,7 @@ export default function PositionPagination({ currentPage, setCurrentPage, isPend
   const range = (length, startIdx = 1) => [...Array(length).keys()].map(i => i + startIdx);
   
   const setPage = (page) => {
-    if (isPending || page < 1 || page > pagesCount(tableData.length, positionsOnPage)) {
+    if (isPending || page < 1 || page > pagesCount(tableData?.length, positionsOnPage)) {
       return;
     }
     setCurrentPage(page);
@@ -25,7 +25,7 @@ export default function PositionPagination({ currentPage, setCurrentPage, isPend
 
       <div className="flex items-center justify-center gap-4">
         {!isPending && tableData ? 
-          range(pagesCount(tableData.length, positionsOnPage)).map((page) => (
+          range(pagesCount(tableData?.length, positionsOnPage)).map((page) => (
             <div
               key={page}
               className={`text-xs font-normal cursor-pointer ${currentPage === page ? 'font-semibold text-[#5b3c8f]' : 'text-[#413547]'}`}
@@ -37,11 +37,11 @@ export default function PositionPagination({ currentPage, setCurrentPage, isPend
       </div>
 
       <div
-        className={`flex justify-center items-center w-6 h-6 rounded-full cursor-pointer ${currentPage === pagesCount(tableData.length, positionsOnPage) ? 'bg-[#2e1b3d] cursor-default' : 'bg-[#5b3c8f]'} ${isPending ? 'cursor-default' : ''}`}
+        className={`flex justify-center items-center w-6 h-6 rounded-full cursor-pointer ${currentPage === pagesCount(tableData?.length, positionsOnPage) ? 'bg-[#2e1b3d] cursor-default' : 'bg-[#5b3c8f]'} ${isPending ? 'cursor-default' : ''}`}
         onClick={() => setPage(currentPage + 1)}
         aria-label="Next Page"
       >
-        <ArrowRightIcon className={`${currentPage === pagesCount(tableData.length, positionsOnPage) ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`} />
+        <ArrowRightIcon className={`${currentPage === pagesCount(tableData?.length, positionsOnPage) ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`} />
       </div>
     </div>
   );
