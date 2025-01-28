@@ -85,7 +85,7 @@ const WalletSection = ({ onConnectWallet, onLogout }) => {
 
       {/* Connect Wallet button for big screens (outside menu) */}
       {!isMobile && !walletId && (
-        <Button variant="primary" size="sm" onClick={onConnectWallet}>
+        <Button variant="primary" size="md" onClick={onConnectWallet}>
           <span>Connect Wallet</span>
         </Button>
       )}
