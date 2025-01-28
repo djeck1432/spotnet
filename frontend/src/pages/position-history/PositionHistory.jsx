@@ -33,15 +33,15 @@ function PositionHistory() {
   }, [currentPage, isPending]);
 
   const tokenIconMap = {
-    STRK: <StrkIcon className="w-6 h-6 bg-[#201338] rounded-full p-1" />,
-    USDC: <UsdIcon className="w-6 h-6 bg-[#201338] rounded-full p-1" />,
-    ETH: <EthIcon className="w-6 h-6 bg-[#201338] rounded-full p-1" />,
+    STRK: <StrkIcon className="w-6 h-6 bg-border-color rounded-full p-1" />,
+    USDC: <UsdIcon className="w-6 h-6 bg-border-color rounded-full p-1" />,
+    ETH: <EthIcon className="w-6 h-6 bg-border-color rounded-full p-1" />,
   };
 
   const statusStyles = {
-    opened: 'text-green-500',
-    closed: 'text-red-500',
-    pending: 'text-yellow-500',
+    opened: 'text-success-color',
+    closed: 'text-error-color',
+    pending: 'text-warning',
   };
 
   return (
