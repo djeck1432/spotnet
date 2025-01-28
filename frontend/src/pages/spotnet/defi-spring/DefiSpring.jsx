@@ -98,7 +98,7 @@ export const DefiSpringPage = () => {
 
   return (
     <div className="flex flex-row min-h-screen relative pt-1">
-      <div className="w-[380px]">
+      <div className="lg:w-[380px]">
         <Sidebar title="Content" items={tableOfContents} />
       </div>
 

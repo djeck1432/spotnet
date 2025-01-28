@@ -64,7 +64,7 @@ function Footer() {
         ))}
       </div>
 
-      <div className="flex lg:hidden items-center justify-around w-full px-4 py-4">
+      <div className="flex lg:hidden items-center justify-center gap-2 w-full px-4 py-4">
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>
@@ -79,7 +79,7 @@ function Footer() {
           </div>
         </NavLink>
 
-        <div className="w-px h-4 bg-gray-500" />
+        <div className="w-px rounded-md h-4 bg-border-color" />
 
         <NavLink
           to="/form"

@@ -61,7 +61,7 @@ const TermsAndConditionsPage = () => {
 
   return (
     <div className="flex flex-row min-h-screen relative text-white">
-      <div className="w-[380px]">
+      <div className="lg:w-[380px]">
         <Sidebar items={tableOfContents} title={'Content'} />
       </div>
 

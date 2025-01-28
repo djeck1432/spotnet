@@ -66,7 +66,7 @@ const OverviewPage = () => {
 
   return (
     <div className="min-h-screen flex flex-row text-white">
-      <div className="w-[380px]">
+      <div className="lg:w-[380px]">
         <Sidebar items={tableOfContents} title="Overview" />
       </div>
 

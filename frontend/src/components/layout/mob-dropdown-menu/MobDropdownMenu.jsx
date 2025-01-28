@@ -32,7 +32,7 @@ function MobDropdownMenu() {
           </li>
         ))}
         <li>
-          <button className="w-full py-3 bg-header-button-bg text-second-primary hover:text-white rounded-xl">
+          <button variant="primary" size="lg" className="w-full py-3 bg-header-button-bg text-second-primary hover:text-white rounded-xl ">
             Cancel
           </button>
         </li>

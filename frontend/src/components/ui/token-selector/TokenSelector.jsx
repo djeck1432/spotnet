@@ -24,7 +24,7 @@ const TokenSelector = ({ selectedToken, setSelectedToken, className }) => {
             className={`relative w-full text-center rounded-lg p-2 transition-colors duration-300 cursor-pointer ${
               selectedToken === token.label
                 ? 'border-gradient-mask'
-                : 'border border-gray'
+                : 'border-x border-y border-secondary'
             }`}
             onClick={() => handleTokenChange(token)}
           >

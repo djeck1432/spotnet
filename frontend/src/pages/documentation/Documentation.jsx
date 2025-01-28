@@ -202,7 +202,7 @@ const Documentation = () => {
 
   return (
     <div className="flex flex-row min-h-screen relative">
-      <div className="w-[380px]">
+      <div className="lg:w-[380px]">
         <Sidebar title="Table of Contents" items={tableOfContents} />
       </div>
 

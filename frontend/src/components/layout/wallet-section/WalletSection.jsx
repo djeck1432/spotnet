@@ -43,20 +43,20 @@ const WalletSection = ({ onConnectWallet, onLogout }) => {
         <div className="relative" ref={menuRef}>
           {/* rendering walletId on big screens only */}
           {walletId && !isMobile && (
-            <span className="text-sm font-semibold text-gray-500">{`${walletId.slice(0, 4)}...${walletId.slice(-4)}`}</span>
+            <span className="text-sm font-semibold text-gray">{`${walletId.slice(0, 4)}...${walletId.slice(-4)}`}</span>
           )}
 
           {/* three dots menu */}
-          <span className="cursor-pointer w-11 h-11 text-2xl font-bold border-none rounded-full border bg-footer-divider-bg flex items-center justify-center" onClick={toggleMenu}>
+          <span className="cursor-pointer w-11 h-11 text-2xl text-secondary font-bold border-none rounded-full border bg-footer-divider-bg flex items-center justify-center" onClick={toggleMenu}>
             &#x22EE;
           </span>
 
           {/* dropdown-menu */}
           {isMenuOpen && (
-            <div className="absolute top-[200%] right-[10%] transform bg-primary-color border rounded-lg shadow-lg px-4 py-3 w-80 mt-2 z-10">
+            <div className="absolute top-[200%] right-[10%] transform bg-dark-purple border rounded-lg shadow-lg px-4 py-3 w-80 mt-2 z-10">
               {/* Connect Wallet button for mobile screens */}
               {isMobile && !walletId && (
-                <Button className="w-full" onClick={onConnectWallet}>
+                <Button variant='primary' className="w-[50px]" onClick={onConnectWallet}>
                   <span>Connect Wallet</span>
                 </Button>
               )}
@@ -65,10 +65,10 @@ const WalletSection = ({ onConnectWallet, onLogout }) => {
               {walletId && (
                 <div>
                   <div>
-                    <span className="text-sm font-semibold text-gray-500">{`${walletId.slice(0, 4)}...${walletId.slice(-4)}`}</span>
+                    <span className="text-sm font-semibold text-gray">{`${walletId.slice(0, 4)}...${walletId.slice(-4)}`}</span>
                   </div>
                   <button
-                    className="w-full mt-4 bg-red-500 text-white py-2 rounded-md"
+                    className="w-full mt-4 bg-error-color text-white py-2 rounded-md"
                     onClick={() => {
                       setIsMenuOpen(false);
                       onLogout();
@@ -85,7 +85,7 @@ const WalletSection = ({ onConnectWallet, onLogout }) => {
 
       {/* Connect Wallet button for big screens (outside menu) */}
       {!isMobile && !walletId && (
-        <Button variant="primary" size="md" onClick={onConnectWallet}>
+        <Button variant="primary" size="sm" onClick={onConnectWallet}>
           <span>Connect Wallet</span>
         </Button>
       )}
