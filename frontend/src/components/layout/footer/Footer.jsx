@@ -64,7 +64,7 @@ function Footer() {
         ))}
       </div>
 
-      <div className="flex lg:hidden items-center justify-center gap-2 w-full px-4 py-4">
+      <div className="flex lg:hidden items-center justify-center gap-8 w-full px-4 py-4">
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>

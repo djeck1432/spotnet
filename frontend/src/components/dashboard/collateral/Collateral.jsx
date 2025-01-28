@@ -3,13 +3,14 @@ import CollateralIcon from '@/assets/icons/collateral_dynamic.svg?react';
 import { TrendingDown, TrendingUp } from 'lucide-react';
 
 function Collateral({ data, startSum, currentSum, getCurrentSumColor }) {
+  const icon = data[0]?.currencyIcon;
   return (
     <div className="font-normal text-left w-fit h-fit p-1 pl-5 pt-8">
       <div className="flex flex-col gap-2 w-fit h-fit">
         <div className="flex items-center">
-          {React.createElement(data[0]?.currencyIcon || CollateralIcon, {
-            className: 'w-8 h-8 mr-2 bg-border-color rounded-full flex items-center justify-center p-2',
-          })}
+          <p className='w-8 h-8 mr-2 bg-border-color rounded-full flex items-center justify-center p-2'>
+            {icon ? <img src={icon} alt="icon"/> : <CollateralIcon />}
+          </p>
           <span className="text-2xl text-second-primary">{data[0]?.currencyName || 'N/A'}</span>
         </div>
         <span>

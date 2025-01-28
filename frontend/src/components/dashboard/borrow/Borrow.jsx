@@ -2,13 +2,15 @@ import React from 'react';
 import BorrowIcon from '@/assets/icons/borrow_dynamic.svg?react';
 
 function Borrow({ data }) {
+  const icon = data[1]?.currencyIcon;
   return (
     <div className="font-normal text-left w-fit h-fit p-1 pt-0">
       <div className="flex flex-col gap-2 w-[594px] h-[190px] mt-3">
         <div className="flex items-center">
-          {React.createElement(data[1]?.currencyIcon || BorrowIcon, {
-            className: 'w-8 h-8 mr-2 bg-border-color rounded-full flex items-center justify-center p-2',
-          })}
+        <p className="w-8 h-8 mr-2 bg-border-color rounded-full flex items-center justify-center p-2">
+          {icon ? <img src={icon} alt="icon"/> : <BorrowIcon />}
+        </p>
+
           <span className="text-2xl text-second-primary">{data[1]?.currencyName || 'N/A'}</span>
         </div>
         <span>
