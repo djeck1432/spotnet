@@ -113,3 +113,16 @@ class UserPositionExtraDepositsResponse(BaseModel):
     """
     main: UserPositionResponse
     extra_deposits: list[UserExtraDeposit]
+
+
+class UserPositionHistoryResponse(BaseModel):
+    """
+    Response model for user position history with pagination.
+
+    ### Attributes:
+    - **positions**: List of user positions
+    - **total_count**: Total number of positions for pagination
+    """
+
+    positions: List[UserPositionResponse] = []
+    total_count: int = 0

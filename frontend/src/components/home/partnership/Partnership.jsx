@@ -1,7 +1,7 @@
 import React from 'react';
-import { ReactComponent as ZklendLogo } from '../../../assets/images/zklend_logo.svg';
-import { ReactComponent as EkuboLogo } from '../../../assets/images/ekubo_logo.svg';
-import { ReactComponent as Star } from '../../../assets/particles/star.svg';
+import ZklendLogo from '@/assets/images/zklend_logo.svg?react';
+import EkuboLogo from '@/assets/images/ekubo_logo.svg?react';
+import Star from '@/assets/particles/star.svg?react';
 
 const Partnership = () => {
   const logos = [];

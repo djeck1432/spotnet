@@ -1,10 +1,10 @@
 import React from 'react';
-import { ReactComponent as Rocket } from '../../../assets/icons/rocket.svg';
-import { ReactComponent as Hand } from '../../../assets/images/hand.svg';
-import { ReactComponent as Star } from '../../../assets/particles/star.svg';
+import Rocket from '@/assets/icons/rocket.svg?react';
+import Hand from '@/assets/images/hand.svg?react';
+import Star from '@/assets/particles/star.svg?react';
 import { useNavigate } from 'react-router-dom';
-import { notify } from '../../../components/layout/notifier/Notifier';
-import { useWalletStore } from '../../../stores/useWalletStore';
+import { notify } from '@/components/layout/notifier/Notifier';
+import { useWalletStore } from '@/stores/useWalletStore';
 
 const DontMiss = () => {
   const { walletId } = useWalletStore();

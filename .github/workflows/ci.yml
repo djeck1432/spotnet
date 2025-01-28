@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'web_app/**'
+      - 'devops/**'
   pull_request:
     branches:
       - main
+    paths:
+      - 'web_app/**'
+      - 'devops/**'
 
 jobs:
   shared:

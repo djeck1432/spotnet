@@ -56,6 +56,20 @@ class User(Base):
     wallet_id = Column(String, nullable=False, unique=True, index=True)
     contract_address = Column(String)
 
+class Referal(Base):
+    """
+    SQLAlchemy model for the referal table.
+    """
+
+    __tablename__ = "referal"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    user_id = Column(
+        UUID(as_uuid=True), ForeignKey("user.id"), index=True, nullable=False
+    )
+    referal_id = Column(String(16), nullable=False, unique=True, index=True)
+    created_at = Column(DateTime, nullable=False, default=func.now())
+
 
 class Position(Base):
     """

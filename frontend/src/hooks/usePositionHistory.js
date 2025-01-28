@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { axiosInstance } from 'utils/axios';
-import { formatDate } from 'utils/formatDate';
-import { useWalletStore } from 'stores/useWalletStore';
+import { axiosInstance } from '../utils/axios';
+import { formatDate } from '../utils/formatDate';
+import { useWalletStore } from '../stores/useWalletStore';
 
 const fetchPositionHistoryTable = async (walletId) => {
   if (!walletId) {
@@ -18,7 +18,7 @@ const formatPositionHistoryTable = (data) => {
     start_price: `$${position.start_price.toFixed(2)}`,
     multiplier: position.multiplier.toFixed(1),
     created_at: formatDate(position.created_at),
-    closed_at: position.closed_at ? formatDate(position.closed_at) : "-",
+    closed_at: position.closed_at ? formatDate(position.closed_at) : '-',
     datetime_liquidation: formatDate(position.datetime_liquidation),
     status: position.status.charAt(0).toUpperCase() + position.status.slice(1),
     is_liquidated: position.is_liquidated ? 'Yes' : 'No',

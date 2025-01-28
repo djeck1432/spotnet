@@ -1,11 +1,11 @@
 import React from 'react';
-import { ReactComponent as ArrowLeftIcon } from '../../assets/icons/arrow-left.svg';
-import { ReactComponent as ArrowRightIcon } from '../../assets/icons/arrow-right.svg';
+import ArrowLeftIcon from '@/assets/icons/arrow-left.svg?react';
+import ArrowRightIcon from '@/assets/icons/arrow-right.svg?react';
 
 export default function PositionPagination({ currentPage, setCurrentPage, isPending, tableData, positionsOnPage }) {
   const pagesCount = (totalItems, itemsPerPage) => Math.ceil(totalItems / itemsPerPage);
-  const range = (length, startIdx = 1) => [...Array(length).keys()].map(i => i + startIdx);
-  
+  const range = (length, startIdx = 1) => [...Array(length).keys()].map((i) => i + startIdx);
+
   const setPage = (page) => {
     if (isPending || page < 1 || page > pagesCount(tableData?.length, positionsOnPage)) {
       return;

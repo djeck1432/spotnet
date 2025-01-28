@@ -1,16 +1,14 @@
 module.exports = {
   setupFiles: ['./jest.setup.js'],
   transform: {
-    '^.+\\.[tj]sx?$': 'babel-jest', // Using Babel for transforming JS, JSX, TS, and TSX
+    '^.+\\.[tj]sx?$': 'babel-jest',
   },
   moduleNameMapper: {
+    '\\.svg\\?react$': '<rootDir>/test/__mocks__/svgMock.js', // Add this line
     '\\.svg$': '<rootDir>/test/__mocks__/svgMock.js',
     '\\.css$': '<rootDir>/test/__mocks__/styleMock.js',
     '^src/(.*)$': ['<rootDir>/src/$1'],
   },
-  transformIgnorePatterns: [
-    'node_modules/(?!(axios|starknetkit)/)', // Ignore transforming node_modules
-  ],
-
-  testEnvironment: 'jsdom', // Use node as the test environment
+  transformIgnorePatterns: ['node_modules/(?!(axios|starknetkit)/)'],
+  testEnvironment: 'jsdom',
 };

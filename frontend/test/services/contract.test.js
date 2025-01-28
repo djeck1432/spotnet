@@ -25,7 +25,7 @@ describe('Contract Deployment Tests', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     getDeployContractData.mockReturnValue({
       contractData: 'mockContractData',
     });

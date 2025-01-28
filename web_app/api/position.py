@@ -6,14 +6,14 @@ from decimal import Decimal, InvalidOperation
 from typing import Optional
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Query, Request
 
 from web_app.api.serializers.position import (
     AddPositionDepositData,
     PositionFormData,
     TokenMultiplierResponse,
-    UserPositionResponse,
     UserPositionExtraDepositsResponse,
+    UserPositionHistoryResponse,
 )
 from web_app.api.serializers.transaction import (
     LoopLiquidityData,
@@ -311,27 +311,37 @@ async def add_extra_deposit(position_id: UUID, data: AddPositionDepositData):
 @router.get(
     "/api/user-positions/{wallet_id}",
     tags=["Position Operations"],
-    response_model=list[UserPositionResponse],
+    response_model=UserPositionHistoryResponse,
     summary="Get all positions for a user",
-    response_description="Returns paginated list of positions for the given wallet ID",
+    response_description="Returns paginated of positions for the given wallet ID",
 )
-async def get_user_positions(wallet_id: str, start: Optional[int] = None) -> list:
+async def get_user_positions(
+    wallet_id: str,
+    start: int = Query(0, ge=0),
+    limit: int = Query(PAGINATION_STEP, ge=1, le=100),
+) -> UserPositionHistoryResponse:
     """
     Get all positions for a specific user by their wallet ID.
-    :param wallet_id: The wallet ID of the user
-    :param start: Optional starting index for pagination (0-based). If not provided, defaults to 0
-    :return: UserPositionsListResponse containing paginated list of positions
+
+    :param wallet_id: Wallet ID of the user
+    :param start: Starting index for pagination (default: 0)
+    :param limit: Number of items per page (default: 10 from PAGINATION_STEP variable)
+
+    :return: UserPositionHistoryResponse with positions and total count
     :raises: HTTPException: If wallet ID is empty or invalid
     """
     if not wallet_id:
         raise HTTPException(status_code=400, detail="Wallet ID is required")
 
-    start_index = max(0, start) if start is not None else 0
-
     positions = position_db_connector.get_all_positions_by_wallet_id(
-        wallet_id, start_index, PAGINATION_STEP
+        wallet_id, start=start, limit=limit
     )
-    return positions
+    total_positions = position_db_connector.get_count_positions_by_wallet_id(wallet_id)
+    
+    return UserPositionHistoryResponse(
+        positions=positions,
+        total_count=total_positions
+    )
 
 
 @router.get(
@@ -348,8 +358,7 @@ async def get_list_of_deposited_tokens(position_id: UUID):
     :return Dict containing main position and extra positions
     """
     main_position = position_db_connector.get_position_by_id(position_id)
-    extra_deposits = position_db_connector.get_extra_deposits_by_position_id(position_id)
-    return {
-        "main": main_position,
-        "extra_deposits": extra_deposits
-    }
+    extra_deposits = position_db_connector.get_extra_deposits_by_position_id(
+        position_id
+    )
+    return {"main": main_position, "extra_deposits": extra_deposits}

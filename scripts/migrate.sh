@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker-compose -f docker-compose.back.yaml up --build
+docker compose -f devops/docker-compose.back.yaml up --build
 
 echo "Installing Poetry globally..."
 curl -sSL https://install.python-poetry.org | python3 -

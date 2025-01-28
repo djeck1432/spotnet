@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import MetricCard from '../../components/vault/stake-card/StakeCard';
-import STRK from '../../assets/icons/strk.svg';
-import USDCc from '../../assets/icons/apy_icon.svg';
-import { VaultLayout } from '../../components/vault/VaultLayout';
-import { Button } from 'components/ui/custom-button/Button';
-import GasFee from '../../components/vault/gas-fee/GasFee';
-import BalanceCards from '../../components/ui/balance-cards/BalanceCards';
+import MetricCard from '@/components/vault/stake-card/StakeCard';
+import STRK from '@/assets/icons/strk.svg';
+import USDCc from '@/assets/icons/apy_icon.svg';
+import { VaultLayout } from '@/components/vault/VaultLayout';
+import { Button } from '@/components/ui/custom-button/Button';
+import GasFee from '@/components/vault/gas-fee/GasFee';
+import BalanceCards from '@/components/ui/balance-cards/BalanceCards';
 
 function Stake() {
   const [selectedNetwork, setSelectedNetwork] = useState('Starknet');

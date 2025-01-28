@@ -1,8 +1,8 @@
 import React from 'react';
-import { ReactComponent as ArrowDownIcon } from '../../../assets/icons/dropdown-arrow.svg';
-import { ReactComponent as ReloadIcon } from '../../../assets/icons/reload.svg';
-import { ReactComponent as OpenBotIcon } from '../../../assets/icons/bot.svg';
-import { ReactComponent as TermsIcon } from '../../../assets/icons/terms.svg';
+import ArrowDownIcon from '@/assets/icons/dropdown-arrow.svg?react';
+import ReloadIcon from '@/assets/icons/reload.svg?react';
+import OpenBotIcon from '@/assets/icons/bot.svg?react';
+import TermsIcon from '@/assets/icons/terms.svg?react';
 
 const menuItems = [
   { id: 1, text: 'Reload page', icon: <ReloadIcon className="w-5 h-5 mr-2" />, link: '#' },

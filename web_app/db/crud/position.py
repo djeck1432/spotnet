@@ -106,7 +106,7 @@ class PositionDBConnector(UserDBConnector):
 
     def get_all_positions_by_wallet_id(
         self, wallet_id: str, start: int, limit: int
-    ) -> list:
+    ) -> list[dict]:
         """
         Retrieves paginated positions for a user by their wallet ID
         and returns them as a list of dictionaries.
@@ -138,6 +138,30 @@ class PositionDBConnector(UserDBConnector):
             except SQLAlchemyError as e:
                 logger.error(f"Failed to retrieve positions: {str(e)}")
                 return []
+    
+    def get_count_positions_by_wallet_id(self, wallet_id: str) -> int:
+        """
+        Counts total number of positions for a user.
+        
+        :param wallet_id: Wallet ID of the user
+        :return: Total number of positions
+        """
+        with self.Session() as db:
+            user = self._get_user_by_wallet_id(wallet_id)
+            if not user:
+                return 0
+
+            try:
+                total_positions = (
+                    db.query(func.count(Position.id))
+                    .filter(Position.user_id == user.id)
+                    .scalar()
+                )
+                return total_positions or 0
+
+            except SQLAlchemyError as e:
+                logger.error(f"Failed to count user positions: {str(e)}")
+                return 0
 
     def has_opened_position(self, wallet_id: str) -> bool:
         """

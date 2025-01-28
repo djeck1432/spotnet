@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as Star } from '../../../assets/particles/star.svg';
+import Star from '@/assets/particles/star.svg?react';
 
 const StarMaker = ({ starData }) =>
   starData.map((star, index) => (

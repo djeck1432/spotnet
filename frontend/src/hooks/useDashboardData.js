@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import QueryKeys from 'QueryKeys/QueryKeys';
-import { axiosInstance } from 'utils/axios';
-import { useWalletStore } from 'stores/useWalletStore';
+import QueryKeys from '../QueryKeys/QueryKeys';
+import { axiosInstance } from '../utils/axios';
+import { useWalletStore } from '../stores/useWalletStore';
 
 export const fetchDashboardData = async (walletId) => {
   if (!walletId) {

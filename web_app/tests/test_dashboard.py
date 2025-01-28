@@ -21,6 +21,7 @@ from httpx import ASGITransport, AsyncClient
 
 from web_app.api.dashboard import get_dashboard, router
 from web_app.api.serializers.dashboard import DashboardResponse
+from web_app.db.models import ExtraDeposit
 from web_app.contract_tools.mixins import HealthRatioMixin
 from web_app.contract_tools.mixins.dashboard import DashboardMixin
 
@@ -68,6 +69,14 @@ MOCK_POSITION = {
 
 MOCK_WALLET_BALANCES = {"ETH": "10.5", "USDC": "1000.0"}
 
+MOCK_EXTRA_DEPOSITS = [
+    ExtraDeposit(token_symbol="ETH", amount="100.0"),
+    ExtraDeposit(token_symbol="USDC", amount="200.0"),
+]
+RETURN_EXTRA_DEPOSIT = [
+    {"token": "ETH", "amount": "100.0"},
+    {"token": "USDC", "amount": "200.0"},
+]
 
 @pytest.mark.asyncio
 async def test_get_dashboard_success():
@@ -76,7 +85,6 @@ async def test_get_dashboard_success():
     wallet_id = "0x1234567890abcdef"
     id = uuid.uuid4()
     mock_position_balance = 500
-    mock_extra_deposit = 700
     multiplier = 1
 
     with patch(
@@ -86,6 +94,8 @@ async def test_get_dashboard_success():
     ) as mock_get_positions_by_wallet_id, patch(
         "web_app.contract_tools.mixins.health_ratio.HealthRatioMixin.get_health_ratio_and_tvl"
     ) as mock_get_health_ratio_and_tvl, patch(
+        "web_app.db.crud.position.PositionDBConnector.get_extra_deposits_by_position_id",
+    ) as mock_get_extra_deposits_by_position_id, patch(
         "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_wallet_balances",
         new_callable=AsyncMock,
     ) as mock_get_wallet_balances, patch(
@@ -100,9 +110,9 @@ async def test_get_dashboard_success():
     ) as mock_get_position_balance:
 
         mock_get_position_balance.return_value = (
-            mock_position_balance,
-            mock_extra_deposit,
+            mock_position_balance
         )
+        mock_get_extra_deposits_by_position_id.return_value = MOCK_EXTRA_DEPOSITS
         mock_get_contract_address_by_wallet_id.return_value = "0xabcdef1234567890"
         mock_get_positions_by_wallet_id.return_value = [
             {
@@ -128,7 +138,6 @@ async def test_get_dashboard_success():
             * Decimal(multiplier)
             * (Decimal(100) / Decimal(99))
         )
-        balance = total_position_balance + mock_extra_deposit
 
         async with AsyncClient(
             transport=ASGITransport(app=app), base_url=BASE_URL
@@ -144,10 +153,10 @@ async def test_get_dashboard_success():
             "current_sum": "200.0",
             "start_sum": "200.0",
             "borrowed": "200000.00",
-            "balance": str(balance),
+            "balance": str(total_position_balance),
             "health_ratio": "1.2",
             "position_id": str(id),
-            "deposit_data": [],
+            "deposit_data": RETURN_EXTRA_DEPOSIT,
         }
 
 

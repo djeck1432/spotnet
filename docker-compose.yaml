@@ -6,27 +6,27 @@ networks:
 
 services:
   nginx:
-    build: ../frontend
+    build: ./frontend
     container_name: nginx
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ../certs/spotnet.xyz.chain.crt:/etc/nginx/spotnet.xyz.chain.crt:ro
-      - ../certs/spotnet.xyz.key:/etc/nginx/spotnet.xyz.key:ro
+      - ./certs/spotnet.xyz.chain.crt:/etc/nginx/spotnet.xyz.chain.crt:ro
+      - ./certs/spotnet.xyz.key:/etc/nginx/spotnet.xyz.key:ro
     depends_on:
       - backend
     networks:
       - app_network
   backend:
-    build: ..
+    build: .
     command: ["bash", "/app/entrypoint.sh"]
     restart: always
     volumes:
-      - ../entrypoint.sh:/app/entrypoint.sh
+      - ./entrypoint.sh:/app/entrypoint.sh
     env_file:
-      - ../.env
+      - .env
     depends_on:
       - db
     expose:

@@ -4,9 +4,21 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**/*.rs'
+      - '**/*.cairo'
+      - Scarb.toml
+      - Scarb.lock
+      - .tool-versions
   pull_request:
     branches:
       - main
+    paths:
+      - '**/*.rs'
+      - '**/*.cairo'
+      - Scarb.toml
+      - Scarb.lock
+      - .tool-versions
 
 jobs:
   build-and-test:

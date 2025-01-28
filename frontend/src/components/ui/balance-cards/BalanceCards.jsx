@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useMatchMedia } from 'hooks/useMatchMedia';
-import { getBalances } from '../../../services/wallet';
-import { useWalletStore } from 'stores/useWalletStore';
-import { ReactComponent as ETH } from '../../../assets/icons/ethereum.svg';
-import { ReactComponent as USDC } from '../../../assets/icons/borrow_usdc.svg';
-import { ReactComponent as STRK } from '../../../assets/icons/strk.svg';
+import { useMatchMedia } from '@/hooks/useMatchMedia';
+import { getBalances } from '@/services/wallet';
+import { useWalletStore } from '@/stores/useWalletStore';
+
+import ETH from '@/assets/icons/ethereum.svg?react';
+import USDC from '@/assets/icons/borrow_usdc.svg?react';
+import STRK from '@/assets/icons/strk.svg?react';
 
 const BalanceCards = ({ className }) => {
   const { walletId } = useWalletStore();

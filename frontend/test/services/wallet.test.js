@@ -1,11 +1,20 @@
 import { connect } from 'starknetkit';
 import { InjectedConnector } from 'starknetkit/injected';
-import { checkForCRMToken, connectWallet, getTokenBalances, getBalances, logout, getWallet, getConnectors } from '../../src/services/wallet';
+import {
+  checkForCRMToken,
+  connectWallet,
+  getTokenBalances,
+  getBalances,
+  logout,
+  getWallet,
+  getConnectors,
+} from '../../src/services/wallet';
 import { ETH_ADDRESS, STRK_ADDRESS, USDC_ADDRESS } from '../../src/utils/constants';
 
 jest.mock('starknetkit', () => ({
   connect: jest.fn(),
   disconnect: jest.fn(),
+  getSelectedConnectorWallet: jest.fn(),
 }));
 
 jest.mock(
@@ -27,13 +36,13 @@ describe('Wallet Services', () => {
 
   describe('checkForCRMToken', () => {
     it('should return true in development mode', async () => {
-      process.env.REACT_APP_IS_DEV = 'true';
+      process.env.VITE_APP_IS_DEV = 'true';
       const result = await checkForCRMToken('0x123');
       expect(result).toBe(true);
     });
 
     it('should validate CRM token and return true if wallet has tokens', async () => {
-      process.env.REACT_APP_IS_DEV = 'false';
+      process.env.VITE_APP_IS_DEV = 'false';
       const mockStarknet = {
         wallet: {
           isConnected: true,
@@ -51,7 +60,7 @@ describe('Wallet Services', () => {
     });
 
     it('should return false and alert if wallet lacks CRM tokens', async () => {
-      process.env.IS_DEV = 'false';
+      process.env.VITE_IS_DEV = 'false';
       const mockStarknet = {
         wallet: {
           isConnected: true,
@@ -102,10 +111,8 @@ describe('Wallet Services', () => {
 
         const connectors = getConnectors();
 
-        expect(connectors).toEqual([
-          new InjectedConnector({ options: { id: connector } }),
-        ]);
-      })
+        expect(connectors).toEqual([new InjectedConnector({ options: { id: connector } })]);
+      });
     });
   });
 
@@ -129,7 +136,7 @@ describe('Wallet Services', () => {
 
         const mockGetItem = jest.fn().mockReturnValue(connectorId);
         const mockSetItem = jest.fn();
-        
+
         Object.defineProperty(window, 'localStorage', {
           value: {
             getItem: mockGetItem,
@@ -138,7 +145,7 @@ describe('Wallet Services', () => {
         });
 
         const wallet = await getWallet();
-        
+
         expect(mockGetItem).toHaveBeenCalledWith('starknetLastConnectedWallet');
 
         expect(connect).toHaveBeenCalledWith(
@@ -157,8 +164,8 @@ describe('Wallet Services', () => {
         expect(wallet.enable).toHaveBeenCalled();
         expect(wallet.selectedAddress).toBe(expectedAddress);
       });
-    })
-    
+    });
+
     it('should return wallet object if wallet is not choosen before', async () => {
       const mockStarknet = {
         wallet: {
@@ -171,7 +178,7 @@ describe('Wallet Services', () => {
       connect.mockResolvedValue(mockStarknet);
 
       const mockGetItem = jest.fn().mockReturnValue(null);
-      
+
       Object.defineProperty(window, 'localStorage', {
         value: {
           getItem: mockGetItem,
@@ -180,7 +187,7 @@ describe('Wallet Services', () => {
       });
 
       const wallet = await getWallet();
-      
+
       expect(mockGetItem).toHaveBeenCalledWith('starknetLastConnectedWallet');
 
       expect(connect).toHaveBeenCalledWith(
@@ -188,16 +195,16 @@ describe('Wallet Services', () => {
           connectors: expect.arrayContaining([
             expect.objectContaining({
               options: expect.objectContaining({
-                id: 'argentX'
+                id: 'argentX',
               }),
             }),
             expect.objectContaining({
               options: expect.objectContaining({
-                id: 'braavos'
+                id: 'braavos',
               }),
             }),
           ]),
-          modalMode: 'neverAsk'
+          modalMode: 'neverAsk',
         })
       );
       expect(wallet.isConnected).toBe(true);
@@ -224,7 +231,7 @@ describe('Wallet Services', () => {
         expect.objectContaining({
           connectors: expect.any(Array),
           modalMode: 'alwaysAsk',
-          modalTheme: 'dark'
+          modalTheme: 'dark',
         })
       );
       expect(mockStarknet.wallet.enable).toHaveBeenCalled();

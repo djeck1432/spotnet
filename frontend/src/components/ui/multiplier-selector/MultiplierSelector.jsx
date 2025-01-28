@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState, useRef, useEffect } from 'react';
-import { useMaxMultiplier } from '../../../hooks/useMaxMultiplier';
-import sliderThumb from '../../../assets/icons/slider_thumb.svg';
+import { useMaxMultiplier } from '@/hooks/useMaxMultiplier';
+import sliderThumb from '@/assets/icons/slider_thumb.svg';
 
 const MultiplierSelector = ({ setSelectedMultiplier, selectedToken }) => {
   const minMultiplier = 1.1;

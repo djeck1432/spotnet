@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import './globals.css';
-import Header from './components/layout/header/Header';
-import Dashboard from './pages/dashboard/Dashboard';
-import Footer from './components/layout/footer/Footer';
-import SpotnetApp from './pages/spotnet-app/SpotnetApp';
-import Form from './pages/form/Form';
+import Header from '@/components/layout/header/Header';
+import Dashboard from '@/pages/dashboard/Dashboard';
+import Footer from '@/components/layout/footer/Footer';
+import SpotnetApp from '@/pages/spotnet-app/SpotnetApp';
+import Form from '@/pages/form/Form';
 import { createPortal } from 'react-dom';
-import { logout } from './services/wallet';
-import { getTelegramUserWalletId } from './services/telegram';
-import Documentation from './pages/documentation/Documentation';
-import TermsAndConditionsPage from './pages/terms-and-conditions/TermsAndConditions';
+import { logout } from '@/services/wallet';
+import { getTelegramUserWalletId } from '@/services/telegram';
+import Documentation from '@/pages/documentation/Documentation';
+import TermsAndConditionsPage from '@/pages/terms-and-conditions/TermsAndConditions';
 
-import Withdraw from './pages/withdraw/Withdraw';
-import { useWalletStore } from './stores/useWalletStore';
-import { Notifier, notify } from './components/layout/notifier/Notifier';
-import { useConnectWallet } from './hooks/useConnectWallet';
-import OverviewPage from './pages/overview/Overview';
-import { ActionModal } from './components/ui/action-modal';
-import Stake from './pages/stake/Stake';
-import { TELEGRAM_BOT_LINK } from './utils/constants';
-import { useCheckMobile } from './hooks/useCheckMobile';
-import PositionHistory from './pages/position-history/PositionHistory';
-import WithdrawAll from 'pages/spotnet/dashboard/withdraw-all/WithdrawAll';
-import { DefiSpringPage } from 'pages/spotnet/defi-spring/DefiSpring';
-import { AddDeposit } from 'pages/add-deposit/AddDeposit';
+import Withdraw from '@/pages/withdraw/Withdraw';
+import { useWalletStore } from '@/stores/useWalletStore';
+import { Notifier, notify } from '@/components/layout/notifier/Notifier';
+import { useConnectWallet } from '@/hooks/useConnectWallet';
+import OverviewPage from '@/pages/overview/Overview';
+import { ActionModal } from '@/components/ui/action-modal';
+import Stake from '@/pages/stake/Stake';
+import { TELEGRAM_BOT_LINK } from '@/utils/constants';
+import { useCheckMobile } from '@/hooks/useCheckMobile';
+import PositionHistory from '@/pages/position-history/PositionHistory';
+import WithdrawAll from '@/pages/spotnet/dashboard/withdraw-all/WithdrawAll';
+import { DefiSpringPage } from '@/pages/spotnet/defi-spring/DefiSpring';
+import { AddDeposit } from '@/pages/add-deposit/AddDeposit';
 
 function App() {
   const { setWalletId, removeWalletId } = useWalletStore();
@@ -34,7 +34,7 @@ function App() {
   const [isMobileRestrictionModalOpen, setisMobileRestrictionModalOpen] = useState(true);
   const isMobile = useCheckMobile();
 
-  const disableDesktopOnMobile = process.env.REACT_APP_DISABLE_DESKTOP_ON_MOBILE !== 'false';
+  const disableDesktopOnMobile = process.env.VITE_APP_DISABLE_DESKTOP_ON_MOBILE !== 'false';
 
   const connectWalletMutation = useConnectWallet(setWalletId);
 

@@ -1,17 +1,17 @@
 import React from 'react';
-import { connect, disconnect } from 'starknetkit';
+import { connect, disconnect, getSelectedConnectorWallet } from 'starknetkit';
 import { InjectedConnector } from 'starknetkit/injected';
 import { ETH_ADDRESS, STRK_ADDRESS, USDC_ADDRESS } from '../utils/constants';
-import { ReactComponent as ETH } from 'assets/icons/ethereum.svg';
-import { ReactComponent as USDC } from 'assets/icons/borrow_usdc.svg';
-import { ReactComponent as STRK } from 'assets/icons/strk.svg';
+import ETH from '../assets/icons/ethereum.svg?react';
+import USDC from '../assets/icons/borrow_usdc.svg?react';
+import STRK from '../assets/icons/strk.svg?react';
 
-const CRM_TOKEN_ADDRESS = "0x051c4b1fe3bf6774b87ad0b15ef5d1472759076e42944fff9b9f641ff13e5bbe";
+const CRM_TOKEN_ADDRESS = '0x051c4b1fe3bf6774b87ad0b15ef5d1472759076e42944fff9b9f641ff13e5bbe';
 
 // Check if the connected wallet holds the CRM token
 export const checkForCRMToken = async (walletAddress) => {
-  if (process.env.REACT_APP_IS_DEV === "true") {
-    console.log("Development mode: Skipping CRM token check.");
+  if (process.env.VITE_APP_IS_DEV === 'true') {
+    console.log('Development mode: Skipping CRM token check.');
     return true;
   }
 
@@ -29,26 +29,31 @@ export const checkForCRMToken = async (walletAddress) => {
     if (Number(balance) > 0) {
       return true;
     } else {
-      alert("Beta testing is allowed only for users who hold the CRM token.");
+      alert('Beta testing is allowed only for users who hold the CRM token.');
       return false;
     }
   } catch (error) {
-    console.error("Error checking CRM token balance:", error);
+    console.error('Error checking CRM token balance:', error);
     throw error; // Ensures test will catch errors as thrown
   }
 };
 
-export const getConnectors = () => !localStorage.getItem("starknetLastConnectedWallet") ? [
-  new InjectedConnector({ options: { id: "argentX" }}),
-  new InjectedConnector({ options: { id: "braavos" }}),
-] : [
-  new InjectedConnector({ options: { id: localStorage.getItem("starknetLastConnectedWallet") }}),
-];
+export const getConnectors = () =>
+  !localStorage.getItem('starknetLastConnectedWallet')
+    ? [new InjectedConnector({ options: { id: 'argentX' } }), new InjectedConnector({ options: { id: 'braavos' } })]
+    : [new InjectedConnector({ options: { id: localStorage.getItem('starknetLastConnectedWallet') } })];
 
 export const getWallet = async () => {
+  const connectedWallet = await getSelectedConnectorWallet();
+
+  if (connectedWallet && connectedWallet.isConnected) {
+    console.log('found existing wallet:', connectedWallet);
+    return connectedWallet;
+  }
+
   const { wallet } = await connect({
     connectors: getConnectors(),
-    modalMode: "neverAsk",
+    modalMode: 'neverAsk',
   });
 
   if (wallet && wallet.isConnected) {
@@ -66,8 +71,8 @@ export const connectWallet = async () => {
 
     const { wallet } = await connect({
       connectors: getConnectors(),
-      modalMode: "alwaysAsk",
-      modalTheme: "dark"
+      modalMode: 'alwaysAsk',
+      modalTheme: 'dark',
     });
 
     if (!wallet) {
@@ -97,7 +102,7 @@ export function logout() {
 export async function getTokenBalances(walletAddress) {
   try {
     const wallet = await getWallet();
-    console.log("Wallet info", wallet);
+    console.log('Wallet info', wallet);
 
     const tokenBalances = {
       ETH: await getTokenBalance(wallet, walletAddress, ETH_ADDRESS),
@@ -120,9 +125,9 @@ export async function getTokenBalance(wallet, walletAddress, tokenAddress) {
       calldata: [walletAddress],
     });
 
-    const tokenDecimals = (tokenAddress === USDC_ADDRESS) ? 6 : 18;
+    const tokenDecimals = tokenAddress === USDC_ADDRESS ? 6 : 18;
     const balance = BigInt(response.result[0]).toString();
-    const readableBalance = (Number(balance) / (10 ** tokenDecimals)).toFixed(4);
+    const readableBalance = (Number(balance) / 10 ** tokenDecimals).toFixed(4);
     console.log(`Balance for token ${tokenAddress}:`, readableBalance);
     return readableBalance;
   } catch (error) {

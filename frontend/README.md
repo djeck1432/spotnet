@@ -1,69 +1,54 @@
-# Getting Started with Create React App
+# Getting Started with Vite
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was migrated from [Create React App](https://github.com/facebook/create-react-app) to [Vite](https://vitejs.dev/), a fast and modern frontend build tool.
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Runs the app in development mode.  
+Open [http://localhost:5173](http://localhost:5173) (default) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The page will reload when you make changes.  
+You may also see any errors or warnings in the console.
 
-### `npm test`
+### `yarn test`
 
-This launches the tests using the node environment provisioned by jest. After running the initial setup and the app is runnign , open another terminal shell, cd into the frontend directory and then run npm test.
+Runs the tests using the environment provisioned by Jest. After running the initial setup and starting the app, open another terminal shell, navigate to the frontend directory, and run `yarn test`.
 
-### `npm run build`
+### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds the app for production to the `dist` folder.  
+It optimizes the build for the best performance using Vite's efficient bundling and minification process.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The production build is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+For more information on deployment, check out [Vite's deployment guide](https://vitejs.dev/guide/static-deploy.html).
 
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To learn more about Vite, visit the [Vite documentation](https://vitejs.dev/guide/).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+To learn React, check out the [React documentation](https://react.dev/).
 
-### Code Splitting
+## Code Splitting and Performance
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Vite supports efficient code splitting and performance optimization out of the box. Learn more in [Vite's guide to optimization](https://vitejs.dev/guide/features.html#code-splitting).
 
-### Analyzing the Bundle Size
+## Troubleshooting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+If you encounter any issues during development or deployment, refer to the [Vite Troubleshooting Guide](https://vitejs.dev/guide/troubleshooting.html).
 
-### Making a Progressive Web App
+## Migration Notes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Key Changes from Create React App:
 
-### Advanced Configuration
+- The development server now runs on [Vite](https://vitejs.dev/), offering faster startup and rebuild times.
+- `yarn dev` replaces `yarn start` for running the development server.
+- Production builds are now output to the `dist` folder instead of the `build` folder.
+- Vite uses [ES modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) by default, ensuring modern, fast builds.
+- Configuration has been simplified with a `vite.config.js` or `vite.config.ts` file.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+For help with the migration process, check out [Vite's guide for migrating from CRA](https://vitejs.dev/guide/migration-from-cra.html).

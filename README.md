@@ -42,7 +42,7 @@ This guide explains how to start the development environment for the project usi
 
    If you get a "command not found" error, you might have the older version. Check with:
    ```sh
-   docker-compose version
+   docker compose version
    ```
 
 ### Installing/Updating Docker
@@ -231,7 +231,7 @@ docker compose up -d celery celery_beat
 To stop the Celery worker and Beat services, run
 
 ```bash
-docker-compose stop celery celery_beat
+docker compose stop celery celery_beat
 ```
 
 ### Purging Celery Tasks
@@ -267,7 +267,7 @@ docker exec -ti backend_dev python -m web_app.db.seed_data
 Run up docker containers
 
 ```bash
-docker compose -f docker-compose.dev.yaml up --build
+docker compose -f devops/docker-compose.dev.yaml up --build
 ```
 
 Windows users:

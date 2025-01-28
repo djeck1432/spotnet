@@ -1,9 +1,8 @@
-import React from 'react';
-import DashboardLayout from '../../../DashboardLayout';
-import BalanceCards from 'components/ui/balance-cards/BalanceCards';
-import { useWalletStore } from 'stores/useWalletStore';
-import { Button } from 'components/ui/custom-button/Button';
-import useWithdrawAll from 'hooks/useWithdrawAll';
+import BalanceCards from '@/components/ui/balance-cards/BalanceCards';
+import { Button } from '@/components/ui/custom-button/Button';
+import useWithdrawAll from '@/hooks/useWithdrawAll';
+import { useWalletStore } from '@/stores/useWalletStore';
+import DashboardLayout from '@/pages/DashboardLayout.jsx';
 
 const WithdrawAll = () => {
   const { walletId } = useWalletStore();

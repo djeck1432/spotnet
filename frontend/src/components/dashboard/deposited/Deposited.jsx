@@ -1,6 +1,6 @@
-import { ReactComponent as EthIcon } from '../../../assets/icons/ethereum.svg';
-import { ReactComponent as StrkIcon } from '../../../assets/icons/strk.svg';
-import { ReactComponent as UsdIcon } from '../../../assets/icons/usdc-icon.svg';
+import EthIcon from '@/assets/icons/ethereum.svg?react';
+import StrkIcon from '@/assets/icons/strk.svg?react';
+import UsdIcon from '@/assets/icons/usdc-icon.svg?react';
 
 function Deposited({ data }) {
   return (

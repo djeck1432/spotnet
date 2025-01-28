@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import EthIcon from '@/assets/icons/ethereum.svg?react';
+import filterIcon from '@/assets/icons/filter-horizontal.svg';
+import HealthIcon from '@/assets/icons/health.svg?react';
+import StrkIcon from '@/assets/icons/strk.svg?react';
+import UsdIcon from '@/assets/icons/usd_coin.svg?react';
+import Card from '@/components/ui/card/Card';
+import Spinner from '@/components/ui/spinner/Spinner';
+import useDashboardData from '@/hooks/useDashboardData';
+import { usePositionHistoryTable } from '@/hooks/usePositionHistory';
+import PositionHistoryModal from '@/pages/position-history/PositionHistoryModal';
+import PositionPagination from '@/pages/position-history/PositionPagination';
+import { useEffect, useState } from 'react';
 import DashboardLayout from '../DashboardLayout';
-import { ReactComponent as HealthIcon } from '../../assets/icons/health.svg';
-import { ReactComponent as EthIcon } from '../../assets/icons/ethereum.svg';
-import { ReactComponent as StrkIcon } from '../../assets/icons/strk.svg';
-import { ReactComponent as UsdIcon } from '../../assets/icons/usd_coin.svg';
-import { usePositionHistoryTable } from '../../hooks/usePositionHistory';
-import Spinner from '../../components/ui/spinner/Spinner';
-import filterIcon from '../../assets/icons/filter-horizontal.svg';
-import useDashboardData from '../../hooks/useDashboardData';
-import Card from '../../components/ui/card/Card';
-import PositionHistoryModal from '../../pages/position-history/PositionHistoryModal';
-import PositionPagination from '../../pages/position-history/PositionPagination';
 
 function PositionHistory() {
   const [selectedPosition, setSelectedPosition] = useState(null);

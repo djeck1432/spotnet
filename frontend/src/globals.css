@@ -107,7 +107,7 @@ a.svelte-1mtuslq.svelte-1mtuslq {
 }
 
 .App {
-  background: url('../public/desktop-background.png') no-repeat;
+  background: url('/desktop-background.png') no-repeat;
   background-size: cover;
   min-height: 100vh;
   box-sizing: border-box;
@@ -116,7 +116,7 @@ a.svelte-1mtuslq.svelte-1mtuslq {
 
 @media (max-width: 768px) {
   .App {
-    background: url('../public/mobile-background.png') no-repeat;
+    background: url('/mobile-background.png') no-repeat;
     background-size: cover;
     background-position: 50% 40%;
     height: 100%;
