@@ -26,8 +26,8 @@ export const DefiSpringPage = () => {
 
   const sectionsData = [
     {
-      id: 'Introduction',
-      title: 'introduction',
+      id: 'introduction',
+      title: 'Introduction',
       content: [
         {
           type: 'text',
@@ -97,20 +97,13 @@ export const DefiSpringPage = () => {
   ];
 
   return (
-    <div className="flex min-h-screen relative pt-1">
-      <Sidebar title="Content" items={tableOfContents} />
+    <div className="flex flex-row min-h-screen relative pt-1">
+      <div className="w-1/5">
+        <Sidebar title="Content" items={tableOfContents} />
+      </div>
 
-      <div
-        className="flex-1 bg-cover bg-center bg-no-repeat relative min-h-screen px-7 md:px-4 py-6 md:py-10"
-        style={{
-          backgroundImage: `radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
-    radial-gradient(circle at 15% 85%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.25) 1px, transparent 1px)`,
-        }}
-      >
-        <h1 className="text-white text-4xl font-bold mb-12 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-800 to-black md:text-3xl md:mb-8 ml-10">
-          DeFi Spring Documentation
-        </h1>
+      <div className="ml-4 flex-1 relative min-h-screen px-7 md:px-4 py-6 md:py-12">
+        <h1 className="text-white text-4xl font-bold mt-16 mb-8">DeFi Spring Documentation</h1>
         <Sections sections={sectionsData} />
       </div>
 

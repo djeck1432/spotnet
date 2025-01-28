@@ -5,7 +5,7 @@ import { ReactComponent as UsdIcon } from '../../../assets/icons/usdc-icon.svg';
 function Deposited({ data }) {
   return (
     <div className="text-left w-full h-[190px] px-5 md:px-10 mt-4">
-      <div className="flex flex-col gap-2.5 justify-center">
+      <div className="flex flex-col gap-2 justify-center">
         <div className="flex items-center justify-between text-xl font-semibold">
           <div className="flex items-center gap-1.5 text-white">
             <EthIcon className="w-8 h-8 bg-border-color rounded-full p-1.5" />
@@ -14,7 +14,7 @@ function Deposited({ data }) {
           <p className="text-gray">{data.eth}</p>
         </div>
 
-        <div className="h-0.5 w-full bg-border-color rounded-lg my-2" />
+        <div className="h-0.5 w-full bg-border-color rounded-lg my-0.5" />
 
         <div className="flex items-center justify-between text-xl font-semibold">
           <div className="flex items-center gap-1.5 text-white">
@@ -24,7 +24,7 @@ function Deposited({ data }) {
           <p className="text-gray">{data.strk}</p>
         </div>
 
-        <div className="h-0.5 w-full bg-border-color rounded-lg my-2" />
+        <div className="h-0.5 w-full bg-border-color rounded-lg my-0.5" />
 
         <div className="flex items-center justify-between text-xl font-semibold">
           <div className="flex items-center gap-1.5 text-white">
@@ -34,7 +34,7 @@ function Deposited({ data }) {
           <p className="text-gray">{data.usdc}</p>
         </div>
 
-        <div className="h-0.5 w-full bg-border-color rounded-lg my-2" />
+        <div className="h-0.5 w-full bg-border-color rounded-lg my-0.5" />
 
         <div className="flex items-center justify-between text-xl font-semibold">
           <div className="flex items-center gap-1.5 text-white">

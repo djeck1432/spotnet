@@ -65,13 +65,13 @@ const OverviewPage = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row items-start justify-center bg-gray-900 text-white">
-      <div className="w-full lg:w-[374px] flex-shrink-0 bg-gray-800 border-r border-gray-700">
+    <div className="min-h-screen flex flex-row text-white">
+      <div className="w-1/5">
         <Sidebar items={tableOfContents} title="Overview" />
       </div>
 
-      <div className="flex-1 px-6 py-10 lg:ml-[390px]">
-        <h1 className="text-4xl font-semibold mb-6">Overview</h1>
+      <div className="ml-4 flex-1 relative min-h-screen px-7 md:px-4 py-6 md:py-12">
+        <h1 className="text-white text-4xl font-bold mt-16 mb-8">Overview</h1>
         <div className="mb-12">
           <Sections sections={sectionsData} />
         </div>

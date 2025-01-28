@@ -26,7 +26,7 @@ function DashboardTabs({ activeTab, switchTab }) {
   ];
 
   return (
-    <div className="flex relative items-center pb-2 border-b border-light-purple">
+    <div className="flex relative items-center pb-2 border-b border-light-purple mb-4">
       {tabConfig.map((tab, index) => (
         <React.Fragment key={tab.key}>
           <button
@@ -35,14 +35,14 @@ function DashboardTabs({ activeTab, switchTab }) {
             className={`flex-1 text-center py-2 cursor-pointer flex items-center justify-center ${activeTab === tab.key ? 'text-brand' : 'text-gray'}`}
           >
             <tab.Icon className="mr-2" />
-            <span className="text-lg font-semibold">{tab.title}</span>
+            <span className="text-[15px] font-semibold">{tab.title}</span>
           </button>
 
-          {index < tabConfig.length - 1 && <div className="w-[3px] h-[18px] rounded-lg bg-gray mx-4"></div>}
+          {index < tabConfig.length - 1 && <div className="w-[3px] h-[18px] rounded-lg bg-footer-divider-bg mx-3"></div>}
         </React.Fragment>
       ))}
 
-      <div className="absolute bottom-[-16px] left-0 w-full h-[1px] overflow-hidden">
+      <div className="absolute bottom-0 left-0 w-full h-[1px] overflow-hidden">
         <div
           className={`absolute bottom-0 left-0 h-full transition-transform duration-300 ease-in-out transform ${
             activeTab === COLLATERAL

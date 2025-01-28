@@ -60,20 +60,14 @@ const TermsAndConditionsPage = () => {
   ];
 
   return (
-    <div className="flex min-h-screen relative pt-16 text-primary">
-      <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_85%_15%,rgba(255,255,255,.25)_1px,transparent_1px),radial-gradient(circle_at_15%_85%,rgba(255,255,255,.25)_1px,transparent_1px),radial-gradient(circle_at_75%_75%,rgba(255,255,255,.25)_1px,transparent_1px)] bg-[length:100px_100px] pointer-events-none z-0"></div>
-
-      <div className="lg:ml-[370px] flex-1 bg-cover bg-center relative min-h-screen" style={{
-        backgroundImage: `radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
-        radial-gradient(circle at 15% 85%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
-        radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.25) 1px, transparent 1px)`
-      }}>
+    <div className="flex flex-row min-h-screen relative text-white">
+      <div className="w-1/5">
         <Sidebar items={tableOfContents} title={'Content'} />
       </div>
 
-      <div className="content flex-grow relative">
-        <h1 className="text-5xl font-bold text-transparent bg-white bg-clip-text mt-24 mb-12 ml-10">Terms & Conditions</h1>
-        <div className="ml-5">
+      <div className="ml-4 flex-1 relative min-h-screen px-7 md:px-4 py-6 md:py-12">
+        <h1 className="text-white text-4xl font-bold mt-16 mb-8">Terms & Conditions</h1>
+        <div className="">
           <Sections sections={sectionsData} />
         </div>
       </div>

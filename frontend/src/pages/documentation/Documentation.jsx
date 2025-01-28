@@ -14,9 +14,7 @@ const Documentation = () => {
       id: 'Overview',
       name: 'Overview',
       link: '#overview',
-      subItems: [
-        { id: 'cosmos-1', name: 'Cosmos Overview', link: '#cosmos-1' },
-      ],
+      subItems: [{ id: 'cosmos-1', name: 'Cosmos Overview', link: '#cosmos-1' }],
     },
     { id: 'how-it-performs', name: 'How it performs', link: '#how-it-performs' },
     { id: 'powered-by-starknet', name: 'Powered by Starknet', link: '#powered-by-starknet' },
@@ -34,7 +32,8 @@ const Documentation = () => {
         },
         {
           type: 'text',
-          value: 'Spotnet is a decentralized platform designed to help users easily amplify their investments in digital assets like ETH. \n This documentation provides a comprehensive guide on using SpotNet and making the most of its features.',
+          value:
+            'Spotnet is a decentralized platform designed to help users easily amplify their investments in digital assets like ETH. \n This documentation provides a comprehensive guide on using SpotNet and making the most of its features.',
         },
       ],
     },
@@ -159,7 +158,8 @@ const Documentation = () => {
       content: [
         {
           type: 'text',
-          value: 'To get started with Spotnet and fully leverage its features, you’ll need to set up a compatible Web3 wallet. Follow the steps below to set up your wallet and connect it to Spotnet:',
+          value:
+            'To get started with Spotnet and fully leverage its features, you’ll need to set up a compatible Web3 wallet. Follow the steps below to set up your wallet and connect it to Spotnet:',
         },
 
         {
@@ -201,13 +201,14 @@ const Documentation = () => {
   ];
 
   return (
-    <div className="flex w-[calc(100vw-372px)] min-h-screen relative ml-[372px]">
-      <Sidebar title="Table of Contents" items={tableOfContents} />
+    <div className="flex flex-row min-h-screen relative">
+      <div className="w-1/5">
+        <Sidebar title="Table of Contents" items={tableOfContents} />
+      </div>
 
-      <div className="flex-1 relative min-h-screen w-[calc(100vw-372px)] p-6 pt-0">
-        <h1 className="text-4xl font-bold mt-24 mb-12 ml-10 text-transparent bg-clip-text bg-white">
-          Spotnet Documentation
-        </h1>
+      <div className="ml-4 flex-1 relative min-h-screen px-7 md:px-4 py-6 md:py-12">
+        <h1 className="text-white text-4xl font-bold mt-16 mb-8">Spotnet Documentation</h1>
+
         <Sections sections={sectionsData} />
       </div>
 
