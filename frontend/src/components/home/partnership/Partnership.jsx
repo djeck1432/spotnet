@@ -30,7 +30,7 @@ const Partnership = () => {
       ))}
       <h1 className="text-center font-bold text-white mb-32 text-4xl md:text-3xl sm:text-2xl">Partnership</h1>
       <div className="w-screen h-36 bg-main-gradient flex relative overflow-hidden">
-        <div className="flex items-center justify-start animate-scroll w-[calc(150px*8*2)] bg-transparent">
+        <div className="partnership-logo">
           {logos}
         </div>
       </div>

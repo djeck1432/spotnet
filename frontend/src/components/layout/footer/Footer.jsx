@@ -27,11 +27,11 @@ function Footer() {
 
   return (
     <footer className="px-20 md:px-16 sm:px-8 bg-footer-bg-color h-24 flex items-center justify-between relative z-10">
-      <div className="text-secondary text-sm hidden lg:flex">
+      <div className="text-white text-lg hidden lg:flex">
         <p>Copyright© Spotnet {new Date().getFullYear()}</p>
       </div>
 
-      <nav className="lg:flex gap-4 text-secondary hidden">
+      <nav className="lg:flex gap-4 text-white text-lg hidden">
         {[
           { path: '/documentation', label: 'Documentation' },
           { path: '/overview', label: 'Overview' },
@@ -42,7 +42,7 @@ function Footer() {
             key={path}
             to={path}
             className={({ isActive }) =>
-              isActive ? 'text-secondary scale-105 transition-transform' : 'hover:scale-105 transition-transform'
+              isActive ? 'text-brand hover:scale-105 transition-transform' : 'text-white hover:scale-105 transition-transform'
             }
             onClick={(e) => {
               if (window.location.pathname === path) {

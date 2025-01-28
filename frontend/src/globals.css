@@ -228,26 +228,53 @@ a.svelte-1mtuslq.svelte-1mtuslq {
 
 .border-gradient-mask {
   position: relative;
-  border: none; /* Remove the default border */
+  border: none;
+  /* Remove the default border */
 }
 
 .border-gradient-mask::after {
   content: '';
   position: absolute;
   inset: 0;
-  padding: 1px; /* Border thickness */
+  padding: 1px;
+  /* Border thickness */
   border-radius: inherit;
   background: linear-gradient(90deg, #49abd2 0%, #e01dee 100%);
-  -webkit-mask: 
+  -webkit-mask:
     conic-gradient(#000 0 0) content-box exclude,
     conic-gradient(#000 0 0);
-  mask: 
+  mask:
     conic-gradient(#000 0 0) content-box exclude,
     conic-gradient(#000 0 0);
   z-index: 0;
 }
 
-.border-gradient-mask > * {
+.border-gradient-mask>* {
   position: relative;
   z-index: 10;
+}
+
+.partnership-logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  animation: scroll 13s linear infinite; /* Infinite scroll */
+  width: calc(150px * 8 * 2); /* Adjust width for duplicated logos */
+}
+
+.partnership-logo > * {
+  flex-shrink: 0;
+  width: 150px;
+  height: 100px;
+  margin: 0 20px;
+}
+
+@keyframes scroll {
+  0% {
+    right: 0;
+  }
+  100% {
+    right: 100%;
+  }
 }

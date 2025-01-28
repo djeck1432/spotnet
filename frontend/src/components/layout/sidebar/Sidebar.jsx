@@ -54,7 +54,7 @@ const Sidebar = ({ title, items, className = '' }) => {
     const isActive = activeItemId === item.id;
     const isExpanded = expandedItems[item.id];
     const hasChildren = item.children && item.children.length > 0;
-    const itemClass = `w-full flex items-center p-[12.5px] text-gray hover:text-white cursor-pointer ${
+    const itemClass = `w-full flex items-center p-[12.5px] text-gray hover:text-white transition cursor-pointer ${
       isActive ? 'text-white' : ''
     } ${level > 0 ? 'pl-2' : ''}`;
 
@@ -71,18 +71,18 @@ const Sidebar = ({ title, items, className = '' }) => {
         )}
 
         {hasChildren && isExpanded && (
-          <div className="ml-4">{item.children.map((child) => renderSidebarItem(child, level + 1))}</div>
+          <div className="ml-6">{item.children.map((child) => renderSidebarItem(child, level + 1))}</div>
         )}
       </div>
     );
   };
 
   return (
-    <div className={`bg-black border-r border-[#300734] fixed top-[5.5rem] left-0 h-screen w-1/5 ${className} hidden lg:block`}>
-      <nav className="flex flex-col p-8 pt-8">
+    <div className={`bg-black border-r border-[#300734] fixed top-[5.5rem] left-0 h-screen w-[380px] ${className} hidden lg:block`}>
+      <nav className="flex flex-col pl-20 p-8 pt-8">
         {title && (
-          <div className="pb-2 mb-3 border-b border-[#9333ea]">
-            <h2 className="text-sm font-normal text-[#83919f]">{title}</h2>
+          <div className="pb-2 mb-3 border-b border-border-gradient">
+            <h2 className="text-[15px] font-normal text-white">{title}</h2>
           </div>
         )}
         {items.map((item) => renderSidebarItem(item))}

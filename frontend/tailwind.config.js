@@ -4,15 +4,6 @@ module.exports = {
   content: ['./src/**/*.{html,js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      animation: {
-        scroll: 'scroll 13s linear infinite',
-      },
-      keyframes: {
-        scroll: {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-100%)' },
-        },
-      },
       colors: {
         primary: '#fff',
         'dashboard-bg': 'rgba(11, 12, 16, 1)',
@@ -78,6 +69,7 @@ module.exports = {
         'blue-pink-gradient-alt': 'linear-gradient(90deg, #49abd2 0%, #e01dee 100%)',
         'blue-pink-gradient-alt2': 'linear-gradient(90deg, #49abd2 100%, #e01dee 100%)',
         'card-bg-gradient': 'linear-gradient(135deg, rgba(116, 214, 253, 0.5) 0%, rgba(11, 12, 16, 0.5) 100%)',
+        'report-btn-bg-hover': 'linear-gradient(to right, rgba(147, 51, 234, 0.3), rgba(59, 130, 246, 0.3))',
       },
       boxShadow: {
         card: 'inset 4px 4px 9px 0 rgba(153, 234, 255, 0.25), 0 4px 4px 0 rgba(0, 0, 0, 0.15)',

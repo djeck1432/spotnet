@@ -5,7 +5,7 @@ export const SidebarItem = ({ item: { icon, name }, isExpanded, hasChildren, isN
   return (
     <>
       {isNested ? (
-        <span className="bg-[#9333ea] w-[6px] h-[6px] rounded-full mr-2" />
+        <span className="bg-[#9333ea]/40 w-[6px] h-[6px] rounded-full mr-2" />
       ) : (
         <span className="mr-2 flex items-center">
           <img

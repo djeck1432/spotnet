@@ -66,13 +66,13 @@ const OverviewPage = () => {
 
   return (
     <div className="min-h-screen flex flex-row text-white">
-      <div className="w-1/5">
+      <div className="w-[380px]">
         <Sidebar items={tableOfContents} title="Overview" />
       </div>
 
       <div className="ml-4 flex-1 relative min-h-screen px-7 md:px-4 py-6 md:py-12">
         <h1 className="text-white text-4xl font-bold mt-16 mb-8">Overview</h1>
-        <div className="mb-12">
+        <div className="ml-8 mb-12">
           <Sections sections={sectionsData} />
         </div>
       </div>

@@ -98,13 +98,15 @@ export const DefiSpringPage = () => {
 
   return (
     <div className="flex flex-row min-h-screen relative pt-1">
-      <div className="w-1/5">
+      <div className="w-[380px]">
         <Sidebar title="Content" items={tableOfContents} />
       </div>
 
       <div className="ml-4 flex-1 relative min-h-screen px-7 md:px-4 py-6 md:py-12">
         <h1 className="text-white text-4xl font-bold mt-16 mb-8">DeFi Spring Documentation</h1>
-        <Sections sections={sectionsData} />
+        <div className="ml-8">
+          <Sections sections={sectionsData} />
+        </div>
       </div>
 
       <ScrollButton />

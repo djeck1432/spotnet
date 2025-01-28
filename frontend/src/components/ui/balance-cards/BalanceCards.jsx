@@ -26,7 +26,7 @@ const BalanceCards = ({ className }) => {
         {balances.map((balance) =>
           isMobile ? (
             <div
-              className="flex flex-col flex-1 items-center justify-center rounded-lg border border-bg-footer-divider-bg bg-dark-purple py-3.5 sm:gap-1"
+              className="flex flex-col flex-1 items-center justify-center rounded-lg border-x border-y border-bg-footer-divider-bg bg-dark-purple py-3.5 sm:gap-1"
               key={balance.title}
             >
               <div className="flex w-max items-center gap-2">
@@ -39,7 +39,7 @@ const BalanceCards = ({ className }) => {
             </div>
           ) : (
             <div
-              className="flex flex-col flex-1 items-center justify-center rounded-lg border border-bg-footer-divider-bg bg-dark-purple p-6 sm:gap-2"
+              className="flex flex-col flex-1 items-center justify-center rounded-lg border-x border-y border-bg-footer-divider-bg bg-dark-purple p-6 sm:gap-2"
               key={balance.title}
             >
               <div className="flex items-center gap-2">

@@ -15,26 +15,26 @@ export function ReportBugModal({ onClose }) {
             className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50 p-24"
         >
             <form
-                className="relative rounded-md w-full max-w-xl bg-[#120721] p-6"
+                className="relative rounded-xl w-full max-w-xl"
                 onClick={(e) => e.stopPropagation()}
                 onSubmit={handleSubmit}
-            >yarn start 
+            >
                 <div className="space-y-6">
-                    <div className="text-center">
-                        <h3 className="text-[#798795] text-lg font-normal pb-2 border-b border-[#22153A]">
+                    <div className="text-center bg-dark-purple p-6">
+                        <h3 className="text-gray text-sm font-normal pb-2 border-b border-border-color">
                             Report Bug
                         </h3>
-                        <p className="text-[#f0f0f0] text-sm font-normal mt-2 mb-4">
+                        <p className="text-white text-sm font-normal mt-2 mb-4">
                             Please describe the bug you've encountered
                         </p>
                         <textarea
                             value={bugDescription}
                             onChange={(e) => setBugDescription(e.target.value)}
                             placeholder="The bug I'm experiencing..."
-                            className="w-full min-h-[135px] bg-[#120721] border border-[#22153A] rounded-lg p-4 text-white resize-none outline-none placeholder:text-[#f0f0f0] placeholder:text-sm"
+                            className="w-full min-h-[135px] bg-dark-purple border-x border-y border-border-color rounded-lg p-3 text-white resize-none outline-none placeholder:text-secondary placeholder:text-sm"
                         />
                         <a
-                            className="flex items-center gap-2 text-[#f0f0f0] text-sm font-normal mb-6 hover:text-white"
+                            className="flex items-center gap-2 text-secondary text-sm font-normal mt-3 mb-6 hover:text-white"
                             href="https://t.me/spotnet_dev"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -52,7 +52,7 @@ export function ReportBugModal({ onClose }) {
                         <Button
                             variant="secondary"
                             type="button"
-                            className="px-6 py-2 text-sm text-[#f0f0f0] border border-[#22153A] bg-transparent rounded-lg hover:bg-[#22153A]"
+                            className="px-6 py-2 text-sm text-white border-x border-y border-border-color bg-transparent rounded-lg hover:border-dark-purple"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onClose();
@@ -63,7 +63,7 @@ export function ReportBugModal({ onClose }) {
                         <Button
                             variant="primary"
                             type="submit"
-                            className="px-6 py-2 text-sm text-white bg-[#798795] rounded-lg hover:bg-[#5c6c7b]"
+                            className="px-6 py-2 text-sm text-white bg-[#798795] rounded-lg"
                         >
                             {mutation.isPending ? "Sending..." : "Send Report"}
                         </Button>
