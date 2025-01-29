@@ -6,6 +6,8 @@ export default function PositionPagination({ currentPage, setCurrentPage, isPend
   const pagesCount = (totalItems, itemsPerPage) => Math.ceil(totalItems / itemsPerPage);
   const range = (length, startIdx = 1) => [...Array(length).keys()].map((i) => i + startIdx);
 
+  const range = (length, startIdx = 1) => [...Array(length).keys()].map((i) => i + startIdx);
+
   const setPage = (page) => {
     if (isPending || page < 1 || page > pagesCount(tableData?.length, positionsOnPage)) {
       return;
@@ -44,5 +46,6 @@ export default function PositionPagination({ currentPage, setCurrentPage, isPend
         <img src={ArrowRightIcon} alt="arrow-right-icon" className={`${currentPage === pagesCount(tableData?.length, positionsOnPage) ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`} />
       </div>
     </div>
+  );
   );
 }

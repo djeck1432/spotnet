@@ -19,6 +19,27 @@ import useDashboardData from '@/hooks/useDashboardData';
 import useTelegramNotification from '@/hooks/useTelegramNotification';
 import { useWalletStore } from '@/stores/useWalletStore';
 import { DASHBOARD_TABS } from '@/utils/constants';
+import { useEffect, useState } from 'react';
+import BorrowIcon from '@/assets/icons/borrow_dynamic.svg?react';
+import CollateralIcon from '@/assets/icons/collateral_dynamic.svg?react';
+import EthIcon from '@/assets/icons/ethereum.svg?react';
+import HealthIcon from '@/assets/icons/health.svg?react';
+import StrkIcon from '@/assets/icons/strk.svg?react';
+import TelegramIcon from '@/assets/icons/telegram_dashboard.svg?react';
+import UsdIcon from '@/assets/icons/usd_coin.svg?react';
+import Borrow from '@/components/dashboard/borrow/Borrow';
+import Collateral from '@/components/dashboard/collateral/Collateral';
+import DashboardTabs from '@/components/dashboard/dashboard-tab/DashboardTabs';
+import Deposited from '@/components/dashboard/deposited/Deposited';
+import { ActionModal } from '@/components/ui/action-modal';
+import Card from '@/components/ui/card/Card';
+import { Button } from '@/components/ui/custom-button/Button';
+import Spinner from '@/components/ui/spinner/Spinner';
+import { useCheckPosition, useClosePosition } from '@/hooks/useClosePosition';
+import useDashboardData from '@/hooks/useDashboardData';
+import useTelegramNotification from '@/hooks/useTelegramNotification';
+import { useWalletStore } from '@/stores/useWalletStore';
+import { DASHBOARD_TABS } from '@/utils/constants';
 import DashboardLayout from '../DashboardLayout';
 
 export default function DashboardPage({ telegramId }) {
@@ -94,6 +115,13 @@ export default function DashboardPage({ telegramId }) {
       deposit_data.forEach((deposit) => {
         updatedDepositedData[deposit.token.toLowerCase()] += Number(deposit.amount);
       });
+      const { health_ratio, current_sum, start_sum, borrowed, multipliers, balance, deposit_data } = data;
+
+      // group extra deposits for each token
+      const updatedDepositedData = { eth: 0, strk: 0, usdc: 0, usdt: 0 };
+      deposit_data.forEach((deposit) => {
+        updatedDepositedData[deposit.token.toLowerCase()] += Number(deposit.amount);
+      });
 
       let currencyName = 'Ethereum';
       let currencyIcon = EthIcon;
@@ -130,6 +158,7 @@ export default function DashboardPage({ telegramId }) {
 
       setCardData(updatedCardData);
       setHealthFactor(health_ratio || '0.00');
+      setDepositedData(updatedDepositedData);
       setDepositedData(updatedDepositedData);
       setCurrentSum(current_sum || 0);
       setStartSum(start_sum || 0);
@@ -205,3 +234,4 @@ export default function DashboardPage({ telegramId }) {
     </DashboardLayout>
   );
 }
+

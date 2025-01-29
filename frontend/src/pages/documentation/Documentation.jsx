@@ -15,6 +15,7 @@ const Documentation = () => {
       name: 'Overview',
       link: '#overview',
       subItems: [{ id: 'cosmos-1', name: 'Cosmos Overview', link: '#cosmos-1' }],
+      subItems: [{ id: 'cosmos-1', name: 'Cosmos Overview', link: '#cosmos-1' }],
     },
     { id: 'how-it-performs', name: 'How it performs', link: '#how-it-performs' },
     { id: 'powered-by-starknet', name: 'Powered by Starknet', link: '#powered-by-starknet' },
@@ -28,6 +29,7 @@ const Documentation = () => {
       content: [
         {
           type: 'text',
+          value: 'Welcome to Spotnet documentation.',
           value: 'Welcome to Spotnet documentation.',
         },
         {
@@ -43,6 +45,7 @@ const Documentation = () => {
       content: [
         {
           type: 'text',
+          value: 'What is Spotnet?',
           value: 'What is Spotnet?',
         },
         {
@@ -160,7 +163,10 @@ const Documentation = () => {
           type: 'text',
           value:
             'To get started with Spotnet and fully leverage its features, you’ll need to set up a compatible Web3 wallet. Follow the steps below to set up your wallet and connect it to Spotnet:',
+          value:
+            'To get started with Spotnet and fully leverage its features, you’ll need to set up a compatible Web3 wallet. Follow the steps below to set up your wallet and connect it to Spotnet:',
         },
+
 
         {
           type: 'text',
