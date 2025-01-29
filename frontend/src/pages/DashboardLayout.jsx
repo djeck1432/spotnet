@@ -30,7 +30,6 @@ const dashboardItems = [
     link: '/dashboard/withdraw',
     icon: withdrawIcon,
   },
-  },
 ];
 
 export default function DashboardLayout({ children, title = 'zkLend Position' }) {

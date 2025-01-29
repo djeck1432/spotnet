@@ -12,9 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import { ActionModal } from '@/components/ui/action-modal';
 import { useHealthFactor } from '@/hooks/useHealthRatio';
 import { notify } from '@/components/layout/notifier/Notifier';
-import { ActionModal } from '@/components/ui/action-modal';
-import { useHealthFactor } from '@/hooks/useHealthRatio';
-import { notify } from '@/components/layout/notifier/Notifier';
 
 const Form = () => {
   const navigate = useNavigate();

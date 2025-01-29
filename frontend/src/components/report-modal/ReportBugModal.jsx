@@ -8,9 +8,6 @@ export function ReportBugModal({ onClose }) {
   const { walletId } = useWalletStore();
   const [bugDescription, setBugDescription] = useState('');
   const { mutation, handleSubmit } = useBugReport(walletId, bugDescription, onClose);
-  const { walletId } = useWalletStore();
-  const [bugDescription, setBugDescription] = useState('');
-  const { mutation, handleSubmit } = useBugReport(walletId, bugDescription, onClose);
 
   return (
     <div

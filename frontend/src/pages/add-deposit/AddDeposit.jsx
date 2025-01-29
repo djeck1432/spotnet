@@ -7,15 +7,6 @@ import { useAddDeposit } from '@/hooks/useAddDeposit';
 import useDashboardData from '@/hooks/useDashboardData';
 import { NUMBER_REGEX } from '@/utils/regex';
 import { useState } from 'react';
-import EthIcon from '@/assets/icons/ethereum.svg?react';
-import HealthIcon from '@/assets/icons/health.svg?react';
-import Card from '@/components/ui/card/Card';
-import { Button } from '@/components/ui/custom-button/Button';
-import TokenSelector from '@/components/ui/token-selector/TokenSelector';
-import { useAddDeposit } from '@/hooks/useAddDeposit';
-import useDashboardData from '@/hooks/useDashboardData';
-import { NUMBER_REGEX } from '@/utils/regex';
-import { useState } from 'react';
 import DashboardLayout from '../DashboardLayout';
 
 export const AddDeposit = () => {
