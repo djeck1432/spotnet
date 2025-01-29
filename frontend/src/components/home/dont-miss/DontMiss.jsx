@@ -27,11 +27,15 @@ const DontMiss = () => {
     <div className="flex flex-col items-center justify-center mt-16 mb-64 relative">
       <div className="text-center">
         <h1 className="text-4xl font-semibold text-white">Don&apos;t miss out</h1>
-        <p className="text-lg font-normal text-secondary mt-2">Investing wisely would be the smartest move you&apos;ll make!</p>
+        <p className="text-lg font-normal text-secondary mt-2">
+          Investing wisely would be the smartest move you&apos;ll make!
+        </p>
       </div>
 
       {starData.map((star, index) => (
-        <Star
+        <img
+          src={Star}
+          alt="star-icon"
           key={index}
           className="absolute"
           style={{
@@ -49,11 +53,15 @@ const DontMiss = () => {
           onClick={handleLaunchApp}
         >
           <div className="flex items-center gap-3">
-            <span className='text-black'>Launch App</span>
-            <Rocket className="w-5 h-5" />
+            <span className="text-black">Launch App</span>
+            <img src={Rocket} alt="rocket" className="w-5 h-5" />
           </div>
         </button>
-        <Hand className="absolute right-[-2.5rem] top-6 w-32 h-32 md:w-28 md:h-28 lg:w-36 lg:h-36" />
+        <img
+          src={Hand}
+          alt="hand"
+          className="absolute right-[-2.5rem] top-6 w-32 h-32 md:w-28 md:h-28 lg:w-36 lg:h-36"
+        />
       </div>
     </div>
   );

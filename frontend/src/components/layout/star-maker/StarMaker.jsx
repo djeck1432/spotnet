@@ -3,7 +3,9 @@ import Star from '@/assets/particles/star.svg?react';
 
 const StarMaker = ({ starData }) =>
   starData.map((star, index) => (
-    <Star
+    <img 
+      src={Star}
+      alt="star"
       key={index}
       style={{
         position: 'absolute',

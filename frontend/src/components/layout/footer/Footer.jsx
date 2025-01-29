@@ -59,7 +59,7 @@ function Footer() {
       <div className="hidden lg:flex gap-6 items-center justify-center">
         {socialLinks.map(({ name, href, icon: Icon }) => (
           <a key={name} href={href} target="_blank" rel="noopener noreferrer" aria-label={name}>
-            <Icon className="w-6 h-6 transition-transform hover:scale-110" />
+            <img src={Icon} alt="icon" className="w-6 h-6 transition-transform hover:scale-110" />
           </a>
         ))}
       </div>
@@ -74,7 +74,7 @@ function Footer() {
           }
         >
           <div className="flex flex-col items-center">
-            <DashboardIcon className="w-6 h-6 mb-1" />
+            <img src={DashboardIcon} alt="dashboard-icon" className="w-6 h-6 mb-1" />
             <span className="text-xs">Dashboard</span>
           </div>
         </NavLink>
@@ -90,7 +90,7 @@ function Footer() {
           }
         >
           <div className="flex flex-col items-center">
-            <FormIcon className="w-6 h-6 mb-1" />
+            <img src={FormIcon} alt="form-icon" className="w-6 h-6 mb-1" />
             <span className="text-xs">Form</span>
           </div>
         </NavLink>

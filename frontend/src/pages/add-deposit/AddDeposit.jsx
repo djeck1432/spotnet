@@ -52,12 +52,12 @@ export const AddDeposit = () => {
           <Card
             label="Health Factor"
             value={dashboardData?.health_ratio}
-            icon={<HealthIcon className="w-4 h-4" />}
+            icon={<img src={HealthIcon} alt="health-icon" className="w-4 h-4" />}
           />
           <Card
             label="Borrow Balance"
             value={formatNumber(dashboardData?.borrowed, true)}
-            icon={<EthIcon className="w-4 h-4" />}
+            icon={<img src={EthIcon} alt="eth-icon" className="w-4 h-4" />}
           />
         </div>
       </div>

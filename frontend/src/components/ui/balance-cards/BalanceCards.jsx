@@ -16,9 +16,9 @@ const BalanceCards = ({ className }) => {
   }, [walletId]);
 
   const [balances, setBalances] = useState([
-    { icon: <ETH />, title: 'ETH', balance: '0.00' },
-    { icon: <USDC />, title: 'USDC', balance: '0.00' },
-    { icon: <STRK />, title: 'STRK', balance: '0.00' },
+    { icon: <img src={ETH} alt="icon" />, title: 'ETH', balance: '0.00' },
+    { icon: <img src={USDC} alt="icon" />, title: 'USDC', balance: '0.00' },
+    { icon: <img src={STRK} alt="icon" />, title: 'STRK', balance: '0.00' },
   ]);
 
   return (

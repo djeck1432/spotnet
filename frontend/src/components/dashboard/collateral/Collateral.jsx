@@ -9,7 +9,7 @@ function Collateral({ data, startSum, currentSum, getCurrentSumColor }) {
       <div className="flex flex-col gap-2 w-fit h-fit">
         <div className="flex items-center">
           <p className='w-8 h-8 mr-2 bg-border-color rounded-full flex items-center justify-center p-2'>
-            {icon ? <img src={icon} alt="icon"/> : <CollateralIcon />}
+            <img src={icon || CollateralIcon} alt="icon"/>
           </p>
           <span className="text-2xl text-second-primary">{data[0]?.currencyName || 'N/A'}</span>
         </div>

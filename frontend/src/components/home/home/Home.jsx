@@ -56,7 +56,9 @@ function Home() {
       <div className="mt-[400px] mb-[200px] h-full md:mt-[250px] md:mb-[150px] sm:mt-[200px] sm:mb-[100px]">
         <div>
           {decorationData.map((decoration, index) => (
-            <Decoration
+            <img
+              src={Decoration}
+              alt={"decoration"}
               key={index}
               className={`absolute -z-1 
                 ${index === 0 ? 'w-[40%] h-[40%] sm:w-[40%] sm:h-[40%] md:w-[65%] md:h-[65%] xl:w-[80%] xl:h-[80%]' 
@@ -75,7 +77,9 @@ function Home() {
         <div className="bg-main-gradient h-[100px] mb-[100px] w-[60%] m-0 rounded-t-[2000px] blur-[100px] -z-1 absolute left-1/2 -translate-x-1/2 top-[-50px]"></div>
         <div>
           {starsData.map((star, index) => (
-            <SmallStar
+            <img
+              src={SmallStar}
+              alt={"small-star"}
               key={index}
               className="absolute -z-1"
               style={{
@@ -86,7 +90,7 @@ function Home() {
           ))}
           <StarMaker starData={starData} />
 
-          <Starknet className="absolute top-0 right-5 -z-1 w-[15px] md:w-[15px] lg:w-[30px] h-auto" />
+          <img src={Starknet} alt="starknet" className="absolute top-0 right-5 -z-1 w-[15px] md:w-[15px] lg:w-[30px] h-auto" />
         </div>
         <div className="2xl:mt-[150px] flex justify-center items-center flex-col">
           <h2
@@ -113,7 +117,7 @@ function Home() {
         >
           <div className="flex justify-center items-center">
             <span className="text-[21px] text-black">Launch App</span>
-            <Rocket className="w-6 h-6 ml-2" />
+            <img src={Rocket} alt="rocket" className="w-6 h-6 ml-2" />
           </div>
         </button>
         <span className="block mt-[100px]"></span>

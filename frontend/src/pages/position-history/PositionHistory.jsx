@@ -33,9 +33,9 @@ function PositionHistory() {
   }, [currentPage, isPending]);
 
   const tokenIconMap = {
-    STRK: <StrkIcon className="w-6 h-6 bg-border-color rounded-full p-1" />,
-    USDC: <UsdIcon className="w-6 h-6 bg-border-color rounded-full p-1" />,
-    ETH: <EthIcon className="w-6 h-6 bg-border-color rounded-full p-1" />,
+    STRK: <img src={StrkIcon} alt="strk-icon" className="w-6 h-6 bg-border-color rounded-full p-1" />,
+    USDC: <img src={UsdIcon} alt="usd-icon" className="w-6 h-6 bg-border-color rounded-full p-1" />,
+    ETH: <img src={EthIcon} alt="eth-icon" className="w-6 h-6 bg-border-color rounded-full p-1" />,
   };
 
   const statusStyles = {
@@ -51,12 +51,12 @@ function PositionHistory() {
           <Card
             label="Health Factor"
             value={cardData?.health_ratio || '0.00'}
-            icon={<HealthIcon className="w-6 h-6" />}
+            icon={<img src={HealthIcon} alt="health-icon" className="w-6 h-6" />}
           />
           <Card
             label="Borrow Balance"
             value={cardData?.borrowed || '0.00'}
-            icon={<EthIcon className="w-6 h-6" />}
+            icon={<img src={EthIcon} alt="eth-icon" className="w-6 h-6" />}
           />
         </div>
 

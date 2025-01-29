@@ -149,8 +149,8 @@ export default function DashboardPage({ telegramId }) {
     <DashboardLayout>
       {loading && <Spinner loading={loading} />}
       <div className="flex items-center gap-4">
-        <Card label="Health Factor" value={healthFactor} icon={<HealthIcon className="w-6 h-6" />} />
-        <Card label="Borrow Balance" cardData={cardData} icon={<EthIcon className="w-6 h-6" />} />
+        <Card label="Health Factor" value={healthFactor} icon={<img src={HealthIcon} alt="health-icon" className="w-6 h-6" />} />
+        <Card label="Borrow Balance" cardData={cardData} icon={<img src={EthIcon} alt="eth-icon" className="w-6 h-6" />} />
       </div>
       <div className="mt-6 flex flex-col gap-4">
         <div className="p-4 rounded-2xl border-x border-y border-light-purple shadow-md space-y-4">
@@ -184,7 +184,7 @@ export default function DashboardPage({ telegramId }) {
           className="w-full flex items-center justify-center gap-2 sm:w-auto py-2 px-4 text-lg text-white rounded-lg"
           onClick={handleOpen}
         >
-          <TelegramIcon className="w-5 h-5 mr-2 inline" />
+          <img src={TelegramIcon} alt="telegram-icon" className="w-5 h-5 mr-2 inline" />
           <span>Enable telegram notification bot</span>
         </Button>
         {showModal && (

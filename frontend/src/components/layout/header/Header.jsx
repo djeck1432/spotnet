@@ -6,7 +6,7 @@ import WalletSection from '@/components/layout/wallet-section/WalletSection';
 import NavigationLinks from '@/components/layout/navigation-links/NavigationLinks';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 import MobDropdownMenu from '@/components/layout/mob-dropdown-menu/MobDropdownMenu';
-import '@/globals.css';
+import '@/index.css';
 import { ReportBugButton } from '@/components/report-button/ReportBugButton';
 import { ReportBugModal } from '@/components/report-modal/ReportBugModal';
 
@@ -70,7 +70,7 @@ function Header({ onConnectWallet, onLogout }) {
         <div className="flex items-center justify-between w-full px-[30px] relative">
           <div className="logo">
             <NavLink to="/">
-              <Logo className="mt-[9px] w-[300px] h-auto" />
+              <img src={Logo} alt="logo" className="mt-[9px] w-[300px] h-auto" />
             </NavLink>
           </div>
           {/* desktop navigation */}

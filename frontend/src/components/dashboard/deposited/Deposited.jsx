@@ -8,7 +8,7 @@ function Deposited({ data }) {
       <div className="flex flex-col gap-2 justify-center">
         <div className="flex items-center justify-between text-xl font-semibold">
           <div className="flex items-center gap-1.5 text-white">
-            <EthIcon className="w-8 h-8 bg-border-color rounded-full p-1.5" />
+            <img src={EthIcon} alt="eth-icon" className="w-8 h-8 bg-border-color rounded-full p-1.5" />
             <p>ETH</p>
           </div>
           <p className="text-gray">{data.eth}</p>
@@ -18,7 +18,7 @@ function Deposited({ data }) {
 
         <div className="flex items-center justify-between text-xl font-semibold">
           <div className="flex items-center gap-1.5 text-white">
-            <StrkIcon className="w-8 h-8 bg-border-color rounded-full p-1.5" />
+            <img src={StrkIcon} alt="strk-icon" className="w-8 h-8 bg-border-color rounded-full p-1.5" />
             <p className="text-xl font-semibold">STRK</p>
           </div>
           <p className="text-gray">{data.strk}</p>
@@ -28,7 +28,7 @@ function Deposited({ data }) {
 
         <div className="flex items-center justify-between text-xl font-semibold">
           <div className="flex items-center gap-1.5 text-white">
-            <UsdIcon className="w-8 h-8 bg-border-color rounded-full p-1.5" />
+            <img src={UsdIcon} alt="usd-icon" className="w-8 h-8 bg-border-color rounded-full p-1.5" />
             <p className="text-xl font-semibold">USDC</p>
           </div>
           <p className="text-gray">{data.usdc}</p>
@@ -38,7 +38,7 @@ function Deposited({ data }) {
 
         <div className="flex items-center justify-between text-xl font-semibold">
           <div className="flex items-center gap-1.5 text-white">
-            <EthIcon className="w-8 h-8 bg-border-color rounded-full p-1.5" />
+            <img src={EthIcon} alt="eth-icon" className="w-8 h-8 bg-border-color rounded-full p-1.5" />
             <p className="text-xl font-semibold">USDT</p>
           </div>
           <p className="text-gray">{data.usdt}</p>

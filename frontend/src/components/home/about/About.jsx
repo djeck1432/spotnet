@@ -55,7 +55,7 @@ const About = () => {
               <h2 className="text-lg font-bold text-brand">{card.number}</h2>
             </div>
             <div className="flex justify-center items-center w-28 h-28 mx-auto">
-              <card.icon className="w-full h-full" />
+              <img src={card.icon} alt="card-icon" className="w-full h-full" />
             </div>
             <h4 className="text-center text-xl font-medium text-gray-800">{card.title}</h4>
             <h6 className="text-center text-lg font-light text-gray-600">{card.description}</h6>

@@ -22,14 +22,14 @@ export default function Withdraw() {
             <div className="bg-footerDividerBg border-midnightPurple px-8 py-8 rounded-lg w-full flex justify-between items-center">
               <div className="text-center flex flex-col items-center">
                 <div className="flex items-center text-stormyGray">
-                  <DiamondIcon className="mr-1 w-4 h-4" />
+                  <img src={DiamondIcon} alt="diamond-icon" className="mr-1 w-4 h-4" />
                   <span className="label">Your Stack</span>
                 </div>
                 <div className="text-3xl">13.89</div>
               </div>
               <div className="text-center flex flex-col items-center">
                 <div className="flex items-center text-stormyGray">
-                  <TimeIcon className="mr-1 w-4 h-4" />
+                  <img src={TimeIcon} alt="time-icon" className="mr-1 w-4 h-4" />
                   <span className="label">Your Boost</span>
                 </div>
                 <div className="text-3xl">132.43%</div>
@@ -44,7 +44,7 @@ export default function Withdraw() {
               <div className="flex justify-between items-center py-3">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-footerDividerBg rounded-full flex justify-center items-center cursor-pointer">
-                    <SettingIcon className="w-4 h-4" />
+                    <img src={SettingIcon} alt="settings-icon" className="w-4 h-4" />
                   </div>
                   <div className="text-stormyGray text-sm">Gas fee: 0.00 STRK</div>
                 </div>

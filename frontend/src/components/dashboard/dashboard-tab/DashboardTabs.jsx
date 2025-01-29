@@ -34,7 +34,7 @@ function DashboardTabs({ activeTab, switchTab }) {
             onClick={() => switchTab(tab.key)}
             className={`flex-1 text-center py-2 cursor-pointer flex items-center justify-center ${activeTab === tab.key ? 'text-brand' : 'text-gray'}`}
           >
-            <tab.Icon className="mr-2" />
+            <img src={tab.Icon} alt="icon" className="mr-2" />
             <span className="text-[15px] font-semibold">{tab.title}</span>
           </button>
 

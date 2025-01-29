@@ -8,8 +8,8 @@ const Partnership = () => {
   const logoCount = 20; // Number of logo pairs
 
   for (let i = 0; i < logoCount; i++) {
-    logos.push(<ZklendLogo key={`zklend-${i}`} className="w-36 h-24 mx-5 shrink-0" />);
-    logos.push(<EkuboLogo key={`ekubo-${i}`} className="w-36 h-24 mx-5 shrink-0" />);
+    logos.push(<img src={ZklendLogo} alt="zklend-logo" key={`zklend-${i}`} className="w-36 h-24 mx-5 shrink-0" />);
+    logos.push(<img src={EkuboLogo} alt="ekubo-logo" key={`ekubo-${i}`} className="w-36 h-24 mx-5 shrink-0" />);
   }
 
   const starData = [{ top: '10%', left: '75%', size: '15%' }];
@@ -17,7 +17,9 @@ const Partnership = () => {
   return (
     <div className="relative">
       {starData.map((star, index) => (
-        <Star
+        <img 
+          src={Star}
+          alt="star"
           key={index}
           className="absolute"
           style={{

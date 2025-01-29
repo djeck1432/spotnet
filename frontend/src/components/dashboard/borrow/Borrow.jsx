@@ -8,7 +8,7 @@ function Borrow({ data }) {
       <div className="flex flex-col gap-2 w-[594px] h-[190px] mt-3">
         <div className="flex items-center">
         <p className="w-8 h-8 mr-2 bg-border-color rounded-full flex items-center justify-center p-2">
-          {icon ? <img src={icon} alt="icon"/> : <BorrowIcon />}
+          <img src={icon || BorrowIcon} alt="icon"/>
         </p>
 
           <span className="text-2xl text-second-primary">{data[1]?.currencyName || 'N/A'}</span>

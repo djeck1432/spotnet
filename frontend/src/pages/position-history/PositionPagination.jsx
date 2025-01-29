@@ -20,7 +20,7 @@ export default function PositionPagination({ currentPage, setCurrentPage, isPend
         onClick={() => setPage(currentPage - 1)}
         aria-label="Previous Page"
       >
-        <ArrowLeftIcon className={`${currentPage === 1 ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`} />
+        <img src={ArrowLeftIcon} alt="arrow-left-icon" className={`${currentPage === 1 ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`} />
       </div>
 
       <div className="flex items-center justify-center gap-4">
@@ -41,7 +41,7 @@ export default function PositionPagination({ currentPage, setCurrentPage, isPend
         onClick={() => setPage(currentPage + 1)}
         aria-label="Next Page"
       >
-        <ArrowRightIcon className={`${currentPage === pagesCount(tableData?.length, positionsOnPage) ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`} />
+        <img src={ArrowRightIcon} alt="arrow-right-icon" className={`${currentPage === pagesCount(tableData?.length, positionsOnPage) ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`} />
       </div>
     </div>
   );

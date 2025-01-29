@@ -4,9 +4,9 @@ import USDC from '@/assets/icons/borrow_usdc.svg?react';
 import STRK from '@/assets/icons/strk.svg?react';
 
 const Tokens = [
-  { id: 'ethOption', component: <ETH />, label: 'ETH' },
-  { id: 'usdcOption', component: <USDC />, label: 'USDC' },
-  { id: 'strkOption', component: <STRK />, label: 'STRK' },
+  { id: 'ethOption', component: <img src={ETH} alt="icon" />, label: 'ETH' },
+  { id: 'usdcOption', component: <img src={USDC} alt="icon" />, label: 'USDC' },
+  { id: 'strkOption', component: <img src={STRK} alt="icon" />, label: 'STRK' },
 ];
 
 const TokenSelector = ({ selectedToken, setSelectedToken, className }) => {
