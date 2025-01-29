@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import TwitterIcon from '@/assets/icons/new-twitter.svg?react';
-import TelegramIcon from '@/assets/icons/telegram.svg?react';
-import GithubIcon from '@/assets/icons/github.svg?react';
-import DashboardIcon from '@/assets/icons/dashboard-icon.svg?react';
-import FormIcon from '@/assets/icons/form-icon.svg?react';
+import TwitterIcon from '@/assets/icons/new-twitter.svg';
+import TelegramIcon from '@/assets/icons/telegram.svg';
+import GithubIcon from '@/assets/icons/github.svg';
+import DashboardIcon from '@/assets/icons/dashboard-icon.svg';
+import FormIcon from '@/assets/icons/form-icon.svg';
 
 function Footer() {
   const socialLinks = [
@@ -42,7 +42,9 @@ function Footer() {
             key={path}
             to={path}
             className={({ isActive }) =>
-              isActive ? 'text-brand hover:scale-105 transition-transform' : 'text-white hover:scale-105 transition-transform'
+              isActive
+                ? 'text-brand hover:scale-105 transition-transform'
+                : 'text-white hover:scale-105 transition-transform'
             }
             onClick={(e) => {
               if (window.location.pathname === path) {
@@ -68,9 +70,7 @@ function Footer() {
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>
-            isActive
-              ? 'text-brand font-semibold'
-              : 'text-secondary hover:text-brand transition-colors'
+            isActive ? 'text-brand font-semibold' : 'text-secondary hover:text-brand transition-colors'
           }
         >
           <div className="flex flex-col items-center">
@@ -84,9 +84,7 @@ function Footer() {
         <NavLink
           to="/form"
           className={({ isActive }) =>
-            isActive
-              ? 'text-brand font-semibold'
-              : 'text-secondary hover:text-brand transition-colors'
+            isActive ? 'text-brand font-semibold' : 'text-secondary hover:text-brand transition-colors'
           }
         >
           <div className="flex flex-col items-center">

@@ -1,9 +1,9 @@
 import React from 'react';
-import Star from '@/assets/particles/star.svg?react';
+import Star from '@/assets/particles/star.svg';
 
 const StarMaker = ({ starData }) =>
   starData.map((star, index) => (
-    <img 
+    <img
       src={Star}
       alt="star"
       key={index}

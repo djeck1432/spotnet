@@ -1,7 +1,7 @@
 import React from 'react';
-import ZklendLogo from '@/assets/images/zklend_logo.svg?react';
-import EkuboLogo from '@/assets/images/ekubo_logo.svg?react';
-import Star from '@/assets/particles/star.svg?react';
+import ZklendLogo from '@/assets/images/zklend_logo.svg';
+import EkuboLogo from '@/assets/images/ekubo_logo.svg';
+import Star from '@/assets/particles/star.svg';
 
 const Partnership = () => {
   const logos = [];
@@ -17,7 +17,7 @@ const Partnership = () => {
   return (
     <div className="relative">
       {starData.map((star, index) => (
-        <img 
+        <img
           src={Star}
           alt="star"
           key={index}
@@ -32,9 +32,7 @@ const Partnership = () => {
       ))}
       <h1 className="text-center font-bold text-white mb-32 text-4xl md:text-3xl sm:text-2xl">Partnership</h1>
       <div className="w-screen h-36 bg-main-gradient flex relative overflow-hidden">
-        <div className="partnership-logo">
-          {logos}
-        </div>
+        <div className="partnership-logo">{logos}</div>
       </div>
     </div>
   );

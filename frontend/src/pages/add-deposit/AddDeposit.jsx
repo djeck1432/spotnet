@@ -1,5 +1,5 @@
-import EthIcon from '@/assets/icons/ethereum.svg?react';
-import HealthIcon from '@/assets/icons/health.svg?react';
+import EthIcon from '@/assets/icons/ethereum.svg';
+import HealthIcon from '@/assets/icons/health.svg';
 import Card from '@/components/ui/card/Card';
 import { Button } from '@/components/ui/custom-button/Button';
 import TokenSelector from '@/components/ui/token-selector/TokenSelector';
@@ -61,14 +61,8 @@ export const AddDeposit = () => {
           />
         </div>
       </div>
-      <h1 className="text-xl font-normal text-white text-center mt-8 mb-0">
-        Please make a deposit
-      </h1>
-      <TokenSelector
-        selectedToken={selectedToken}
-        setSelectedToken={setSelectedToken}
-        className="rounded-lg"
-      />
+      <h1 className="text-xl font-normal text-white text-center mt-8 mb-0">Please make a deposit</h1>
+      <TokenSelector selectedToken={selectedToken} setSelectedToken={setSelectedToken} className="rounded-lg" />
       <div
         className="relative mx-auto mt-8 mb-6 max-w-md w-36 text-center font-semibold text-4xl"
         aria-labelledby="amount-input-label"
@@ -104,4 +98,3 @@ export const AddDeposit = () => {
     </DashboardLayout>
   );
 };
-

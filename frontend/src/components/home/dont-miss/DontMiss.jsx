@@ -1,7 +1,7 @@
 import React from 'react';
-import Rocket from '@/assets/icons/rocket.svg?react';
-import Hand from '@/assets/images/hand.svg?react';
-import Star from '@/assets/particles/star.svg?react';
+import Rocket from '@/assets/icons/rocket.svg';
+import Hand from '@/assets/images/hand.svg';
+import Star from '@/assets/particles/star.svg';
 import { useNavigate } from 'react-router-dom';
 import { notify } from '@/components/layout/notifier/Notifier';
 import { useWalletStore } from '@/stores/useWalletStore';

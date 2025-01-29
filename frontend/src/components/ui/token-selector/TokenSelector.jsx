@@ -1,7 +1,7 @@
 import React from 'react';
-import ETH from '@/assets/icons/ethereum.svg?react';
-import USDC from '@/assets/icons/borrow_usdc.svg?react';
-import STRK from '@/assets/icons/strk.svg?react';
+import ETH from '@/assets/icons/ethereum.svg';
+import USDC from '@/assets/icons/borrow_usdc.svg';
+import STRK from '@/assets/icons/strk.svg';
 
 const Tokens = [
   { id: 'ethOption', component: <img src={ETH} alt="icon" />, label: 'ETH' },
@@ -22,9 +22,7 @@ const TokenSelector = ({ selectedToken, setSelectedToken, className }) => {
           <div
             key={token.id}
             className={`relative w-full text-center rounded-lg p-2 transition-colors duration-300 cursor-pointer ${
-              selectedToken === token.label
-                ? 'border-gradient-mask'
-                : 'border-x border-y border-secondary'
+              selectedToken === token.label ? 'border-gradient-mask' : 'border-x border-y border-secondary'
             }`}
             onClick={() => handleTokenChange(token)}
           >
@@ -38,13 +36,8 @@ const TokenSelector = ({ selectedToken, setSelectedToken, className }) => {
               className="hidden"
             />
             <div className="flex flex-row gap-2 items-center justify-center py-2">
-              <span className="h-8 w-8 flex justify-center items-center">
-                {token.component}
-              </span>
-              <label
-                htmlFor={token.id}
-                className="text-lg font-semibold text-white"
-              >
+              <span className="h-8 w-8 flex justify-center items-center">{token.component}</span>
+              <label htmlFor={token.id} className="text-lg font-semibold text-white">
                 {token.label}
               </label>
             </div>

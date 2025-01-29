@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import SmallStar from '@/assets/particles/small_star.svg?react';
+import SmallStar from '@/assets/particles/small_star.svg';
 import StarMaker from '@/components/layout/star-maker/StarMaker';
-import Decoration from '@/assets/particles/deco.svg?react';
-import Starknet from '@/assets/particles/starknet.svg?react';
-import Rocket from '@/assets/icons/rocket.svg?react';
+import Decoration from '@/assets/particles/deco.svg';
+import Starknet from '@/assets/particles/starknet.svg';
+import Rocket from '@/assets/icons/rocket.svg';
 import { useWalletStore } from '@/stores/useWalletStore';
 import { notify } from '@/components/layout/notifier/Notifier';
 
@@ -58,14 +58,20 @@ function Home() {
           {decorationData.map((decoration, index) => (
             <img
               src={Decoration}
-              alt={"decoration"}
+              alt={'decoration'}
               key={index}
               className={`absolute -z-1 
-                ${index === 0 ? 'w-[40%] h-[40%] sm:w-[40%] sm:h-[40%] md:w-[65%] md:h-[65%] xl:w-[80%] xl:h-[80%]' 
-                  : index === 1 ? 'w-[30%] h-[30%] md:w-[20%] md:h-[20%] xl:w-[30%] xl:h-[30%]' 
-                  : index === 2 ? 'w-[45%] h-[45%] sm:w-[50%] sm:h-[43%] md:w-[40%] md:h-[40%] xl:w-[45%] xl:h-[45%]' 
-                  : index === 3 ? 'w-[75%] h-[75%] md:w-[55%] md:h-[55%] xl:w-[70%] xl:h-[70%]' 
-                  : ''}
+                ${
+                  index === 0
+                    ? 'w-[40%] h-[40%] sm:w-[40%] sm:h-[40%] md:w-[65%] md:h-[65%] xl:w-[80%] xl:h-[80%]'
+                    : index === 1
+                      ? 'w-[30%] h-[30%] md:w-[20%] md:h-[20%] xl:w-[30%] xl:h-[30%]'
+                      : index === 2
+                        ? 'w-[45%] h-[45%] sm:w-[50%] sm:h-[43%] md:w-[40%] md:h-[40%] xl:w-[45%] xl:h-[45%]'
+                        : index === 3
+                          ? 'w-[75%] h-[75%] md:w-[55%] md:h-[55%] xl:w-[70%] xl:h-[70%]'
+                          : ''
+                }
                 `}
               style={{
                 top: `${decoration.top}vh`,
@@ -79,7 +85,7 @@ function Home() {
           {starsData.map((star, index) => (
             <img
               src={SmallStar}
-              alt={"small-star"}
+              alt={'small-star'}
               key={index}
               className="absolute -z-1"
               style={{
@@ -90,7 +96,11 @@ function Home() {
           ))}
           <StarMaker starData={starData} />
 
-          <img src={Starknet} alt="starknet" className="absolute top-0 right-5 -z-1 w-[15px] md:w-[15px] lg:w-[30px] h-auto" />
+          <img
+            src={Starknet}
+            alt="starknet"
+            className="absolute top-0 right-5 -z-1 w-[15px] md:w-[15px] lg:w-[30px] h-auto"
+          />
         </div>
         <div className="2xl:mt-[150px] flex justify-center items-center flex-col">
           <h2
@@ -98,7 +108,10 @@ function Home() {
   text-[35px] sm:text-[35px] md:text-[40px] lg:text-[45px] xl:text-[70px]
   lg:-z-1"
           >
-            <span className="text-brand">Earn</span> <span className="text-white">by leveraging your <br /> assets</span>
+            <span className="text-brand">Earn</span>{' '}
+            <span className="text-white">
+              by leveraging your <br /> assets
+            </span>
             <span className="bg-main-gradient bg-clip-text text-transparent"> with Spotnet</span>
           </h2>
           <h5

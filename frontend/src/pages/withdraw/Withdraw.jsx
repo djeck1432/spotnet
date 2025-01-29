@@ -1,7 +1,7 @@
 import React from 'react';
-import DiamondIcon from '@/assets/icons/diamond.svg?react';
-import TimeIcon from '@/assets/icons/time.svg?react';
-import SettingIcon from '@/assets/icons/settings.svg?react';
+import DiamondIcon from '@/assets/icons/diamond.svg';
+import TimeIcon from '@/assets/icons/time.svg';
+import SettingIcon from '@/assets/icons/settings.svg';
 import MetricCard from '@/components/vault/metric-card/MetricCard';
 import { VaultLayout } from '@/components/vault/VaultLayout';
 
@@ -37,7 +37,11 @@ export default function Withdraw() {
             </div>
             <div className="pt-2 pb-4">
               <div className="text-stormyGray text-base mb-1">Input Unstake Amount</div>
-              <input type="text" className="w-full h-16 bg-transparent border-midnightPurple border-2 rounded-lg px-4 text-primary text-lg" placeholder="Enter Amount to Withdraw" />
+              <input
+                type="text"
+                className="w-full h-16 bg-transparent border-midnightPurple border-2 rounded-lg px-4 text-primary text-lg"
+                placeholder="Enter Amount to Withdraw"
+              />
             </div>
             <div className="w-full">
               <div className="w-full h-px bg-footerDividerBg mb-4"></div>
@@ -55,8 +59,12 @@ export default function Withdraw() {
             Withdraw
           </button>
           <div className="hidden sm:flex flex-row-reverse justify-center gap-4 w-full mt-4">
-            <button className="w-1/2 h-16 text-primary text-lg font-semibold bg-transparent border-none cursor-pointer">Withdraw</button>
-            <button className="w-1/2 h-16 text-primary text-lg font-semibold bg-transparent border-midnightPurple border-2 rounded-lg cursor-pointer">Cancel</button>
+            <button className="w-1/2 h-16 text-primary text-lg font-semibold bg-transparent border-none cursor-pointer">
+              Withdraw
+            </button>
+            <button className="w-1/2 h-16 text-primary text-lg font-semibold bg-transparent border-midnightPurple border-2 rounded-lg cursor-pointer">
+              Cancel
+            </button>
           </div>
         </div>
       </div>

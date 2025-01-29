@@ -1,7 +1,7 @@
 import React from 'react';
-import DepositIcon from '@/assets/icons/deposited_dynamic.svg?react';
-import CollateralIcon from '@/assets/icons/collateral_dynamic.svg?react';
-import BorrowIcon from '@/assets/icons/borrow_dynamic.svg?react';
+import DepositIcon from '@/assets/icons/deposited_dynamic.svg';
+import CollateralIcon from '@/assets/icons/collateral_dynamic.svg';
+import BorrowIcon from '@/assets/icons/borrow_dynamic.svg';
 import { DASHBOARD_TABS } from '@/utils/constants';
 
 function DashboardTabs({ activeTab, switchTab }) {
@@ -38,7 +38,9 @@ function DashboardTabs({ activeTab, switchTab }) {
             <span className="text-[15px] font-semibold">{tab.title}</span>
           </button>
 
-          {index < tabConfig.length - 1 && <div className="w-[3px] h-[18px] rounded-lg bg-footer-divider-bg mx-3"></div>}
+          {index < tabConfig.length - 1 && (
+            <div className="w-[3px] h-[18px] rounded-lg bg-footer-divider-bg mx-3"></div>
+          )}
         </React.Fragment>
       ))}
 
@@ -48,10 +50,10 @@ function DashboardTabs({ activeTab, switchTab }) {
             activeTab === COLLATERAL
               ? 'w-[180px] bg-blue-pink-gradient-alt2'
               : activeTab === BORROW
-              ? 'w-[155px] bg-blue-pink-gradient-alt2 left-[38%]'
-              : activeTab === DEPOSITED
-              ? 'w-[155px] bg-blue-pink-gradient-alt2 left-[78%]'
-              : ''
+                ? 'w-[155px] bg-blue-pink-gradient-alt2 left-[38%]'
+                : activeTab === DEPOSITED
+                  ? 'w-[155px] bg-blue-pink-gradient-alt2 left-[78%]'
+                  : ''
           }`}
         />
       </div>

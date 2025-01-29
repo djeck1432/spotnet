@@ -1,6 +1,6 @@
-import EthIcon from '@/assets/icons/ethereum.svg?react';
-import StrkIcon from '@/assets/icons/strk.svg?react';
-import UsdIcon from '@/assets/icons/usdc-icon.svg?react';
+import EthIcon from '@/assets/icons/ethereum.svg';
+import StrkIcon from '@/assets/icons/strk.svg';
+import UsdIcon from '@/assets/icons/usdc-icon.svg';
 
 function Deposited({ data }) {
   return (

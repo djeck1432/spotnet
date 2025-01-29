@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import BorrowIcon from '@/assets/icons/borrow_dynamic.svg?react';
-import CollateralIcon from '@/assets/icons/collateral_dynamic.svg?react';
-import EthIcon from '@/assets/icons/ethereum.svg?react';
-import HealthIcon from '@/assets/icons/health.svg?react';
-import StrkIcon from '@/assets/icons/strk.svg?react';
-import TelegramIcon from '@/assets/icons/telegram_dashboard.svg?react';
-import UsdIcon from '@/assets/icons/usd_coin.svg?react';
+import BorrowIcon from '@/assets/icons/borrow_dynamic.svg';
+import CollateralIcon from '@/assets/icons/collateral_dynamic.svg';
+import EthIcon from '@/assets/icons/ethereum.svg';
+import HealthIcon from '@/assets/icons/health.svg';
+import StrkIcon from '@/assets/icons/strk.svg';
+import TelegramIcon from '@/assets/icons/telegram_dashboard.svg';
+import UsdIcon from '@/assets/icons/usd_coin.svg';
 import Borrow from '@/components/dashboard/borrow/Borrow';
 import Collateral from '@/components/dashboard/collateral/Collateral';
 import DashboardTabs from '@/components/dashboard/dashboard-tab/DashboardTabs';
@@ -150,8 +150,16 @@ export default function DashboardPage({ telegramId }) {
     <DashboardLayout>
       {loading && <Spinner loading={loading} />}
       <div className="flex items-center gap-4">
-        <Card label="Health Factor" value={healthFactor} icon={<img src={HealthIcon} alt="health-icon" className="w-6 h-6" />} />
-        <Card label="Borrow Balance" cardData={cardData} icon={<img src={EthIcon} alt="eth-icon" className="w-6 h-6" />} />
+        <Card
+          label="Health Factor"
+          value={healthFactor}
+          icon={<img src={HealthIcon} alt="health-icon" className="w-6 h-6" />}
+        />
+        <Card
+          label="Borrow Balance"
+          cardData={cardData}
+          icon={<img src={EthIcon} alt="eth-icon" className="w-6 h-6" />}
+        />
       </div>
       <div className="mt-6 flex flex-col gap-4">
         <div className="p-4 rounded-2xl border-x border-y border-light-purple shadow-md space-y-4">
@@ -206,4 +214,3 @@ export default function DashboardPage({ telegramId }) {
     </DashboardLayout>
   );
 }
-

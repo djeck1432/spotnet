@@ -1,6 +1,6 @@
 import React from 'react';
-import ArrowLeftIcon from '@/assets/icons/arrow-left.svg?react';
-import ArrowRightIcon from '@/assets/icons/arrow-right.svg?react';
+import ArrowLeftIcon from '@/assets/icons/arrow-left.svg';
+import ArrowRightIcon from '@/assets/icons/arrow-right.svg';
 
 export default function PositionPagination({ currentPage, setCurrentPage, isPending, tableData, positionsOnPage }) {
   const pagesCount = (totalItems, itemsPerPage) => Math.ceil(totalItems / itemsPerPage);
@@ -20,20 +20,25 @@ export default function PositionPagination({ currentPage, setCurrentPage, isPend
         onClick={() => setPage(currentPage - 1)}
         aria-label="Previous Page"
       >
-        <img src={ArrowLeftIcon} alt="arrow-left-icon" className={`${currentPage === 1 ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`} />
+        <img
+          src={ArrowLeftIcon}
+          alt="arrow-left-icon"
+          className={`${currentPage === 1 ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`}
+        />
       </div>
 
       <div className="flex items-center justify-center gap-4">
-        {!isPending && tableData ? 
-          range(pagesCount(tableData?.length, positionsOnPage)).map((page) => (
-            <div
-              key={page}
-              className={`text-xs font-normal cursor-pointer ${currentPage === page ? 'font-semibold text-[#5b3c8f]' : 'text-[#413547]'}`}
-              onClick={() => setPage(page)}
-            >
-              {page}
-            </div>
-          )) : null}
+        {!isPending && tableData
+          ? range(pagesCount(tableData?.length, positionsOnPage)).map((page) => (
+              <div
+                key={page}
+                className={`text-xs font-normal cursor-pointer ${currentPage === page ? 'font-semibold text-[#5b3c8f]' : 'text-[#413547]'}`}
+                onClick={() => setPage(page)}
+              >
+                {page}
+              </div>
+            ))
+          : null}
       </div>
 
       <div
@@ -41,7 +46,11 @@ export default function PositionPagination({ currentPage, setCurrentPage, isPend
         onClick={() => setPage(currentPage + 1)}
         aria-label="Next Page"
       >
-        <img src={ArrowRightIcon} alt="arrow-right-icon" className={`${currentPage === pagesCount(tableData?.length, positionsOnPage) ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`} />
+        <img
+          src={ArrowRightIcon}
+          alt="arrow-right-icon"
+          className={`${currentPage === pagesCount(tableData?.length, positionsOnPage) ? 'stroke-[#402525]' : 'stroke-[#b2a0b6]'} transition-all`}
+        />
       </div>
     </div>
   );

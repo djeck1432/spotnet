@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import EthIcon from '@/assets/icons/ethereum.svg?react';
+import EthIcon from '@/assets/icons/ethereum.svg';
 import filterIcon from '@/assets/icons/filter-horizontal.svg';
-import HealthIcon from '@/assets/icons/health.svg?react';
-import StrkIcon from '@/assets/icons/strk.svg?react';
-import UsdIcon from '@/assets/icons/usd_coin.svg?react';
+import HealthIcon from '@/assets/icons/health.svg';
+import StrkIcon from '@/assets/icons/strk.svg';
+import UsdIcon from '@/assets/icons/usd_coin.svg';
 import Card from '@/components/ui/card/Card';
 import Spinner from '@/components/ui/spinner/Spinner';
 import useDashboardData from '@/hooks/useDashboardData';
@@ -88,7 +88,9 @@ function PositionHistory() {
                 <tbody>
                   {!tableData || tableData?.length === 0 || !filteredTableData ? (
                     <tr>
-                      <td colSpan="10" className="text-center py-4">No opened positions</td>
+                      <td colSpan="10" className="text-center py-4">
+                        No opened positions
+                      </td>
                     </tr>
                   ) : (
                     filteredTableData.map((data, index) => (
@@ -101,7 +103,9 @@ function PositionHistory() {
                         </td>
                         <td className="py-4 px-2">{data.amount}</td>
                         <td className="py-4 px-2">{data.created_at}</td>
-                        <td className={`py-4 px-2 font-semibold ${statusStyles[data.status.toLowerCase()] || ''}`}>{data.status}</td>
+                        <td className={`py-4 px-2 font-semibold ${statusStyles[data.status.toLowerCase()] || ''}`}>
+                          {data.status}
+                        </td>
                         <td className="py-4 px-2">{data.start_price}</td>
                         <td className="py-4 px-2">{data.multiplier}</td>
                         <td className="py-4 px-2">{data.is_liquidated}</td>
@@ -146,4 +150,3 @@ function PositionHistory() {
 }
 
 export default PositionHistory;
-

@@ -1,12 +1,17 @@
 import React from 'react';
-import ArrowDownIcon from '@/assets/icons/dropdown-arrow.svg?react';
-import ReloadIcon from '@/assets/icons/reload.svg?react';
-import OpenBotIcon from '@/assets/icons/bot.svg?react';
-import TermsIcon from '@/assets/icons/terms.svg?react';
+import ArrowDownIcon from '@/assets/icons/dropdown-arrow.svg';
+import ReloadIcon from '@/assets/icons/reload.svg';
+import OpenBotIcon from '@/assets/icons/bot.svg';
+import TermsIcon from '@/assets/icons/terms.svg';
 
 const menuItems = [
   { id: 1, text: 'Reload page', icon: <img src={ReloadIcon} alt="relaod-icon" className="w-5 h-5 mr-2" />, link: '#' },
-  { id: 2, text: 'Open Bot', icon: <img src={OpenBotIcon} alt="open-button-icon" className="w-5 h-5 mr-2" />, link: '#' },
+  {
+    id: 2,
+    text: 'Open Bot',
+    icon: <img src={OpenBotIcon} alt="open-button-icon" className="w-5 h-5 mr-2" />,
+    link: '#',
+  },
   { id: 3, text: 'Terms of Use', icon: <img src={TermsIcon} className="w-5 h-5 mr-2" />, link: '#' },
 ];
 
@@ -32,7 +37,11 @@ function MobDropdownMenu() {
           </li>
         ))}
         <li>
-          <button variant="primary" size="lg" className="w-full py-3 bg-header-button-bg text-second-primary hover:text-white rounded-xl ">
+          <button
+            variant="primary"
+            size="lg"
+            className="w-full py-3 bg-header-button-bg text-second-primary hover:text-white rounded-xl "
+          >
             Cancel
           </button>
         </li>

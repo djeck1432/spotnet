@@ -3,9 +3,9 @@ import { useMatchMedia } from '@/hooks/useMatchMedia';
 import { getBalances } from '@/services/wallet';
 import { useWalletStore } from '@/stores/useWalletStore';
 
-import ETH from '@/assets/icons/ethereum.svg?react';
-import USDC from '@/assets/icons/borrow_usdc.svg?react';
-import STRK from '@/assets/icons/strk.svg?react';
+import ETH from '@/assets/icons/ethereum.svg';
+import USDC from '@/assets/icons/borrow_usdc.svg';
+import STRK from '@/assets/icons/strk.svg';
 
 const BalanceCards = ({ className }) => {
   const { walletId } = useWalletStore();

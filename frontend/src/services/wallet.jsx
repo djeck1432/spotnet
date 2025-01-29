@@ -2,9 +2,9 @@ import React from 'react';
 import { connect, disconnect, getSelectedConnectorWallet } from 'starknetkit';
 import { InjectedConnector } from 'starknetkit/injected';
 import { ETH_ADDRESS, STRK_ADDRESS, USDC_ADDRESS } from '../utils/constants';
-import ETH from '../assets/icons/ethereum.svg?react';
-import USDC from '../assets/icons/borrow_usdc.svg?react';
-import STRK from '../assets/icons/strk.svg?react';
+import ETH from '../assets/icons/ethereum.svg';
+import USDC from '../assets/icons/borrow_usdc.svg';
+import STRK from '../assets/icons/strk.svg';
 
 const CRM_TOKEN_ADDRESS = '0x051c4b1fe3bf6774b87ad0b15ef5d1472759076e42944fff9b9f641ff13e5bbe';
 
