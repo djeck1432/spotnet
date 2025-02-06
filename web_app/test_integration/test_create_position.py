@@ -92,7 +92,9 @@ class TestPositionCreation:
         assert (
             position.status == Status.PENDING
         ), "Position status should be 'pending' upon creation"
-        assert position.is_protection is False, "Position should not have protection by default"
+        assert (
+            position.is_protection is False
+        ), "Position should not have protection by default"
 
         logger.info(
             f"Position {position.id} created successfully with status '{position.status}'."
@@ -112,9 +114,12 @@ class TestPositionCreation:
         position = position_db.get_position_by_id(position.id)
         assert position is not None, "Position not found in database before opening"
         assert position.status == Status.OPENED, "Position status should be 'opened'"
-        assert position.start_price == current_prices[token_symbol], "Start price should be the token price"
-        assert position.created_at is not None, "Position should have a created_at timestamp"
-
+        assert (
+            position.start_price == current_prices[token_symbol]
+        ), "Start price should be the token price"
+        assert (
+            position.created_at is not None
+        ), "Position should have a created_at timestamp"
 
         # Clean up - delete the position and user
         user = position_db.get_user_by_wallet_id(wallet_id)

@@ -58,7 +58,7 @@ class TestPositionLiquidation:
     def test_position_liquidation(self, position_data: Dict[str, Any]) -> None:
         """
         Test the complete lifecycle of a position liquidation.
-        
+
         Args:
             position_data (Dict[str, Any]): Position data for testing.
         """
@@ -83,14 +83,22 @@ class TestPositionLiquidation:
         assert position is not None, "Position should be created successfully"
         assert position.status == Status.PENDING, "Initial status should be pending"
         assert not position.is_liquidated, "Position should not be liquidated initially"
-        assert position.liquidation_bonus == 0.0, "Initial liquidation bonus should be 0"
-        assert position.datetime_liquidation is None, "Liquidation datetime should be None initially"
+        assert (
+            position.liquidation_bonus == 0.0
+        ), "Initial liquidation bonus should be 0"
+        assert (
+            position.datetime_liquidation is None
+        ), "Liquidation datetime should be None initially"
 
         # Open position
         current_prices = asyncio.run(DashboardMixin.get_current_prices())
-        assert token_symbol in current_prices, f"Token {token_symbol} missing in current prices"
+        assert (
+            token_symbol in current_prices
+        ), f"Token {token_symbol} missing in current prices"
         position_status = position_db.open_position(position.id, current_prices)
-        assert position_status == Status.OPENED, "Position should be opened successfully"
+        assert (
+            position_status == Status.OPENED
+        ), "Position should be opened successfully"
 
         # Test liquidation
         liquidation_result = position_db.liquidate_position(position.id)
@@ -98,17 +106,25 @@ class TestPositionLiquidation:
 
         # Verify liquidated position
         liquidated_position = position_db.get_position_by_id(position.id)
-        assert liquidated_position.status == Status.CLOSED, "Position should be closed after liquidation"
-        assert liquidated_position is not None, "Should be able to retrieve liquidated position"
-        assert liquidated_position.is_liquidated is True, "Position should be marked as liquidated"
-        assert liquidated_position.datetime_liquidation is not None, "Liquidation datetime should be set"
-        
+        assert (
+            liquidated_position.status == Status.CLOSED
+        ), "Position should be closed after liquidation"
+        assert (
+            liquidated_position is not None
+        ), "Should be able to retrieve liquidated position"
+        assert (
+            liquidated_position.is_liquidated is True
+        ), "Position should be marked as liquidated"
+        assert (
+            liquidated_position.datetime_liquidation is not None
+        ), "Liquidation datetime should be set"
+
         # Test retrieving all liquidated positions
         all_liquidated = position_db.get_all_liquidated_positions()
         assert len(all_liquidated) > 0, "Should have at least one liquidated position"
         assert any(
-            pos["token_symbol"] == token_symbol and 
-            pos["amount"] == amount for pos in all_liquidated
+            pos["token_symbol"] == token_symbol and pos["amount"] == amount
+            for pos in all_liquidated
         ), "Liquidated position should be in the list"
 
         # Clean up
@@ -121,7 +137,7 @@ class TestPositionLiquidation:
     def test_liquidate_nonexistent_position(self) -> None:
         """Test attempting to liquidate a non-existent position."""
         import uuid
-        
+
         non_existent_id = uuid.uuid4()
         result = position_db.liquidate_position(non_existent_id)
         assert result is False, "Liquidating non-existent position should return False"
@@ -132,11 +148,11 @@ class TestPositionLiquidation:
         positions = []
         for position_data in self.test_positions[:2]:  # Create 2 positions
             wallet_id = position_data["wallet_id"]
-        
+
             # Create user if needed
             if not position_db.get_user_by_wallet_id(wallet_id):
                 position_db.create_user(wallet_id)
-            
+
             # Create position
             position = position_db.create_position(
                 wallet_id=wallet_id,
@@ -144,7 +160,7 @@ class TestPositionLiquidation:
                 amount=position_data["amount"],
                 multiplier=position_data["multiplier"],
             )
-            
+
             # Open position
             current_prices = asyncio.run(DashboardMixin.get_current_prices())
             position_db.open_position(position.id, current_prices)
@@ -153,11 +169,15 @@ class TestPositionLiquidation:
         # Liquidate all positions
         for position in positions:
             liquidation_result = position_db.liquidate_position(position.id)
-            assert liquidation_result is True, f"Liquidation failed for position {position.id}"
+            assert (
+                liquidation_result is True
+            ), f"Liquidation failed for position {position.id}"
 
         # Verify all liquidated positions
         liquidated_positions = position_db.get_all_liquidated_positions()
-        assert len(liquidated_positions) >= len(positions), "All positions should be liquidated"
+        assert len(liquidated_positions) >= len(
+            positions
+        ), "All positions should be liquidated"
 
         # Clean up
         for position in positions:
