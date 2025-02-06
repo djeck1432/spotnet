@@ -67,7 +67,7 @@ class PositionDBConnector(UserDBConnector):
 
     def get_positions_by_wallet_id(
         self, wallet_id: str, start: int = 0, limit: int = 10
-    ) -> list:
+    ) -> list[dict]:
         """
         Retrieves paginated positions for a user by their wallet ID
         and returns them as a list of dictionaries.
@@ -525,3 +525,10 @@ class PositionDBConnector(UserDBConnector):
             return extra_deposits
 
 
+    def delete_all_extra_deposits(self, position_id: UUID) -> None:
+        """
+        Delete all extra deposits for a position.
+        """
+        with self.Session() as db:
+            db.query(ExtraDeposit).filter(ExtraDeposit.position_id == position_id).delete()
+            db.commit()

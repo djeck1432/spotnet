@@ -21,6 +21,7 @@ from datetime import datetime
 from web_app.db.crud import PositionDBConnector, AirDropDBConnector
 from web_app.contract_tools.mixins.dashboard import DashboardMixin
 from web_app.db.models import Status
+from web_app.test_integration.utils import with_temp_user
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -79,50 +80,41 @@ class TestPositionCreation:
         multiplier = form_data["multiplier"]
         borrowing_token = form_data["borrowing_token"]
 
-        existing_user = position_db.get_user_by_wallet_id(wallet_id)
-        if not existing_user:
-            position_db.create_user(wallet_id)
+        with with_temp_user(wallet_id):
+            position = position_db.create_position(
+                wallet_id=wallet_id,
+                token_symbol=token_symbol,
+                amount=amount,
+                multiplier=multiplier,
+            )
+            assert (
+                position.status == Status.PENDING
+            ), "Position status should be 'pending' upon creation"
+            assert (
+                position.is_protection is False
+            ), "Position should not have protection by default"
 
-        position = position_db.create_position(
-            wallet_id=wallet_id,
-            token_symbol=token_symbol,
-            amount=amount,
-            multiplier=multiplier,
-        )
-        assert (
-            position.status == Status.PENDING
-        ), "Position status should be 'pending' upon creation"
-        assert (
-            position.is_protection is False
-        ), "Position should not have protection by default"
+            logger.info(
+                f"Position {position.id} created successfully with status '{position.status}'."
+            )
 
-        logger.info(
-            f"Position {position.id} created successfully with status '{position.status}'."
-        )
-
-        # Open position
-        current_prices = asyncio.run(DashboardMixin.get_current_prices())
-        assert (
-            position.token_symbol in current_prices
-        ), "Token price missing in current prices"
-        position_status = position_db.open_position(position.id, current_prices)
-        assert (
-            position_status == Status.OPENED
-        ), "Position status should be 'opened' after updating"
-        logger.info(f"Position {position.id} successfully opened.")
-        # Verify position attributes after opening
-        position = position_db.get_position_by_id(position.id)
-        assert position is not None, "Position not found in database before opening"
-        assert position.status == Status.OPENED, "Position status should be 'opened'"
-        assert (
-            position.start_price == current_prices[token_symbol]
-        ), "Start price should be the token price"
-        assert (
-            position.created_at is not None
-        ), "Position should have a created_at timestamp"
-
-        # Clean up - delete the position and user
-        user = position_db.get_user_by_wallet_id(wallet_id)
-        airdrop.delete_all_users_airdrop(user.id)
-        position_db.delete_all_user_positions(user.id)
-        position_db.delete_user_by_wallet_id(wallet_id)
+            # Open position
+            current_prices = asyncio.run(DashboardMixin.get_current_prices())
+            assert (
+                position.token_symbol in current_prices
+            ), "Token price missing in current prices"
+            position_status = position_db.open_position(position.id, current_prices)
+            assert (
+                position_status == Status.OPENED
+            ), "Position status should be 'opened' after updating"
+            logger.info(f"Position {position.id} successfully opened.")
+            # Verify position attributes after opening
+            position = position_db.get_position_by_id(position.id)
+            assert position is not None, "Position not found in database before opening"
+            assert position.status == Status.OPENED, "Position status should be 'opened'"
+            assert (
+                position.start_price == current_prices[token_symbol]
+            ), "Start price should be the token price"
+            assert (
+                position.created_at is not None
+            ), "Position should have a created_at timestamp"
