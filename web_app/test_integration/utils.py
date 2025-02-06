@@ -1,4 +1,6 @@
-import uuid
+"""
+Utils for integration tests.
+"""
 from contextlib import contextmanager
 
 from web_app.db.crud.user import UserDBConnector
