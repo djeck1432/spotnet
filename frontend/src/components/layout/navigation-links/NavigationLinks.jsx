@@ -32,7 +32,7 @@ const NavigationLinks = ({ onNavClick }) => (
 
     <div className="bg-light-purple h-4 w-[1.5px] rounded-md" />
 
-    <NavLink
+    {/* <NavLink
       to="/form"
       className={({ isActive }) =>
         isActive
@@ -42,10 +42,10 @@ const NavigationLinks = ({ onNavClick }) => (
       onClick={onNavClick}
     >
       Form
-    </NavLink>
+    </NavLink> */}
 
     {/* <div className="h-4 w-[1.5px] rounded-md bg-light-purple" /> */}
-    {/* 
+{/*     
     <NavLink 
       to="/vault" 
       className={({ isActive }) => 

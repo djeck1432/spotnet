@@ -5,6 +5,7 @@ import clockIcon from '@/assets/icons/clock.svg';
 import computerIcon from '@/assets/icons/computer-icon.svg';
 import depositIcon from '@/assets/icons/deposit.svg';
 import withdrawIcon from '@/assets/icons/withdraw.svg';
+import formIcon from '@/assets/icons/form-icon.svg';
 import { useCheckMobile } from '@/hooks/useCheckMobile';
 
 const dashboardItems = [
@@ -22,7 +23,7 @@ const dashboardItems = [
   },
   {
     id: 'deposit',
-    name: 'Add Deposit',
+    name: 'Add Extra Deposit',
     link: '/dashboard/deposit',
     icon: depositIcon,
   },
@@ -32,17 +33,24 @@ const dashboardItems = [
     link: '/dashboard/withdraw',
     icon: withdrawIcon,
   },
+  {
+    id: 'Postion',
+    name: 'Open Position',
+    link: '/form',
+    icon: formIcon,
+  },
 ];
 
 export default function DashboardLayout({ children, title = 'zkLend Position' }) {
   const isMobile = useCheckMobile();
+  console.log(formIcon)
   return (
     <div className="flex min-h-screen w-screen md:justify-center lg:ml-[372px] lg:w-[calc(100vw-372px)]">
       <Sidebar items={dashboardItems} />
-      <div className="relative flex h-full w-full items-center justify-around">
+      <div className="relative flex items-center justify-around w-full h-full">
         <div className="mt-24 mb-12 flex h-full w-full flex-col justify-center gap-2.5 p-6 pt-5 md:w-auto md:max-w-none">
-          <h1 className="text-second-primary mt-4 text-center text-2xl font-semibold">{title}</h1>
-          <div className="text-second-primary flex w-full flex-col justify-center gap-6 rounded-2xl text-center">
+          <h1 className="mt-4 text-2xl font-semibold text-center text-second-primary">{title}</h1>
+          <div className="flex flex-col justify-center w-full gap-6 text-center text-second-primary rounded-2xl">
             {children}
           </div>
         </div>

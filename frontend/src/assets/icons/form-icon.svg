@@ -1,10 +1,7 @@
-<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M1.91675 8.00008C1.91675 5.01452 1.91675 3.52174 2.84424 2.59424C3.77174 1.66675 5.26452 1.66675 8.25008 1.66675C11.2356 1.66675 12.7284 1.66675 13.6559 2.59424C14.5834 3.52174 14.5834 5.01452 14.5834 8.00008C14.5834 10.9856 14.5834 12.4784 13.6559 13.4059C12.7284 14.3334 11.2356 14.3334 8.25008 14.3334C5.26452 14.3334 3.77174 14.3334 2.84424 13.4059C1.91675 12.4784 1.91675 10.9856 1.91675 8.00008Z" stroke="currentColor" />
-  <path d="M7.58325 4.66675H11.5833" stroke="currentColor" stroke-linecap="round" />
-  <path d="M4.91675 4.66675H5.58341" stroke="currentColor" stroke-linecap="round" />
-  <path d="M4.91675 8H5.58341" stroke="currentColor" stroke-linecap="round" />
-  <path d="M4.91675 11.3333H5.58341" stroke="currentColor" stroke-linecap="round" />
-  <path d="M7.58325 8H11.5833" stroke="currentColor" stroke-linecap="round" />
-  <path d="M7.58325 11.3333H11.5833" stroke="currentColor" stroke-linecap="round" />
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 7C4 5.11438 4 4.17157 4.58579 3.58579C5.17157 3 6.11438 3 8 3H16C17.8856 3 18.8284 3 19.4142 3.58579C20 4.17157 20 5.11438 20 7V15C20 17.8284 20 19.2426 19.1213 20.1213C18.2426 21 16.8284 21 14 21H10C7.17157 21 5.75736 21 4.87868 20.1213C4 19.2426 4 17.8284 4 15V7Z" stroke="#83919F" stroke-width="2"/>
+<path d="M15 18L15 21M9 18L9 21" stroke="#83919F" stroke-width="2" stroke-linecap="round"/>
+<path d="M9 8L15 8" stroke="#83919F" stroke-width="2" stroke-linecap="round"/>
+<path d="M9 12L15 12" stroke="#83919F" stroke-width="2" stroke-linecap="round"/>
 </svg>
-
