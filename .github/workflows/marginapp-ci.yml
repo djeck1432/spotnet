@@ -1,0 +1,57 @@
+name: MarginApp CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'margin_app/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'margin_app/**'
+
+jobs:
+  shared:
+    uses: ./.github/workflows/shared_workflow.yml
+    with:
+      python-version: "3.12"
+      env-vars: |
+        ENV_VERSION=DEV
+
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create .env file
+        run: cp .env.dev .env
+
+      - name: Start services
+        run: docker compose -f devops/docker-compose.dev.yaml --env-file .env up -d --build
+
+      - name: Run tests
+        run: |
+          docker compose -f devops/docker-compose.dev.yaml exec -T backend poetry run pytest margin_app/tests
+
+      - name: Run tests coverage
+        run: |
+          docker compose -f devops/docker-compose.dev.yaml exec -T backend poetry run pytest --cov=margin_app/tests --cov-fail-under=90
+
+      - name: Tear down
+        run: |
+          docker compose -f devops/docker-compose.dev.yaml down 
