@@ -1,0 +1,16 @@
+name: Test cases Workflow
+
+on:
+  push:
+    branches:
+      - test-pipeline-branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+  
