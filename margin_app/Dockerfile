@@ -32,11 +32,11 @@ RUN poetry config virtualenvs.create false \
 # Copy the rest of the application code
 COPY ./app /app/app
 COPY alembic.ini /app
-COPY ./scripts/entrypoint.sh /app
+COPY ./scripts/entrypoint_dev.sh /app
 
 # Set the entrypoint script as executable
-RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/entrypoint_dev.sh
 
-ENTRYPOINT ["bash", "/app/entrypoint.sh"]
+ENTRYPOINT ["bash", "/app/entrypoint_dev.sh"]
 
 EXPOSE 8000
