@@ -96,35 +96,3 @@ class UserCRUD(DBConnector):
             user_id=user_id, size=size, leverage=leverage
         )
         return await self.write_to_db(new_margin_position)
-
-
-async def main():
-    """Test CRUD operations"""
-    db = UserCRUD()
-
-    try:
-        print(await db.test_connection())
-        wallet_id = str(uuid.uuid4())
-        user = await db.create_user(wallet_id)
-        print(f"Created user: {user.id} - {user.wallet_id}")
-
-        updated = await db.update_user(user.id, wallet_id="new_wallet_id_123")
-        print(f"Updated user wallet ID: {updated.wallet_id}")
-
-        deposit = await db.add_deposit(user.id, 1000.0)
-        print(f"Added deposit: {deposit.amount}")
-
-        position = await db.add_margin_position(user.id, 500.0, 3)
-        print(
-            f"Added margin position: {position.size} with {position.leverage}x leverage"
-        )
-        await db.delete_user(user.id)
-        print("Test user cleaned up")
-
-    except Exception as e:
-        print(f"Test failed: {str(e)}")
-        raise
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
