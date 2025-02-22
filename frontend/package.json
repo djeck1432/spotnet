@@ -31,7 +31,9 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
-    "format": "prettier --check . --write"
+    "format": "prettier --check . --write",
+    "biome:check": "biome check .",
+    "biome:fix": "biome format ."
   },
   "options": {
     "allowedHosts": [
@@ -53,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@vitest/ui": "^3.0.4",
     "class-variance-authority": "^0.7.1",
     "globals": "^15.11.0",
