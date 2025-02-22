@@ -1,8 +1,19 @@
+"""
+This module contains unit tests for the margin app.
+
+It includes tests for:
+- Health check endpoint
+- Database connection
+- Environment variables
+
+"""
+
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 
 client = TestClient(app)
+
 
 def test_health_check():
     """Test the health check endpoint"""
