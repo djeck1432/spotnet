@@ -99,26 +99,20 @@ async def main():
 
     try:
         print(await db.test_connection())
-        #  Test create_user
         wallet_id = str(uuid.uuid4())
         user = await db.create_user(wallet_id)
         print(f"Created user: {user.id} - {user.wallet_id}")
 
-        # Test update_user
         updated = await db.update_user(user.id, wallet_id="new_wallet_id_123")
         print(f"Updated user wallet ID: {updated.wallet_id}")
 
-        # Test add_deposit
         deposit = await db.add_deposit(user.id, 1000.0)
         print(f"Added deposit: {deposit.amount}")
 
-        # Test add_margin_position
         position = await db.add_margin_position(user.id, 500.0, 3)
         print(
             f"Added margin position: {position.size} with {position.leverage}x leverage"
         )
-
-        # Cleanup
         await db.delete_user(user.id)
         print("Test user cleaned up")
 
