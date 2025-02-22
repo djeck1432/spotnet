@@ -6,11 +6,11 @@ import asyncio
 import uuid
 from typing import Optional
 from uuid import UUID
+from sqlalchemy.sql import text
 
 from app.models.deposit import Deposit
 from app.models.margin_position import MarginPosition
 from app.models.user import User
-from sqlalchemy.sql import text
 
 from .base import DBConnector
 
@@ -21,6 +21,10 @@ class UserCRUD(DBConnector):
     """
 
     async def test_connection(self):
+        """
+        Test the database connection.
+        :return
+        """
         async with self.session() as session:
             result = await session.execute(text("SELECT version()"))
             return f"PostgreSQL version: {result.scalar()}"
