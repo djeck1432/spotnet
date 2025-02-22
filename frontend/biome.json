@@ -1,7 +1,11 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "formatter": {
-    "enabled": true
+    "enabled": true,
+    "options": {
+      "printWidth": 120,
+      "organizeImports": true
+    }
   },
   "linter": {
     "rules": {
