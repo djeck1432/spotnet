@@ -15,10 +15,11 @@ class User(BaseModel):
     User model. With one-to-many realtionships to Deposit and MarginPosition models.
     """
     
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     wallet_id: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    deposit: Mapped[list[Deposit]] = relationship("Deposit", back_populates="user")
+    deposits: Mapped[list["Deposit"]] = relationship("Deposit", back_populates="user", 
+                                                    cascade="all, delete-orphan")
     margin_position: Mapped[list[MarginPosition]] = relationship(
         "MarginPosition", back_populates="user"
     )

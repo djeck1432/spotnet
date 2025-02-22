@@ -32,7 +32,7 @@ class MarginPosition(BaseModel):
 
     user_id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True), 
-        ForeignKey('user.id'), 
+        ForeignKey('users.id'), 
         nullable=False
     )
     multiplier: Mapped[int] = mapped_column(nullable=False)

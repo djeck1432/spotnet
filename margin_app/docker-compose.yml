@@ -21,9 +21,11 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - app_network
+      app_network:
+        aliases:
+          - postgres
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -40,7 +42,9 @@ services:
     depends_on:
       - db
     networks:
-      - app_network
+      app_network:
+        aliases:
+          - application
 
 volumes:
   pgdata: { }

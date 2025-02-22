@@ -7,6 +7,7 @@ import uuid
 from typing import Optional
 from uuid import UUID
 from sqlalchemy.sql import text
+from decimal import Decimal
 
 from app.models.deposit import Deposit
 from app.models.margin_position import MarginPosition
@@ -65,11 +66,11 @@ class UserCRUD(DBConnector):
 
         await self.delete_object_by_id(User, user_id)
 
-    async def add_deposit(self, user_id: UUID, amount: float) -> Deposit:
+    async def add_deposit(self, user_id: UUID, amount: Decimal) -> Deposit:
         """
         Add a deposit to a user's account.
         :param user_id: UUID
-        :param amount: float
+        :param amount: Decimal
         :return: Deposit
         """
 
@@ -79,12 +80,12 @@ class UserCRUD(DBConnector):
         return await self.write_to_db(new_deposit)
 
     async def add_margin_position(
-        self, user_id: UUID, size: float, leverage: int
+        self, user_id: UUID, size: Decimal, leverage: int
     ) -> MarginPosition:
         """
         Add a margin position to a user's account.
         :param user_id: UUID
-        :param size: float
+        :param size: Decimal
         :param leverage: int
         :return: MarginPosition
         """
