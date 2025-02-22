@@ -32,7 +32,7 @@ services:
     build: .
     restart: always
     volumes:
-      - .:/app
+      - .:/src
     env_file:
       - .env
     ports:

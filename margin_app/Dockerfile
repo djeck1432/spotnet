@@ -18,25 +18,17 @@ RUN apt-get update \
 # Install Poetry
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
-# Create app directory
-RUN mkdir /app
-WORKDIR /app
+WORKDIR /src
 
-# Copy the pyproject.toml and poetry.lock files into container's /app/ directory
-COPY pyproject.toml poetry.lock /app/
+# Copy all files
+COPY . /src/
 
-# Install dependencies from the poetry.lock file
+# Install poetry dependencies
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-root
 
-# Copy the rest of the application code
-COPY ./app /app/app
-COPY alembic.ini /app
-COPY ./scripts/entrypoint_dev.sh /app
+RUN chmod +x /src/scripts/entrypoint.sh
 
-# Set the entrypoint script as executable
-RUN chmod +x /app/entrypoint_dev.sh
-
-ENTRYPOINT ["bash", "/app/entrypoint_dev.sh"]
+ENTRYPOINT ["bash", "/src/scripts/entrypoint.sh"]
 
 EXPOSE 8000
