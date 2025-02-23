@@ -61,7 +61,7 @@ jobs:
         working-directory: ./margin_app
         run: |
           cp .env.example .env
-          sed -i 's/DATABASE_URL=.*/DATABASE_URL=postgresql:\/\/:password@localhost:5432\/spotnet/' .env
+          sed -i 's/DATABASE_URL=.*/DATABASE_URL=postgresql:\/\/postgres:password@localhost:5432\/spotnet/' .env
 
       - name: Run migrations
         working-directory: ./margin_app
