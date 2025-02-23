@@ -1,6 +1,7 @@
 name: MarginApp Tests
 
 on:
+  workflpw_dispatch:
   push:
     paths:
       - 'margin_app/'
