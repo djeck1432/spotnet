@@ -1,7 +1,6 @@
 name: MarginApp Tests
 
-on:
-  workflow_dispatch:
+on:  
   push:
     paths:
       - 'margin_app/'
