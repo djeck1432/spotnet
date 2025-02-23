@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router'; 
 import Logo from '@/assets/icons/spotnet-logo.svg';
 import WalletSection from '@/components/layout/wallet-section/WalletSection';
 import NavigationLinks from '@/components/layout/navigation-links/NavigationLinks';
@@ -19,6 +20,7 @@ const STICKY_ROUTES = [
   '/dashboard/withdraw',
   '/terms-and-conditions',
   '/defispring',
+  
 ];
 
 const useMenuHandling = (pathname) => {
@@ -82,6 +84,7 @@ const LogoSection = () => (
 function Header({ onConnectWallet, onLogout }) {
   const location = useLocation();
   const makeNavStick = STICKY_ROUTES.includes(location.pathname);
+  
 
   const { isMenuOpen, toggleMenu, closeMenu } = useMenuHandling(location.pathname);
   const { isModalOpen, openModal, closeModal } = useModalHandling();
@@ -94,6 +97,7 @@ function Header({ onConnectWallet, onLogout }) {
         <div className="relative flex w-full items-center justify-between bg-transparent px-[30px]">
           <LogoSection />
 
+         
           <NavigationLinks onNavClick={closeMenu} />
 
           <div className="flex items-center">

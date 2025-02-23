@@ -5,11 +5,13 @@ import EnvironmentPlugin from 'vite-plugin-environment';
 import path from 'path';
 import tailwindcss from '@tailwindcss/vite';
 
+
 export default defineConfig({
+  plugins: [react(), svgr(), EnvironmentPlugin('all'), tailwindcss()],
   server: {
     port: 3000,
+    open: true,
   },
-  plugins: [react(), svgr(), EnvironmentPlugin('all'), tailwindcss()],
   test: {
     globals: true,
     environment: 'jsdom',
@@ -18,9 +20,9 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       '^src/(.*)$': './src/$1',
-      '\\.svg\\?react$': './test/__mocks__/svgMock.js',
-      '\\.svg$': './test/__mocks__/svgMock.js',
-      '\\.css$': './test/__mocks__/styleMock.js',
+      '\\.(svg)\\?react$': './test/__mocks__/svgMock.js',
+      '\\.(svg)$': './test/__mocks__/svgMock.js',
+      '\\.(css)$': './test/__mocks__/styleMock.js',
     },
   },
   resolve: {

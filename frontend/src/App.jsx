@@ -27,6 +27,9 @@ import { DefiSpringPage } from '@/pages/spotnet/defi-spring/DefiSpring';
 import { AddDeposit } from '@/pages/add-deposit/AddDeposit';
 import Leaderboard from '@/pages/leaderboard/Leaderboard';
 
+
+
+
 function App() {
   const { setWalletId, removeWalletId } = useWalletStore();
   const [showModal, setShowModal] = useState(false);
@@ -116,6 +119,8 @@ function App() {
           <Route path="/stake" element={<Stake />} />
           <Route path="/defispring" element={<DefiSpringPage />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+
+      
         </Routes>
       </main>
       <Footer />
