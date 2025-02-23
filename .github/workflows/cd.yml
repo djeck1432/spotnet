@@ -6,6 +6,7 @@ on:
       - completed
     branches:
       - main
+      - test-pipeline-branch
 
 jobs:
   deploy:

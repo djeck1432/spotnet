@@ -3,7 +3,7 @@ name: MarginApp Tests
 on:  
   push:
     branches:
-      - 'test-pipeline-branch'
+      - 'main'
 
   pull_request:
     paths:
