@@ -1,7 +1,9 @@
 name: MarginApp Tests
 
 on:  
-  
+  push:
+    branch:
+      - test-pipeline-branch
 
   pull_request:
     paths:
@@ -16,9 +18,9 @@ jobs:
       postgres:
         image: postgres:14
         env:
-          POSTGRES_DB: margin_test
-          POSTGRES_USER: margin_user
-          POSTGRES_PASSWORD: margin_password
+          POSTGRES_DB: spotnet
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
         ports:
           - 5432:5432
         options: >-
@@ -59,7 +61,7 @@ jobs:
         working-directory: ./margin_app
         run: |
           cp .env.example .env
-          sed -i 's/DATABASE_URL=.*/DATABASE_URL=postgresql:\/\/margin_user:margin_password@localhost:5432\/margin_test/' .env
+          sed -i 's/DATABASE_URL=.*/DATABASE_URL=postgresql:\/\/:password@localhost:5432\/spotnet/' .env
 
       - name: Run migrations
         working-directory: ./margin_app
