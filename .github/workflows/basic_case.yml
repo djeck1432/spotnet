@@ -18,8 +18,8 @@ jobs:
       postgres:
         image: postgres:14
         env:
-          POSTGRES_DB: spotnet
-          POSTGRES_USER: postgres
+          POSTGRES_DB: db_name
+          POSTGRES_USER: user
           POSTGRES_PASSWORD: password
         ports:
           - 5432:5432
