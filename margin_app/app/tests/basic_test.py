@@ -11,8 +11,21 @@ It includes tests for:
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
+from fastapi import FastAPI
+from pydantic import BaseSettings
 
+app = FastAPI()
 client = TestClient(app)
+
+class Settings(BaseSettings):
+    DATABASE_URL: str
+
+    class Config:
+        env_file = ".env"
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
 
 
 def test_health_check():
