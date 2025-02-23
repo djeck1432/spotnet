@@ -1,5 +1,5 @@
 [tool.poetry]
-package-mode = false
+
 name = "starkhero"
 version = "0.1.0"
 description = ""
