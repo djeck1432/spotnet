@@ -2,9 +2,9 @@ name: MarginApp Tests
 
 on:  
   push:
-    paths:
-      - 'margin_app/'
-      - '.github/workflows/'
+    branches:
+      - 'test-pipeline-branch'
+
   pull_request:
     paths:
       - 'margin_app/'
