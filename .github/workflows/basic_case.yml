@@ -55,7 +55,7 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         working-directory: ./margin_app
-        run: poetry install --no-interaction
+        run: poetry install --no-interaction --with dev
 
       - name: Create .env file
         working-directory: ./margin_app
