@@ -1,9 +1,7 @@
 name: MarginApp Tests
 
 on:  
-  push:
-    branches:
-      - 'main'
+  
 
   pull_request:
     paths:
