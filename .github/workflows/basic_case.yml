@@ -71,6 +71,7 @@ jobs:
       - name: Run tests
         working-directory: ./margin_app
         run: |
+          poetry install --no-interaction
           poetry run pytest app/tests/ -v --cov=app --cov-report=term-missing
 
 
