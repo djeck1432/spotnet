@@ -2,9 +2,7 @@ name: MarginApp Tests
 
 on:  
   push:
-    branch:
-      - test-pipeline-branch
-
+   
   pull_request:
     paths:
       - 'margin_app/'
@@ -66,6 +64,8 @@ jobs:
       - name: Run migrations
         working-directory: ./margin_app
         run: |
+          poetry lock 
+          --no-update
           poetry run alembic upgrade head
 
       - name: Run tests
