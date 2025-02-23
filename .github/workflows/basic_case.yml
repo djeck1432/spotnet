@@ -1,7 +1,7 @@
 name: MarginApp Tests
 
 on:
-  workflpw_dispatch:
+  workflow_dispatch:
   push:
     paths:
       - 'margin_app/'
