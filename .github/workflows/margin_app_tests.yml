@@ -16,14 +16,14 @@ jobs:
     uses: ./.github/workflows/shared_workflow.yml
     with:
       python-version: "3.12"
-      env-vars: |
-        APP_ENV=development
-        SECRET_KEY=SECRET_KEY
-        DB_PORT=5432
-        DB_NAME=margin
-        POSTGRES_USER=postgres
-        POSTGRES_PASSWORD=margin_password
-        DB_HOST=db
+      env: 
+        APP_ENV: development
+        SECRET_KEY: SECRET_KEY
+        DB_PORT: 5432
+        DB_NAME: margin
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: margin_password
+        DB_HOST: db
 
   margin-tests:
     runs-on: ubuntu-latest
