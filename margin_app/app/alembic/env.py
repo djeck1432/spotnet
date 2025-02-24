@@ -17,7 +17,6 @@ from app.core.config import settings
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-database_url = os.getenv("DATABASE_URL")
 
 config.set_main_option(
     "sqlalchemy.url", settings.db_url.render_as_string(hide_password=False)
