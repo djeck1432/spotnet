@@ -1,9 +1,9 @@
 import uuid
 from decimal import Decimal
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, Mock
 
 import pytest
-from app.crud.margin_position_crud import MarginPositionCRUD, MarginPositionStatus
+from app.crud.margin_position import MarginPositionCRUD, MarginPositionStatus
 from app.models.margin_position import MarginPosition
 
 
@@ -63,15 +63,16 @@ async def test_close_margin_position_success():
 @pytest.mark.asyncio
 async def test_close_margin_position_not_found():
     position_id = uuid.uuid4()
-
+    
     crud = MarginPositionCRUD()
     crud.get_object = AsyncMock(return_value=None)
-
+    crud.write_to_db = AsyncMock()  # Properly mock the method
+    
     result = await crud.close_margin_position(position_id)
-
+    
     assert result is None
     crud.get_object.assert_awaited_once_with(MarginPosition, position_id)
-    crud.write_to_db.assert_not_called()
+    crud.write_to_db.assert_not_awaited()  # For async mocks, use assert_not_awaited
 
 
 @pytest.mark.asyncio

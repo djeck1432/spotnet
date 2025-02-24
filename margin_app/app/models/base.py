@@ -7,11 +7,12 @@ from datetime import datetime
 
 from sqlalchemy import DateTime
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import as_declarative
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import Mapped, mapped_column
 
 
-@as_declarative()
+Base = declarative_base()
+
 class BaseModel:
     """
     Base model for all database tables. Includes common fields such as

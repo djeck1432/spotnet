@@ -30,7 +30,8 @@ class MarginPositionCRUD(DBConnector):
             user_id=user_id,
             borrowed_amount=borrowed_amount,
             multiplier=multiplier,
-            transaction_id=transaction_id
+            transaction_id=transaction_id,
+            status=MarginPositionStatus.OPEN
         )
         position = await self.write_to_db(position_entry)
         return position
