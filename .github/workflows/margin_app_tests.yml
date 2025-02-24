@@ -33,7 +33,7 @@ jobs:
 
       - name: Create .env file
         run: |
-          cat << EOF > /home/runner/work/spotnet/spotnet/margin_app/.env
+          cat << EOF > margin_app/.env
           APP_ENV=${{ env.APP_ENV }}
           SECRET_KEY=${{ env.SECRET_KEY }}
           DB_PORT=${{ env.DB_PORT }}
@@ -42,6 +42,9 @@ jobs:
           POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }}
           DB_HOST=${{ env.DB_HOST }}
           EOF
+      
+      - name: Read .env file
+        run: cat margin_app/.env
 
       - name: Build and Start Containers
         run: |
