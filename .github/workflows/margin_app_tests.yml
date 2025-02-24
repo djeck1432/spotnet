@@ -33,13 +33,12 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "APP_ENV=${{ env.APP_ENV }}" > margin_app/.env
-          echo "SECRET_KEY=${{ env.SECRET_KEY }}" >> margin_app/.env
-          echo "DB_PORT=${{ env.DB_PORT }}" >> margin_app/.env
-          echo "DB_NAME=${{ env.DB_NAME }}" >> margin_app/.env
-          echo "POSTGRES_USER=${{ env.POSTGRES_USER }}" >> margin_app/.env
-          echo "POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }}" >> margin_app/.env
-          echo "DB_HOST=${{ env.DB_HOST }}" >> margin_app/.env
+          echo "APP_ENV=$APP_ENV" > margin_app/.env
+          echo "SECRET_KEY=$SECRET_KEY" >> margin_app/.env
+          echo "DB_PORT=$DB_PORT" >> margin_app/.env
+          echo "DB_NAME=$DB_NAME" >> margin_app/.env
+          echo "POSTGRES_USER=$POSTGRES_USER" >> margin_app/.env
+          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> margin_app/.env
       
       - name: Read .env file
         run: cat margin_app/.env
