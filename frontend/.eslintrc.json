@@ -1,0 +1,18 @@
+{
+  "extends": ["eslint:recommended", "plugin:react-hooks/recommended", "plugin:@tanstack/query/recommended"],
+  "plugins": ["react-hooks", "@tanstack/query"],
+  "rules": {
+    "react/prop-types": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "@tanstack/query/exhaustive-deps": "error"
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
