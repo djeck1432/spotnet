@@ -32,6 +32,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Download .env file from shared job
+        uses: actions/download-artifact@v3
+        with:
+          name: env-file
+
       - name: Build and Start Containers
         run: |
           docker compose -f margin_app/docker-compose.yml --env-file margin_app/.env up -d --build

@@ -46,3 +46,10 @@ jobs:
       - name: Read .env file
         if: ${{ inputs.env-vars != '' }}
         run: cat ${{ inputs.env-path }}
+
+      - name: Upload .env file as artifact
+        if: ${{ inputs.env-vars != '' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: env-file
+          path: ${{ inputs.env-path }}
