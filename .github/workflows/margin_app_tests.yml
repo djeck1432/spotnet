@@ -51,8 +51,8 @@ jobs:
 
       - name: Install Test Dependencies in Container
         run: |
-          docker exec backend pip install pytest pytest-cov
-          docker exec backend pip freeze  # Debug: show installed packages
+          docker compose -f margin_app/docker-compose.yml exec backend pip install pytest pytest-cov
+          docker compose -f margin_app/docker-compose.yml exec backend pip freeze  # Debug: show installed packages
 
       - name: Wait for Backend Service
         timeout-minutes: 5
