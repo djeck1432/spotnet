@@ -11,6 +11,11 @@ on:
         description: "Environment variables as a multi-line string"
         required: false
         type: string
+      env-path:
+        description: "Path for .env"
+        required: false
+        type: string
+        default: ".env"
 
 jobs:
   shared-setup:
@@ -36,4 +41,8 @@ jobs:
       - name: Create .env file
         if: ${{ inputs.env-vars != '' }}
         run: |
-          echo "${{ inputs.env-vars }}" > .env
+          echo "${{ inputs.env-vars }}" > ${{ inputs.env-path }}
+
+      - name: Read .env file
+        if: ${{ inputs.env-vars != '' }}
+        run: cat ${{ inputs.env-path }}

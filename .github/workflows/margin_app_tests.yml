@@ -16,32 +16,21 @@ jobs:
     uses: ./.github/workflows/shared_workflow.yml
     with:
       python-version: "3.12"
-      env: 
-        APP_ENV: development
-        SECRET_KEY: SECRET_KEY
-        DB_PORT: 5432
-        DB_NAME: margin
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: margin_password
-        DB_HOST: db
+      env-vars: |
+        APP_ENV=development
+        SECRET_KEY=SECRET_KEY
+        DB_PORT=5432
+        DB_NAME=margin
+        POSTGRES_USER=postgres
+        POSTGRES_PASSWORD=margin_password
+        DB_HOST=db
+      env-path: margin_app/.env
 
   margin-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Create .env file
-        run: |
-          echo "APP_ENV=$APP_ENV" > margin_app/.env
-          echo "SECRET_KEY=$SECRET_KEY" >> margin_app/.env
-          echo "DB_PORT=$DB_PORT" >> margin_app/.env
-          echo "DB_NAME=$DB_NAME" >> margin_app/.env
-          echo "POSTGRES_USER=$POSTGRES_USER" >> margin_app/.env
-          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> margin_app/.env
-      
-      - name: Read .env file
-        run: cat margin_app/.env
 
       - name: Build and Start Containers
         run: |
