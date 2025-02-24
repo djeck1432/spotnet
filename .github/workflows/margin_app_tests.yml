@@ -27,6 +27,7 @@ jobs:
       env-path: margin_app/.env
 
   margin-tests:
+    needs: shared
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
