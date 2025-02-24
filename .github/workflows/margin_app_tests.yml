@@ -33,7 +33,7 @@ jobs:
 
       - name: Create .env file
         run: |
-          cat << EOF > /home/runner/work/spotnet/spotnet/.env
+          cat << EOF > /home/runner/work/spotnet/spotnet/margin_app/.env
           APP_ENV=${{ env.APP_ENV }}
           SECRET_KEY=${{ env.SECRET_KEY }}
           DB_PORT=${{ env.DB_PORT }}
@@ -45,7 +45,7 @@ jobs:
 
       - name: Build and Start Containers
         run: |
-          docker compose -f margin_app/docker-compose.yml --env-file .env up -d --build
+          docker compose -f margin_app/docker-compose.yml --env-file margin_app/.env up -d --build
           echo "Waiting for containers to be ready..."
           sleep 30
 
