@@ -1,0 +1,98 @@
+name: Margin Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'margin_app/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'margin_app/**'
+jobs:
+  shared:
+    uses: ./.github/workflows/shared_workflow.yml
+    with:
+      python-version: "3.x"
+      env-vars: |
+        APP_ENV=development
+        SECRET_KEY=SECRET_KEY
+        DB_PORT=5432
+        DB_NAME=margin
+        POSTGRES_USER=postgres
+        POSTGRES_PASSWORD=margin_password
+        DB_HOST=db
+
+  margin-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          cat << EOF > /home/runner/work/spotnet/spotnet/.env
+          APP_ENV=${{ env.APP_ENV }}
+          SECRET_KEY=${{ env.SECRET_KEY }}
+          DB_PORT=${{ env.DB_PORT }}
+          DB_NAME=${{ env.DB_NAME }}
+          POSTGRES_USER=${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }}
+          DB_HOST=${{ env.DB_HOST }}
+          EOF
+
+      - name: Build and Start Containers
+        run: |
+          docker compose -f margin_app/docker-compose.yml --env-file .env up -d --build
+          echo "Waiting for containers to be ready..."
+          sleep 30
+
+      - name: Install Test Dependencies in Container
+        run: |
+          docker exec backend pip install pytest pytest-cov
+          docker exec backend pip freeze  # Debug: show installed packages
+
+      - name: Wait for Backend Service
+        timeout-minutes: 5
+        run: |
+          while ! curl -s http://localhost:8000/health > /dev/null; do
+            echo "Waiting for backend service..."
+            sleep 30
+            
+            # Check if the container is still running before logging
+            if ! docker ps | grep -q backend; then
+              echo "Backend container is not running!"
+              docker compose -f margin_app/docker-compose.yml  logs backend || true 
+              exit 1
+            fi
+            
+            # Log the backend service status for debugging purposes.
+            docker compose -f margin_app/docker-compose.yml logs backend || true 
+          done
+
+      - name: Apply Migrations
+        run: |
+          docker exec backend alembic -c margin_app/alembic.ini upgrade head || {
+            echo "Migration failed. Showing backend logs:"
+            docker compose -f margin_app/docker-compose.yml logs backend || true
+            exit 1
+          }
+
+      - name: Run Integration Tests with Coverage
+        run: |
+          docker compose -f margin_app/docker-compose.yml backend bash -c "cd /app && python -m pytest margin_app/app/tests -v"
+
+      - name: Clean Up
+        if: always()
+        run: |
+          docker compose -f margin_app/docker-compose.yml  logs > docker-logs.txt || true 
+          docker compose -f margin_app/docker-compose.yml  down -v
+
+      - name: Upload Docker Logs on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-logs
+          path: docker-logs.txt
