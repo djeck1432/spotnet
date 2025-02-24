@@ -79,7 +79,7 @@ class DBConnector:
         :return: Base - the updated object
         """
         async with self.session() as db:
-            db.add(obj)
+            obj = await db.merge(obj)
             await db.commit()
             await db.refresh(obj)
             return obj

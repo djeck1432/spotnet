@@ -94,3 +94,4 @@ class DepositCRUD(DBConnector):
             logger.error(f"Error updating deposit with ID {deposit_id}: {e}")
             raise
 
+deposit_crud = DepositCRUD()

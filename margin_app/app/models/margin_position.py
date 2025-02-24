@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime
 from decimal import Decimal
 from enum import Enum
-from sqlalchemy import String, ForeignKey, CheckConstraint
+from sqlalchemy import String, ForeignKey, CheckConstraint, Enum as SQLAlchemyEnum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import BaseModel
@@ -37,9 +37,13 @@ class MarginPosition(BaseModel):
     )
     multiplier: Mapped[int] = mapped_column(nullable=False)
     borrowed_amount: Mapped[Decimal] = mapped_column(nullable=False)
-    status: Mapped[str] = mapped_column(
-        String, nullable=False, 
-        default=MarginPositionStatus.OPEN.value, 
+    status: Mapped[MarginPositionStatus] = mapped_column(
+        SQLAlchemyEnum(
+            MarginPositionStatus,
+            name="margin_position_status",
+            values_callable=lambda obj: [e.value for e in obj],
+        ),
+        default=MarginPositionStatus.OPEN
     )
     transaction_id: Mapped[str] = mapped_column(String, nullable=False)
     liquidated_at: Mapped[datetime] = mapped_column(nullable=True)

@@ -12,16 +12,26 @@ from app.models.margin_position import MarginPositionStatus
 
 class MarginPositionCRUD(DBConnector):
     """"Handles margin position database operations"""
-    async def open_margin_position(self, user_id: uuid.UUID,
-                                   borrowed_amount: Decimal) -> MarginPosition:
+    async def open_margin_position(
+        self, user_id: uuid.UUID,
+        borrowed_amount: Decimal,
+        multiplier: int,
+        transaction_id: str
+    ) -> MarginPosition:
         """
         Opens a margin position by creating an entry record in the database.
         :param user_id: uuid
         :param borrowed_amount: Decimal
+        :param multiplier int
+        :param transaction_id str
         :return: MarginPosition
         """
-        position_entry = MarginPosition(user_id=user_id,
-                                        borrowed_amount=borrowed_amount)
+        position_entry = MarginPosition(
+            user_id=user_id,
+            borrowed_amount=borrowed_amount,
+            multiplier=multiplier,
+            transaction_id=transaction_id
+        )
         position = await self.write_to_db(position_entry)
         return position
 
@@ -32,8 +42,10 @@ class MarginPositionCRUD(DBConnector):
         :return: MarginPositionStatus
         """
 
-        position = self.get_object(MarginPosition, position_id)
+        position = await self.get_object(MarginPosition, position_id)
         if position:
-            position.status = MarginPositionStatus.CLOSED.value
+            position.status = MarginPositionStatus.CLOSED
             await self.write_to_db(position)
             return position.status
+
+margin_position_crud = MarginPositionCRUD()

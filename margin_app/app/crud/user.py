@@ -66,33 +66,50 @@ class UserCRUD(DBConnector):
 
         await self.delete_object_by_id(User, user_id)
 
-    async def add_deposit(self, user_id: UUID, amount: Decimal) -> Deposit:
+    async def add_deposit(
+        self, user_id: UUID, amount: Decimal, 
+        token: str, transaction_id: str
+    ) -> Deposit:
         """
         Add a deposit to a user's account.
         :param user_id: UUID
         :param amount: Decimal
+        :param token str
+        :param transaction_id str
         :return: Deposit
         """
 
         if not await self.get_object(User, user_id):
             raise ValueError(f"User {user_id} does not exist.")
-        new_deposit = Deposit(user_id=user_id, amount=amount)
+        new_deposit = Deposit(
+            user_id=user_id, amount=amount, 
+            token=token, transaction_id=transaction_id
+        )
         return await self.write_to_db(new_deposit)
 
     async def add_margin_position(
-        self, user_id: UUID, size: Decimal, leverage: int
+        self, user_id: UUID, 
+        borrowed_amount: Decimal,
+        multiplier: int,
+        transaction_id: str
     ) -> MarginPosition:
         """
         Add a margin position to a user's account.
         :param user_id: UUID
-        :param size: Decimal
-        :param leverage: int
+        :param borrowed_amount: Decimal
+        :param multiplier: int
+        :param transaction_id str
         :return: MarginPosition
         """
 
         if not await self.get_object(User, user_id):
             raise ValueError(f"User {user_id} does not exist.")
         new_margin_position = MarginPosition(
-            user_id=user_id, size=size, leverage=leverage
+            user_id=user_id,
+            borrowed_amount=borrowed_amount,
+            multiplier=multiplier,
+            transaction_id=transaction_id
         )
         return await self.write_to_db(new_margin_position)
+
+user_crud = UserCRUD()
