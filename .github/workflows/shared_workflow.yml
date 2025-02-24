@@ -49,7 +49,7 @@ jobs:
 
       - name: Upload .env file as artifact
         if: ${{ inputs.env-vars != '' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: env-file
           path: ${{ inputs.env-path }}
