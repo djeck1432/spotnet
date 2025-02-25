@@ -1,3 +1,7 @@
+"""
+This module contains Pydantic schemas for Deposit models.
+"""
+
 from _decimal import Decimal
 from uuid import UUID
 
