@@ -8,8 +8,9 @@ export default defineConfig({
     name: "react",
     browser: {
       enabled: true,
-      name: "chromium",
       provider: "playwright",
+      headless: true,
     },
+    exclude: ["test/browser/**/*"],
   },
 });

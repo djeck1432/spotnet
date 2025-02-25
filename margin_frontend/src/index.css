@@ -1,2 +1,97 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "InstrumentSans";
+  src: url("./assets/fonts/Instrument_Sans/static/InstrumentSans-Regular.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "InstrumentSans";
+  src: url("./assets/fonts/Instrument_Sans/static/InstrumentSans-Medium.ttf")
+    format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "InstrumentSans";
+  src: url("./assets/fonts/Instrument_Sans/static/InstrumentSans-SemiBold.ttf")
+    format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "InstrumentSans";
+  src: url("./assets/fonts/Instrument_Sans/static/InstrumentSans-Bold.ttf")
+    format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BricolageGrotesque";
+  src: url("./assets/fonts/Bricolage_Grotesque/static/BricolageGrotesque-Regular.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BricolageGrotesque";
+  src: url("./assets/fonts/Bricolage_Grotesque/static/BricolageGrotesque-Medium.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BricolageGrotesque";
+  src: url("./assets/fonts/Bricolage_Grotesque/static/BricolageGrotesque-SemiBold.ttf")
+    format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BricolageGrotesque";
+  src: url("./assets/fonts/Bricolage_Grotesque/static/BricolageGrotesque-Bold.ttf")
+    format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PilotCommandSpaced";
+  src: url("./assets/fonts/Pilot-Command-Spaced/pilotcommandspaced.ttf")
+    format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@theme {
+  /* Fonts */
+  --font-instrumentsans: "InstrumentSans";
+  --font-bricolageGrotesque: "BricolageGrotesque";
+  --font-pilotCommandSpaced: "PilotCommandSpaced";
+
+  /* Colors */
+  --color-baseWhite: #fffcfc;
+  --color-navLinkColor: #b4b4b4;
+  --color-navSeperatorColor: #252525;
+  --color-btnBorderColor: #4f4f4f;
+  --color-headerText: #e5e5e5;
+
+  --color-navbg: #161616;
+  --color-pageBg: #0e0e0e;
+
+  /* Other */
+  --text-logo: 13px;
+  --leading-logo: 15.86px;
+
+  --text-header-text-size: 64px;
+  --leading-header-text-lineheight: 68.35px;
+}

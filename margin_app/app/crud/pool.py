@@ -12,14 +12,15 @@ from app.crud.base import DBConnector
 
 """This module contains the PoolCRUD class for managing Pool relation in database."""
 
+
 class PoolCRUD(DBConnector):
     """Handles Database queries for Pools"""
+
     async def create_pool(self, token: str, risk_status: PoolRiskStatus) -> Pool:
         """
         Creates a new pool
         :param token: string of the token in the pool
         :return Pool the object successfully added to the database
-        
         """
         pool_entry: Pool = Pool(token=token, risk_status=risk_status)
         return await self.write_to_db(pool_entry)
@@ -31,8 +32,7 @@ class UserPoolCRUD(DBConnector):
     """
 
     async def create_user_pool(
-        self, user_id: uuid.UUID,
-        pool_id: uuid.UUID, amount: Decimal
+        self, user_id: uuid.UUID, pool_id: uuid.UUID, amount: Decimal
     ) -> UserPool:
         """
         Create a new user pool entry.
@@ -76,6 +76,7 @@ class UserPoolCRUD(DBConnector):
             await db.commit()
             await db.refresh(user_pool)
             return user_pool
+
 
 pool_crud = PoolCRUD()
 user_pool_crud = UserPoolCRUD()

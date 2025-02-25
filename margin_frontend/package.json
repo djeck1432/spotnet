@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.8",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "eslint-plugin-react": "^7.37.4",
     "react": "^19.0.0",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@playwright/test": "^1.50.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
