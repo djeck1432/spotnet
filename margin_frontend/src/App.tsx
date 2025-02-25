@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import "./index.css"
 import { cn } from "./utils/cn.ts";
+import HomePage from './routes/index.tsx';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,8 +16,10 @@ function App() {
         >
           count is {count}
         </button>
+        <HomePage/>
       </div>
     </div>
+
   )
 }
 
