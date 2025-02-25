@@ -12,6 +12,7 @@ from app.api.deposit import router as deposit_router
 
 app = FastAPI()
 app.include_router(pool_router, prefix="/api/pool", tags=["Pool"])
+app.include_router(deposit_router, prefix="/api/deposit", tags=["Deposit"])
 
 
 # Configure Loguru
