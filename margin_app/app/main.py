@@ -7,13 +7,16 @@ import sys
 from fastapi import FastAPI, Request
 from loguru import logger
 
+from app.api.margin_position import router as margin_position_router
 from app.api.pools import router as pool_router
+from app.api.user import router as user_router
 from app.api.deposit import router as deposit_router
 
 app = FastAPI()
 app.include_router(pool_router, prefix="/api/pool", tags=["Pool"])
 app.include_router(deposit_router, prefix="/api/deposit", tags=["Deposit"])
-
+app.include_router(margin_position_router, tags=["MarginPosition"])
+app.include_router(user_router, prefix="/api/user", tags=["User"])
 
 # Configure Loguru
 logger.remove()  # Remove default logger to configure custom settings
