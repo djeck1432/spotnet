@@ -2,8 +2,10 @@
 This module contains Pydantic schemas for Deposit models.
 """
 
-from _decimal import Decimal
+from decimal import Decimal
 from uuid import UUID
+from typing import Optional
+from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
@@ -27,11 +29,21 @@ class DepositCreate(DepositBase):
     pass
 
 
+class DepositUpdate(BaseModel):
+    """
+    Pydantic model for updating a Deposit.
+    """
+    token: Optional[str] = None
+    amount: Optional[Decimal] = None
+    transaction_id: Optional[str] = None
+
+
 class DepositResponse(DepositBase):
     """
-    Represents the schema for a deposit transaction response
+    Pydantic model for a Deposit response.
     """
-
     id: UUID
+    created_at: datetime
+    updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)

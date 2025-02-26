@@ -17,6 +17,9 @@ app.include_router(pool_router, prefix="/api/pool", tags=["Pool"])
 app.include_router(deposit_router, prefix="/api/deposit", tags=["Deposit"])
 app.include_router(margin_position_router, tags=["MarginPosition"])
 app.include_router(user_router, prefix="/api/user", tags=["User"])
+app.include_router(margin_position_router, prefix="/api/margin_position", tags=["MarginPosition"])
+app.include_router(deposit_router, prefix="/api/deposit", tags=["Deposit"])
+
 
 # Configure Loguru
 logger.remove()  # Remove default logger to configure custom settings

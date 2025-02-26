@@ -3,8 +3,10 @@ This module contains the API routes for the Deposit model.
 """
 
 from fastapi import APIRouter, status
+
+from uuid import UUID
 from app.crud.deposit import deposit_crud
-from app.schemas.deposit import DepositResponse, DepositCreate
+from app.schemas.deposit import DepositResponse, DepositCreate, DepositUpdate
 
 router = APIRouter()
 
@@ -22,4 +24,21 @@ async def create_deposit(deposit_in: DepositCreate) -> DepositResponse:
         deposit_in.token,
         deposit_in.amount,
         deposit_in.transaction_id,
+    )
+
+
+@router.post("/update/{deposit_id}", response_model=DepositResponse)
+async def update_deposit(
+    deposit_id: UUID,
+    deposit_update: DepositUpdate,
+):
+    """
+    Update a deposit by ID.
+    :param deposit_id: str
+    :param deposit_update: DepositUpdate data
+    :param db: AsyncSession
+    :return: Deposit
+    """
+    return await deposit_crud.update_deposit(
+        deposit_id, deposit_update.model_dump(exclude_none=True)
     )

@@ -5,6 +5,7 @@ This module contains Pydantic schemas for Pools.
 from pydantic import BaseModel, ConfigDict
 from uuid import UUID
 from decimal import Decimal
+from typing import Optional
 
 
 class UserPoolBase(BaseModel):
