@@ -6,7 +6,11 @@
   ],
   "include": ["src/**/*"],
   "compilerOptions": {
+    "baseUrl": "./",
     "allowUnreachableCode": false,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@/*": ["src/*"]
+    }
   }
 }

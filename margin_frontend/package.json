@@ -1,3 +1,4 @@
+
 {
   "name": "margin_frontend",
   "private": true,
@@ -43,3 +44,46 @@
     "vitest": "^3.0.6"
   }
 }
+=======
+{
+  "name": "margin_frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "biome:check": "biome check .",
+    "biome:fix": "biome check --apply ."
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.0.8",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss": "^4.0.8",
+    "vitest-browser-react": "^0.1.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@playwright/test": "^1.50.1",
+    "@types/node": "^22.13.5",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react-swc": "^3.8.0",
+    "@vitest/browser": "^3.0.6",
+    "globals": "^15.14.0",
+    "jsdom": "^26.0.0",
+    "playwright": "^1.50.1",
+    "typescript": "~5.7.2",
+    "vite": "^6.1.1",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.6"
+  }
+}
+
