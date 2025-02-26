@@ -77,4 +77,5 @@ async def health_check():
     """
     logger.info("Health check endpoint accessed.")
     return {"status": "OK"}
+
 app.include_router(deposit_router, prefix="/api/deposit", tags=["Deposit"])
