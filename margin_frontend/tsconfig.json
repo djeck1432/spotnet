@@ -4,9 +4,13 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "components/PostsDemo.tsx"],
   "compilerOptions": {
+    "baseUrl": "./",
     "allowUnreachableCode": false,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@/*": ["src/*"]
+    }
   }
 }

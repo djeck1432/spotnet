@@ -20,6 +20,7 @@ class PoolCRUD(DBConnector):
         """
         Creates a new pool
         :param token: string of the token in the pool
+        :param risk_status: risk status of the pool
         :return Pool the object successfully added to the database
         """
         pool_entry: Pool = Pool(token=token, risk_status=risk_status)

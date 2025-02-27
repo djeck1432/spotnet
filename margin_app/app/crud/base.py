@@ -7,13 +7,12 @@ import uuid
 from typing import Type, TypeVar
 from app.models.base import BaseModel
 
-from typing import AsyncIterator
+from typing import AsyncIterator, Callable
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 from app.core.config import settings
-
 logger = logging.getLogger(__name__)
 ModelType = TypeVar("ModelType", bound=BaseModel)
 
@@ -36,7 +35,7 @@ class DBConnector:
         """
         self.engine = create_async_engine(settings.db_url)
         self.session_maker = async_sessionmaker(bind=self.engine)
-        
+            
     @asynccontextmanager
     async def session(self) -> AsyncIterator[AsyncSession]:
         """

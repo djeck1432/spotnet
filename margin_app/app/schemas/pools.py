@@ -4,7 +4,13 @@ This module contains Pydantic schemas for Pools.
 
 from pydantic import BaseModel, ConfigDict
 from uuid import UUID
+from typing import Optional
 from decimal import Decimal
+
+from app.models.pool import PoolRiskStatus
+
+from typing import Optional
+
 
 
 class UserPoolBase(BaseModel):
@@ -24,6 +30,7 @@ class UserPoolCreate(UserPoolBase):
 
     pass
 
+
 class UserPoolUpdate(BaseModel):
     """
     User pool update model
@@ -34,6 +41,7 @@ class UserPoolUpdate(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class UserPoolResponse(UserPoolBase):
     """
     User pool response model
@@ -43,12 +51,44 @@ class UserPoolResponse(UserPoolBase):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class UserPoolUpdateResponse(UserPoolBase):
     """
     User pool update response model
     """
 
     id: UUID
-    updated_at: str 
+    updated_at: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class PoolBase(BaseModel):
+    """
+    Pool base model
+    """
+
+    name: Optional[str] = None
+    risk_status: Optional[PoolRiskStatus] = PoolRiskStatus.LOW
+
+
+class PoolCreate(PoolBase):
+    """
+    Pool create model
+    """
+
+
+class PoolUpdate(PoolBase):
+    """
+    Pool update model
+    """
+
+
+class PoolResponse(PoolBase):
+    """
+    Pool response model
+    """
+
+    id: UUID
 
     model_config = ConfigDict(from_attributes=True)
