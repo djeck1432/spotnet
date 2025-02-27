@@ -12,9 +12,9 @@ from app.api.pools import router as pool_router
 from app.api.user import router as user_router
 from app.api.deposit import router as deposit_router
 
-# Initialize FastAPI app
 app = FastAPI()
 app.include_router(pool_router, prefix="/api/pool", tags=["Pool"])
+app.include_router(deposit_router, prefix="/api/deposit", tags=["Deposit"])
 app.include_router(margin_position_router, tags=["MarginPosition"])
 app.include_router(user_router, prefix="/api/user", tags=["User"])
 app.include_router(margin_position_router, prefix="/api/margin_position", tags=["MarginPosition"])
@@ -80,3 +80,5 @@ async def health_check():
     """
     logger.info("Health check endpoint accessed.")
     return {"status": "OK"}
+
+app.include_router(deposit_router, prefix="/api/deposit", tags=["Deposit"])
