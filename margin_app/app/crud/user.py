@@ -7,6 +7,7 @@ import uuid
 from typing import Optional
 from uuid import UUID
 from sqlalchemy.sql import text
+from sqlalchemy.exc import IntegrityError
 from decimal import Decimal
 
 from app.models.deposit import Deposit
@@ -29,6 +30,7 @@ class UserCRUD(DBConnector):
         async with self.session() as session:
             result = await session.execute(text("SELECT version()"))
             return f"PostgreSQL version: {result.scalar()}"
+        
 
     async def create_user(self, wallet_id: str) -> User:
         """
@@ -36,9 +38,9 @@ class UserCRUD(DBConnector):
         :param wallet_id: str
         :return: User
         """
-
         new_user = User(wallet_id=wallet_id)
         return await self.write_to_db(new_user)
+
 
     async def update_user(self, user_id: UUID, **kwargs) -> Optional[User]:
         """
@@ -47,10 +49,11 @@ class UserCRUD(DBConnector):
         :return: User
         """
 
-        with self.session() as session:
+        async with self.session() as session:
             user = await session.get(User, user_id)
             if not user:
                 return None
+            
             for key, value in kwargs.items():
                 setattr(user, key, value)
             await session.commit()
@@ -63,7 +66,6 @@ class UserCRUD(DBConnector):
         :param user_id: UUID
         :return: None
         """
-
         await self.delete_object_by_id(User, user_id)
 
     async def add_deposit(
@@ -81,12 +83,17 @@ class UserCRUD(DBConnector):
 
         if not await self.get_object(User, user_id):
             raise ValueError(f"User {user_id} does not exist.")
+        
         new_deposit = Deposit(
-            user_id=user_id, amount=amount, 
-            token=token, transaction_id=transaction_id
+            user_id=user_id, 
+            amount=amount, 
+            token=token, 
+            transaction_id=transaction_id
         )
         return await self.write_to_db(new_deposit)
 
+        
+   
     async def add_margin_position(
         self, user_id: UUID, 
         borrowed_amount: Decimal,
@@ -111,5 +118,6 @@ class UserCRUD(DBConnector):
             transaction_id=transaction_id
         )
         return await self.write_to_db(new_margin_position)
+
 
 user_crud = UserCRUD()

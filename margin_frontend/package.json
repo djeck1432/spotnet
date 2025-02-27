@@ -13,11 +13,20 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.8",
+
     "@tanstack/react-router": "^1.111.11",
     "@tanstack/router-devtools": "^1.111.11",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "eslint-plugin-react": "^7.37.4",
+
+    "@tanstack/react-query": "^5.66.9",
+    "@tanstack/react-query-devtools": "^5.66.9",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "eslint-plugin-react": "^7.37.4",
+    "ky": "^1.7.5",
+
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.0.1",
@@ -27,6 +36,9 @@
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@playwright/test": "^1.50.1",
+
+    "@types/node": "^22.13.5",
+
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
@@ -43,8 +55,9 @@
     "vite": "^6.1.1",
     "vitest": "^3.0.6"
   }
+
 }
-=======
+
 {
   "name": "margin_frontend",
   "private": true,
@@ -85,5 +98,8 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.0.6"
   }
+}
+
+
 }
 

@@ -8,10 +8,15 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
+
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
+
+    "isolatedModules": true,
+    "moduleDetection": "force",
+
     "composite": true,
 
     /* Linting */
@@ -22,6 +27,7 @@
     "noUncheckedSideEffectImports": true
   },
   "include": ["vite.config.ts"]
+
 }
 {
   "compilerOptions": {
@@ -47,3 +53,6 @@
   },
   "include": ["vite.config.ts"]
 }
+
+}
+
