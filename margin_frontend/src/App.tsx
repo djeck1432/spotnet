@@ -1,13 +1,12 @@
-import './index.css';
-import { Home } from './routes/index.tsx';
-import Pool from './routes/pool.tsx';
+import "./index.css";
+import Pools from "./routes/pool";
 
 function App() {
-  return (
-    <div className="w-screen min-h-screen bg-pageBg ">
-      <Pool />
-    </div>
-  );
+	return (
+		<div className="w-screen min-h-screen bg-pageBg ">
+			<Pools />
+		</div>
+	);
 }
 
 export default App;
