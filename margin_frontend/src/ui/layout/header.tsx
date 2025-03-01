@@ -17,7 +17,7 @@ export function Header() {
 			<h4 className="font-bold uppercase font-instrumentsans text-baseWhite text-logo leading-logo">Margin</h4>
 			<nav className="items-center hidden gap-4 md:flex">
 				{navlink.map((link, index) => (
-					<React.Fragment key={index}>
+					<React.Fragment key={link.title}>
 						<a href={link.link} className="text-sm font-normal text-navLinkColor font-bricolageGrotesque">
 							{link.title}
 						</a>

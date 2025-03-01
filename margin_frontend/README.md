@@ -3,6 +3,6 @@
 to run Vite server, run
 
 ```bash
-# or
+## or
 yarn dev
 ```
