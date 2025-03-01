@@ -184,3 +184,6 @@ node_modules/
 .vscode 
 .cursor*
 .DS_Store
+
+#ignore build dist
+dist/
