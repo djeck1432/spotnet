@@ -8,6 +8,11 @@
 		"strict": true,
 		"paths": {
 			"@/*": ["src/*"]
-		}
+		},
+		"target": "ESNext",
+    	"module": "nodenext",
+		"jsx": "react-jsx",
+		"moduleResolution": "nodenext"
+
 	}
 }

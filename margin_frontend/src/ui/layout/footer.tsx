@@ -20,8 +20,8 @@ export function Footer() {
 		<div className="hidden md:w-11/12 xl:w-[1280px] px-10 rounded-t-4xl lg:bg-navbg pb-10 pt-6 mx-auto h-[88px] md:flex  justify-between">
 			<h4 className="font-bold uppercase font-instrumentsans text-baseWhite text-logo leading-logo">Margin</h4>
 			<div className="flex items-center h-6 gap-6">
-				{socials.map((social, index) => (
-					<a href={social.link} key={index}>
+				{socials.map((social) => (
+					<a href={social.link} key={social.title}>
 						<img src={social.icon} alt="" className="size-6" />
 					</a>
 				))}

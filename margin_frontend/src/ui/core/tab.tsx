@@ -19,7 +19,8 @@ export function Tabs({ tabs, defaultActiveIndex = 0, className = "" }: TabsProps
 			<div className="flex border-b border-inactiveTab bg-pageBg">
 				{tabs.map((tab, index) => (
 					<button
-						key={index}
+						type="button"
+						key={tab.label}
 						className={`p-4 text-sm  font-medium focus:outline-none transition-colors min-w-[100px] ${
 							activeIndex === index
 								? " rounded-t-lg text-baseWhite bg-navbg border-b border-activeTab "

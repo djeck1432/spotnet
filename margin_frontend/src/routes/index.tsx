@@ -5,7 +5,7 @@ export const Route = createFileRoute("/")({
 	component: Home,
 });
 
-function Home() {
+export function Home() {
 	return (
 		<div className="mt-[100px] md:mt-0 pb-[112px] md:pb-0">
 			<h1 className="hidden text-center uppercase md:block text-header-text-size leading-header-text-lineheight font-pilotCommandSpaced text-headerText">
