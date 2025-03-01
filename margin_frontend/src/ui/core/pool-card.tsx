@@ -1,62 +1,55 @@
-import { Button } from "./button";
+import React from "react";
+
+export interface PoolType {
+  id: number;
+  name: string;
+  type: string;
+  baseApy: string;
+  totalApy: string;
+  liquidity: string;
+  riskLevel: string;
+  isDegen: boolean;
+}
 
 interface PoolCardProps {
-	pool: {
-		id: number;
-		name: string;
-		type: string;
-		baseApy: string;
-		totalApy: string;
-		liquidity: string;
-		riskLevel: string;
-		isDegen: boolean;
-	};
+  pool: PoolType;
 }
 
 export default function PoolCard({ pool }: PoolCardProps) {
-	return (
-		<div className="bg-[#1a1a1a] rounded-lg p-5 text-baseWhite">
-			<div className="flex items-center justify-between mb-4">
-				<div className="flex items-center">
-					<div className="relative flex mr-3">
-						<div className="h-10 w-10 rounded-full overflow-hidden border-2 border-[#1a1a1a] bg-blue-900">
-							<img src="src/assets/img/strkLogo.png" alt="STRK Token" width={40} height={40} className="object-cover" />
-						</div>
-						<div className="h-10 w-10 rounded-full overflow-hidden border-2 border-[#1a1a1a] bg-gray-800 -ml-2">
-							<img src="src/assets/img/ethLogo.png" alt="ETH Token" width={40} height={40} className="object-cover" />
-						</div>
-					</div>
-					<div>
-						<h3 className="font-bold text-lg">{pool.name}</h3>
-						<div className="flex items-center text-sm text-gray-400">
-							<span>{pool.type}</span>
-							<span className="mx-2">•</span>
-							<span>{pool.baseApy}</span>
-						</div>
-					</div>
-				</div>
+  return (
+    <div className="bg-[#131313] rounded-lg p-4 shadow-md">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-xl font-semibold tracking-tight">{pool.name}</h2>
+          <p className="text-sm text-[#898989]">
+            {pool.type} · Base APY: {pool.baseApy}
+          </p>
+        </div>
+        {pool.isDegen && (
+          <span className="bg-[#1d1d1d] text-xs text-[#898989] px-2 py-1 rounded">
+            Degen
+          </span>
+        )}
+      </div>
 
-				{pool.isDegen && <div className="bg-[#333] px-2 py-1 rounded text-xs text-gray-300">Degen</div>}
-			</div>
+      <div className="grid grid-cols-3 gap-4 mb-4">
+        <div>
+          <p className="text-xs text-[#898989] mb-1">Liquidity</p>
+          <p className="font-medium">{pool.liquidity}</p>
+        </div>
+        <div>
+          <p className="text-xs text-[#898989] mb-1">APY</p>
+          <p className="font-medium text-[#58c15d]">{pool.totalApy}</p>
+        </div>
+        <div>
+          <p className="text-xs text-[#898989] mb-1">Risk Level</p>
+          <p className="font-medium">{pool.riskLevel}</p>
+        </div>
+      </div>
 
-			<div className="grid grid-cols-3 gap-4 mb-4">
-				<div>
-					<div className="text-gray-400 text-sm mb-1">Liquidity</div>
-					<div className="font-bold">{pool.liquidity}</div>
-				</div>
-				<div>
-					<div className="text-gray-400 text-sm mb-1">APY</div>
-					<div className="font-bold text-green-500">{pool.totalApy}</div>
-				</div>
-				<div>
-					<div className="text-gray-400 text-sm mb-1">Risk Level</div>
-					<div className="font-bold">{pool.riskLevel}</div>
-				</div>
-			</div>
-
-			<Button variant="outline" className="w-full bg-transparent border-[#333] hover:bg-[#333] text-white">
-				DEPOSIT
-			</Button>
-		</div>
-	);
+      <button className="w-full py-3 bg-[#1b1b1b] hover:bg-[#252525] rounded text-sm transition-colors">
+        DEPOSIT
+      </button>
+    </div>
+  );
 }
