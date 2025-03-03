@@ -1,18 +1,18 @@
 {
-	"files": [],
-	"references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
-	"include": ["src/**/*", "components/PostsDemo.tsx"],
 	"compilerOptions": {
-		"baseUrl": "./",
-		"allowUnreachableCode": false,
-		"strict": true,
-		"paths": {
-			"@/*": ["src/*"]
-		},
-		"target": "ESNext",
-    	"module": "nodenext",
-		"jsx": "react-jsx",
-		"moduleResolution": "nodenext"
-
-	}
-}
+	  "target": "ESNext",
+	  "module": "ESNext",
+	  "moduleResolution": "Node",
+	  "strict": true,
+	  "jsx": "preserve",
+	  "esModuleInterop": true,
+	  "skipLibCheck": true,
+	  "forceConsistentCasingInFileNames": true,
+	  "outDir": "./dist", // Ensure this matches your build output directory
+	  "rootDir": "./", // Ensure this is set correctly
+	  "declaration": true, // Generate .d.ts files
+	  "emitDeclarationOnly": true // Only emit .d.ts files (optional)
+	},
+	"include": ["src/**/*", "components/**/*", "src/env.d.ts"], // Ensure this matches your project structure
+	"exclude": ["node_modules", "dist"] // Exclude unnecessary directories
+  }

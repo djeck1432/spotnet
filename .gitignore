@@ -185,5 +185,32 @@ node_modules/
 .cursor*
 .DS_Store
 
-#ignore build dist
-dist/
+
+# Ignore JavaScript files generated from TypeScript
+/**/*.js
+/**/*.js.map
+/**/*.d.ts
+
+# But don't ignore JavaScript in specific places
+!/webpack.config.js
+!/jest.config.js
+# (add any other JS files that should be kept)
+
+# Keep the dist folder ignored
+/dist
+
+# TypeScript incremental compilation cache
+*.tsbuildinfo
+
+# Build outputs
+/dist
+*.js
+*.d.ts
+*.js.map
+*.d.ts.map
+/components/*.js
+/components/*.d.ts
+/components/*.js.map
+# Except specific JS files that should be committed
+!vite.config.js
+!vitest.config.js

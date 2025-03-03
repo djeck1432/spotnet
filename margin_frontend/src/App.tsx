@@ -1,4 +1,3 @@
-import "./index.css";
 import Pools from "./routes/pool";
 
 function App() {
