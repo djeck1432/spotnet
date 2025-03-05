@@ -1,6 +1,6 @@
 #[starknet::contract]
 pub mod Margin {
-    use openzeppelin_token::erc20::interface::IERC20DispatcherTrait;
+    use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
     use core::num::traits::Zero;
     use starknet::{
         event::EventEmitter,
@@ -8,10 +8,23 @@ pub mod Margin {
         ContractAddress, get_contract_address, get_caller_address,
     };
     use margin::{
-        interface::IMargin,
+        
+        interface::{
+            IMargin, IERC20MetadataForPragma, IERC20MetadataForPragmaDispatcher,
+            ,
+        },
+       
         types::{Position, TokenAmount, PositionParameters, SwapData, EkuboSlippageLimits},
+    ,
     };
-    use openzeppelin_token::erc20::interface::{IERC20Dispatcher};
+    use margin::mocks::erc20_mock::{ERC20Mock, IERC20MetadataForPragmaImpl};
+    use alexandria_math::{BitShift, shl};
+
+    use openzeppelin::token::erc20::interface::{IERC20Dispatcher};
+    use margin::pragma::mock_get_data_median;
+    use pragma_lib::abi::{IPragmaABIDispatcher, IPragmaABIDispatcherTrait};
+    use pragma_lib::types::{AggregationMode, DataType, PragmaPricesResponse};
+
     use ekubo::{
         interfaces::core::{ICoreDispatcher, ILocker, ICoreDispatcherTrait},
         types::{keys::PoolKey, delta::Delta},
@@ -46,6 +59,7 @@ pub mod Margin {
         treasury_balances: Map<(ContractAddress, ContractAddress), TokenAmount>,
         pools: Map<ContractAddress, TokenAmount>,
         positions: Map<ContractAddress, Position>,
+        oracle_address: ContractAddress,
     }
 
     #[constructor]
@@ -102,6 +116,24 @@ pub mod Margin {
             self.emit(Withdraw { withdrawer, token, amount });
         }
 
+        // TODO: Add Ekubo data for swap
+        fn open_margin_position(ref self: ContractState, position_parameters: PositionParameters) {}
+        fn close_position(ref self: ContractState) {}
+        fn liquidate(ref self: ContractState, user: ContractAddress) {}
+
+        fn get_asset_data(ref self: ContractState, token: ContractAddress) -> PragmaPricesResponse {
+            let oracle_dispatcher = IPragmaABIDispatcher {
+                contract_address: self.oracle_address.read(),
+            };
+            let token_symbol: felt252 = IERC20MetadataForPragmaDispatcher {
+                contract_address: token,
+            }
+                .symbol();
+
+            let pair_id = shl(token_symbol, 4) + '/USD';
+
+            return mock_get_data_median(1234, DataType::SpotEntry(pair_id));
+        }
         fn open_margin_position(
             ref self: ContractState,
             position_parameters: PositionParameters,
