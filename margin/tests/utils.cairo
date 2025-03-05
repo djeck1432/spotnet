@@ -1,4 +1,4 @@
-use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 use starknet::{ContractAddress, contract_address_const, get_contract_address};
 use margin::interface::{IMarginDispatcher};
 use snforge_std::cheatcodes::execution_info::caller_address::{

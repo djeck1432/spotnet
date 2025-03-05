@@ -1,5 +1,6 @@
 use starknet::ContractAddress;
 use crate::types::{TokenAmount, PositionParameters};
+use pragma_lib::types::{AggregationMode, DataType, PragmaPricesResponse};
 
 #[starknet::interface]
 pub trait IMargin<TContractState> {
@@ -11,11 +12,13 @@ pub trait IMargin<TContractState> {
     fn close_position(ref self: TContractState);
 
     fn liquidate(ref self: TContractState, user: ContractAddress);
+
+    fn get_asset_data(ref self: TContractState, token: ContractAddress) -> PragmaPricesResponse;
 }
 
 #[starknet::interface]
-pub trait IERC20MetadataForPragma<TState> {
-    fn name(self: @TState) -> ByteArray;
-    fn symbol(self: @TState) -> felt252;
-    fn decimals(self: @TState) -> felt252;
+pub trait IERC20MetadataForPragma<TContractState> {
+    fn name(self: @TContractState) -> ByteArray;
+    fn symbol(self: @TContractState) -> felt252;
+    fn decimals(self: @TContractState) -> felt252;
 }
