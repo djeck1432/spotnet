@@ -6,30 +6,11 @@ import uuid
 from unittest.mock import patch
 
 import pytest
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
 
-from app.api.margin_position import router
 from app.models.margin_position import MarginPositionStatus
 from app.schemas.margin_position import MarginPositionResponse
 
-
-@pytest.fixture
-def app():
-    """
-    Create a FastAPI app for testing.
-    """
-    test_app = FastAPI()
-    test_app.include_router(router, prefix="/margin-positions")
-    return test_app
-
-
-@pytest.fixture
-def client(app):
-    """
-    Create a test client for the app.
-    """
-    return TestClient(app)
+MARGIN_POSITION_URL = "api/margin-positions"
 
 
 @pytest.fixture
@@ -77,7 +58,7 @@ def test_open_margin_position_success(
     )
     mock_open_margin_position.return_value = valid_position_response
 
-    response = client.post("/margin-positions/open", json=data)
+    response = client.post(MARGIN_POSITION_URL + "/open", json=data)
     assert response.status_code == 200
     assert response.json()["user_id"] == data["user_id"]
     assert response.json()["borrowed_amount"] == str(data["borrowed_amount"])
@@ -91,7 +72,7 @@ def test_close_margin_position_success(client, mock_close_margin_position):
     position_id = uuid.uuid4()
     mock_close_margin_position.return_value = MarginPositionStatus.CLOSED
 
-    response = client.post(f"/margin-positions/close/{position_id}")
+    response = client.post(f"{MARGIN_POSITION_URL}/close/{position_id}")
 
     assert response.status_code == 200
     assert response.json()["position_id"] == str(position_id)
@@ -108,7 +89,7 @@ def test_open_margin_position_invalid_data(client):
         "transaction_id": "txn_123456789",
     }
 
-    response = client.post("/margin-positions/open", json=invalid_data)
+    response = client.post(MARGIN_POSITION_URL + "/open", json=invalid_data)
 
     assert response.status_code == 422
 
@@ -126,7 +107,7 @@ def test_open_margin_position_invalid_multiplier(client, mock_open_margin_positi
         "Multiplier must be between 1 and 20"
     )
 
-    response = client.post("/margin-positions/open", json=invalid_data)
+    response = client.post(MARGIN_POSITION_URL + "/open", json=invalid_data)
 
     assert response.status_code == 400
     assert "Multiplier" in response.json()["detail"]
@@ -138,7 +119,7 @@ def test_close_margin_position_not_found(client, mock_close_margin_position):
     position_id = uuid.uuid4()
     mock_close_margin_position.return_value = None
 
-    response = client.post(f"/margin-positions/close/{position_id}")
+    response = client.post(f"{MARGIN_POSITION_URL}/close/{position_id}")
 
     assert response.status_code == 404
     assert "not found" in response.json()["detail"]
@@ -149,6 +130,6 @@ def test_close_margin_position_invalid_uuid(client):
     """Test closing a margin position with invalid UUID format."""
     invalid_id = "not-a-uuid"
 
-    response = client.post(f"/margin-positions/close/{invalid_id}")
+    response = client.post(f"{MARGIN_POSITION_URL}/close/{invalid_id}")
 
     assert response.status_code == 422

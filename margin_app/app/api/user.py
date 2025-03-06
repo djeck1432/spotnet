@@ -2,7 +2,7 @@
 This module contains the API routes for the user.
 """
 from app.crud.deposit import deposit_crud
-from app.crud.user import UserCRUD
+from app.crud.user import user_crud
 from app.db.sessions import get_db
 from app.schemas.user import (AddMarginPositionRequest,
                               AddMarginPositionResponse, AddUserDepositRequest,
@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 router = APIRouter()
 
 @router.post(
-    "/users", 
+    "/",
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
     )
@@ -29,14 +29,44 @@ async def create_user(user: UserCreate)-> UserResponse:
     Returns:
     - UserResponse: The created user object
     """
+
+    user_db = await user_crud.get_object_by_field(field="wallet_id", value=user.wallet_id)
+
+    if user_db:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="User with such wallet_id laready exist.")
+
     try:
-        user = await crud_create_user.create_user(user.wallet_id)
+        user = await user_crud.create_user(user.wallet_id)
     except Exception as e:
         logger.error(f"Error creating user: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Something went wrong.",
         ) from e
+    return user
+
+
+@router.get(
+    "/{wallet_id}",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+    )
+async def get_user(wallet_id: str)-> UserResponse:
+    """
+    Get user.
+
+    Parameters:
+    - wallet_id: str, the wallet ID of the user
+
+    Returns:
+    - UserResponse: The user object
+    """
+    user = await user_crud.get_object_by_field(field="wallet_id", value=wallet_id)
+
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+
     return user
 
 
@@ -64,7 +94,7 @@ async def add_user_deposit(user_deposit: AddUserDepositRequest):
         logger.error(f"Error adding user deposit: {e}")
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
-        
+
 @router.post(
     "/add_user_deposit",
     status_code=status.HTTP_201_CREATED,
@@ -114,7 +144,6 @@ async def add_margin_position(
     Raises:
     - HTTPException (400): If the user does not exist or any validation fails.
     """
-    user_crud = UserCRUD()
 
     try:
         margin_position = await user_crud.add_margin_position(

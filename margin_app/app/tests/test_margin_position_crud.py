@@ -116,7 +116,7 @@ async def test_open_margin_position_db_error(
     """
     with patch.object(
         margin_crud, "write_to_db", side_effect=Exception("Database error")
-    ) as mock_write:
+    ) as _mock_write:
         with pytest.raises(Exception) as exc_info:
             await margin_crud.open_margin_position(
                 user_id=sample_user_id,

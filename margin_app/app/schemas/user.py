@@ -2,10 +2,9 @@
 This module contains Pydantic schemas for User.
 """
 
-from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
-
+from app.schemas.deposit import DepositResponse
 from pydantic import BaseModel, ConfigDict
 
 
@@ -14,9 +13,7 @@ class UserBase(BaseModel):
     User base model
     """
 
-    id: int
     wallet_id: str
-    created_at: datetime
 
 
 class UserCreate(UserBase):
@@ -33,7 +30,7 @@ class UserResponse(UserBase):
     """
 
     id: UUID
-
+    deposit: list[DepositResponse] = []
     model_config = ConfigDict(from_attributes=True)
 
 

@@ -19,6 +19,6 @@ class Deposit(BaseModel):
     token = Column(String, nullable=False)
     amount = Column(Numeric(precision=10, scale=2), nullable=False)
     transaction_id = Column(String, nullable=False, unique=True)
-    user: Mapped["User"] = relationship(back_populates="deposit")
+    user: Mapped["User"] = relationship(back_populates="deposit", lazy="selectin")
 
     # pylint: disable=too-few-public-methods

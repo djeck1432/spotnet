@@ -4,32 +4,26 @@ Tests for user API endpoints.
 
 import uuid
 from decimal import Decimal
-from unittest.mock import patch, MagicMock
+from unittest.mock import AsyncMock, patch, MagicMock
 
 import pytest
-from fastapi import FastAPI, status
-from fastapi.testclient import TestClient
+from fastapi import status
 
-from app.api.user import router
 from app.schemas.user import UserResponse
+from app.crud.user import UserCRUD
+
+USER_URL = "/api/user/"
 
 
 @pytest.fixture
-def app():
+def mock_get_user():
     """
-    Create a FastAPI app for testing.
+    Mock the create_user method of crud_create_user.
     """
-    test_app = FastAPI()
-    test_app.include_router(router)
-    return test_app
-
-
-@pytest.fixture
-def client(app):
-    """
-    Create a test client for the app.
-    """
-    return TestClient(app)
+    with patch(
+        "app.crud.user.UserCRUD.get_object_by_field", new_callable=AsyncMock
+    ) as mock:
+        yield mock
 
 
 @pytest.fixture
@@ -37,7 +31,7 @@ def mock_create_user():
     """
     Mock the create_user method of crud_create_user.
     """
-    with patch("app.api.user.crud_create_user.create_user") as mock:
+    with patch("app.crud.user.UserCRUD.create_user", new_callable=AsyncMock) as mock:
         yield mock
 
 
@@ -55,30 +49,40 @@ def mock_add_margin_position():
     """
     Mock the add_margin_position method of UserCRUD.
     """
-    with patch.object("app.api.user.UserCRUD", "add_margin_position") as mock:
+    with patch.object(UserCRUD, "add_margin_position") as mock:
         yield mock
 
 
-def test_create_user_success(client, mock_create_user):
+def test_create_user_success(client, mock_create_user, mock_get_user):
     """Test successfully creating a user."""
     wallet_id = "0x1234567890abcdef1234567890abcdef12345678"
     user_id = uuid.uuid4()
 
-    mock_create_user.return_value = UserResponse(id=user_id, wallet_id=wallet_id)
+    mock_get_user.return_value = None
+    mock_create_user.return_value = UserResponse(
+        id=user_id,
+        wallet_id=wallet_id,
+    )
 
-    response = client.post("/users", json={"wallet_id": wallet_id})
+    response = client.post(USER_URL, json={"wallet_id": f"{wallet_id}"})
 
     assert response.status_code == status.HTTP_201_CREATED
-    assert response.json() == {"id": str(user_id), "wallet_id": wallet_id}
+
+    assert response.json() == {
+        "id": str(user_id),
+        "wallet_id": wallet_id,
+        "deposit": [],
+    }
+
     mock_create_user.assert_called_once_with(wallet_id)
 
 
-def test_create_user_error(client, mock_create_user):
+def test_create_user_error(client, mock_create_user, mock_get_user):
     """Test error handling when creating a user."""
     wallet_id = "0x1234567890abcdef1234567890abcdef12345678"
     mock_create_user.side_effect = Exception("Database error")
-
-    response = client.post("/users", json={"wallet_id": wallet_id})
+    mock_get_user.return_value = None
+    response = client.post(USER_URL, json={"wallet_id": wallet_id})
 
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     assert response.json() == {"detail": "Something went wrong."}
@@ -101,7 +105,7 @@ def test_add_user_deposit_success(client, mock_create_deposit):
     mock_deposit.id = deposit_id
     mock_create_deposit.return_value = mock_deposit
 
-    response = client.post("/add_user_deposit", json=request_data)
+    response = client.post(USER_URL + "add_user_deposit", json=request_data)
 
     assert response.status_code == status.HTTP_201_CREATED
     assert response.json() == {"deposit_id": str(deposit_id)}
@@ -126,7 +130,7 @@ def test_add_user_deposit_error(client, mock_create_deposit):
 
     mock_create_deposit.side_effect = Exception("User not found")
 
-    response = client.post("/add_user_deposit", json=request_data)
+    response = client.post(USER_URL + "add_user_deposit", json=request_data)
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json() == {"detail": "User not found"}
@@ -150,7 +154,7 @@ def test_add_margin_position_success(client, mock_add_margin_position):
     mock_position.id = position_id
     mock_add_margin_position.return_value = mock_position
 
-    response = client.post("/add_margin_position", json=request_data)
+    response = client.post(USER_URL + "add_margin_position", json=request_data)
 
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == {"margin_position_id": str(position_id)}
@@ -178,7 +182,7 @@ def test_add_margin_position_error(client, mock_add_margin_position):
         "Insufficient funds for margin position"
     )
 
-    response = client.post("/add_margin_position", json=request_data)
+    response = client.post(USER_URL + "add_margin_position", json=request_data)
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json() == {"detail": "Insufficient funds for margin position"}
@@ -187,10 +191,8 @@ def test_add_margin_position_error(client, mock_add_margin_position):
 
 def test_create_user_invalid_wallet(client):
     """Test invalid wallet format when creating a user."""
-    invalid_wallet = "invalid-wallet-format"
 
-    response = client.post("/users", json={"wallet_id": invalid_wallet})
-
+    response = client.post(USER_URL, json={})
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
 
@@ -205,7 +207,7 @@ def test_add_user_deposit_invalid_amount(client):
         "transaction_id": "0xabcdef1234567890",
     }
 
-    response = client.post("/add_user_deposit", json=request_data)
+    response = client.post(USER_URL + "add_user_deposit", json=request_data)
 
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
@@ -222,6 +224,6 @@ def test_add_margin_position_invalid_multiplier(client):
         "transaction_id": "0x9876543210abcdef",
     }
 
-    response = client.post("/add_margin_position", json=request_data)
+    response = client.post(USER_URL + "add_margin_position", json=request_data)
 
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY

@@ -10,17 +10,11 @@ Test Cases:
 """
 
 import uuid
-from dataclasses import dataclass
-from typing import Optional
-from unittest.mock import AsyncMock, patch
-from uuid import UUID
-
 import pytest
-from _decimal import Decimal
-from fastapi import HTTPException
+
+from unittest.mock import AsyncMock, patch
 from fastapi.testclient import TestClient
 
-from app.main import app
 
 BASE_URL = "/api/deposit"
 MOCK_ID = str(uuid.uuid4())
@@ -34,17 +28,6 @@ MOCK_CREATION_RESPONSE = {
     "created_at": "2022-01-01T00:00:00",
     "updated_at": "2022-01-01T00:00:00",
 }
-
-
-@pytest.fixture(scope="module")
-def client() -> None:
-    """
-    A client mock fixture
-    :return: TestClient
-    """
-
-    with TestClient(app=app) as test_client:
-        yield test_client
 
 
 @pytest.mark.anyio

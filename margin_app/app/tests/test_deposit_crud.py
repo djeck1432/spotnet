@@ -26,11 +26,12 @@ def sample_deposit():
         user_id=uuid.uuid4(),
         token="NGN",
         amount=Decimal("1.5"),
-        transaction_id="tx234"
+        transaction_id="tx234",
     )
 
 
 ### Positive Test Cases ###
+
 
 @pytest.mark.asyncio
 async def test_create_deposit_success(deposit_crud):
@@ -40,9 +41,15 @@ async def test_create_deposit_success(deposit_crud):
     amount = Decimal("1.5")
     transaction_id = "tx234"
 
-    deposit_crud.write_to_db = AsyncMock(return_value=Deposit(
-        id=uuid.uuid4(), user_id=user_id, token=token, amount=amount, transaction_id=transaction_id
-    ))
+    deposit_crud.write_to_db = AsyncMock(
+        return_value=Deposit(
+            id=uuid.uuid4(),
+            user_id=user_id,
+            token=token,
+            amount=amount,
+            transaction_id=transaction_id,
+        )
+    )
 
     deposit = await deposit_crud.create_deposit(user_id, token, amount, transaction_id)
 
@@ -79,6 +86,7 @@ async def test_update_deposit_success(deposit_crud, sample_deposit):
 
 
 ### Negative Test Cases ###
+
 
 @pytest.mark.asyncio
 async def test_create_deposit_failure(deposit_crud):

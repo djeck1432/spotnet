@@ -12,7 +12,6 @@ import uuid
 import pytest
 import pytest_asyncio
 from sqlalchemy import Column, String
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.base import BaseModel
 

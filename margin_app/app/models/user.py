@@ -17,7 +17,7 @@ class User(BaseModel):
     __tablename__ = "user"
 
     wallet_id: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    deposit: Mapped[list[Deposit]] = relationship("Deposit", back_populates="user")
+    deposit: Mapped[list[Deposit]] = relationship("Deposit", back_populates="user", lazy="selectin")
     margin_position: Mapped[list[MarginPosition]] = relationship(
         "MarginPosition", back_populates="user"
     )

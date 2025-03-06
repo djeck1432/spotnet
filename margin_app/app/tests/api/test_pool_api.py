@@ -1,4 +1,4 @@
-""" The module contains tests for `margin_app/app/api/pools.py`"""
+"""The module contains tests for `margin_app/app/api/pools.py`"""
 
 import uuid
 from unittest.mock import AsyncMock, patch
@@ -6,15 +6,18 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastapi.testclient import TestClient
 
-from app.api.pools import router
-from app.schemas.pools import (PoolResponse, PoolRiskStatus, UserPoolCreate,
-                               UserPoolResponse, UserPoolUpdate,
-                               UserPoolUpdateResponse)
+from app.schemas.pools import (
+    PoolResponse,
+    PoolRiskStatus,
+    UserPoolResponse,
+    UserPoolUpdateResponse,
+)
 
-client = TestClient(router)
+
+POOL_URL = "api/pool"
 
 
-def test_create_pool():
+def test_create_pool(client):
     """
     Test the create_pool endpoint.
 
@@ -29,14 +32,14 @@ def test_create_pool():
             id=str(uuid.uuid4()), name="TEST", risk_status=PoolRiskStatus("low")
         )
         mock_create_pool.return_value = mock_pool.model_dump()
-        response = client.post("/create_pool?token=TEST&risk_status=low")
+        response = client.post(POOL_URL + "/create_pool?token=TEST&risk_status=low")
         assert response.status_code == 201
         assert response.json().get("name") == "TEST"
 
 
 @pytest.mark.asyncio
 @patch("app.crud.pool.user_pool_crud.create_user_pool", new_callable=AsyncMock)
-async def test_create_user_pool(mock_create_user_pool):
+async def test_create_user_pool(mock_create_user_pool, client):
     """
     Test the create_user_pool endpoint.
 
@@ -54,7 +57,7 @@ async def test_create_user_pool(mock_create_user_pool):
         created_at="2024-01-01T00:00:00Z",
     ).model_dump()
     response = client.post(
-        "/create_user_pool",
+        POOL_URL + "/create_user_pool",
         json={"user_id": user_id, "pool_id": pool_id, "amount": 1000},
     )
     assert response.status_code == 201
@@ -63,7 +66,7 @@ async def test_create_user_pool(mock_create_user_pool):
 
 @pytest.mark.asyncio
 @patch("app.crud.pool.user_pool_crud.update_user_pool", new_callable=AsyncMock)
-async def test_update_user_pool(mock_update_user_pool):
+async def test_update_user_pool(mock_update_user_pool, client):
     """
     Test the update_user_pool endpoint.
 
@@ -83,13 +86,14 @@ async def test_update_user_pool(mock_update_user_pool):
     ).model_dump()
     mock_update_user_pool.return_value = mock_response
     response = client.post(
-        "/update_user_pool", json={"user_pool_id": user_pool_id, "amount": 2000}
+        POOL_URL + "/update_user_pool",
+        json={"user_pool_id": user_pool_id, "amount": 2000},
     )
     assert response.status_code == 200
     assert int(response.json()["amount"]) == 2000
 
 
-def test_update_user_pool_not_found():
+def test_update_user_pool_not_found(client):
     """
     Test the update_user_pool endpoint when the specified user pool entry is not found.
 
@@ -98,14 +102,15 @@ def test_update_user_pool_not_found():
     that the HTTPException is captured as a response. The test verifies that the response returns a
     500 status code and that the response body is empty.
     """
-    client_local = TestClient(router, raise_server_exceptions=False)
+    client_local = TestClient(client, raise_server_exceptions=False)
     with patch(
         "app.crud.pool.user_pool_crud.update_user_pool", new_callable=AsyncMock
     ) as mock_update_user_pool:
         mock_update_user_pool.return_value = None
         user_pool_id = str(uuid.uuid4())
         response = client_local.post(
-            "/update_user_pool", json={"user_pool_id": user_pool_id, "amount": 2000}
+            POOL_URL + "/update_user_pool",
+            json={"user_pool_id": user_pool_id, "amount": 2000},
         )
         assert response.status_code == 500
         assert response.content == b""

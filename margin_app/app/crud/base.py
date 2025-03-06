@@ -35,21 +35,21 @@ class DBConnector:
         """
         self.engine = create_async_engine(settings.db_url)
         self.session_maker = async_sessionmaker(bind=self.engine)
-            
+
     @asynccontextmanager
     async def session(self) -> AsyncIterator[AsyncSession]:
         """
         Asynchronous context manager for handling database sessions.
 
-        This method creates and yields an asynchronous 
-            database session using `self.session_maker()`.  
+        This method creates and yields an asynchronous
+            database session using `self.session_maker()`.
         It ensures proper handling of transactions and session cleanup.
 
         Yields:
             AsyncSession: An asynchronous database session.
 
         Raises:
-            Exception: If a database operation fails, 
+            Exception: If a database operation fails,
             an exception is raised after rolling back the transaction.
 
         Example:
@@ -107,7 +107,7 @@ class DBConnector:
         """
         async with self.session() as db:
             result = await db.execute(select(model).where(getattr(model, field) == value))
-            return result.scalar_one()
+            return result.scalar_one_or_none()
 
     async def delete_object_by_id(
         self, model: Type[ModelType] = None, obj_id: uuid = None
