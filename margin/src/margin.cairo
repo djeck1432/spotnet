@@ -10,15 +10,15 @@ pub mod Margin {
     use margin::{
         
         interface::{
-            IMargin, IERC20MetadataForPragma, IERC20MetadataForPragmaDispatcher,
-            ,
+            IMargin, IERC20MetadataForPragma, IERC20MetadataForPragmaDispatcherTrait,
+            IERC20MetadataForPragmaDispatcher,
         },
        
         types::{Position, TokenAmount, PositionParameters, SwapData, EkuboSlippageLimits},
     ,
     };
-    use margin::mocks::erc20_mock::{ERC20Mock, IERC20MetadataForPragmaImpl};
-    use alexandria_math::{BitShift, shl};
+    use margin::mocks::erc20_mock::{};
+    use alexandria_math::{BitShift, U256BitShift};
 
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher};
     use margin::pragma::mock_get_data_median;
@@ -130,9 +130,12 @@ pub mod Margin {
             }
                 .symbol();
 
-            let pair_id = shl(token_symbol, 4) + '/USD';
+            let token_symbol_u256: u256 = token_symbol.into();
+            let pair_id = BitShift::shl(token_symbol_u256, 4) + '/USD';
 
-            return mock_get_data_median(1234, DataType::SpotEntry(pair_id));
+            return mock_get_data_median(
+                1234, DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')),
+            );
         }
         fn open_margin_position(
             ref self: ContractState,
