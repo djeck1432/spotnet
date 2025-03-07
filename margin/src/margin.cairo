@@ -133,6 +133,7 @@ pub mod Margin {
             let token_symbol_u256: u256 = token_symbol.into();
             let pair_id = BitShift::shl(token_symbol_u256, 4) + '/USD';
 
+            // oracle_dispatcher.get_asset_data(pair_id)
             return mock_get_data_median(
                 1234, DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')),
             );
