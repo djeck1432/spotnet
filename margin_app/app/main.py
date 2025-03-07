@@ -1,16 +1,18 @@
 """
-Main entry point for the application.
+Main FastAPI application entry point.
 """
 
 import sys
+
 from fastapi import FastAPI, Request
 from loguru import logger
 
+from app.api.deposit import router as deposit_router
 from app.api.liquidation import router as liquidation_router
 from app.api.margin_position import router as margin_position_router
+from app.api.order import router as order_router
 from app.api.pools import router as pool_router
 from app.api.user import router as user_router
-from app.api.deposit import router as deposit_router
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -28,6 +30,7 @@ app.include_router(
 )
 app.include_router(user_router, prefix="/api/user", tags=["User"])
 app.include_router(deposit_router, prefix="/api/deposit", tags=["Deposit"])
+app.include_router(order_router, prefix="/api/order", tags=["Order"])
 
 # Configure Loguru
 logger.remove()  # Remove default logger to configure custom settings
@@ -40,6 +43,7 @@ logger.add(
     diagnose=True,
 )
 
+
 @app.on_event("startup")
 async def startup_event():
     """
@@ -47,6 +51,7 @@ async def startup_event():
     For example, database connection setup or loading configurations.
     """
     logger.info("Application startup: Initializing resources.")
+
 
 @app.on_event("shutdown")
 async def shutdown_event():
@@ -67,7 +72,7 @@ async def log_requests(request: Request, call_next):
     logger.info(f"Response: {response.status_code} {request.url}")
     return response
 
-  
+
 # Additional route
 @app.get("/health")
 async def health_check():

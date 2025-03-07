@@ -6,7 +6,7 @@ from sqlalchemy import VARCHAR, Numeric, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
-from base import BaseModel
+from app.models.base import BaseModel
 
 
 class Order(BaseModel):
