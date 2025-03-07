@@ -1,14 +1,27 @@
 #[starknet::contract]
 pub mod Margin {
-    use openzeppelin_token::erc20::interface::IERC20DispatcherTrait;
+    use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
     use core::num::traits::Zero;
     use starknet::{
         event::EventEmitter,
         storage::{StoragePointerReadAccess, StoragePointerWriteAccess, StoragePathEntry, Map},
         ContractAddress, get_contract_address, get_caller_address,
     };
-    use margin::{interface::IMargin, types::{Position, TokenAmount, PositionParameters}};
-    use openzeppelin_token::erc20::interface::{IERC20Dispatcher};
+    use margin::{
+        interface::{
+            IMargin, IERC20MetadataForPragma, IERC20MetadataForPragmaDispatcherTrait,
+            IERC20MetadataForPragmaDispatcher,
+        },
+        types::{Position, TokenAmount, PositionParameters},
+    };
+    use margin::mocks::erc20_mock::{};
+    use alexandria_math::{BitShift, U256BitShift};
+
+    use openzeppelin::token::erc20::interface::{IERC20Dispatcher};
+    use margin::pragma::mock_get_data_median;
+    use pragma_lib::abi::{IPragmaABIDispatcher, IPragmaABIDispatcherTrait};
+    use pragma_lib::types::{AggregationMode, DataType, PragmaPricesResponse};
+
 
     #[derive(starknet::Event, Drop)]
     struct Deposit {
@@ -37,6 +50,7 @@ pub mod Margin {
         treasury_balances: Map<(ContractAddress, ContractAddress), TokenAmount>,
         pools: Map<ContractAddress, TokenAmount>,
         positions: Map<ContractAddress, Position>,
+        oracle_address: ContractAddress,
     }
 
     #[abi(embed_v0)]
@@ -83,5 +97,23 @@ pub mod Margin {
         fn open_margin_position(ref self: ContractState, position_parameters: PositionParameters) {}
         fn close_position(ref self: ContractState) {}
         fn liquidate(ref self: ContractState, user: ContractAddress) {}
+
+        fn get_asset_data(ref self: ContractState, token: ContractAddress) -> PragmaPricesResponse {
+            let oracle_dispatcher = IPragmaABIDispatcher {
+                contract_address: self.oracle_address.read(),
+            };
+            let token_symbol: felt252 = IERC20MetadataForPragmaDispatcher {
+                contract_address: token,
+            }
+                .symbol();
+
+            let token_symbol_u256: u256 = token_symbol.into();
+            let pair_id = BitShift::shl(token_symbol_u256, 4) + '/USD';
+
+            // oracle_dispatcher.get_asset_data(pair_id)
+            return mock_get_data_median(
+                1234, DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')),
+            );
+        }
     }
 }
