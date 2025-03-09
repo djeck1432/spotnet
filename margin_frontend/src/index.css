@@ -87,10 +87,15 @@
 
   --color-navbg: #161616;
   --color-pageBg: #0e0e0e;
-  --color-tabText:#B1B1B1
+  --color-tabText:#B1B1B1;
   --color-activeTab: #434343;
   --color-inactiveTab: #252525;
-  --color-titleHeader:#313131
+  --color-titleHeader:#313131;
+  --color-grayborder:#191819;
+  --color-tableHeads:#868686;
+  --color-riskandliquidity:#fbfff7;
+  --color-APY:#58c15d;
+  --color-AppBg:#101110;
 
   /* Other */
   --text-logo: 13px;
@@ -99,3 +104,12 @@
   --text-header-text-size: 64px;
   --leading-header-text-lineheight: 68.35px;
 }
+#root{
+  overflow-x: hidden;
+}
+.bricolage{
+  font-family: var(--font-bricolageGrotesque), sans-serif;
+}
+
+
+

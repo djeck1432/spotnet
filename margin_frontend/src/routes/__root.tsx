@@ -14,7 +14,7 @@ export const Route = createRootRouteWithContext<{
 function RootComponent() {
 	return (
 		<>
-			<div className="flex flex-col w-screen min-h-screen bg-pageBg md:justify-between">
+			<div className="flex flex-col w-screen min-h-screen bg-AppBg md:justify-between overflow-x-hidden">
 				<Header />
 				<Outlet />
 				<Footer />
