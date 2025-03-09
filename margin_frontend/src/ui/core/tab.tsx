@@ -3,6 +3,7 @@ import { type ReactNode, useState } from "react";
 interface Tab {
 	label: string;
 	content: ReactNode;
+	id: string;
 }
 
 interface TabsProps {
@@ -17,16 +18,17 @@ export function Tabs({ tabs, defaultActiveIndex = 0, className = "" }: TabsProps
 	return (
 		<div className={`w-full ${className}`}>
 			<div className="flex border-b border-inactiveTab bg-pageBg">
-				{tabs.map((tab, index) => (
+				{tabs.map((tab) => (
 					<button
-						key={index}
+						key={tab.id}
+						type="button"
 						className={`p-4 text-sm  font-medium focus:outline-none transition-colors min-w-[100px] ${
-							activeIndex === index
+							activeIndex === tabs.indexOf(tab)
 								? " rounded-t-lg text-baseWhite bg-navbg border-b border-activeTab "
 								: "text-tabText hover:text-baseWhite "
 						}`}
 						onClick={() => {
-							setActiveIndex(index);
+							setActiveIndex(tabs.indexOf(tab));
 						}}
 					>
 						{tab.label}

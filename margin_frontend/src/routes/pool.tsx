@@ -5,8 +5,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Input } from "../ui/core/input";
 import PoolCard from "../ui/core/pool-card";
 import PoolTable from "../ui/core/pool-table";
-import { Footer } from "../ui/layout/footer";
-import { Header } from "../ui/layout/header";
 export const Route = createFileRoute("/pool")({
 	component: Pool,
 });
@@ -38,7 +36,7 @@ function Pool() {
 						className="pl-10 h-12 w-full bg-[#1a1a1a] border-[#333] rounded-full text-[#848484]"
 					/>
 				</div>
-				<button className="ml-4 text-gray-400 lg:hidden">
+				<button type="button" className="ml-4 text-gray-400 lg:hidden">
 					<Menu size={24} />
 				</button>
 			</div>
@@ -56,6 +54,7 @@ function Pool() {
 					<div className="border-b border-[#333] mb-6">
 						<div className="flex">
 							<button
+								type="button"
 								onClick={() => {
 									setActiveTab("all");
 								}}
@@ -64,9 +63,10 @@ function Pool() {
 								}`}
 							>
 								All
-								{activeTab === "all" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white"></span>}
+								{activeTab === "all" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white" />}
 							</button>
 							<button
+								type="button"
 								onClick={() => {
 									setActiveTab("stable");
 								}}
@@ -75,9 +75,10 @@ function Pool() {
 								}`}
 							>
 								Stable
-								{activeTab === "stable" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white"></span>}
+								{activeTab === "stable" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white" />}
 							</button>
 							<button
+								type="button"
 								onClick={() => {
 									setActiveTab("volatile");
 								}}
@@ -86,7 +87,7 @@ function Pool() {
 								}`}
 							>
 								Volatile
-								{activeTab === "volatile" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white"></span>}
+								{activeTab === "volatile" && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white" />}
 							</button>
 						</div>
 					</div>
@@ -103,7 +104,7 @@ function Pool() {
 								className="pl-10 h-12 w-full bg-[#1a1a1a] border-[#333] rounded-full text-[#848484]"
 							/>
 						</div>
-						<button className="ml-4 text-gray-400 lg:hidden">
+						<button type="button" className="ml-4 text-gray-400 lg:hidden">
 							<Menu size={24} />
 						</button>
 					</div>

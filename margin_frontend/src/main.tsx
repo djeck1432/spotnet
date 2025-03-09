@@ -8,7 +8,7 @@ const queryClient = new QueryClient();
 
 const router = createRouter({
 	routeTree,
-	defaultPendingComponent: () => <div></div>,
+	defaultPendingComponent: () => <div />,
 	defaultErrorComponent: ({ error }) => <ErrorComponent error={error} />,
 	defaultNotFoundComponent: () => {
 		return (
@@ -33,9 +33,9 @@ declare module "@tanstack/react-router" {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const rootElement = document.getElementById("root")!;
+const rootElement = document.getElementById("root");
 
-if (!rootElement.innerHTML) {
+if (rootElement && !rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<QueryClientProvider client={queryClient}>
