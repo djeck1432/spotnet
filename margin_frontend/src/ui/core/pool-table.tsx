@@ -25,7 +25,7 @@ export default function PoolTable({ pools }: PoolTableProps) {
 						<th className="pb-4 font-medium">APY %</th>
 						<th className="pb-4 font-medium">Risk Level</th>
 						<th className="pb-4 font-medium">Liquidity</th>
-						<th className="pb-4 font-medium"></th>
+						<th className="pb-4 font-medium" />
 					</tr>
 				</thead>
 				<tbody className="divide-y divide-[#333] text-baseWhite">

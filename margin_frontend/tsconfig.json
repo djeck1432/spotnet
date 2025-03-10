@@ -6,8 +6,14 @@
 		"baseUrl": "./",
 		"allowUnreachableCode": false,
 		"strict": true,
+		"jsx": "react-jsx",
 		"paths": {
 			"@/*": ["src/*"]
-		}
+		},
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"outDir": "./dist",
+		"declaration": true,
+		"emitDeclarationOnly": false
 	}
 }
