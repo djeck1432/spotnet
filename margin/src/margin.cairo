@@ -11,7 +11,8 @@ pub mod Margin {
         
         interface::{
             IMargin, IERC20MetadataForPragma, IERC20MetadataForPragmaDispatcherTrait,
-            IERC20MetadataForPragmaDispatcher,
+            IERC20MetadataForPragmaDispatcher, IPragmaOracleDispatcher,
+            IPragmaOracleDispatcherTrait,
         },
        
         types::{Position, TokenAmount, PositionParameters, SwapData, EkuboSlippageLimits},
@@ -21,8 +22,6 @@ pub mod Margin {
     use alexandria_math::{BitShift, U256BitShift};
 
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher};
-    use margin::pragma::mock_get_data_median;
-    use pragma_lib::abi::{IPragmaABIDispatcher, IPragmaABIDispatcherTrait};
     use pragma_lib::types::{AggregationMode, DataType, PragmaPricesResponse};
 
     use ekubo::{
@@ -63,6 +62,7 @@ pub mod Margin {
     }
 
     #[constructor]
+<<<<<<< HEAD
     fn constructor(ref self: ContractState, ekubo_core: ICoreDispatcher) {
         self.ekubo_core.write(ekubo_core);
     }
@@ -73,6 +73,10 @@ pub mod Margin {
         fn swap(ref self: ContractState, swap_data: SwapData) -> Delta {
             call_core_with_callback(self.ekubo_core.read(), @swap_data)
         }
+=======
+    fn constructor(ref self: ContractState, oracle_address: ContractAddress) {
+        self.oracle_address.write(oracle_address);
+>>>>>>> f4f8f10f (bet)
     }
 
 
@@ -120,23 +124,18 @@ pub mod Margin {
         fn open_margin_position(ref self: ContractState, position_parameters: PositionParameters) {}
         fn close_position(ref self: ContractState) {}
         fn liquidate(ref self: ContractState, user: ContractAddress) {}
+    }
 
-        fn get_asset_data(ref self: ContractState, token: ContractAddress) -> PragmaPricesResponse {
-            let oracle_dispatcher = IPragmaABIDispatcher {
-                contract_address: self.oracle_address.read(),
-            };
-            let token_symbol: felt252 = IERC20MetadataForPragmaDispatcher {
-                contract_address: token,
-            }
-                .symbol();
+    #[external(v0)]
+    fn get_data(ref self: ContractState, token: ContractAddress) -> PragmaPricesResponse {
+        let token_symbol: felt252 = IERC20MetadataForPragmaDispatcher { contract_address: token }
+            .symbol();
 
-            let token_symbol_u256: u256 = token_symbol.into();
-            let pair_id = BitShift::shl(token_symbol_u256, 4) + '/USD';
+        let token_symbol_u256: u256 = token_symbol.into();
+        let pair_id = BitShift::shl(token_symbol_u256, 4) + '/USD';
 
-            // oracle_dispatcher.get_asset_data(pair_id)
-            return mock_get_data_median(
-                1234, DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')),
-            );
+        IPragmaOracleDispatcher { contract_address: self.oracle_address.read() }
+        .get_data_median(DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')))
         }
         fn open_margin_position(
             ref self: ContractState,
