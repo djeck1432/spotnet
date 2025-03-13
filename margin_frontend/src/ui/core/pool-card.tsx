@@ -35,7 +35,13 @@ export default function PoolCard({ pool }: PoolCardProps) {
 					</div>
 				</div>
 
-				{pool.isDegen && <div className="bg-[#333] px-2 py-1 rounded text-xs text-gray-300 flex flex-row items-center gap-1"> <div className="h-[8px] w-[8px] bg-[#898989] rounded-[2px]"></div>Degen</div>}
+				{pool.isDegen && (
+					<div className="bg-[#333] px-2 py-1 rounded text-xs text-gray-300 flex flex-row items-center gap-1">
+						{" "}
+						<div className="h-[8px] w-[8px] bg-[#898989] rounded-[2px]" />
+						Degen
+					</div>
+				)}
 			</div>
 
 			<div className="grid grid-cols-3 gap-4 mb-4 justify-between">

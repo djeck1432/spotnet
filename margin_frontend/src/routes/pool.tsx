@@ -1,6 +1,5 @@
-import { Menu, Search } from "lucide-react";
-import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { Menu, Search } from "lucide-react";
 import { Input } from "../ui/core/input";
 import PoolTable from "../ui/core/pool-table";
 import { Tabs } from "../ui/core/tab";
@@ -9,8 +8,6 @@ export const Route = createFileRoute("/pool")({
 });
 
 function Pool() {
-
-
 	// Sample pool data
 	const pools = Array(8)
 		.fill(null)
@@ -24,22 +21,25 @@ function Pool() {
 			riskLevel: "Low",
 			isDegen: true,
 		}));
-		const Tab = [
-			{
-				label: 'All',
-				content:<PoolTable pools={pools}/>
-			},
-			{
-				label: 'Stable',
-				content: 'to be replced with stable component'
-			},
-			{
-				label: 'Volatile',
-				content: 'to be replaced with volatile component'
-			},
-		]
+	const Tab = [
+		{
+			label: "All",
+			content: <PoolTable pools={pools} />,
+			id: "all-tab",
+		},
+		{
+			label: "Stable",
+			content: "to be replced with stable component",
+			id: "stable-tab",
+		},
+		{
+			label: "Volatile",
+			content: "to be replaced with volatile component",
+			id: "volatile-tab",
+		},
+	];
 	return (
-		<div className="flex-1 max-w-7xl mx-auto w-full px-4 pb-6 pt-2 " >
+		<div className="flex-1 max-w-7xl mx-auto w-full px-4 pb-6 pt-2 ">
 			<div className="flex md:hidden items-center justify-between mb-8">
 				<div className="relative flex-1 max-w-md">
 					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#848484]" />
@@ -48,7 +48,7 @@ function Pool() {
 						className="pl-10 h-[48px] w-full max-w-[305px] text-[#848484] bg-transparent border-[#191819] border-solid border-[1px] rounded-[8px] text-[#848484] bricolage"
 					/>
 				</div>
-				<button className="ml-4 text-gray-400 md:hidden">
+				<button type="button" className="ml-4 text-gray-400 md:hidden">
 					<Menu size={24} />
 				</button>
 			</div>
@@ -77,8 +77,6 @@ function Pool() {
 					</div>
 				</div>
 			</div>
-
-		
 		</div>
 	);
 }
