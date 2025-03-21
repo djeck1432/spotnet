@@ -5,9 +5,12 @@ updating and closing margin positions.
 
 import uuid
 from decimal import Decimal
+from typing import List
+from sqlalchemy import select
 from app.crud.base import DBConnector
 from app.models.margin_position import MarginPosition
 from app.models.margin_position import MarginPositionStatus
+from app.schemas.margin_position import MarginPositionResponse
 
 
 class MarginPositionCRUD(DBConnector):
@@ -47,5 +50,21 @@ class MarginPositionCRUD(DBConnector):
             position.status = MarginPositionStatus.CLOSED
             await self.write_to_db(position)
             return position.status
+
+    async def get_all_liquidated_positions(self) -> List[MarginPositionResponse]:
+        """
+        Retrieves all liquidated margin positions from the database.
+
+        Returns:
+            List[MarginPositionResponse]: List of all liquidated margin positions
+        """
+        async with self.session() as db:
+            result = await db.execute(
+                select(MarginPosition).where(
+                    MarginPosition.liquidated_at.isnot(None)
+                )
+            )
+            positions = result.scalars().all()
+            return [MarginPositionResponse.from_orm(pos) for pos in positions]
 
 margin_position_crud = MarginPositionCRUD()

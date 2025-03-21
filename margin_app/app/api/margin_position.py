@@ -3,6 +3,7 @@ This module contains the API routes for margin positions.
 """
 
 from uuid import UUID
+from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -65,3 +66,24 @@ async def close_margin_position(
         )
 
     return CloseMarginPositionResponse(position_id=position_id, status=status)
+
+
+@router.get("/liquidated", response_model=List[MarginPositionResponse])
+async def get_all_liquidated_positions() -> List[MarginPositionResponse]:
+    """
+    Retrieve all liquidated margin positions.
+
+    Returns:
+        List[MarginPositionResponse]: List of all liquidated margin positions
+
+    Raises:
+        HTTPException: If there's an error retrieving the positions
+    """
+    try:
+        positions = await margin_position_crud.get_all_liquidated_positions()
+        return positions
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving liquidated positions: {str(e)}"
+        ) from e
