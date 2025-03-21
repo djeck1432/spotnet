@@ -7,10 +7,13 @@ fixtures to set up and tear down test environments, as well as tests for
 creating, retrieving, updating, and deleting objects in the database.
 """
 
-import pytest
 import uuid
 from decimal import Decimal
 from unittest.mock import AsyncMock, MagicMock
+
+import pytest
+from isort.io import Empty
+
 from app.crud.pool import PoolCRUD, UserPoolCRUD
 from app.models.pool import Pool, PoolRiskStatus, UserPool
 
@@ -91,6 +94,54 @@ async def test_create_pool(pool_crud, mock_db_session):
     mock_session_instance.merge.assert_called_once()
     mock_session_instance.commit.assert_called_once()
     mock_session_instance.refresh.assert_called_once_with(pool)
+
+
+@pytest.mark.asyncio
+async def test_get_all_pools(pool_crud, mock_db_session):
+    """Test retrieving all pools."""
+    pools = [
+        Pool(token="BTC", risk_status=PoolRiskStatus.LOW),
+        Pool(token="ETH", risk_status=PoolRiskStatus.HIGH),
+    ]
+
+    mock_result = MagicMock()
+    mock_result.scalars.return_value.all.return_value = pools
+    mock_db_session.execute.return_value = mock_result
+
+    result = await pool_crud.get_all_pools()
+
+    assert len(result) == 2
+    assert result[0].token == "BTC"
+    assert result[1].token == "ETH"
+    assert result[0].risk_status == PoolRiskStatus.LOW
+    assert result[1].risk_status == PoolRiskStatus.HIGH
+
+    mock_db_session.execute.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_get_all_pools_empty(pool_crud, mock_db_session):
+    """Test retrieving all pools when there are no pools."""
+    pools = []
+
+    mock_result = MagicMock()
+    mock_result.scalars.return_value.all.return_value = pools
+    mock_db_session.execute.return_value = mock_result
+
+    result = await pool_crud.get_all_pools()
+
+    assert len(result) == 0
+
+    mock_db_session.execute.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_get_all_pools_with_internal_exception(pool_crud, mock_db_session):
+    """Test retrieving all pools when there is an internal exception."""
+    mock_db_session.execute.side_effect = Exception("Internal error")
+
+    with pytest.raises(Exception):
+        await pool_crud.get_all_pools()
 
 
 @pytest.mark.asyncio

@@ -6,9 +6,9 @@ CRUD operations for the UserPool model.
 import uuid
 from decimal import Decimal
 from typing import Optional
-from app.models.pool import Pool, PoolRiskStatus, UserPool
-from app.crud.base import DBConnector
 
+from app.crud.base import DBConnector
+from app.models.pool import Pool, PoolRiskStatus, UserPool
 
 """This module contains the PoolCRUD class for managing Pool relation in database."""
 
@@ -25,6 +25,13 @@ class PoolCRUD(DBConnector):
         """
         pool_entry: Pool = Pool(token=token, risk_status=risk_status)
         return await self.write_to_db(pool_entry)
+
+    async def get_all_pools(self) -> list[Pool]:
+        """
+        Fetches all pool entries from the database.
+        :return: List[Pool]: List of all pool records fetched from the database
+        """
+        return await self.get_objects(Pool)
 
 
 class UserPoolCRUD(DBConnector):

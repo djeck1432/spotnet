@@ -50,6 +50,14 @@ async def test_get_object(db_connector, test_object):
     assert fetched_obj.name == "Test Object"
 
 
+async def test_get_objects(db_connector, test_object):
+    """Test retrieving all objects of a given type."""
+    fetched_objs = await db_connector.get_objects(TestModel)
+    assert len(fetched_objs) == 1
+    assert fetched_objs[0].id == test_object.id
+    assert fetched_objs[0].name == "Test Object"
+
+
 async def test_get_object_by_field(db_connector, test_object):
     """Test retrieving an object by field."""
     fetched_obj = await db_connector.get_object_by_field(
