@@ -1,9 +1,6 @@
 """
-Based on the issues raised, this module contains the API routes for margin positions.
-It provides endpoints for managing margin trading positions including;
-Opening new margin positions
-Closing existing positions
-Retrieving all margin positions
+This file handles all the API endpoints using fastAPI frameworkfor margin trading positions.
+This script Open new margin trading positions, Close existing positions and shows all open margin trading positions requested by a user.
 """
 
 from uuid import UUID
@@ -19,7 +16,7 @@ from app.schemas.margin_position import (
     MarginPositionResponse,
 )
 
-# Initialize FastAPI router for margin position endpoints
+# Creating a router to handle all margin position API endpoints
 router = APIRouter()
 
 
@@ -28,25 +25,12 @@ async def open_margin_position(
     position_data: MarginPositionCreate,
     db: AsyncSession = Depends(margin_position_crud.session),
 ) -> MarginPositionResponse:
-    """
-    Opens a new margin position by creating an entry record in the database.
-
-    This endpoint handles the creation of new margin trading positions.
-    It validates the input data and creates a new position record.
-
-    Args:
-        position_data (MarginPositionCreate): The data required to create a new margin position,
-            including user_id, borrowed_amount, multiplier, and transaction_id
-        db (AsyncSession): Database session dependency provided by FastAPI
-
-    Returns:
-        MarginPositionResponse: The created margin position with all its details
-
-    Raises:
-        HTTPException: 400 error if the input data is invalid or business rules are violated
-    """
+    """this endpoint allows you open a new margin trading position and saves it in the system;
+    the user provides his ID, the amount the user wants to borrow, thw leverage the useris looking to utilize, and a transaction ID Which returns the details on the users new margin position
+     error handling is added for invalid data, it displays a 400 error.
+"""
     try:
-        # Create new margin position using the CRUD operation
+        # this block of code saves the new margin position to the database.
         position = await margin_position_crud.open_margin_position(
             user_id=position_data.user_id,
             borrowed_amount=position_data.borrowed_amount,
@@ -64,22 +48,16 @@ async def close_margin_position(
     db: AsyncSession = Depends(margin_position_crud.session),
 ) -> CloseMarginPositionResponse:
     """
-    Close an existing margin position endpoint.
+    this endpoint aloows the user close a margin trade position by;
+    providing the transaction ID of the position they want to close
+    it runs through the database to find the ID, closes It and updates the status to #closed#
 
-    This endpoint handles the closure of an existing margin trading position.
-    It updates the position's status to closed and performs any necessary cleanup.
-     Args:
-        position_id (UUID): The unique identifier of the margin position to close
-        db (AsyncSession): Database session dependency provided by FastAPI
-    Returns:
-        CloseMarginPositionResponse: Object containing the position ID and its updated status
-     Raises:
-        HTTPException: 404 error if the position is not found
+    404 error handling code was implemented to handle invalid data  
     """
-    # Attempt to close the margin position
+    # this block of code tries to close the position
     status = await margin_position_crud.close_margin_position(position_id)
 
-    # Return 404 if position not found
+    # If the position was not found, display the 404 error.
     if not status:
         raise HTTPException(
             status_code=404, detail=f"Margin position with id {position_id} not found"
@@ -93,23 +71,15 @@ async def get_all_margin_positions(
     db: AsyncSession = Depends(margin_position_crud.session),
 ) -> List[MarginPositionResponse]:
     """
-    Get all margin positions endpoint.
-
-    This endpoint retrieves a list of all margin trading positions in the system.
-    It can be used for monitoring and reporting purposes.
-    Args:
-        db (AsyncSession): Database session dependency provided by FastAPI
-    Returns:
-        List[MarginPositionResponse]: List of all margin positions with their details
-    Raises:
-        HTTPException: 500 error if there's a database error or other internal server error
+    This block of code allows the user see all open margin trading positions,margi trading positions with all important details.
+        i added ERROR handling if there is an issue with communication to the database during the course of retrieving information.
     """
     try:
-        # Fetch all margin positions from the database
+        # these lines of code extracts all margin positions currentlyopen from the database.
         positions = await margin_position_crud.get_all()
         return positions
     except Exception as e:
-        # Handle any unexpected errors and return appropriate error response
+        # letting the user know that there was an error with retrieving data.(either from the database or due to network or communication issues.)
         raise HTTPException(
             status_code=500,
             detail=f"Error fetching margin positions: {str(e)}"
