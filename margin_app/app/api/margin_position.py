@@ -1,6 +1,6 @@
 """
 This file handles all the API endpoints using fastAPI frameworkfor margin trading positions.
-This script Open new margin trading positions, Close existing positions and shows all open margin trading positions requested by a user.
+This script Open new margin trading positions, Close existing positionsSee all your margin positions
 """
 
 from uuid import UUID
@@ -26,9 +26,11 @@ async def open_margin_position(
     db: AsyncSession = Depends(margin_position_crud.session),
 ) -> MarginPositionResponse:
     """this endpoint allows you open a new margin trading position and saves it in the system;
-    the user provides his ID, the amount the user wants to borrow, thw leverage the useris looking to utilize, and a transaction ID Which returns the details on the users new margin position
-     error handling is added for invalid data, it displays a 400 error.
-"""
+    the user provides his ID, the amount the user wants to borrow, thw leverage the useris looking to utilize, and a transaction ID
+
+    Which returns the details on the users new margin position
+     error handling is done for invalid data, it displays a 400 error.
+    """
     try:
         # this block of code saves the new margin position to the database.
         position = await margin_position_crud.open_margin_position(
@@ -47,8 +49,7 @@ async def close_margin_position(
     position_id: UUID,
     db: AsyncSession = Depends(margin_position_crud.session),
 ) -> CloseMarginPositionResponse:
-    """
-    this endpoint aloows the user close a margin trade position by;
+    """this endpoint aloows the user close a margin trade position by;
     providing the transaction ID of the position they want to close
     it runs through the database to find the ID, closes It and updates the status to #closed#
 
@@ -70,8 +71,7 @@ async def close_margin_position(
 async def get_all_margin_positions(
     db: AsyncSession = Depends(margin_position_crud.session),
 ) -> List[MarginPositionResponse]:
-    """
-    This block of code allows the user see all open margin trading positions,margi trading positions with all important details.
+    """This block of code allows the user see all open margin trading positions,margi trading positions with all important details.
         i added ERROR handling if there is an issue with communication to the database during the course of retrieving information.
     """
     try:
