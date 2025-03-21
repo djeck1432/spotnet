@@ -7,14 +7,14 @@ import uuid
 from decimal import Decimal
 
 from app.crud.base import DBConnector
-from app.models.order import Order
+from app.models.user_order import UserOrder
 
 logger = logging.getLogger(__name__)
 
 
-class OrderCRUD(DBConnector):
+class UserOrderCRUD(DBConnector):
     """
-    CRUD operations for Order model.
+    CRUD operations for UserOrder model.
 
     Methods:
     - add_new_order: Create and store a new order in the database
@@ -23,7 +23,7 @@ class OrderCRUD(DBConnector):
 
     async def add_new_order(
         self, user_id: uuid.UUID, price: Decimal, token: str, position: uuid.UUID
-    ) -> Order:
+    ) -> UserOrder:
         """
         Creates a new order in the database.
 
@@ -36,7 +36,7 @@ class OrderCRUD(DBConnector):
         Returns:
             Order: The newly created order object
         """
-        order = Order(user_id=user_id, price=price, token=token, position=position)
+        order = UserOrder(user_id=user_id, price=price, token=token, position=position)
         order = await self.write_to_db(order)
         return order
 
@@ -50,7 +50,7 @@ class OrderCRUD(DBConnector):
         Returns:
             bool: True if the order was successfully executed, False otherwise
         """
-        order = await self.get_object(Order, order_id)
+        order = await self.get_object(UserOrder, order_id)
         if not order:
             return False
 
@@ -58,4 +58,4 @@ class OrderCRUD(DBConnector):
         return True
 
 
-order_crud = OrderCRUD()
+order_crud = UserOrderCRUD()

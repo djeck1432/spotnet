@@ -94,6 +94,11 @@ class DBConnector:
         """
         async with self.session() as db:
             return await db.get(model, obj_id)
+    
+    async def get_objects(self, model: Type[ModelType]) -> list[ModelType]:
+        async with self.session() as db:
+            result = await db.execute(select(model))
+            return result.scalars().all()
 
     async def get_object_by_field(
         self, model: Type[ModelType] = None, field: str = None, value: str = None

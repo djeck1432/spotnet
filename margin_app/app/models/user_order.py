@@ -1,5 +1,5 @@
 """
-Order model
+UserOrder model "Order" word is reserved in sql, so can not be used
 """
 
 from decimal import Decimal
@@ -10,7 +10,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.models.base import BaseModel
 
 
-class Order(BaseModel):
+class UserOrder(BaseModel):
     """
     Represents an order placed by a user.
 
@@ -22,9 +22,9 @@ class Order(BaseModel):
     - position (UUID): The identifier of the position related to the order.
 
     Table:
-    - Name: "order"
+    - Name: "user_order"
     """
-    __tablename__ = "order"
+    __tablename__ = "user_order"
     user_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True),
                                           ForeignKey("user.id"), primary_key=True)
     price: Mapped[Decimal] = mapped_column(nullable=False)

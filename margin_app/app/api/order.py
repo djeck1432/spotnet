@@ -7,23 +7,45 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.order import order_crud
-from app.models.order import Order
-from app.schemas.order import OrderCreate, OrderResponse
+from app.models.user_order import UserOrder
+from app.schemas.order import UserOrderCreate, UserOrderResponse
 
 router = APIRouter()
 
+@router.get("/get_all_orders",
+    status_code=status.HTTP_200_OK,
+    summary="Get all orders",
+    description="Gets all orders from database",
+)
+async def get_all_orders():
+    """
+    Gets and sends all orders from user_order table.
+
+    Returns: list of orders
+
+    Raises:
+        HTTPException: If there's an error getting orders
+    """
+    try:
+        orders = await order_crud.get_objects(UserOrder)
+        return orders
+    except SQLAlchemyError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get orders: {str(e)}",
+        )
 
 @router.post(
     "/create_order",
-    response_model=OrderResponse,
+    response_model=UserOrderResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create a new order",
     description="Creates a new order in the system",
 )
 async def create_order(
-    order_data: OrderCreate,
+    order_data: UserOrderCreate,
     db: AsyncSession = Depends(order_crud.session),
-) -> Order:
+) -> UserOrder:
     """
     Create a new order with the provided order data.
 

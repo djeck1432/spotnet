@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.order import router
-from app.models.order import Order
+from app.models.user_order import Order
 
 
 @pytest.fixture

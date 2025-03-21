@@ -9,8 +9,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.crud.order import OrderCRUD
-from app.models.order import Order
+from app.crud.order import UserOrderCRUD
+from app.models.user_order import UserOrder
 
 TEST_USER_ID = uuid.uuid4()
 TEST_POSITION_ID = uuid.uuid4()
@@ -22,13 +22,13 @@ TEST_TOKEN = "BTC"
 @pytest.fixture
 def order_crud():
     """Fixture to create an OrderCRUD instance for testing"""
-    return OrderCRUD()
+    return UserOrderCRUD()
 
 
 @pytest.fixture
 def mock_order():
     """Fixture to create a mock Order object"""
-    order = MagicMock(spec=Order)
+    order = MagicMock(spec=UserOrder)
     order.id = TEST_ORDER_ID
     order.user_id = TEST_USER_ID
     order.price = TEST_PRICE
@@ -87,7 +87,7 @@ async def test_execute_order_success(order_crud, mock_order):
 
         result = await order_crud.execute_order(TEST_ORDER_ID)
 
-        mock_get_object.assert_called_once_with(Order, TEST_ORDER_ID)
+        mock_get_object.assert_called_once_with(UserOrder, TEST_ORDER_ID)
         assert result is True
 
 
@@ -101,7 +101,7 @@ async def test_execute_order_not_found(order_crud):
 
         result = await order_crud.execute_order(TEST_ORDER_ID)
 
-        mock_get_object.assert_called_once_with(Order, TEST_ORDER_ID)
+        mock_get_object.assert_called_once_with(UserOrder, TEST_ORDER_ID)
         assert result is False
 
 
@@ -116,7 +116,7 @@ async def test_execute_order_exception(order_crud):
         with pytest.raises(Exception):
             _ = await order_crud.execute_order(TEST_ORDER_ID)
 
-        mock_get_object.assert_called_once_with(Order, TEST_ORDER_ID)
+        mock_get_object.assert_called_once_with(UserOrder, TEST_ORDER_ID)
 
 
 @pytest.mark.asyncio

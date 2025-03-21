@@ -1,5 +1,5 @@
 """
-Pydantic schemas for order operations.
+Pydantic schemas for user_order operations.
 """
 
 import uuid
@@ -8,7 +8,7 @@ from decimal import Decimal
 from pydantic import BaseModel, Field
 
 
-class OrderCreate(BaseModel):
+class UserOrderCreate(BaseModel):
     """Schema for creating a new order"""
 
     user_id: uuid.UUID = Field(..., description="ID of the user placing the order")
@@ -17,7 +17,7 @@ class OrderCreate(BaseModel):
     position: uuid.UUID = Field(..., description="Position ID related to the order")
 
 
-class OrderResponse(BaseModel):
+class UserOrderResponse(BaseModel):
     """Schema for order response"""
 
     id: uuid.UUID
