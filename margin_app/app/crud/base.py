@@ -4,7 +4,7 @@ This module contains the base crud database configuration.
 
 import logging
 import uuid
-from typing import Type, TypeVar
+from typing import List, Optional, Type, TypeVar
 from app.models.base import BaseModel
 
 from typing import AsyncIterator, Callable
@@ -26,6 +26,7 @@ class DBConnector:
     - write_to_db: Writes an object to the database.
     - get_object: Retrieves an object by its ID in the database.
     - remove_object: Removes an object by its ID from the database.
+    - get_objects: Retrieves all objects from the database.
     """
 
     def __init__(self):
@@ -133,3 +134,25 @@ class DBConnector:
         async with self.session() as db:
             await db.delete(model)
             await db.commit()
+
+    async def get_objects(
+        self,
+        model: Type[ModelType] = None,
+        limit: Optional[int] = 25,
+        offset: Optional[int] = 0,
+        **kwargs,
+    ) -> list[ModelType] | None:
+        """
+        Retrieves objects by filter from the database.
+        :param: model: type[Base] = None
+        :param limit: Optional[int] = None
+        :param offset: Optional[int] = None       
+        :return: list[Base] | None
+        """
+        async with self.session() as db:
+            query = select(model).limit(limit).offset(offset)
+            if kwargs:
+                query = query.filter_by(**kwargs)
+
+            result = await db.execute(query)            
+            return result.scalars().all()
