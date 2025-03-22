@@ -1,6 +1,12 @@
 """
 Core configuration settings for the application.
 """
+from datetime import datetime, timedelta
+from typing import Optional
+import jwt
+from fastapi import HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer
+from pydantic import BaseModel
 
 from pydantic import Field, computed_field
 from pydantic_settings import BaseSettings

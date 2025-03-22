@@ -34,7 +34,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-def get_current_user(token: str = Depends(oauth2_scheme)) -> TokenData:
+
     """
     Extracts and validates the JWT token from the request.
 
@@ -49,8 +49,8 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> TokenData:
     """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        email: str = payload.get("sub")
+        if email is None:
             raise HTTPException(status_code=401, detail="Invalid token")
         return TokenData(username=username)
     except jwt.ExpiredSignatureError:
