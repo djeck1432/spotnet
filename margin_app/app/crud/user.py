@@ -130,4 +130,16 @@ class UserCRUD(DBConnector):
         return await super().get_object_by_field(model, field, value)
 
 
+    async def get_all(
+        self, limit:int = 25, offset:int = 0
+    ) -> list[User]:
+        """
+        Retrieves all users.
+        :param limit: Optional[int] - max users to be retrieved
+        :param offset: Optional[int] - start retrieving at.
+        :return: list[User]
+        """
+        return await self.get_objects(User, limit, offset)
+
+
 user_crud = UserCRUD()

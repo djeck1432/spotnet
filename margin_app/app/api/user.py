@@ -7,8 +7,9 @@ from app.db.sessions import get_db
 from app.schemas.user import (AddMarginPositionRequest,
                               AddMarginPositionResponse, AddUserDepositRequest,
                               AddUserDepositResponse, UserResponse, UserCreate)
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from loguru import logger
+from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
@@ -45,6 +46,40 @@ async def create_user(user: UserCreate)-> UserResponse:
             detail="Something went wrong.",
         ) from e
     return user
+
+
+@router.get(
+    "/get_all_users",
+    response_model=list[UserResponse],
+    status_code=status.HTTP_200_OK,
+)
+async def get_all_users(
+    limit: Optional[int] = Query(25, gt=0),
+    offset: Optional[int] = Query(0, ge=0)
+) -> list[UserResponse]:
+    """
+    Return all users.
+
+    Parameters:
+    - limit: Optional[int] - max users to be retrieved
+    - offset: Optional[int] - start retrieving at.
+
+    Returns:
+    - list[UserResponse]: a List of users
+
+    Raises:
+    - HTTPException (400): If any validation fails.
+    - HTTPException (422): If query params are invalid.
+    """   
+    try:
+        users = await user_crud.get_all(limit, offset)
+
+        return users
+    except ValueError as e:        
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+
 
 
 @router.get(

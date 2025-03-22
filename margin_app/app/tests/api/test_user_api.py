@@ -53,6 +53,15 @@ def mock_add_margin_position():
         yield mock
 
 
+@pytest.fixture
+def mock_get_all():
+    """
+    Mock the get_all method of crud_create_user.
+    """
+    with patch("app.crud.user.UserCRUD.get_all", new_callable=AsyncMock) as mock:
+        yield mock
+
+
 def test_create_user_success(client, mock_create_user, mock_get_user):
     """Test successfully creating a user."""
     wallet_id = "0x1234567890abcdef1234567890abcdef12345678"
@@ -227,3 +236,62 @@ def test_add_margin_position_invalid_multiplier(client):
     response = client.post(USER_URL + "add_margin_position", json=request_data)
 
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+
+def test_get_all_users(client, mock_get_all):
+    """Test successfully return all users"""
+    users = []
+    for i in range(10):
+        users.append({
+            "wallet_id": str(i),
+            "id": str(uuid.uuid4()),
+            "deposit": [],
+        })
+        
+    mock_get_all.return_value = users
+    response = client.get(USER_URL + "get_all_users")
+
+    assert response.status_code == 200
+    assert response.json() == users 
+
+
+def test_get_all_users(client, mock_get_all):
+    """Test successfully return all users with limit and offset applied."""
+    users = []
+    for i in range(10):
+        users.append({
+            "wallet_id": str(i),
+            "id": str(uuid.uuid4()),
+            "deposit": [],
+        })
+        
+    mock_get_all.return_value = users[:3]
+    response = client.get(USER_URL + "get_all_users" + f"?limit=3")
+    assert response.status_code == 200
+    assert response.json() == users[:3] 
+
+    mock_get_all.return_value = users[-3:]
+    response = client.get(USER_URL + "get_all_users" + f"?limit=3&offset=7")
+    assert response.status_code == 200
+    assert response.json() == users[-3:] 
+
+    mock_get_all.return_value = users[-5:]
+    response = client.get(USER_URL + "get_all_users" + f"?offset=5")
+    assert response.status_code == 200
+    assert response.json() == users[-5:] 
+
+
+def test_get_all_users_invalid_params(client, mock_get_all):
+    """Test fails when limit < 1 or offset < 0"""
+    invalid_params = [
+        {"limit": 0, "offset": 0},
+        {"limit": -1, "offset": 0},
+        {"limit": 0, "offset": -1},
+        {"limit": -1, "offset": -1},
+    ]
+
+    for params in invalid_params:
+        limit = f"limit={params["limit"]}"
+        offset = f"offset={params["offset"]}"
+        response = client.get(USER_URL + "get_all_users" + f"?{limit}&{offset}")
+        assert response.status_code == 422
