@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Optional
 import jwt
-from fastapi import HTTPException, Depends
+from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
@@ -10,12 +10,11 @@ SECRET_KEY = "your_secret_key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# OAuth2 Scheme for Token Authentication
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 class TokenData(BaseModel):
     """Pydantic model for storing token data."""
-    username: Optional[str] = None
+    email: Optional[str] = None
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     """
@@ -52,7 +51,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
         email: str = payload.get("sub")
         if email is None:
             raise HTTPException(status_code=401, detail="Invalid token")
-        return TokenData(username=username)
+        return TokenData(email=email)
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expired")
     except jwt.PyJWTError:

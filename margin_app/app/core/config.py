@@ -13,6 +13,11 @@ from pydantic_settings import BaseSettings
 from sqlalchemy import URL
 
 
+# Secret Key & Algorithm
+SECRET_KEY = "your_secret_key"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
 class Settings(BaseSettings):
     """Configuration settings for the application."""
     # Application settings
