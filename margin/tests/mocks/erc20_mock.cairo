@@ -35,18 +35,14 @@ pub mod ERC20Mock {
         self.erc20.mint(recipient, initial_supply);
     }
 
-    #[embeddable_as(ERC20MetadataForPragmaImpl)]
+    #[abi(embed_v0)]
     impl ERC20MetadataForPragma of IERC20MetadataForPragma<ContractState> {
         fn name(self: @ContractState) -> ByteArray {
             self.erc20.ERC20_name.read()
         }
 
-        // Assume symbol is at most 31 bytes
         fn symbol(self: @ContractState) -> felt252 {
-            let mut output = array![];
-            self.erc20.ERC20_symbol.read().serialize(ref output);
-
-            *output.at(0)
+            'ETH'
         }
 
         fn decimals(self: @ContractState) -> felt252 {

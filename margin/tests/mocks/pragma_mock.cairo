@@ -1,5 +1,5 @@
 #[starknet::contract]
-mod MockPragmaOracle {
+pub mod PragmaMock {
     use starknet::ContractAddress;
 
     use margin::interface::{IPragmaOracle, IMockPragmaOracle};
@@ -18,12 +18,13 @@ mod MockPragmaOracle {
     #[abi(embed_v0)]
     impl IPragmaOracleImpl of IPragmaOracle<ContractState> {
         fn get_data_median(self: @ContractState, data_type: DataType) -> PragmaPricesResponse {
+            // Return mock data regardless of input
             PragmaPricesResponse {
-                price: self.price.read(),
-                decimals: self.decimals.read(),
-                last_updated_timestamp: self.last_updated_timestamp.read(),
-                num_sources_aggregated: self.num_sources_aggregated.read(),
-                expiration_timestamp: self.expiration_timestamp.read(),
+                price: 1000000000000000000, // 1.0 with 18 decimals
+                decimals: 18,
+                last_updated_timestamp: 1234567890,
+                num_sources_aggregated: 1,
+                expiration_timestamp: Option::None,
             }
         }
     }

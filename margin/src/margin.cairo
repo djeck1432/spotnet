@@ -124,50 +124,20 @@ pub mod Margin {
         fn open_margin_position(ref self: ContractState, position_parameters: PositionParameters) {}
         fn close_position(ref self: ContractState) {}
         fn liquidate(ref self: ContractState, user: ContractAddress) {}
-    }
 
-    #[external(v0)]
-    fn get_data(ref self: ContractState, token: ContractAddress) -> PragmaPricesResponse {
-        let token_symbol: felt252 = IERC20MetadataForPragmaDispatcher { contract_address: token }
-            .symbol();
+        fn get_data(self: @ContractState, token: ContractAddress) -> PragmaPricesResponse {
+            let token_symbol: felt252 = IERC20MetadataForPragmaDispatcher {
+                contract_address: token,
+            }
+                .symbol();
 
-        let token_symbol_u256: u256 = token_symbol.into();
-        let pair_id = BitShift::shl(token_symbol_u256, 4) + '/USD';
+            let token_symbol_u256: u256 = token_symbol.into();
+            let pair_id = BitShift::shl(token_symbol_u256, 4) + '/USD';
 
-        IPragmaOracleDispatcher { contract_address: self.oracle_address.read() }
-        .get_data_median(DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')))
-        }
-        fn open_margin_position(
-            ref self: ContractState,
-            position_parameters: PositionParameters,
-            pool_key: PoolKey,
-            ekubo_limits: EkuboSlippageLimits,
-        ) {}
-        fn close_position(
-            ref self: ContractState, pool_key: PoolKey, ekubo_limits: EkuboSlippageLimits,
-        ) {}
-        fn liquidate(
-            ref self: ContractState,
-            user: ContractAddress,
-            pool_key: PoolKey,
-            ekubo_limits: EkuboSlippageLimits,
-        ) {}
-    }
-
-
-    #[abi(embed_v0)]
-    impl Locker of ILocker<ContractState> {
-        fn locked(ref self: ContractState, id: u32, data: Span<felt252>) -> Span<felt252> {
-            let core = self.ekubo_core.read();
-            let SwapData { pool_key, params, caller } = consume_callback_data(core, data);
-            let delta = core.swap(pool_key, params);
-
-            handle_delta(core, pool_key.token0, delta.amount0, caller);
-            handle_delta(core, pool_key.token1, delta.amount1, caller);
-
-            let mut arr: Array<felt252> = ArrayTrait::new();
-            Serde::serialize(@delta, ref arr);
-            arr.span()
+            IPragmaOracleDispatcher { contract_address: self.oracle_address.read() }
+                .get_data_median(
+                    DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')),
+                )
         }
     }
 }

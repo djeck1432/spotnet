@@ -20,6 +20,7 @@ pub trait IMargin<TContractState> {
     );
 
     fn liquidate(ref self: TContractState, user: ContractAddress);
+    fn get_data(self: @TContractState, token: ContractAddress) -> PragmaPricesResponse;
 }
 
 #[starknet::interface]
