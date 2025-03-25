@@ -19,7 +19,13 @@ pub trait IMargin<TContractState> {
         ref self: TContractState, pool_key: PoolKey, ekubo_limits: EkuboSlippageLimits,
     );
 
-    fn liquidate(ref self: TContractState, user: ContractAddress);
+    fn liquidate(
+        ref self: TContractState,
+        user: ContractAddress,
+        pool_key: PoolKey,
+        ekubo_limits: EkuboSlippageLimits,
+    );
+
     fn get_data(self: @TContractState, token: ContractAddress) -> PragmaPricesResponse;
 }
 

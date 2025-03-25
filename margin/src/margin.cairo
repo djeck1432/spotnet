@@ -8,15 +8,12 @@ pub mod Margin {
         ContractAddress, get_contract_address, get_caller_address,
     };
     use margin::{
-        
         interface::{
             IMargin, IERC20MetadataForPragma, IERC20MetadataForPragmaDispatcherTrait,
             IERC20MetadataForPragmaDispatcher, IPragmaOracleDispatcher,
             IPragmaOracleDispatcherTrait,
         },
-       
         types::{Position, TokenAmount, PositionParameters, SwapData, EkuboSlippageLimits},
-    ,
     };
     use margin::mocks::erc20_mock::{};
     use alexandria_math::{BitShift, U256BitShift};
@@ -62,9 +59,11 @@ pub mod Margin {
     }
 
     #[constructor]
-<<<<<<< HEAD
-    fn constructor(ref self: ContractState, ekubo_core: ICoreDispatcher) {
+    fn constructor(
+        ref self: ContractState, ekubo_core: ICoreDispatcher, oracle_address: ContractAddress,
+    ) {
         self.ekubo_core.write(ekubo_core);
+        self.oracle_address.write(oracle_address);
     }
 
 
@@ -73,10 +72,6 @@ pub mod Margin {
         fn swap(ref self: ContractState, swap_data: SwapData) -> Delta {
             call_core_with_callback(self.ekubo_core.read(), @swap_data)
         }
-=======
-    fn constructor(ref self: ContractState, oracle_address: ContractAddress) {
-        self.oracle_address.write(oracle_address);
->>>>>>> f4f8f10f (bet)
     }
 
 
@@ -120,10 +115,21 @@ pub mod Margin {
             self.emit(Withdraw { withdrawer, token, amount });
         }
 
-        // TODO: Add Ekubo data for swap
-        fn open_margin_position(ref self: ContractState, position_parameters: PositionParameters) {}
-        fn close_position(ref self: ContractState) {}
-        fn liquidate(ref self: ContractState, user: ContractAddress) {}
+        fn open_margin_position(
+            ref self: ContractState,
+            position_parameters: PositionParameters,
+            pool_key: PoolKey,
+            ekubo_limits: EkuboSlippageLimits,
+        ) {}
+        fn close_position(
+            ref self: ContractState, pool_key: PoolKey, ekubo_limits: EkuboSlippageLimits,
+        ) {}
+        fn liquidate(
+            ref self: ContractState,
+            user: ContractAddress,
+            pool_key: PoolKey,
+            ekubo_limits: EkuboSlippageLimits,
+        ) {}
 
         fn get_data(self: @ContractState, token: ContractAddress) -> PragmaPricesResponse {
             let token_symbol: felt252 = IERC20MetadataForPragmaDispatcher {

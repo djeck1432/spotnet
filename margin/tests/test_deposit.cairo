@@ -8,6 +8,7 @@ use super::utils::{
     setup_test_suite, deploy_erc20_mock, setup_user, get_treasury_balance, get_pool_value,
     deploy_pragma_mock,
 };
+use super::constants::{HYPOTHETICAL_OWNER_ADDR, DEPOSIT_MOCK_USER, DEPOSIT_MOCK_USER_2};
 
 
 #[test]

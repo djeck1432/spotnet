@@ -9,9 +9,7 @@ const HYPOTHETICAL_OWNER_ADDR: felt252 =
 fn test_pragma() {
     // Setup
     let suite = setup_test_suite(
-        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), 
-        deploy_erc20_mock(), 
-        deploy_pragma_mock()
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
     );
 
     // Get price data
