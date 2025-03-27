@@ -96,14 +96,7 @@ async def check_user(wallet_id: str) -> CheckUserResponse:
     """
     This endpoint checks if the user exists, or adds the user to the database if they don't exist,
     and checks whether their contract is deployed.
-
-    ### Parameters:
-    - **wallet_id**: The wallet ID of the user.
-
-    ### Returns:
-    The contract deployment status
     """
-
     user = user_db.get_user_by_wallet_id(wallet_id)
     if user and not user.is_contract_deployed:
         return {"is_contract_deployed": False}
