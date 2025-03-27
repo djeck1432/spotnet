@@ -74,3 +74,26 @@ async def get_all_deposits(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve deposits",
         ) from e
+
+@router.get("/{deposit_id}", response_model=DepositResponse, status_code=status.HTTP_200_OK)
+async def get_deposit_by_id(deposit_id: UUID) -> DepositResponse:
+    """
+    Get a specific deposit by ID.
+    :param deposit_id: UUID of the deposit to retrieve
+    :return: DepositResponse schema
+    """
+    try:
+        deposit = await deposit_crud.get_object_by_id(model=Deposit, obj_id=deposit_id)
+        if not deposit:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Deposit with ID {deposit_id} not found"
+            )
+        return deposit
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve deposit",
+        ) from e
