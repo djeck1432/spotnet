@@ -1,12 +1,12 @@
 use starknet::{ContractAddress};
-use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 use snforge_std::cheatcodes::execution_info::caller_address::{
     start_cheat_caller_address, stop_cheat_caller_address,
 };
 use margin::interface::{IMarginDispatcherTrait};
 use super::utils::{
     setup_test_suite, deploy_erc20_mock, deploy_erc20_mock_2, setup_user, get_treasury_balance,
-    get_pool_value,
+    get_pool_value, deploy_pragma_mock,
 };
 
 const WITHDRAW_MOCK_USER: felt252 =
@@ -19,7 +19,9 @@ const HYPOTHETICAL_OWNER_ADDR: felt252 =
 #[should_panic(expected: 'Withdraw amount is zero')]
 fn test_withdraw_zero_amount() {
     // Setup
-    let suite = setup_test_suite(HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock());
+    let suite = setup_test_suite(
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+    );
     let deposit_amount: u256 = 1000;
     let zero_amount: u256 = 0;
     let user: ContractAddress = WITHDRAW_MOCK_USER.try_into().unwrap();
@@ -38,7 +40,9 @@ fn test_withdraw_zero_amount() {
 #[should_panic(expected: 'Insufficient user treasury')]
 fn test_withdraw_insufficient_balance() {
     // Setup
-    let suite = setup_test_suite(HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock());
+    let suite = setup_test_suite(
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+    );
     let deposit_amount: u256 = 1000;
     let withdraw_amount: u256 = 2000; // More than deposited
     let user: ContractAddress = WITHDRAW_MOCK_USER.try_into().unwrap();
@@ -56,7 +60,9 @@ fn test_withdraw_insufficient_balance() {
 #[test]
 fn test_withdraw_success() {
     // Setup
-    let suite = setup_test_suite(HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock());
+    let suite = setup_test_suite(
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+    );
     let deposit_amount: u256 = 1000;
     let withdraw_amount: u256 = 500;
     let user: ContractAddress = WITHDRAW_MOCK_USER.try_into().unwrap();
@@ -88,7 +94,9 @@ fn test_withdraw_success() {
 #[test]
 fn test_multiple_withdrawals() {
     // Setup
-    let suite = setup_test_suite(HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock());
+    let suite = setup_test_suite(
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+    );
     let deposit_amount: u256 = 1000;
     let withdraw_amount1: u256 = 300;
     let withdraw_amount2: u256 = 400;
@@ -121,7 +129,9 @@ fn test_multiple_withdrawals() {
 #[test]
 fn test_withdraw_full_amount() {
     // Setup
-    let suite = setup_test_suite(HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock());
+    let suite = setup_test_suite(
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+    );
     let deposit_amount: u256 = 1000;
     let user: ContractAddress = WITHDRAW_MOCK_USER.try_into().unwrap();
 
@@ -148,7 +158,9 @@ fn test_withdraw_full_amount() {
 #[test]
 fn test_storage_updates_after_withdraw() {
     // Setup
-    let suite = setup_test_suite(HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock());
+    let suite = setup_test_suite(
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+    );
     let deposit_amount: u256 = 1000;
     let withdraw_amount: u256 = 600;
     let user: ContractAddress = WITHDRAW_MOCK_USER.try_into().unwrap();
@@ -184,7 +196,9 @@ fn test_storage_updates_after_withdraw() {
 #[test]
 fn test_multiple_users_withdraw() {
     // Setup
-    let suite = setup_test_suite(HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock());
+    let suite = setup_test_suite(
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+    );
     let deposit_amount1: u256 = 1000;
     let deposit_amount2: u256 = 2000;
     let withdraw_amount1: u256 = 400;
@@ -235,8 +249,9 @@ fn test_multiple_users_withdraw() {
 #[test]
 fn test_withdraw_from_separate_pools() {
     // Setup
-    let suite = setup_test_suite(HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock());
-
+    let suite = setup_test_suite(
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+    );
     // Deploy a second token
     let token2_address = deploy_erc20_mock_2();
 
