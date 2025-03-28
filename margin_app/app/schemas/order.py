@@ -5,7 +5,8 @@ Pydantic schemas for user_order operations.
 import uuid
 from decimal import Decimal
 
-from pydantic import BaseModel, Field
+from app.models.user_order import UserOrder
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class UserOrderCreate(BaseModel):
@@ -30,3 +31,12 @@ class UserOrderResponse(BaseModel):
         """Pydantic model configuration"""
 
         from_attributes = True
+
+
+class UserOrderGetAllResponse(BaseModel):
+    """Schema retrieving all users"""
+
+    orders: list[UserOrderResponse]
+    total: int
+
+    model_config = ConfigDict(from_attributes=True)

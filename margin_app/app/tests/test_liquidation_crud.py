@@ -3,12 +3,13 @@
 import pytest
 from app.crud.liquidation import liquidation_crud
 from app.crud.margin_position import margin_position_crud
-from app.crud.user import user_crud
+from app.crud.user import UserCRUD
 
 
 @pytest.mark.asyncio
 async def test_create_liquidation_success(db_connector):
     """Test creating a liquidation record with valid data."""
+    user_crud = UserCRUD()
     user = await user_crud.create_user("asdasda")
     margin = await margin_position_crud.open_margin_position(
         user_id=user.id, borrowed_amount=12, multiplier=12, transaction_id="asdas"

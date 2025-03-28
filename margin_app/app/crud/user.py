@@ -13,6 +13,7 @@ from decimal import Decimal
 from app.models.deposit import Deposit
 from app.models.margin_position import MarginPosition
 from app.models.user import User
+from app.schemas.user import UserGetAllResponse
 
 from .base import DBConnector
 
@@ -132,14 +133,22 @@ class UserCRUD(DBConnector):
 
     async def get_all(
         self, limit: Optional[int] = None, offset: Optional[int] = None
-    ) -> list[User]:
+    ) -> UserGetAllResponse:
         """
         Retrieves all users.
         :param limit: Optional[int] - max users to be retrieved
         :param offset: Optional[int] - start retrieving at.
-        :return: list[User]
+        :return: UserGetAllResponse
         """
-        return await self.get_objects(User, limit, offset)
+        users, total = await asyncio.gather(
+            self.get_objects(User, limit, offset),
+            self.get_objects_amounts(User)
+        )        
+        return UserGetAllResponse(
+            users=users,
+            total=total
+        )
+
 
 
 user_crud = UserCRUD()

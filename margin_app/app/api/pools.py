@@ -11,6 +11,7 @@ from app.crud.pool import pool_crud, user_pool_crud
 from app.db.sessions import get_db
 from app.schemas.pools import (
     PoolCreate,
+    PoolGetAllResponse,
     PoolResponse,
     PoolRiskStatus,
     UserPoolCreate,
@@ -53,15 +54,17 @@ async def create_pool(token: str, risk_status: PoolRiskStatus) -> PoolResponse:
 
 @router.get(
     "/get_all_pools",
-    response_model=list[PoolResponse],
+    response_model=PoolGetAllResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_all_pools() -> list[PoolResponse]:
+async def get_all_pools() -> PoolGetAllResponse:
     """
     Fetch all pools
 
-    :return: List[PoolResponse] - List of all pool entries fetched from the database
-        (empty list if no pools exist)
+    :return: PoolGetAllResponse
+        where:
+        pools:List[Pool] List of all pool records fetched from the database
+        total:int total number of pools.
     """
     try:
         return await pool_crud.get_all_pools()

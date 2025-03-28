@@ -36,6 +36,15 @@ class UserResponse(UserBase):
     model_config = ConfigDict(from_attributes=True)
 
 
+class UserGetAllResponse(BaseModel):
+    """
+    User response model for getting all users
+    """
+
+    users: list[UserResponse]
+    total: int
+
+
 class AddUserDepositRequest(BaseModel):
     """
     Request model for adding user deposit

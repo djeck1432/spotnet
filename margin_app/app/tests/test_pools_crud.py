@@ -11,6 +11,7 @@ import uuid
 from decimal import Decimal
 from unittest.mock import AsyncMock, MagicMock
 
+from app.schemas.pools import PoolGetAllResponse, PoolResponse
 import pytest
 from isort.io import Empty
 
@@ -100,23 +101,28 @@ async def test_create_pool(pool_crud, mock_db_session):
 async def test_get_all_pools(pool_crud, mock_db_session):
     """Test retrieving all pools."""
     pools = [
-        Pool(token="BTC", risk_status=PoolRiskStatus.LOW),
-        Pool(token="ETH", risk_status=PoolRiskStatus.HIGH),
+        PoolResponse(id=str(uuid.uuid4()), token="BTC", risk_status=PoolRiskStatus.LOW),
+        PoolResponse(id=str(uuid.uuid4()), token="ETH", risk_status=PoolRiskStatus.HIGH),
     ]
+    total = 2
 
-    mock_result = MagicMock()
-    mock_result.scalars.return_value.all.return_value = pools
-    mock_db_session.execute.return_value = mock_result
+    mock_result_pools = MagicMock()
+    mock_result_pools.scalars.return_value.all.return_value = pools
+        
+    mock_result_count = MagicMock()
+    mock_result_count.scalar.return_value = total
 
+    mock_db_session.execute.side_effect = [mock_result_pools,mock_result_count]
+    async def mock_execute(query):        
+        if str(query).startswith("SELECT count("):
+            return mock_result_count
+        return mock_result_pools
+
+    mock_db_session.execute = AsyncMock(side_effect=mock_execute)
     result = await pool_crud.get_all_pools()
-
-    assert len(result) == 2
-    assert result[0].token == "BTC"
-    assert result[1].token == "ETH"
-    assert result[0].risk_status == PoolRiskStatus.LOW
-    assert result[1].risk_status == PoolRiskStatus.HIGH
-
-    mock_db_session.execute.assert_called_once()
+    
+    assert result == PoolGetAllResponse(pools=pools,total=total)
+    assert mock_db_session.execute.call_count == 2
 
 
 @pytest.mark.asyncio
@@ -124,15 +130,26 @@ async def test_get_all_pools_empty(pool_crud, mock_db_session):
     """Test retrieving all pools when there are no pools."""
     pools = []
 
-    mock_result = MagicMock()
-    mock_result.scalars.return_value.all.return_value = pools
-    mock_db_session.execute.return_value = mock_result
+    mock_result_pools = MagicMock()
+    mock_result_pools.scalars.return_value.all.return_value = pools
+        
+    mock_result_count = MagicMock()
+    mock_result_count.scalar.return_value = 0
 
+    mock_db_session.execute.side_effect = [mock_result_pools,mock_result_count]
+    async def mock_execute(query):        
+        if str(query).startswith("SELECT count("):
+            return mock_result_count
+        return mock_result_pools
+
+    mock_db_session.execute = AsyncMock(side_effect=mock_execute)
+    
     result = await pool_crud.get_all_pools()
 
-    assert len(result) == 0
+    assert result.total == 0
+    assert len(result.pools) == 0
 
-    mock_db_session.execute.assert_called_once()
+    assert mock_db_session.execute.call_count == 2
 
 
 @pytest.mark.asyncio

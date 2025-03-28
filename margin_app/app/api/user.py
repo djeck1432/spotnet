@@ -9,9 +9,10 @@ from app.schemas.user import (
     AddMarginPositionRequest,
     AddMarginPositionResponse,
     AddUserDepositRequest,
-    AddUserDepositResponse,
+    AddUserDepositResponse,    
     UserResponse,
     UserCreate,
+    UserGetAllResponse,
 )
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from loguru import logger
@@ -60,31 +61,31 @@ async def create_user(user: UserCreate) -> UserResponse:
 
 @router.get(
     "/get_all_users",
-    response_model=list[UserResponse],
+    response_model=UserGetAllResponse,
     status_code=status.HTTP_200_OK,
 )
 async def get_all_users(
-    limit: Optional[int] = Query(25, gt=0), offset: Optional[int] = Query(0, ge=0)
-) -> list[UserResponse]:
+    limit: Optional[int] = Query(25, gt=0),
+    offset: Optional[int] = Query(0, ge=0)
+) -> UserGetAllResponse:
+
     """
-    Return all users.
+    Return all users and total users count.
 
     Parameters:
     - limit: Optional[int] - max users to be retrieved
     - offset: Optional[int] - start retrieving at.
 
     Returns:
-    - list[UserResponse]: a List of users
+    - UserGetAllResponse: contains users:list[UserResponse] and a total number of users
 
     Raises:
     - HTTPException (400): If any validation fails.
     - HTTPException (422): If query params are invalid.
     """
     try:
-        users = await user_crud.get_all(limit, offset)
-
-        return users
-    except ValueError as e:
+        return await user_crud.get_all(limit, offset)       
+    except ValueError as e:        
         raise HTTPException(status_code=400, detail=str(e)) from e
 
 

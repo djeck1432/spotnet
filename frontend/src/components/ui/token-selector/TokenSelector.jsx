@@ -2,7 +2,8 @@ import React from 'react';
 import ETH from '@/assets/icons/ethereum.svg?react';
 import USDC from '@/assets/icons/borrow_usdc.svg?react';
 import STRK from '@/assets/icons/strk.svg?react';
-import KSTRK from '@/assets/icons/Kstrk.svg?react';
+import KSTRK from '@/assets/icons/kstrk.svg?react';
+
 
 const Tokens = [
   { id: 'ethOption', component: <ETH />, label: 'ETH' },
@@ -22,7 +23,7 @@ const TokenSelector = ({ selectedToken, setSelectedToken, className }) => {
       <div className="flex items-center justify-center w-full gap-2">
         {Tokens.map((token) => (
           <div
-            className={`border-border-color relative grid h-16 w-full place-content-center rounded-xl border text-center ${selectedToken === token.label ? "after:content[''] after:from-nav-button-hover after:to-pink after:absolute after:inset-0 after:rounded-xl after:bg-gradient-to-r after:p-0.5 after:[mask:conic-gradient(#000_0_0)_content-box_exclude,conic-gradient(#000_0_0)]" : ''}`}
+            className={`border-border-color relative grid h-16 w-full place-content-center rounded-xl border text-center cursor-pointer ${selectedToken === token.label ? "after:content[''] after:from-nav-button-hover after:to-pink after:absolute after:inset-0 after:rounded-xl after:bg-gradient-to-r after:p-0.5 after:[mask:conic-gradient(#000_0_0)_content-box_exclude,conic-gradient(#000_0_0)]" : ''}`}
             key={token.id}
             onClick={() => handleTokenChange(token)}
           >

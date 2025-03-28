@@ -3,12 +3,14 @@ This module contains the UserPoolCRUD class, which provides
 CRUD operations for the UserPool model.
 """
 
+import asyncio
 import uuid
 from decimal import Decimal
 from typing import Optional
 
 from app.crud.base import DBConnector
 from app.models.pool import Pool, PoolRiskStatus, UserPool
+from app.schemas.pools import PoolGetAllResponse
 
 """This module contains the PoolCRUD class for managing Pool relation in database."""
 
@@ -26,11 +28,23 @@ class PoolCRUD(DBConnector):
         pool_entry: Pool = Pool(token=token, risk_status=risk_status)
         return await self.write_to_db(pool_entry)
 
-    async def get_all_pools(self) -> list[Pool]:
+    async def get_all_pools(self) -> PoolGetAllResponse:
         """
         Fetches all pool entries from the database.
-        :return: List[Pool]: List of all pool records fetched from the database
+        :return: PoolGetAllResponse
+            where:
+            pools:List[Pool] List of all pool records fetched from the database
+            total:int total number of pools.
         """
+        pools, total = await asyncio.gather(
+            self.get_objects(Pool),
+            self.get_objects_amounts(Pool)
+        )        
+        return PoolGetAllResponse(
+            pools=pools,
+            total=total
+        )
+    
         return await self.get_objects(Pool)
 
 

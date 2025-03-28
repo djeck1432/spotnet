@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 from starlette import status
 
 from app.schemas.pools import (
+    PoolGetAllResponse,
     PoolResponse,
     PoolRiskStatus,
     UserPoolResponse,
@@ -49,23 +50,23 @@ async def test_get_all_pools(mock_get_all_pools, client):
     first_id = str(uuid.uuid4())
     second_id = str(uuid.uuid4())
 
-    mock_response = [
-        PoolResponse(id=first_id, token="BTC", risk_status=PoolRiskStatus.LOW),
-        PoolResponse(id=second_id, token="ETH", risk_status=PoolRiskStatus.HIGH),
-    ]
-
-    mock_get_all_pools.return_value = mock_response
+    mock_get_all_pools.return_value = {
+        "pools": [
+            PoolResponse(id=first_id, token="BTC", risk_status=PoolRiskStatus.LOW),
+            PoolResponse(id=second_id, token="ETH", risk_status=PoolRiskStatus.HIGH),
+        ],
+        "total": 2,
+    }
     response = client.get(POOL_URL + "/get_all_pools")
-
-    response_data = response.json()
-    assert isinstance(response_data, list)
-    assert len(response_data) == len(mock_response)
+   
     assert response.status_code == HTTPStatus.OK
-
-    for i, pool in enumerate(response_data):
-        assert pool["id"] == str(mock_response[i].id)
-        assert pool["token"] == mock_response[i].token
-        assert pool["risk_status"] == mock_response[i].risk_status.value
+    assert response.json() == {
+        "pools": [
+            {"id": first_id, "token": "BTC", "risk_status": "low"},
+            {"id": second_id, "token": "ETH", "risk_status": "high"},
+        ],
+        "total": 2,
+    }
 
     mock_get_all_pools.assert_called_once()
 
@@ -78,15 +79,15 @@ async def test_get_all_pools_no_records_exist(mock_get_all_pools, client):
 
     API Response should be an empty list.
     """
-    mock_response = []
+    mock_response = {"pools": [], "total": 0}
 
     mock_get_all_pools.return_value = mock_response
 
     response = client.get(POOL_URL + "/get_all_pools")
     response_data = response.json()
 
-    assert isinstance(response_data, list)
-    assert len(response_data) == 0
+    assert len(response_data["pools"]) == 0
+    assert response_data["total"] == 0
     assert response.status_code == status.HTTP_200_OK
 
     mock_get_all_pools.assert_called_once()

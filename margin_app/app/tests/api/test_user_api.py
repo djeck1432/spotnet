@@ -320,48 +320,46 @@ def test_add_margin_position_invalid_multiplier(client):
 def test_get_all_users(client, mock_get_all):
     """Test successfully return all users"""
     users = []
-    for i in range(10):
-        users.append(
-            {
-                "wallet_id": str(i),
-                "id": str(uuid.uuid4()),
-                "deposit": [],
-            }
-        )
-
-    mock_get_all.return_value = users
+    total = 10
+    for i in range(total):
+        users.append({
+            "wallet_id": str(i),
+            "id": str(uuid.uuid4()),
+            "deposit": [],
+        })
+        
+    mock_get_all.return_value = {"users": users, "total": total}
     response = client.get(USER_URL + "get_all_users")
 
     assert response.status_code == 200
-    assert response.json() == users
+    assert response.json() == {"users": users, "total": total} 
 
 
 def test_get_all_users(client, mock_get_all):
     """Test successfully return all users with limit and offset applied."""
     users = []
     for i in range(10):
-        users.append(
-            {
-                "wallet_id": str(i),
-                "id": str(uuid.uuid4()),
-                "deposit": [],
-            }
-        )
-
-    mock_get_all.return_value = users[:3]
+        users.append({
+            "wallet_id": str(i),
+            "id": str(uuid.uuid4()),
+            "deposit": [],
+        })
+        
+    mock_get_all.return_value = {"users": users[:3], "total": 3}  
     response = client.get(USER_URL + "get_all_users" + f"?limit=3")
     assert response.status_code == 200
-    assert response.json() == users[:3]
+    assert response.json() == {"users": users[:3], "total": 3} 
 
-    mock_get_all.return_value = users[-3:]
+    mock_get_all.return_value = {"users": users[-3:], "total": 3}  
     response = client.get(USER_URL + "get_all_users" + f"?limit=3&offset=7")
     assert response.status_code == 200
-    assert response.json() == users[-3:]
-
-    mock_get_all.return_value = users[-5:]
+    assert response.json() =={"users": users[-3:], "total": 3}
+    
+    mock_get_all.return_value ={"users":  users[-5:], "total": 5} 
     response = client.get(USER_URL + "get_all_users" + f"?offset=5")
     assert response.status_code == 200
-    assert response.json() == users[-5:]
+    assert response.json() =={"users":  users[-5:], "total": 5} 
+
 
 
 def test_get_all_users_invalid_params(client, mock_get_all):

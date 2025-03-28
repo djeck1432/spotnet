@@ -16,7 +16,7 @@ class AdminCRUD(DBConnector):
         Retrieves an object by a specified field from the database.
         :param field: str = None
         :param value: str = None
-        :param model: = Admin        
+        :param model: = Admin
         :return: Base | None
         """
         return await super().get_object_by_field(model, field, value)

@@ -1,6 +1,7 @@
 """
 This module contains Pydantic schemas for admin.
 """
+
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr
@@ -21,6 +22,15 @@ class AdminRequest(AdminBase):
     """
 
     password: str
+
+
+class AdminResetPassword(BaseModel):
+    """
+    Admin reset password model
+    """
+
+    old_password: str
+    new_password: str
 
 
 class AdminResponse(AdminBase):

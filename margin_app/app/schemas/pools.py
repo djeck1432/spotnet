@@ -93,3 +93,13 @@ class PoolResponse(PoolBase):
     id: UUID
 
     model_config = ConfigDict(from_attributes=True)
+
+class PoolGetAllResponse(BaseModel):
+    """
+    User pool update model
+    """
+
+    pools: list[PoolResponse]
+    total: int
+
+

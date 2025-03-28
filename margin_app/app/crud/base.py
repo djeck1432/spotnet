@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from typing import AsyncIterator, Callable, Type, TypeVar, List, Optional, Any
 
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.sql import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -180,3 +180,15 @@ class DBConnector:
             result = await session.execute(text("SELECT version()"))
             return f"PostgreSQL version: {result.scalar()}"
         
+
+    async def get_objects_amounts(self, model: ModelType) -> int:
+        """
+        Count total number of objects.     
+        :param model: type[Base] = None - Model class to query.   
+        :return int.
+        """
+        async with self.session() as db:
+            result = await db.execute(select(func.count()).select_from(model))           
+            return result.scalar()
+        
+
