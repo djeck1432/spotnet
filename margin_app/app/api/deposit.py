@@ -82,18 +82,10 @@ async def get_deposit_by_id(deposit_id: UUID) -> DepositResponse:
     :param deposit_id: UUID of the deposit to retrieve
     :return: DepositResponse schema
     """
-    try:
-        deposit = await deposit_crud.get_object_by_id(model=Deposit, obj_id=deposit_id)
-        if not deposit:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Deposit with ID {deposit_id} not found"
-            )
-        return deposit
-    except HTTPException:
-        raise
-    except Exception as e:
+    deposit = await deposit_crud.get_object_by_id(model=Deposit, obj_id=deposit_id)
+    if not deposit:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve deposit",
-        ) from e
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Deposit with ID {deposit_id} not found"
+        )
+    return deposit
