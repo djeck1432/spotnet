@@ -25,8 +25,6 @@ pub trait IMargin<TContractState> {
         pool_key: PoolKey,
         ekubo_limits: EkuboSlippageLimits,
     );
-
-    fn get_data(self: @TContractState, token: ContractAddress) -> PragmaPricesResponse;
 }
 
 #[starknet::interface]

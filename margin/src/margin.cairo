@@ -9,9 +9,8 @@ pub mod Margin {
     };
     use margin::{
         interface::{
-            IMargin, IERC20MetadataForPragma, IERC20MetadataForPragmaDispatcherTrait,
-            IERC20MetadataForPragmaDispatcher, IPragmaOracleDispatcher,
-            IPragmaOracleDispatcherTrait,
+            IMargin, IERC20MetadataForPragmaDispatcherTrait, IERC20MetadataForPragmaDispatcher,
+            IPragmaOracleDispatcher, IPragmaOracleDispatcherTrait,
         },
         types::{Position, TokenAmount, PositionParameters, SwapData, EkuboSlippageLimits},
     };
@@ -19,11 +18,10 @@ pub mod Margin {
     use alexandria_math::{BitShift, U256BitShift};
 
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher};
-    use pragma_lib::types::{AggregationMode, DataType, PragmaPricesResponse};
+    use pragma_lib::types::{DataType, PragmaPricesResponse};
 
     use ekubo::{
-        interfaces::core::{ICoreDispatcher, ILocker, ICoreDispatcherTrait},
-        types::{keys::PoolKey, delta::Delta},
+        interfaces::core::{ICoreDispatcher}, types::{keys::PoolKey, delta::Delta},
         components::shared_locker::{consume_callback_data, handle_delta, call_core_with_callback},
     };
 
@@ -71,6 +69,21 @@ pub mod Margin {
     pub impl InternalImpl of InternalTrait {
         fn swap(ref self: ContractState, swap_data: SwapData) -> Delta {
             call_core_with_callback(self.ekubo_core.read(), @swap_data)
+        }
+
+        fn get_data(self: @ContractState, token: ContractAddress) -> PragmaPricesResponse {
+            let token_symbol: felt252 = IERC20MetadataForPragmaDispatcher {
+                contract_address: token,
+            }
+                .symbol();
+
+            let token_symbol_u256: u256 = token_symbol.into();
+            let pair_id = BitShift::shl(token_symbol_u256, 4) + '/USD';
+
+            IPragmaOracleDispatcher { contract_address: self.oracle_address.read() }
+                .get_data_median(
+                    DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')),
+                )
         }
     }
 
@@ -130,20 +143,5 @@ pub mod Margin {
             pool_key: PoolKey,
             ekubo_limits: EkuboSlippageLimits,
         ) {}
-
-        fn get_data(self: @ContractState, token: ContractAddress) -> PragmaPricesResponse {
-            let token_symbol: felt252 = IERC20MetadataForPragmaDispatcher {
-                contract_address: token,
-            }
-                .symbol();
-
-            let token_symbol_u256: u256 = token_symbol.into();
-            let pair_id = BitShift::shl(token_symbol_u256, 4) + '/USD';
-
-            IPragmaOracleDispatcher { contract_address: self.oracle_address.read() }
-                .get_data_median(
-                    DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')),
-                )
-        }
     }
 }

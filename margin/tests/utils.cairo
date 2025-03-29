@@ -8,7 +8,7 @@ use snforge_std::{declare, ContractClassTrait, DeclareResultTrait};
 use alexandria_math::fast_power::fast_power;
 use margin::types::TokenAmount;
 use super::constants::contracts::EKUBO_CORE_SEPOLIA;
-use ekubo::{interfaces::core::{ICoreDispatcher, ILocker, ICoreDispatcherTrait}};
+use ekubo::{interfaces::core::{ICoreDispatcher}};
 
 #[derive(Drop)]
 pub struct MarginTestSuite {
@@ -52,7 +52,6 @@ pub fn deploy_pragma_mock() -> ContractAddress {
     let contract = declare("PragmaMock").unwrap().contract_class();
     let mut calldata: Array<felt252> = array![];
     let (contract_addr, _) = contract.deploy_at(@calldata, PRAGMA_MOCK_CONTRACT()).unwrap();
-
     contract_addr
 }
 
@@ -79,7 +78,9 @@ pub fn setup_test_suite(
     owner: ContractAddress, token_address: ContractAddress, oracle_address: ContractAddress,
 ) -> MarginTestSuite {
     let contract = declare("Margin").unwrap().contract_class();
-    let ekubo = ICoreDispatcher { contract_address: contract_address_const::<'Ekubo'>() };
+    let ekubo = ICoreDispatcher {
+        contract_address: contract_address_const::<EKUBO_CORE_SEPOLIA>(),
+    };
 
     let mut calldata: Array<felt252> = array![];
     Serde::serialize(@ekubo, ref calldata);

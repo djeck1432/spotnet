@@ -1,9 +1,7 @@
 #[starknet::contract]
 pub mod PragmaMock {
-    use starknet::ContractAddress;
-
     use margin::interface::{IPragmaOracle, IMockPragmaOracle};
-    use pragma_lib::types::{AggregationMode, DataType, PragmaPricesResponse};
+    use pragma_lib::types::{DataType, PragmaPricesResponse};
 
     #[storage]
     struct Storage {
@@ -47,5 +45,15 @@ pub mod PragmaMock {
             self.num_sources_aggregated.write(num_sources_aggregated);
             self.expiration_timestamp.write(expiration_timestamp);
         }
+    }
+
+    #[constructor]
+    fn constructor(ref self: ContractState) {
+        // Initialize with default values
+        self.price.write(1000000000000000000); // 1.0 with 18 decimals
+        self.decimals.write(18);
+        self.last_updated_timestamp.write(1234567890);
+        self.num_sources_aggregated.write(1);
+        self.expiration_timestamp.write(Option::None);
     }
 }
