@@ -8,7 +8,6 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.pool import pool_crud, user_pool_crud
-from app.db.sessions import get_db
 from app.schemas.pools import (
     PoolCreate,
     PoolGetAllResponse,
@@ -32,7 +31,6 @@ async def create_pool(token: str, risk_status: PoolRiskStatus) -> PoolResponse:
 
     :param token: pool token (path parameter)
     :param risk_status: pool risk status
-    :param db: database session
     :return: created pool
     """
     try:

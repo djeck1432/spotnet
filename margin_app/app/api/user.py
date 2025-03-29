@@ -4,7 +4,6 @@ This module contains the API routes for the user.
 
 from app.crud.deposit import deposit_crud
 from app.crud.user import user_crud
-from app.db.sessions import get_db
 from app.schemas.user import (
     AddMarginPositionRequest,
     AddMarginPositionResponse,

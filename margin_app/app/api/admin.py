@@ -26,7 +26,6 @@ router = APIRouter(prefix="")
 )
 async def add_admin(
     data: AdminRequest,
-    db: DBConnector = Depends(DBConnector),
     admin_user: Admin = Depends(get_admin_user_from_state),
 ) -> AdminResponse:
     """
@@ -103,7 +102,6 @@ async def get_all_admin(
 )
 async def get_admin(
     admin_id: UUID,
-    db: DBConnector = Depends(DBConnector),
     admin_user: Admin = Depends(get_admin_user_from_state),
 ) -> AdminResponse:
     """
