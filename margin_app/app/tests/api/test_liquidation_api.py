@@ -1,14 +1,18 @@
 """
-The module contains tests for `app/api/liquidation.py`
+Tests for liquidation API endpoints.
 """
 
 from decimal import Decimal
 from uuid import UUID, uuid4
 
 import pytest
-from app.api.liquidation import liquidate_position
+from fastapi import status
+from fastapi.testclient import TestClient
+
 from app.schemas.liquidation import LiquidationResponse
-from fastapi import HTTPException, status
+
+
+MARGIN_POSITION_URL = "api/margin"
 
 
 class MockLiquidationEntry:
@@ -40,7 +44,7 @@ class TestLiquidation:
         self.test_bonus_token = "USDC"
 
     @pytest.mark.asyncio
-    async def test_liquidate_position_success(self, monkeypatch):
+    async def test_liquidate_position_success(self, client: TestClient, monkeypatch):
         """
         Test a successful liquidation endpoint.
         :param monkeypatch: pytest fixture.
@@ -73,17 +77,22 @@ class TestLiquidation:
             mock_liquidate_position,
         )
 
-        response = await liquidate_position(
-            self.test_margin_position_id, self.test_bonus_amount, self.test_bonus_token
-        )
+        request_data = {
+            "margin_position_id": str(self.test_margin_position_id),
+            "bonus_amount": str(self.test_bonus_amount),
+            "bonus_token": self.test_bonus_token
+        }
+        response = client.post(MARGIN_POSITION_URL + "/liquidate", json=request_data)
+        assert response.status_code == status.HTTP_200_OK
 
-        assert isinstance(response, LiquidationResponse)
-        assert response.margin_position_id == self.test_margin_position_id
-        assert response.bonus_amount == self.test_bonus_amount
-        assert response.bonus_token == self.test_bonus_token
+        response_data = response.json()
+        assert response_data["margin_position_id"] == str(self.test_margin_position_id)
+        assert response_data["bonus_amount"] == str(self.test_bonus_amount)
+        assert response_data["bonus_token"] == self.test_bonus_token
+        assert response_data["status"] == "success"
 
     @pytest.mark.asyncio
-    async def test_liquidate_position_failure(self, monkeypatch):
+    async def test_liquidate_position_failure(self, client, monkeypatch):
         """
         Test the liquidation endpoint when the operation fails.
         :param monkeypatch: pytest fixture.
@@ -108,12 +117,12 @@ class TestLiquidation:
             mock_liquidate_position,
         )
 
-        with pytest.raises(HTTPException) as exc_info:
-            await liquidate_position(
-                self.test_margin_position_id,
-                self.test_bonus_amount,
-                self.test_bonus_token,
-            )
+        request_data = {
+            "margin_position_id": str(self.test_margin_position_id),
+            "bonus_amount": str(self.test_bonus_amount),
+            "bonus_token": self.test_bonus_token
+        }
 
-        assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
-        assert error_message in exc_info.value.detail
+        response = client.post(MARGIN_POSITION_URL + "/liquidate", json=request_data)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "detail" in response.json()

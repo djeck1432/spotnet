@@ -34,7 +34,7 @@ class AdminCRUD(DBConnector):
         return await self.get_objects(Admin, limit, offset)
 
 
-    async def create_admin(self, email: str, name: str, password:str) -> Admin:
+    async def create_admin(self, email: str, name: str, password: Optional[str] = None) -> Admin:
         """
         Create a new admin in the database.
         :param email: str
@@ -43,10 +43,10 @@ class AdminCRUD(DBConnector):
         :return: Admin
         """
         new_admin = Admin(
-                name=name,
-                email=email,
-                password=password,
-            )
+            name=name,
+            email=email,
+            password=password,
+        )
         return await self.write_to_db(new_admin)
 
 admin_crud = AdminCRUD()

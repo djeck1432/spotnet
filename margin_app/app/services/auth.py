@@ -6,7 +6,6 @@ from datetime import datetime, timedelta, timezone
 
 import jwt
 from jwt.exceptions import InvalidTokenError
-from sqlalchemy.ext.asyncio import AsyncSession
 from passlib.context import CryptContext
 from starlette.requests import Request
 
@@ -14,8 +13,6 @@ from app.core.config import settings
 from app.crud.admin import admin_crud
 from app.models.admin import Admin
 from app.schemas.admin import AdminResponse
-from app.crud.admin import admin_crud
-from fastapi import Request
 import requests
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -45,24 +42,6 @@ def create_access_token(email: str, expires_delta: timedelta | None = None):
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode = {"sub": email, "exp": expire}
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
-
-
-def save_token_to_session(
-    email: str, request: Request, expires_delta: timedelta | None = None
-) -> None:
-    """
-    Save the token to the session.
-
-    Parameters:
-    - email (str): The email of the user associated with the token.
-    - request (Request): The FastAPI request object.
-    - expires_delta (timedelta | None, optional): The expiration time of the token.
-
-    Returns:
-    - None
-    """
-    token = create_access_token(email=email, expires_delta=expires_delta)
-    request.session["access_token"] = token
 
 
 async def get_current_user(token: str) -> Admin:
@@ -167,7 +146,7 @@ class GoogleAuth:
         response.raise_for_status()
         return response.json()
 
-    async def get_user(self, code: str, db: AsyncSession) -> dict:
+    async def get_user(self, code: str) -> dict:
         """
         Authenticate with Google OAuth and create an access token.
 
@@ -187,8 +166,10 @@ class GoogleAuth:
         name = user_info["name"]
         user = await admin_crud.get_object_by_field(field="email", value=email)
         if not user:
-            return await admin_crud.create_admin(email=email, name=name, db=db)
-        return {"user": AdminResponse(id=user.id, name=user.name, email=user.email)}
+            return AdminResponse.model_validate(
+                await admin_crud.create_admin(email=email, name=name)
+            )
+        return AdminResponse(id=user.id, name=user.name, email=user.email)
 
 
 google_auth = GoogleAuth()

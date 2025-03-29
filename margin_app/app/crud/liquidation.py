@@ -6,6 +6,7 @@ from decimal import Decimal
 from app.crud.base import DBConnector
 from app.models.liquidation import Liquidation
 
+
 class LiquidationCRUD(DBConnector):
     """Handles database operations for liquidations."""
 
@@ -28,5 +29,6 @@ class LiquidationCRUD(DBConnector):
             bonus_token=bonus_token
         )
         return await self.write_to_db(liquidation_entry)
+
 
 liquidation_crud = LiquidationCRUD()

@@ -4,6 +4,7 @@ Admin model definitions for the application.
 
 from sqlalchemy import Boolean, String
 from sqlalchemy.orm import Mapped, mapped_column
+from typing import Optional
 from .base import BaseModel  
 
 class Admin(BaseModel):
@@ -35,8 +36,7 @@ class Admin(BaseModel):
         nullable=False,
         comment="Indicates if the admin has super admin privileges."
     )
-    password: Mapped[str] = mapped_column(
+    password: Mapped[Optional[str]] = mapped_column(
         String(255),
-        nullable=False,
         comment="The hashed password of the admin."
     )

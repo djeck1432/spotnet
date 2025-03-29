@@ -8,6 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import BaseModel
 from .deposit import Deposit
 from .margin_position import MarginPosition
+from .transaction import Transaction
 
 
 class User(BaseModel):
@@ -20,4 +21,7 @@ class User(BaseModel):
     deposit: Mapped[list[Deposit]] = relationship("Deposit", back_populates="user", lazy="selectin")
     margin_position: Mapped[list[MarginPosition]] = relationship(
         "MarginPosition", back_populates="user"
+    )
+    transactions: Mapped[list[Transaction]] = relationship(
+        "Transaction", back_populates="user", lazy="selectin"
     )

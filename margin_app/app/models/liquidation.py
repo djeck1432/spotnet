@@ -4,12 +4,12 @@ Liquidation model
 
 import uuid
 
-from datetime import datetime
 from decimal import Decimal
-from sqlalchemy import DateTime, String, ForeignKey
+from sqlalchemy import String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from app.models.base import BaseModel
+
 
 class Liquidation(BaseModel):
     """
@@ -20,12 +20,12 @@ class Liquidation(BaseModel):
         bonus_token: The token in which the bonus is given.
         created_at: Timestamp when the liquidation was created.
     """
-    
+
     __tablename__ = "liquidation"
-    
-    margin_position_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), 
-        ForeignKey("margin_position.id"), 
+
+    margin_position_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("margin_position.id"),
         nullable=False
     )
     bonus_amount: Mapped[Decimal] = mapped_column(nullable=False)

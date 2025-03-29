@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
+from app.models import MarginPosition
 from app.models.margin_position import MarginPositionStatus
 from app.schemas.margin_position import MarginPositionResponse
 
@@ -46,6 +47,15 @@ def valid_position_data():
         "multiplier": 5,
         "transaction_id": "txn_123456789",
     }
+
+
+@pytest.fixture
+def mock_get_object():
+    """
+    Mock the get_object method of margin_position_crud.
+    """
+    with patch("app.api.margin_position.margin_position_crud.get_object") as mock:
+        yield mock
 
 
 def test_open_margin_position_success(
@@ -133,3 +143,48 @@ def test_close_margin_position_invalid_uuid(client):
     response = client.post(f"{MARGIN_POSITION_URL}/close/{invalid_id}")
 
     assert response.status_code == 422
+
+
+def test_get_margin_by_id_success(client, valid_position_data, mock_get_object):
+    """Test successfully getting a margin position by ID."""
+
+    position_id = uuid.uuid4()
+    data = valid_position_data
+    valid_position_response = MarginPositionResponse(
+        id=position_id, status="Open", liquidated_at=None, **data
+    )
+    mock_get_object.return_value = valid_position_response
+
+    response = client.get(f"{MARGIN_POSITION_URL}/{position_id}")
+
+    assert response.status_code == 200
+    assert response.json()["id"] == str(position_id)
+    assert response.json()["status"] == "Open"
+    assert response.json()["borrowed_amount"] == str(1000.00)
+    assert response.json()["multiplier"] == 5
+    assert response.json()["liquidated_at"] is None
+
+    mock_get_object.assert_called_once_with(MarginPosition, position_id)
+
+
+def test_get_margin_by_id_not_found(client, mock_get_object):
+    """Test getting a non-existent margin position by ID."""
+    position_id = uuid.uuid4()
+    mock_get_object.return_value = None
+
+    response = client.get(f"{MARGIN_POSITION_URL}/{position_id}")
+
+    assert response.status_code == 404
+    assert "not found" in response.json()["detail"]
+
+    mock_get_object.assert_called_once_with(MarginPosition, position_id)
+
+
+def test_get_margin_by_id_invalid_uuid(client):
+    """Test getting a margin position with invalid UUID format."""
+    invalid_id = "not-a-uuid"
+
+    response = client.get(f"{MARGIN_POSITION_URL}/{invalid_id}")
+
+    assert response.status_code == 422
+    assert "Input should be a valid UUID" in response.json()["detail"][0]["msg"]
