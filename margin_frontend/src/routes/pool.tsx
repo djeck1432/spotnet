@@ -45,7 +45,7 @@ function Pool() {
 					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#848484]" />
 					<Input
 						placeholder="Search..."
-						className="pl-10 h-[48px] w-full max-w-[305px] text-[#848484] bg-transparent border-[#191819] border-solid border-[1px] rounded-[8px] text-[#848484] bricolage"
+						className="pl-10 h-[48px] w-full max-w-[305px]  bg-transparent border-[#191819] border-solid border-[1px] rounded-[8px] text-[#848484] bricolage"
 					/>
 				</div>
 				<button type="button" className="ml-4 text-gray-400 md:hidden">
@@ -71,7 +71,7 @@ function Pool() {
 							<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#848484]" />
 							<Input
 								placeholder="Search..."
-								className="pl-10 h-[48px] w-full max-w-[305px] text-[#848484] bg-transparent border-grayborder border-solid border-1 rounded-[8px] text-[#848484] bricolage"
+								className="pl-10 h-[48px] w-full max-w-[305px]  bg-transparent border-grayborder border-solid border-1 rounded-[8px] text-[#848484] bricolage"
 							/>
 						</div>
 					</div>
