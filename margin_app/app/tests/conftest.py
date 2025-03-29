@@ -6,6 +6,20 @@ import pytest
 from app.crud.base import DBConnector
 from app.models.base import BaseModel
 from app.main import app
+import os
+
+def set_test_env_vars():
+    """Sets environment variables for running tests."""
+    print("Setting test environment variables...")
+    os.environ.setdefault("GOOGLE_CLIENT_ID", "test-google-client-id")
+    os.environ.setdefault("GOOGLE_CLIENT_SECRET", "test-google-client-secret")
+    os.environ.setdefault("GOOGLE_REDIRECT_URI", "http://localhost:8000/auth/callback")
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_configure():
+    """Hook to configure pytest before tests run."""
+    set_test_env_vars()
 
 
 @pytest_asyncio.fixture

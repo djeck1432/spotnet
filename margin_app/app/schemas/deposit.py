@@ -7,10 +7,11 @@ from uuid import UUID
 from typing import Optional
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from .base import BaseSchema
 
 
-class DepositBase(BaseModel):
+
+class DepositBase(BaseSchema):
     """
     Represents the base schema for a deposit transaction
     """
@@ -29,7 +30,7 @@ class DepositCreate(DepositBase):
     pass
 
 
-class DepositUpdate(BaseModel):
+class DepositUpdate(BaseSchema):
     """
     Pydantic model for updating a Deposit.
     """
@@ -38,12 +39,10 @@ class DepositUpdate(BaseModel):
     transaction_id: Optional[str] = None
 
 
-class DepositResponse(DepositBase):
+class DepositResponse(BaseSchema):
     """
     Pydantic model for a Deposit response.
     """
     id: UUID
     created_at: datetime
     updated_at: datetime
-
-    model_config = ConfigDict(from_attributes=True)

@@ -67,7 +67,7 @@ class MarginPositionCRUD(DBConnector):
             List[MarginPositionResponse]: List of all margin positions
         """
         positions = await self.get_objects(model=MarginPosition, limit=limit, offset=offset)
-        return [MarginPositionResponse.from_orm(position) for position in positions]
+        return [MarginPositionResponse.model_validate(position) for position in positions]
 
     async def get_all_liquidated_positions(self) -> List[MarginPositionResponse]:
         """
@@ -88,7 +88,7 @@ class MarginPositionCRUD(DBConnector):
                 offset=0,
                 where_clause=MarginPosition.liquidated_at.isnot(None)
             )
-            return [MarginPositionResponse.from_orm(pos) for pos in positions]
+            return [MarginPositionResponse.model_validate(pos) for pos in positions]
         except Exception as e:
             # Log the error or handle it as needed
             raise Exception(f"Error retrieving liquidated positions: {str(e)}") from e

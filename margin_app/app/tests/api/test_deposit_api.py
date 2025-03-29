@@ -12,7 +12,7 @@ Test Cases:
 import uuid
 import pytest
 
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 from fastapi.testclient import TestClient
 
 
@@ -44,9 +44,10 @@ async def test_deposit_creation_success(client: TestClient):
     :param client: TestClient instance for making requests to the API.
     """
     with patch(
-        "app.crud.deposit.DepositCRUD.create_deposit", new_callable=AsyncMock
+        "app.crud.deposit.DepositCRUD.create_deposit", new_callable=MagicMock
     ) as mock_create_deposit:
         mock_create_deposit.return_value = MOCK_CREATION_RESPONSE
+        print("Mock return value:", mock_create_deposit.return_value)
 
         response = client.post(
             f"{BASE_URL}",
@@ -57,6 +58,8 @@ async def test_deposit_creation_success(client: TestClient):
                 "transaction_id": "tx_12345abcde",
             },
         )
+
+        print("Response For Edoka:", response.status_code, response.json(), response.text)
 
         assert response.status_code == 201
         assert response.json() == mock_create_deposit.return_value

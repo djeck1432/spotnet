@@ -35,6 +35,7 @@ ADD . /app
 RUN npm install @argent/get-starknet --legacy-peer-deps --save
 
 # Set the entrypoint script as executable
+COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8000

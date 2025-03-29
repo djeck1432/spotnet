@@ -2,7 +2,7 @@
 This module contains Pydantic schemas for Pools.
 """
 
-from pydantic import BaseModel, ConfigDict
+from .base import BaseSchema
 from uuid import UUID
 from typing import Optional
 from decimal import Decimal
@@ -14,7 +14,7 @@ from typing import Optional
 
 
 
-class UserPoolBase(BaseModel):
+class UserPoolBase(BaseSchema):
     """
     User pool base model
     """
@@ -32,15 +32,13 @@ class UserPoolCreate(UserPoolBase):
     pass
 
 
-class UserPoolUpdate(BaseModel):
+class UserPoolUpdate(BaseSchema):
     """
     User pool update model
     """
 
     user_pool_id: UUID
     amount: Optional[Decimal] = None
-
-    model_config = ConfigDict(from_attributes=True)
 
 
 class UserPoolResponse(UserPoolBase):
@@ -49,8 +47,6 @@ class UserPoolResponse(UserPoolBase):
     """
 
     id: UUID
-
-    model_config = ConfigDict(from_attributes=True)
 
 
 class UserPoolUpdateResponse(UserPoolBase):
@@ -61,10 +57,7 @@ class UserPoolUpdateResponse(UserPoolBase):
     id: UUID
     updated_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
-
-
-class PoolBase(BaseModel):
+class PoolBase(BaseSchema):
     """
     Pool base model
     """
@@ -92,9 +85,8 @@ class PoolResponse(PoolBase):
 
     id: UUID
 
-    model_config = ConfigDict(from_attributes=True)
 
-class PoolGetAllResponse(BaseModel):
+class PoolGetAllResponse(BaseSchema):
     """
     User pool update model
     """
