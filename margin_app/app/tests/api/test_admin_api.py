@@ -6,8 +6,10 @@ import uuid
 from unittest.mock import AsyncMock, patch
 
 import pytest
-
-from app.services.auth import create_access_token
+from fastapi import status
+from app.services.auth.base import create_access_token
+from app.models.admin import Admin
+from app.crud.admin import admin_crud
 
 ADMIN_URL = "/api/admin/"
 

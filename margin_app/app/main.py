@@ -4,7 +4,7 @@ Main FastAPI application entry point.
 
 import sys
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from starlette.middleware.sessions import SessionMiddleware
 from loguru import logger
 from starlette.responses import JSONResponse
@@ -17,7 +17,8 @@ from app.api.order import router as order_router
 from app.api.pools import router as pool_router
 from app.api.user import router as user_router
 from app.api.auth import router as auth_router
-from app.services.auth import get_current_user
+from app.services.auth.base import get_current_user
+from app.models.admin import Admin
 
 # Initialize FastAPI app
 app = FastAPI(

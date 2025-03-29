@@ -3,9 +3,11 @@ Testing module for auth admin user middleware (app.main.auth_admin_user).
 """
 
 import pytest
-from fastapi import status
+from fastapi import status, FastAPI, Request
 
-from app.services.auth import create_access_token
+from app.services.auth.base import create_access_token
+from app.models.admin import Admin
+from app.crud.admin import admin_crud
 from app.tests.api.test_admin_api import (
     mock_get_admin_by_email,
     mock_get_all_admin,

@@ -1,5 +1,5 @@
 """
-Tests for services/auth.
+Test auth services.
 """
 
 from datetime import datetime, timedelta, timezone
@@ -8,7 +8,8 @@ import uuid
 import pytest
 import jwt
 from app.core.config import settings
-from app.services.auth import create_access_token, get_current_user
+from app.services.auth.base import create_access_token, get_current_user
+from app.models.admin import Admin
 from app.crud.admin import admin_crud
 
 ALGORITHM = settings.algorithm

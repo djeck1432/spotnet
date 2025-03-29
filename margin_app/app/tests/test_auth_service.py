@@ -1,8 +1,10 @@
 """
-Tests for the authentication service.
+Test auth service.
 """
 
-from app.services.auth import get_password_hash, verify_password
+import pytest
+from app.services.auth.security import get_password_hash, verify_password
+from app.services.auth.base import create_access_token, get_current_user
 
 
 def test_verify_password():
