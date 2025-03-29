@@ -47,6 +47,15 @@ class PoolCRUD(DBConnector):
     
         return await self.get_objects(Pool)
 
+    async def get_pool_by_id(self, pool_id: uuid.UUID) -> Optional[Pool]:
+        """
+        Fetches a pool by its ID.
+        :param pool_id: UUID of the pool to fetch
+        :return: Optional[Pool]: The pool if found, None otherwise
+        """
+        async with self.session() as db:
+            return await db.get(Pool, pool_id)
+
 
 class UserPoolCRUD(DBConnector):
     """

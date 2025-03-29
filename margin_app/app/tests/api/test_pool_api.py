@@ -100,23 +100,94 @@ async def test_get_all_pools_internal_error(mock_get_all_pools, client):
     Tests the scenario where an internal server error occurs during the execution
     of `get_all_pools` endpoint. The case emulates the scenario where the
     internal server encounters a problem and raises an HTTPException with a
-    status code of 500.
+    500 status code.
     """
-    mock_response = [
-        PoolResponse(id=str(uuid.uuid4()), token="BTC", risk_status=PoolRiskStatus.LOW),
-        PoolResponse(
-            id=str(uuid.uuid4()), token="ETH", risk_status=PoolRiskStatus.HIGH
-        ),
-    ]
-
-    mock_get_all_pools.return_value = mock_response
-    mock_get_all_pools.side_effect = Exception("Internal error")
+    mock_get_all_pools.side_effect = Exception("Database error")
 
     response = client.get(POOL_URL + "/get_all_pools")
 
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
-
     mock_get_all_pools.assert_called_once()
+
+
+@pytest.mark.asyncio
+@patch("app.crud.pool.pool_crud.get_pool_by_id", new_callable=AsyncMock)
+async def test_get_pool_success(mock_get_pool_by_id, client):
+    """
+    Test successful retrieval of a pool by ID.
+
+    This test verifies that when a valid pool ID is provided, the endpoint
+    returns the correct pool data with a 200 status code.
+    """
+    pool_id = uuid.uuid4()
+    mock_pool = PoolResponse(
+        id=str(pool_id),
+        token="BTC",
+        risk_status=PoolRiskStatus.LOW
+    )
+    mock_get_pool_by_id.return_value = mock_pool
+
+    response = client.get(f"{POOL_URL}/{pool_id}")
+    
+    assert response.status_code == status.HTTP_200_OK
+    response_data = response.json()
+    assert response_data["id"] == str(pool_id)
+    assert response_data["token"] == "BTC"
+    assert response_data["risk_status"] == PoolRiskStatus.LOW.value
+    mock_get_pool_by_id.assert_called_once_with(pool_id)
+
+
+@pytest.mark.asyncio
+@patch("app.crud.pool.pool_crud.get_pool_by_id", new_callable=AsyncMock)
+async def test_get_pool_not_found(mock_get_pool_by_id, client):
+    """
+    Test pool retrieval when the pool doesn't exist.
+
+    This test verifies that when a non-existent pool ID is provided,
+    the endpoint returns a 404 status code.
+    """
+    pool_id = uuid.uuid4()
+    mock_get_pool_by_id.return_value = None
+
+    response = client.get(f"{POOL_URL}/{pool_id}")
+    
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json()["detail"] == f"Pool with id {pool_id} not found"
+    mock_get_pool_by_id.assert_called_once_with(pool_id)
+
+
+@pytest.mark.asyncio
+@patch("app.crud.pool.pool_crud.get_pool_by_id", new_callable=AsyncMock)
+async def test_get_pool_invalid_uuid(mock_get_pool_by_id, client):
+    """
+    Test pool retrieval with an invalid UUID.
+
+    This test verifies that when an invalid UUID is provided,
+    the endpoint returns a 422 status code.
+    """
+    response = client.get(f"{POOL_URL}/not-a-uuid")
+    
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+    mock_get_pool_by_id.assert_not_called()
+
+
+@pytest.mark.asyncio
+@patch("app.crud.pool.pool_crud.get_pool_by_id", new_callable=AsyncMock)
+async def test_get_pool_internal_error(mock_get_pool_by_id, client):
+    """
+    Test pool retrieval when an internal error occurs.
+
+    This test verifies that when the database operation fails,
+    the endpoint returns a 500 status code.
+    """
+    pool_id = uuid.uuid4()
+    mock_get_pool_by_id.side_effect = Exception("Database error")
+
+    response = client.get(f"{POOL_URL}/{pool_id}")
+    
+    assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    assert response.json()["detail"] == "Something went wrong."
+    mock_get_pool_by_id.assert_called_once_with(pool_id)
 
 
 @pytest.mark.asyncio
