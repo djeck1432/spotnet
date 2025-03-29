@@ -12,8 +12,9 @@
 
 import { Route as rootRoute } from './routes/__root';
 import { Route as TradeImport } from './routes/trade';
-import { Route as SignUpImport } from './routes/sign-up';
 import { Route as PoolImport } from './routes/pool';
+import { Route as DashboardImport } from './routes/dashboard';
+import { Route as SignUpImport } from './routes/sign-up';
 import { Route as LoginImport } from './routes/login';
 import { Route as ChangePasswordImport } from './routes/change-password';
 import { Route as IndexImport } from './routes/index';
@@ -26,15 +27,21 @@ const TradeRoute = TradeImport.update({
   getParentRoute: () => rootRoute,
 } as any);
 
-const SignUpRoute = SignUpImport.update({
-  id: '/sign-up',
-  path: '/sign-up',
-  getParentRoute: () => rootRoute,
-} as any);
-
 const PoolRoute = PoolImport.update({
   id: '/pool',
   path: '/pool',
+  getParentRoute: () => rootRoute,
+} as any);
+
+const DashboardRoute = DashboardImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRoute,
+} as any);
+
+const SignUpRoute = SignUpImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
   getParentRoute: () => rootRoute,
 } as any);
 
@@ -65,6 +72,13 @@ declare module '@tanstack/react-router' {
       path: '/';
       fullPath: '/';
       preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    '/dashboard': {
+      id: '/dashboard';
+      path: '/dashboard';
+      fullPath: '/dashboard';
+      preLoaderRoute: typeof DashboardImport;
       parentRoute: typeof rootRoute;
     };
     '/change-password': {
@@ -109,6 +123,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute;
+  '/dashboard': typeof DashboardRoute;
   '/change-password': typeof ChangePasswordRoute;
   '/login': typeof LoginRoute;
   '/pool': typeof PoolRoute;
@@ -118,6 +133,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute;
+  '/dashboard': typeof DashboardRoute;
   '/change-password': typeof ChangePasswordRoute;
   '/login': typeof LoginRoute;
   '/pool': typeof PoolRoute;
@@ -128,6 +144,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute;
   '/': typeof IndexRoute;
+  '/dashboard': typeof DashboardRoute;
   '/change-password': typeof ChangePasswordRoute;
   '/login': typeof LoginRoute;
   '/pool': typeof PoolRoute;
@@ -139,16 +156,25 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | '/'
+    | '/dashboard'
     | '/change-password'
     | '/login'
     | '/sign-up'
     | '/pool'
     | '/trade';
   fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/change-password' | '/login' | '/sign-up' | '/pool' | '/trade';
+  to:
+    | '/'
+    | '/dashboard'
+    | '/change-password'
+    | '/login'
+    | '/sign-up'
+    | '/pool'
+    | '/trade';
   id:
     | '__root__'
     | '/'
+    | '/dashboard'
     | '/change-password'
     | '/login'
     | '/sign-up'
@@ -159,6 +185,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
+  DashboardRoute: typeof DashboardRoute;
   ChangePasswordRoute: typeof ChangePasswordRoute;
   LoginRoute: typeof LoginRoute;
   PoolRoute: typeof PoolRoute;
@@ -168,6 +195,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardRoute: DashboardRoute,
   ChangePasswordRoute: ChangePasswordRoute,
   LoginRoute: LoginRoute,
   PoolRoute: PoolRoute,
@@ -186,6 +214,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/dashboard",
         "/change-password",
         "/login",
         "/pool",
@@ -195,6 +224,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/dashboard": {
+      "filePath": "dashboard.tsx"
     },
     "/change-password": {
       "filePath": "change-password.tsx"

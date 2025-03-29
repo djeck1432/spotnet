@@ -1,45 +1,14 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ErrorComponent, Link, RouterProvider, createRouter } from "@tanstack/react-router";
-import ReactDOM from "react-dom/client";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
 import "./index.css";
-import { routeTree } from "./routeTree.gen";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
-const queryClient = new QueryClient();
-
-const router = createRouter({
-	routeTree,
-	defaultPendingComponent: () => <div />,
-	defaultErrorComponent: ({ error }) => <ErrorComponent error={error} />,
-	defaultNotFoundComponent: () => {
-		return (
-			<div>
-				<p>Page not found</p>
-				<Link to="/">Go to home</Link>
-			</div>
-		);
-	},
-	context: {
-		queryClient,
-	},
-	defaultPreload: "intent",
-	defaultPreloadStaleTime: 0,
-	scrollRestoration: true,
-});
-
-declare module "@tanstack/react-router" {
-	interface Register {
-		router: typeof router;
-	}
-}
-
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const rootElement = document.getElementById("root");
-
-if (rootElement && !rootElement.innerHTML) {
-	const root = ReactDOM.createRoot(rootElement);
-	root.render(
-		<QueryClientProvider client={queryClient}>
-			<RouterProvider router={router} />
-		</QueryClientProvider>,
-	);
-}
+createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+        <Provider store={store}>
+            <App />
+        </Provider>
+    </StrictMode>
+);
