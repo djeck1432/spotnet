@@ -57,7 +57,7 @@ async def test_get_all_pools(mock_get_all_pools, client):
         ],
         "total": 2,
     }
-    response = client.get(POOL_URL + "/get_all_pools")
+    response = client.get(POOL_URL + "/pools")
    
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
@@ -83,7 +83,7 @@ async def test_get_all_pools_no_records_exist(mock_get_all_pools, client):
 
     mock_get_all_pools.return_value = mock_response
 
-    response = client.get(POOL_URL + "/get_all_pools")
+    response = client.get(POOL_URL + "/pools")
     response_data = response.json()
 
     assert len(response_data["pools"]) == 0
@@ -104,7 +104,7 @@ async def test_get_all_pools_internal_error(mock_get_all_pools, client):
     """
     mock_get_all_pools.side_effect = Exception("Database error")
 
-    response = client.get(POOL_URL + "/get_all_pools")
+    response = client.get(POOL_URL + "/pools")
 
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     mock_get_all_pools.assert_called_once()

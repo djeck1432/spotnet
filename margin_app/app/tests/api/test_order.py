@@ -5,7 +5,6 @@ Unit tests for Order API endpoints using function-based approach without async/a
 import uuid
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from app.schemas.order import UserOrderGetAllResponse
 import pytest
 from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
@@ -153,7 +152,7 @@ def test_get_all_orders_success(client, mock_get_all):
             }
         )
     mock_get_all.return_value = {"orders": orders, "total": total}
-    response = client.get("/order/get_all_orders")
+    response = client.get("/order/all")
     assert response.status_code == 200
     assert response.json() == {"orders": orders, "total": total}
 
