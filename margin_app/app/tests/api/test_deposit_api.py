@@ -59,7 +59,9 @@ async def test_deposit_creation_success(client: TestClient):
             },
         )
 
-        print("Response For Edoka:", response.status_code, response.json(), response.text)
+        print(
+            "Response For Edoka:", response.status_code, response.json(), response.text
+        )
 
         assert response.status_code == 201
         assert response.json() == mock_create_deposit.return_value
@@ -174,3 +176,86 @@ async def test_deposits_creation_with_data_cases(
         assert response.status_code == expected_status
         if expected_status != 201:
             assert "detail" in response.json()
+
+
+@pytest.mark.anyio
+def test_get_deposit_by_id_success(client: TestClient):
+    """
+    Test getting a deposit by ID successfully.
+
+    This test ensures that a deposit can be retrieved successfully
+    by sending a GET request to the API endpoint.
+    It mocks the `get_object` method of the `DepositCRUD` class
+    to return a deposit response and verifies that the
+    response from the API matches the mocked response.
+
+    :param client: TestClient instance for making requests to the API.
+    """
+    with patch(
+        "app.crud.deposit.DepositCRUD.get_object", new_callable=AsyncMock
+    ) as mock_get_object:
+        mock_get_object.return_value = {
+            "id": MOCK_ID,
+            "created_at": "2022-01-01T00:00:00",
+            "updated_at": "2022-01-01T00:00:00",
+        }
+
+        response = client.get(f"{BASE_URL}/{MOCK_ID}")
+
+        assert response.status_code == 200
+        assert response.json() == mock_get_object.return_value
+
+        mock_get_object.assert_called_once()
+
+
+@pytest.mark.anyio
+def test_get_deposit_by_invalid_id(client: TestClient):
+    """
+    Test getting a deposit by invalid ID.
+
+    This test ensures that trying to retrieve a deposit with an invalid ID
+    results in a 404 Not Found response from the API.
+    It mocks the `get_object` method of the `DepositCRUD` class
+    to return None and verifies that the API returns a 404 response.
+
+    :param client: TestClient instance for making requests to the API.
+    """
+    with patch(
+        "app.crud.deposit.DepositCRUD.get_object", new_callable=AsyncMock
+    ) as mock_get_object:
+        mock_get_object.return_value = None
+
+        response = client.get(f"{BASE_URL}/{MOCK_ID}")
+
+        assert response.status_code == 404
+        assert "detail" in response.json()
+
+        mock_get_object.assert_called_once()
+
+
+@pytest.mark.anyio
+def test_update_invalid_deposits(client: TestClient):
+    """
+    Test updating deposits with invalid data.
+
+    This test ensures that updating deposits with invalid data
+    results in a 400 Bad Request response from the API.
+    It mocks the `update_deposit` method of the `DepositCRUD` class
+    to raise an exception and verifies that the API returns a 400 response.
+
+    :param client: TestClient instance for making requests to the API.
+    """
+    with patch(
+        "app.crud.deposit.DepositCRUD.update_deposit", new_callable=AsyncMock
+    ) as mock_update_deposit:
+        mock_update_deposit.return_value = None
+
+        response = client.post(
+            f"{BASE_URL}/{MOCK_ID}",
+            json={"amount": "2000.00"},
+        )
+
+        assert response.status_code == 400
+        assert "detail" in response.json()
+
+        mock_update_deposit.assert_called_once()

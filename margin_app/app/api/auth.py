@@ -10,14 +10,10 @@ from loguru import logger
 from pydantic import EmailStr
 
 from app.core.config import settings
-from app.services.auth.base import (
-    google_auth,
-    create_access_token,
-    get_current_user
-)
+from app.services.auth.base import google_auth, create_access_token, get_current_user
 from app.crud.admin import admin_crud
 from app.schemas.admin import AdminResetPassword
-from app.services.auth import (
+from app.services.auth.security import (
     get_password_hash,
     verify_password,
 )

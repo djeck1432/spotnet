@@ -9,6 +9,7 @@ from fastapi import APIRouter, HTTPException, Query, status
 
 from app.api.common import GetAllMediator
 from app.crud.deposit import deposit_crud
+from app.models.deposit import Deposit
 from app.schemas.deposit import DepositCreate, DepositResponse, DepositUpdate
 
 router = APIRouter()
@@ -71,3 +72,28 @@ async def get_all_deposits(
     """
     mediator = GetAllMediator(deposit_crud.get_objects, limit, offset)
     return await mediator.execute()
+
+
+@router.get(
+    "/{deposit_id}",
+    response_model=DepositResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_deposit_by_id(
+    deposit_id: UUID,
+) -> DepositResponse:
+    """
+    Get deposit by ID.
+
+    :param deposit_id: UUID - The ID of the deposit to retrieve
+    :return: DepositResponse - The deposit object
+    """
+    deposit = await deposit_crud.get_object(Deposit, deposit_id)
+
+    if not deposit:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Deposit with id {deposit_id} not found",
+        )
+
+    return deposit
