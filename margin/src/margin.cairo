@@ -21,7 +21,8 @@ pub mod Margin {
     use pragma_lib::types::{DataType, PragmaPricesResponse};
 
     use ekubo::{
-        interfaces::core::{ICoreDispatcher}, types::{keys::PoolKey, delta::Delta},
+        interfaces::core::{ICoreDispatcher, ILocker, ICoreDispatcherTrait},
+        types::{keys::PoolKey, delta::Delta},
         components::shared_locker::{consume_callback_data, handle_delta, call_core_with_callback},
     };
 
