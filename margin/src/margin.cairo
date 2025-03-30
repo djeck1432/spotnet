@@ -144,4 +144,20 @@ pub mod Margin {
             ekubo_limits: EkuboSlippageLimits,
         ) {}
     }
+
+    #[abi(embed_v0)]
+    impl Locker of ILocker<ContractState> {
+        fn locked(ref self: ContractState, id: u32, data: Span<felt252>) -> Span<felt252> {
+            let core = self.ekubo_core.read();
+            let SwapData { pool_key, params, caller } = consume_callback_data(core, data);
+            let delta = core.swap(pool_key, params);
+
+            handle_delta(core, pool_key.token0, delta.amount0, caller);
+            handle_delta(core, pool_key.token1, delta.amount1, caller);
+
+            let mut arr: Array<felt252> = ArrayTrait::new();
+            Serde::serialize(@delta, ref arr);
+            arr.span()
+        }
+    }
 }
