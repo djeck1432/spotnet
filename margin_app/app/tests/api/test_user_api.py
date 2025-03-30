@@ -109,10 +109,10 @@ def test_get_user_by_id(client, mock_get_user):
     }
 
 
-def test_get_user_by_id_not_found(client):
+def test_get_user_by_id_not_found(client, mock_get_user):
     """Test not found response"""
-    user_id = uuid.uuid4()
-    response = client.get(USER_URL + "user_id/" + str(user_id))
+    mock_get_user.return_value = None
+    response = client.get(USER_URL + "user_id/" + str(uuid.uuid4()))
 
     assert response.status_code == 404
     assert response.json() == {"detail": "User not found."}
@@ -327,17 +327,17 @@ def test_get_all_users(client, mock_get_all):
         })
         
     mock_get_all.return_value = {"users": users[:3], "total": 3}  
-    response = client.get(USER_URL + "all" + f"?limit=3")
+    response = client.get(USER_URL + "all" + "?limit=3")
     assert response.status_code == 200
     assert response.json() == {"users": users[:3], "total": 3} 
 
     mock_get_all.return_value = {"users": users[-3:], "total": 3}  
-    response = client.get(USER_URL + "all" + f"?limit=3&offset=7")
+    response = client.get(USER_URL + "all" + "?limit=3&offset=7")
     assert response.status_code == 200
     assert response.json() =={"users": users[-3:], "total": 3}
     
     mock_get_all.return_value ={"users":  users[-5:], "total": 5} 
-    response = client.get(USER_URL + "all" + f"?offset=5")
+    response = client.get(USER_URL + "all" + "?offset=5")
     assert response.status_code == 200
     assert response.json() =={"users":  users[-5:], "total": 5} 
 
