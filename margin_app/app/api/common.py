@@ -14,7 +14,7 @@ class GetAllMediator:
     Mediator for handling "get all" requests.
     """
     def __init__(
-        self, crud_func: Callable[..., Any], limit: Optional[int], offset: int
+        self, crud_func: Callable[[int, int], list[Any]], limit: Optional[int], offset: int
     ):
         self.crud_func = crud_func
         self.limit = limit
