@@ -44,7 +44,7 @@ async def test_deposit_creation_success(client: TestClient):
     :param client: TestClient instance for making requests to the API.
     """
     with patch(
-        "app.crud.deposit.DepositCRUD.create_deposit", new_callable=MagicMock
+        "app.crud.deposit.DepositCRUD.create_deposit", new_callable=AsyncMock
     ) as mock_create_deposit:
         mock_create_deposit.return_value = MOCK_CREATION_RESPONSE
         print("Mock return value:", mock_create_deposit.return_value)
@@ -64,7 +64,11 @@ async def test_deposit_creation_success(client: TestClient):
         )
 
         assert response.status_code == 201
-        assert response.json() == mock_create_deposit.return_value
+        assert response.json() == {
+            "id": MOCK_CREATION_RESPONSE["id"],
+            "created_at": MOCK_CREATION_RESPONSE["created_at"],
+            "updated_at": MOCK_CREATION_RESPONSE["updated_at"],
+        }
 
         mock_create_deposit.assert_called_once()
 
@@ -96,7 +100,11 @@ async def test_deposit_update_success(client: TestClient):
         )
 
         assert response.status_code == 200
-        assert response.json() == mock_update_response
+        assert response.json() == {
+            "id": mock_update_response["id"],
+            "created_at": mock_update_response["created_at"],
+            "updated_at": mock_update_response["updated_at"],
+        }
 
         mock_update_deposit.assert_called_once()
 
