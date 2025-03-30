@@ -355,5 +355,5 @@ def test_get_all_users_invalid_params(client, mock_get_all):
     for params in invalid_params:
         limit = f"limit={params["limit"]}"
         offset = f"offset={params["offset"]}"
-        response = client.get(USER_URL + "get_all_users" + f"?{limit}&{offset}")
+        response = client.get(USER_URL + "all" + f"?{limit}&{offset}")
         assert response.status_code == 422
