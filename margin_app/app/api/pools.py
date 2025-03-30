@@ -80,12 +80,6 @@ async def get_pool(pool_id: UUID) -> PoolResponse:
     """
     try:
         pool = await pool_crud.get_pool_by_id(pool_id)
-        if not pool:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Pool with id {pool_id} not found",
-            )
-        return pool
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -97,6 +91,13 @@ async def get_pool(pool_id: UUID) -> PoolResponse:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Something went wrong.",
         ) from e
+
+    if not pool:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Pool with id {pool_id} not found",
+        )
+    return pool
 
 
 @router.post(
