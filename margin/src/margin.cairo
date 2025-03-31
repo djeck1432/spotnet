@@ -46,6 +46,7 @@ pub mod Margin {
         treasury_balances: Map<(ContractAddress, ContractAddress), TokenAmount>,
         pools: Map<ContractAddress, TokenAmount>,
         positions: Map<ContractAddress, Position>,
+        risk_factors: Map<ContractAddress, u128>
     }
 
     #[constructor]
