@@ -3,17 +3,18 @@ name: Run Frontend Tests
 on:
   push:
     paths:
-      - 'frontend/**'
+      - 'spotnet/frontend/**'
       - 'devops/**'
   pull_request:
     paths:
-      - 'frontend/**'
+      - 'spotnet/frontend/**'
       - 'devops/**'
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    env:
+        working-directory: ./spotnet/frontend
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -25,12 +26,12 @@ jobs:
 
     - name: Create .env file
       run: cp .env.dev .env
-      working-directory: frontend
+      working-directory: ${{env.working-directory}}
 
     - name: Install dependencies
       run: yarn install
-      working-directory: frontend
+      working-directory: ${{env.working-directory}}
 
     - name: Run tests
       run: yarn test
-      working-directory: frontend
+      working-directory: ${{env.working-directory}}

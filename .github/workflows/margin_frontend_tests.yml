@@ -15,7 +15,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    env:
+        working-directory: ./margin/margin_frontend
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -27,12 +28,12 @@ jobs:
 
     - name: Create .env file
       run: cp .env.example .env
-      working-directory: margin_frontend
+      working-directory: ${{env.working-directory}}
 
     - name: Install dependencies
       run: yarn install
-      working-directory: margin_frontend
+      working-directory: ${{env.working-directory}}
 
     - name: Run tests
       run: yarn test
-      working-directory: margin_frontend
+      working-directory: ${{env.working-directory}}

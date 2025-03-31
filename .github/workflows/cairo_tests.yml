@@ -5,24 +5,26 @@ on:
     branches:
       - main
     paths:
-      - '**/*.rs'
-      - '**/*.cairo'
-      - Scarb.toml
-      - Scarb.lock
-      - .tool-versions
+      - 'spotnet/**/*.rs'
+      - 'spotnet/**/*.cairo'
+      - spotnet/Scarb.toml
+      - spotnet/Scarb.lock
+      - spotnet/.tool-versions
   pull_request:
     branches:
       - main
     paths:
-      - '**/*.rs'
-      - '**/*.cairo'
-      - Scarb.toml
-      - Scarb.lock
-      - .tool-versions
+      - 'spotnet/**/*.rs'
+      - 'spotnet/**/*.cairo'
+      - spotnet/Scarb.toml
+      - spotnet/Scarb.lock
+      - spotnet/.tool-versions
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+        working-directory: ./spotnet/cairo
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,6 +42,7 @@ jobs:
           asdf install scarb latest
           asdf global scarb latest
           scarb --version
+        working-directory: ${{env.working-directory}}
 
       - name: Install Starknet Foundry
         run: |
@@ -47,9 +50,12 @@ jobs:
           asdf install starknet-foundry 0.32.0
           asdf global starknet-foundry 0.32.0
           snforge --version
+        working-directory: ${{env.working-directory}}
 
       - name: Build Cairo Contracts
         run: scarb build
+        working-directory: ${{env.working-directory}}
 
       - name: Run Cairo Tests
         run: snforge test
+        working-directory: ${{env.working-directory}}

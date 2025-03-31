@@ -5,18 +5,21 @@ on:
     branches:
       - main
     paths:
-      - 'web_app/**'
+      - 'spotnet/web_app/**'
       - 'devops/**'
   pull_request:
     branches:
       - main
     paths:
-      - 'web_app/**'
+      - 'spotnet/web_app/**'
       - 'devops/**'
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+        working-directory: ./spotnet/cairo
+
     services:
       postgres:
         image: postgres:16
@@ -28,9 +31,9 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres" 
-          --health-interval 10s 
-          --health-timeout 5s 
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
           --health-retries 5
 
     steps:
@@ -39,26 +42,27 @@ jobs:
 
       - name: Create .env file
         run: cp .env.dev .env
+        working-directory: ${{env.working-directory}}
 
       - name: Start services and initialize database
         run: |
-          docker compose -f devops/docker-compose.dev.yaml --env-file .env up -d --build
+          docker compose -f devops/docker-compose.spotnet.dev.yaml --env-file spotnet/.env up -d --build
           # Wait for services to be ready
           sleep 10
           # Create initial migration if it doesn't exist
-          docker compose -f devops/docker-compose.dev.yaml exec -T backend poetry run alembic -c web_app/alembic.ini revision --autogenerate -m "Initial migration"
+          docker compose -f devops/docker-compose.spotnet.dev.yaml exec -T backend poetry run alembic -c web_app/alembic.ini revision --autogenerate -m "Initial migration"
           # Run migrations
-          docker compose -f devops/docker-compose.dev.yaml exec -T backend poetry run alembic -c web_app/alembic.ini upgrade head
+          docker compose -f devops/docker-compose.spotnet.dev.yaml exec -T backend poetry run alembic -c web_app/alembic.ini upgrade head
 
       - name: Run tests
         run: |
-          docker compose -f devops/docker-compose.dev.yaml exec -T backend poetry run pytest web_app/tests
+          docker compose -f devops/docker-compose.spotnet.dev.yaml exec -T backend poetry run pytest web_app/tests
 
       - name: Run tests coverage
         run: |
-          docker compose -f devops/docker-compose.dev.yaml exec -T backend poetry run pytest --cov=web_app/tests --cov-fail-under=90
+          docker compose -f devops/docker-compose.spotnet.dev.yaml exec -T backend poetry run pytest --cov=web_app/tests --cov-fail-under=90
 
       - name: Tear down
         if: always()
         run: |
-          docker compose -f devops/docker-compose.dev.yaml down
+          docker compose -f devops/docker-compose.spotnet.dev.yaml down
