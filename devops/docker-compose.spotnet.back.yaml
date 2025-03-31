@@ -6,14 +6,14 @@ networks:
 
 services:
   backend:
-    build: ..
+    build: ../spotnet
     command: bash /app/entrypoint.sh
     container_name: backend_dev
     volumes:
-      - ../entrypoint.sh:/app/entrypoint.sh
-      - ..:/app
+      - ../spotnet/entrypoint.sh:/app/entrypoint.sh
+      - ../spotnet:/app
     env_file:
-      - ../.env.dev
+      - ../spotnet/.env.dev
     expose:
       - "8000"
     ports:
@@ -38,7 +38,7 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data
-      - ../init-db:/docker-entrypoint-initdb.d
+      - ../spotnet/init-db:/docker-entrypoint-initdb.d
     networks:
       - app_network
     ports:
