@@ -10,6 +10,7 @@
 
 // Import Routes
 
+<<<<<<< HEAD
 import { Route as rootRoute } from './routes/__root';
 import { Route as TradeImport } from './routes/trade';
 import { Route as SignUpImport } from './routes/sign-up';
@@ -20,6 +21,18 @@ import { Route as DashboardImport } from './routes/dashboard';
 import { Route as ChangePasswordImport } from './routes/change-password';
 import { Route as IndexImport } from './routes/index';
 import { Route as AdminDashboardImport } from './routes/admin/dashboard';
+=======
+import { Route as rootRoute } from './routes/__root'
+import { Route as TradeImport } from './routes/trade'
+import { Route as SignUpImport } from './routes/sign-up'
+import { Route as ResetPasswordImport } from './routes/reset-password'
+import { Route as PoolImport } from './routes/pool'
+import { Route as LoginImport } from './routes/login'
+import { Route as DashboardImport } from './routes/dashboard'
+import { Route as ChangePasswordImport } from './routes/change-password'
+import { Route as IndexImport } from './routes/index'
+import { Route as AdminPositionsImport } from './routes/admin.positions'
+>>>>>>> final cleaning, some minor chages due to new project structure
 
 // Create/Update Routes
 
@@ -77,6 +90,12 @@ const AdminDashboardRoute = AdminDashboardImport.update({
   getParentRoute: () => rootRoute,
 } as any);
 
+const AdminPositionsRoute = AdminPositionsImport.update({
+  id: '/admin/positions',
+  path: '/admin/positions',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -131,6 +150,7 @@ declare module '@tanstack/react-router' {
       parentRoute: typeof rootRoute;
     };
     '/trade': {
+<<<<<<< HEAD
       id: '/trade';
       path: '/trade';
       fullPath: '/trade';
@@ -144,12 +164,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardImport;
       parentRoute: typeof rootRoute;
     };
+=======
+      id: '/trade'
+      path: '/trade'
+      fullPath: '/trade'
+      preLoaderRoute: typeof TradeImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/positions': {
+      id: '/admin/positions'
+      path: '/admin/positions'
+      fullPath: '/admin/positions'
+      preLoaderRoute: typeof AdminPositionsImport
+      parentRoute: typeof rootRoute
+    }
+>>>>>>> final cleaning, some minor chages due to new project structure
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
+<<<<<<< HEAD
   '/': typeof IndexRoute;
   '/change-password': typeof ChangePasswordRoute;
   '/dashboard': typeof DashboardRoute;
@@ -184,6 +220,42 @@ export interface FileRoutesById {
   '/sign-up': typeof SignUpRoute;
   '/trade': typeof TradeRoute;
   '/admin/dashboard': typeof AdminDashboardRoute;
+=======
+  '/': typeof IndexRoute
+  '/change-password': typeof ChangePasswordRoute
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/pool': typeof PoolRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sign-up': typeof SignUpRoute
+  '/trade': typeof TradeRoute
+  '/admin/positions': typeof AdminPositionsRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/change-password': typeof ChangePasswordRoute
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/pool': typeof PoolRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sign-up': typeof SignUpRoute
+  '/trade': typeof TradeRoute
+  '/admin/positions': typeof AdminPositionsRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/change-password': typeof ChangePasswordRoute
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/pool': typeof PoolRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sign-up': typeof SignUpRoute
+  '/trade': typeof TradeRoute
+  '/admin/positions': typeof AdminPositionsRoute
+>>>>>>> final cleaning, some minor chages due to new project structure
 }
 
 export interface FileRouteTypes {
@@ -197,8 +269,13 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-up'
     | '/trade'
+<<<<<<< HEAD
     | '/admin/dashboard';
   fileRoutesByTo: FileRoutesByTo;
+=======
+    | '/admin/positions'
+  fileRoutesByTo: FileRoutesByTo
+>>>>>>> final cleaning, some minor chages due to new project structure
   to:
     | '/'
     | '/change-password'
@@ -208,7 +285,11 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-up'
     | '/trade'
+<<<<<<< HEAD
     | '/admin/dashboard';
+=======
+    | '/admin/positions'
+>>>>>>> final cleaning, some minor chages due to new project structure
   id:
     | '__root__'
     | '/'
@@ -219,6 +300,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-up'
     | '/trade'
+<<<<<<< HEAD
     | '/admin/dashboard';
   fileRoutesById: FileRoutesById;
 }
@@ -233,6 +315,22 @@ export interface RootRouteChildren {
   SignUpRoute: typeof SignUpRoute;
   TradeRoute: typeof TradeRoute;
   AdminDashboardRoute: typeof AdminDashboardRoute;
+=======
+    | '/admin/positions'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  ChangePasswordRoute: typeof ChangePasswordRoute
+  DashboardRoute: typeof DashboardRoute
+  LoginRoute: typeof LoginRoute
+  PoolRoute: typeof PoolRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SignUpRoute: typeof SignUpRoute
+  TradeRoute: typeof TradeRoute
+  AdminPositionsRoute: typeof AdminPositionsRoute
+>>>>>>> final cleaning, some minor chages due to new project structure
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -244,8 +342,13 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SignUpRoute: SignUpRoute,
   TradeRoute: TradeRoute,
+<<<<<<< HEAD
   AdminDashboardRoute: AdminDashboardRoute,
 };
+=======
+  AdminPositionsRoute: AdminPositionsRoute,
+}
+>>>>>>> final cleaning, some minor chages due to new project structure
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
@@ -265,7 +368,11 @@ export const routeTree = rootRoute
         "/reset-password",
         "/sign-up",
         "/trade",
+<<<<<<< HEAD
         "/admin/dashboard"
+=======
+        "/admin/positions"
+>>>>>>> final cleaning, some minor chages due to new project structure
       ]
     },
     "/": {
@@ -292,8 +399,13 @@ export const routeTree = rootRoute
     "/trade": {
       "filePath": "trade.tsx"
     },
+<<<<<<< HEAD
     "/admin/dashboard": {
       "filePath": "admin/dashboard.tsx"
+=======
+    "/admin/positions": {
+      "filePath": "admin.positions.tsx"
+>>>>>>> final cleaning, some minor chages due to new project structure
     }
   }
 }
