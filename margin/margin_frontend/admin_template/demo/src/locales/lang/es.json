@@ -1,0 +1,137 @@
+{
+    "nav": {
+        "apps": "Aplicaciones",
+        "appsProject": {
+            "project": "Proyecto",
+            "dashboard": "Tablero",
+            "projectList": "Lista de proyectos",
+            "scrumBoard": "Tablero de melé",
+            "issue": "Tema"
+        },
+        "appsCrm": {
+            "crm": "CRM",
+            "dashboard": "Tablero",
+            "calendar": "Calendario",
+            "customers": "Clientes",
+            "customerDetails": "Detalles del cliente",
+            "mail": "Correo"
+        },
+        "appsSales": {
+            "sales": "Ventas",
+            "dashboard": "Tablero",
+            "productList": "Lista de productos",
+            "productEdit": "Producto editar",
+            "productNew": "Agregar producto",
+            "orderList": "Lista de orden",
+            "orderDetails": "Detalles del pedido"
+        },
+        "appsCrypto": {
+            "crypto": "Cripto",
+            "dashboard": "Tablero",
+            "portfolio": "Cartera",
+            "market": "Mercado",
+            "wallets": "Billeteras"
+        },
+        "appsknowledgeBase": {
+            "knowledgeBase": "Base de conocimientos",
+            "helpCenter": "Centro de ayuda",
+            "article": "Artículo",
+            "manageArticles": "Gestionar artículos",
+            "editArticle": "Editar artículo"
+        },
+        "appsAccount": {
+            "account": "Cuenta",
+            "settings": "Ajustes",
+            "invoice": "Factura",
+            "activityLog": "Registro de actividades",
+            "kycForm": "Formulario kyc"
+        },
+        "uiComponents": "Componentes de la UI",
+        "uiComponentsCommon": {
+            "common": "Común",
+            "grid": "Red",
+            "button": "botón",
+            "typography": "Tipografía",
+            "icons": "Iconos"
+        },
+        "uiComponentsFeeback": {
+            "feedback": "Retroalimentación",
+            "alert": "Alerta",
+            "dialog": "Diálogo",
+            "drawer": "Cajón",
+            "progress": "Progreso",
+            "skeleton": "Esqueleto",
+            "spinner": "Hilandero",
+            "toast": "Tostada"
+        },
+        "uiComponentsDataDisplay": {
+            "dataDisplay": "Visualización de datos",
+            "avatar": "Avatar",
+            "badge": "Insignia",
+            "calendar": "Calendario",
+            "cards": "Tarjetas",
+            "table": "Sábana",
+            "tag": "Etiqueta",
+            "timeline": "Línea de tiempo",
+            "tooltip": "Información sobre herramientas"
+        },
+        "uiComponentsForms": {
+            "forms": "Formularios",
+            "checkbox": "Caja",
+            "datePicker": "Selector de fechas",
+            "formControl": "Control de formulario",
+            "input": "Aporte",
+            "inputGroup": "Grupo de entrada",
+            "radio": "Caja individual",
+            "segment": "Segmento",
+            "select": "Selector",
+            "switcher": "Conmutador",
+            "timeInput": "Entrada de tiempo",
+            "upload": "Subir"
+        },
+        "uiComponentsNavigation": {
+            "navigation": "Navegación",
+            "dropdown": "Desplegable",
+            "menu": "Menú",
+            "pagination": "Paginación",
+            "steps": "Pasos",
+            "tabs": "Pestañas"
+        },
+        "uiComponentsGraph": {
+            "graph": "Grafico",
+            "charts": "Gráficos",
+            "maps": "Mapas"
+        },
+        "pages": {
+            "pages": "Paginas",
+            "welcome": "Bienvenidos",
+            "accessDenied": "Acceso denegado"
+        },
+        "authentication": {
+            "authentication": "Autenticación",
+            "signIn": "Registrarse",
+            "signInSimple": "Sencillo",
+            "signInSide": "Lado",
+            "signInCover": "Cubrir",
+            "signUp": "Inscribirse",
+            "signUpSimple": "Sencillo",
+            "signUpSide": "Lado",
+            "signUpCover": "Cubrir",
+            "forgotPassword": "Has olvidado tu contraseña",
+            "forgotPasswordSimple": "Sencillo",
+            "forgotPasswordSide": "Lado",
+            "forgotPasswordCover": "Cubrir",
+            "resetPassword": "Restablecer la contraseña",
+            "resetPasswordSimple": "Sencillo",
+            "resetPasswordSide": "Lado",
+            "resetPasswordCover": "Cubrir"
+        },
+        "docs": {
+            "guide": "guía",
+            "documentation": "Documentación",
+            "sharedComponentDoc": "Componente compartido",
+            "utilsDoc": "útiles",
+            "changeLog": "Registro de cambios"
+        }
+    }
+}

@@ -1,0 +1,54 @@
+input[type="range"] {
+  -webkit-appearance: none;
+}
+
+/* Special styling for WebKit/Blink */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #000000;
+  height: 28px;
+  width: 45px;
+  border-radius: 20px;
+  background: #00d1ff;
+  cursor: pointer;
+  margin-top: -4px;
+  box-shadow:
+    1px 1px 1px #000000,
+    0px 0px 1px #0d0d0d;
+}
+
+/* All the same stuff for Firefox */
+input[type="range"]::-moz-range-thumb {
+  box-shadow:
+    1px 1px 1px #000000,
+    0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 14px;
+  width: 38px;
+  border-radius: 20px;
+  padding: 6px 4px;
+  background: #00d1ff;
+  cursor: pointer;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* All the same stuff for IE */
+input[type="range"]::-ms-thumb {
+  box-shadow:
+    1px 1px 1px #000000,
+    0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 14px;
+  width: 38px;
+  border-radius: 3px;
+  background: #00d1ff;
+  cursor: pointer;
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  pointer-events: none;
+}

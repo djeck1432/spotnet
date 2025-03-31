@@ -1,0 +1,27 @@
+.tab-list {
+  @apply flex items-center overflow-x-auto overflow-y-hidden;
+}
+
+.tab-list-underline {
+  @apply border-b border-gray-200 dark:border-gray-600;
+}
+
+.tab-nav {
+  @apply font-semibold flex items-center justify-center transition duration-200 ease-in-out cursor-pointer;
+
+  &.tab-nav-disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
+}
+
+.tab-nav-underline {
+  @apply py-3 px-5 border-b-2 border-transparent;
+}
+
+.tab-nav-pill {
+  @apply py-2 px-5 mr-1 rtl:ml-1 rounded-md;
+}
+
+.tab-nav-icon {
+  @apply ltr:mr-1.5 rtl:ml-1.5 text-lg;
+}

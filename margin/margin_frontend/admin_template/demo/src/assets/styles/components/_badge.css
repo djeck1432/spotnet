@@ -1,0 +1,22 @@
+.badge {
+  @apply rounded-full px-2 py-0.5 text-xs bg-red-500 text-white;
+}
+
+.badge-dot {
+  @apply rounded-full text-xs bg-red-500 text-white w-2 h-2;
+}
+
+.badge-wrapper {
+  @apply relative flex;
+}
+
+.badge-inner {
+  @apply absolute z-10 
+        transform
+        top-0
+        ltr:translate-x-2/4 
+        rtl:-translate-x-2/4 
+        -translate-y-2/4  
+        ltr:right-0 
+        rtl:left-0;
+}

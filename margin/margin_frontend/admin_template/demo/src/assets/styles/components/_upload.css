@@ -1,0 +1,51 @@
+.upload {
+  @apply relative inline-block;
+
+  &.disabled {
+    @apply cursor-not-allowed opacity-60;
+
+    .upload-input {
+      @apply cursor-not-allowed;
+    }
+  }
+}
+
+.upload-input {
+  @apply absolute inset-0 hidden;
+
+  &.draggable {
+    @apply block opacity-0 w-full cursor-pointer;
+  }
+}
+
+.upload-draggable {
+  min-height: 7rem;
+  @apply border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer flex items-center justify-center;
+}
+
+.upload-file-list {
+  @apply mt-4;
+}
+
+.upload-file-info {
+  min-height: 4rem;
+  @apply flex flex-col justify-center ltr:ml-3 rtl:mr-3;
+}
+
+.upload-file {
+  @apply flex items-center border border-gray-300 dark:border-gray-600 rounded-lg mb-2 justify-between;
+}
+
+.upload-file-thumbnail {
+  height: 4rem;
+  width: 4rem;
+  @apply p-2 flex justify-center items-center;
+}
+
+.upload-file-image {
+  @apply max-w-full;
+}
+
+.upload-file-remove {
+  @apply p-3 mx-2;
+}

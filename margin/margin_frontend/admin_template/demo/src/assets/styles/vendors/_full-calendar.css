@@ -1,0 +1,152 @@
+.calendar {
+  @apply h-full;
+
+  .fc {
+    @apply h-full;
+  }
+
+  .fc-theme-standard .fc-scrollgrid {
+    @apply border-0;
+  }
+
+  .fc-theme-standard td,
+  .fc-theme-standard th {
+    @apply border-gray-200 dark:border-gray-600;
+
+    &:last-child {
+      border-right: 0;
+    }
+  }
+
+  .fc .fc-col-header-cell-cushion {
+    @apply text-gray-900 dark:text-gray-100 py-3;
+  }
+
+  .fc-col-header-cell {
+    border-width: 0px 0px 1px;
+  }
+
+  .fc .fc-daygrid-day-number {
+    @apply font-semibold p-2;
+  }
+
+  .fc-view {
+    @apply rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800;
+  }
+
+  .fc-daygrid-dot-event .fc-event-title {
+    @apply text-gray-900 dark:text-gray-100;
+  }
+
+  .fc .fc-button {
+    @apply rounded-md py-2;
+  }
+
+  .fc .fc-toolbar {
+    @apply lg:flex-row flex-col items-start lg:items-center gap-2;
+  }
+
+  .fc .fc-button-primary {
+    @apply bg-white border border-gray-300 dark:bg-gray-700 dark:border-gray-700 text-gray-600 dark:text-gray-100 font-semibold;
+
+    &:focus {
+      @apply shadow-none;
+    }
+
+    &:hover {
+      @apply hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-300 dark:hover:border-gray-700 hover:text-gray-900 hover:dark:text-gray-100;
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed bg-white border border-gray-300 dark:bg-gray-700 dark:border-gray-700 text-gray-600 dark:text-gray-100;
+
+      &:hover {
+        @apply bg-white border border-gray-300 dark:bg-gray-700 dark:border-gray-700 text-gray-600 dark:text-gray-100;
+      }
+    }
+  }
+
+  .fc .fc-button-primary:not(:disabled):active:focus,
+  .fc .fc-button-primary:not(:disabled).fc-button-active:focus {
+    @apply shadow-none;
+  }
+
+  .fc .fc-button-primary:not(:disabled):active,
+  .fc .fc-button-primary:not(:disabled).fc-button-active {
+    @apply bg-gray-100 border border-gray-300 dark:bg-gray-500 dark:border-gray-500 text-gray-600 dark:text-gray-100;
+  }
+
+  .fc {
+    .fc-dayGridMonth-button,
+    .fc-timeGridDay-button,
+    .fc-timeGridWeek-button,
+    .fc-today-button {
+      @apply px-8 capitalize;
+    }
+  }
+
+  .fc .fc-highlight {
+    @apply bg-transparent;
+  }
+
+  .fc-daygrid-dot-event:hover,
+  .fc-daygrid-dot-event.fc-event-mirror {
+    @apply bg-transparent;
+  }
+
+  .fc .fc-daygrid-event {
+    @apply p-0 rounded-md mb-2;
+  }
+
+  .fc-h-event {
+    @apply bg-transparent border-0;
+  }
+
+  .fc-event-selected,
+  .fc-event:focus {
+    @apply shadow-none;
+
+    &:after {
+      @apply bg-transparent;
+    }
+  }
+
+  .fc .fc-cell-shaded,
+  .fc .fc-day-disabled {
+    @apply bg-gray-200 dark:bg-gray-500;
+  }
+
+  .fc-daygrid-bg-harness {
+    .fc-highlight {
+      @apply bg-gray-100 dark:bg-gray-700;
+    }
+  }
+
+  .fc-daygrid-event {
+    @apply text-xs;
+  }
+
+  .fc .custom-calendar-event {
+    @apply flex items-center min-h-[28px] p-1.5 rounded-md w-full overflow-hidden text-ellipsis h-full;
+  }
+
+  .fc-v-event {
+    @apply border-0 bg-transparent;
+  }
+
+  .fc .fc-scrollgrid-section table {
+    @apply !w-full;
+  }
+
+  .fc .fc-daygrid-body {
+    @apply !w-full;
+  }
+
+  .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+    @apply mx-0;
+  }
+
+  .fc-toolbar-chunk {
+    @apply flex flex-col sm:flex-row gap-2 w-full sm:w-auto;
+  }
+}

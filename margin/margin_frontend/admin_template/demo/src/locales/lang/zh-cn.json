@@ -1,0 +1,137 @@
+{
+    "nav": {
+        "apps": "应用",
+        "appsProject": {
+            "project": "项目",
+            "dashboard": "仪表板",
+            "projectList": "项目清单",
+            "scrumBoard": "看板",
+            "issue": "问题"
+        },
+        "appsCrm": {
+            "crm": "客户关系管理",
+            "dashboard": "仪表板",
+            "calendar": "日历",
+            "customers": "客户",
+            "customerDetails": "客户信息",
+            "mail": "邮件"
+        },
+        "appsSales": {
+            "sales": "销售",
+            "dashboard": "仪表板",
+            "productList": "产品列表",
+            "productEdit": "产品编辑",
+            "productNew": "新增产品",
+            "orderList": "订单",
+            "orderDetails": "订单详细"
+        },
+        "appsCrypto": {
+            "crypto": "加密货币",
+            "dashboard": "仪表板",
+            "portfolio": "投资组合",
+            "market": "市场",
+            "wallets": "加密钱包"
+        },
+        "appsknowledgeBase": {
+            "knowledgeBase": "知识库",
+            "helpCenter": "帮助中心",
+            "article": "文章",
+            "manageArticles": "文章管理",
+            "editArticle": "文章编辑"
+        },
+        "appsAccount": {
+            "account": "帐户",
+            "settings": "设置",
+            "invoice": "发票",
+            "activityLog": "活动日志",
+            "kycForm": "了解客户表格"
+        },
+        "uiComponents": "UI 组件",
+        "uiComponentsCommon": {
+            "common": "通用",
+            "grid": "排版",
+            "button": "按钮",
+            "typography": "排版",
+            "icons": "图标"
+        },
+        "uiComponentsFeeback": {
+            "feedback": "反馈",
+            "alert": "警告提示",
+            "dialog": "对话框",
+            "drawer": "抽屉",
+            "progress": "进度条",
+            "skeleton": "骨架",
+            "spinner": "加载显示",
+            "toast": "彈出提示"
+        },
+        "uiComponentsDataDisplay": {
+            "dataDisplay": "数据展示",
+            "avatar": "头像",
+            "badge": "徽标数",
+            "calendar": "日历",
+            "cards": "卡片",
+            "table": "表格",
+            "tag": "标签",
+            "timeline": "时间线",
+            "tooltip": "文字提示"
+        },
+        "uiComponentsForms": {
+            "forms": "表单",
+            "checkbox": "多选框",
+            "datePicker": "日期选择框",
+            "formControl": "表单控件",
+            "input": "输入框",
+            "inputGroup": "输入框组合",
+            "radio": "单选框",
+            "segment": "分隔选择框",
+            "select": "选择器",
+            "switcher": "开关",
+            "timeInput": "时间输入框",
+            "upload": "上传"
+        },
+        "uiComponentsNavigation": {
+            "navigation": "导航",
+            "dropdown": "下拉菜单",
+            "menu": "导航菜单",
+            "pagination": "分页",
+            "steps": "步骤条",
+            "tabs": "标签页"
+        },
+        "uiComponentsGraph": {
+            "graph": "图形数据",
+            "charts": "图表",
+            "maps": "地图"
+        },
+        "pages": {
+            "pages": "页面",
+            "welcome": "欢迎页",
+            "accessDenied": "拒绝访问"
+        },
+        "authentication": {
+            "authentication": "验证",
+            "signIn": "登入",
+            "signInSimple": "简易",
+            "signInSide": "侧面",
+            "signInCover": "覆盖",
+            "signUp": "注册",
+            "signUpSimple": "简易",
+            "signUpSide": "侧面",
+            "signUpCover": "覆盖",
+            "forgotPassword": "忘记密码",
+            "forgotPasswordSimple": "简易",
+            "forgotPasswordSide": "侧面",
+            "forgotPasswordCover": "覆盖",
+            "resetPassword": "重设密码",
+            "resetPasswordSimple": "简易",
+            "resetPasswordSide": "侧面",
+            "resetPasswordCover": "覆盖"
+        },
+        "docs": {
+            "guide": "指南",
+            "documentation": "文档",
+            "sharedComponentDoc": "共享组件",
+            "utilsDoc": "工具",
+            "changeLog": "更新日志"
+        }
+    }
+}

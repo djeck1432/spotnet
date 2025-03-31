@@ -1,0 +1,140 @@
+.table-default {
+  @apply table-auto min-w-full divide-y divide-gray-200 dark:divide-gray-700;
+
+  thead {
+    @apply bg-gray-50 dark:bg-gray-700;
+
+    > tr {
+      > th {
+        @apply px-6 py-3 text-left rtl:text-right text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-100;
+      }
+    }
+  }
+
+  tbody {
+    @apply divide-y divide-gray-200 dark:divide-gray-700;
+
+    > tr {
+      > td {
+        @apply px-6 py-4;
+      }
+    }
+  }
+
+  tfoot {
+    > tr {
+      > td {
+        @apply px-6 py-3 border-t border-gray-200 dark:border-gray-700;
+      }
+    }
+  }
+
+  &.borderless-row {
+    tbody {
+      @apply divide-none;
+    }
+  }
+}
+
+.table-flex {
+  @apply min-w-full divide-y divide-gray-200 dark:divide-gray-700;
+
+  .thead {
+    @apply bg-gray-50 dark:bg-gray-700;
+
+    .tr {
+      .th {
+        @apply px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-100;
+      }
+    }
+  }
+
+  .tbody {
+    @apply divide-y divide-gray-200 dark:divide-gray-700;
+
+    .tr {
+      .td {
+        @apply px-6 py-4;
+      }
+    }
+  }
+
+  .tfoot {
+    .tr {
+      .td {
+        @apply px-6 py-3 border-t dark:border-gray-700;
+      }
+    }
+  }
+}
+
+.table-virtual {
+  > div {
+    @apply divide-y divide-gray-200 dark:divide-gray-700;
+  }
+}
+
+.table-compact {
+  thead {
+    > tr {
+      > th {
+        @apply px-3 py-2 text-xs;
+      }
+    }
+  }
+
+  tbody {
+    > tr {
+      > td {
+        @apply px-3 py-2;
+      }
+    }
+  }
+
+  .thead {
+    > .tr {
+      > .th {
+        @apply px-3 py-2 text-xs;
+      }
+    }
+  }
+
+  .tbody {
+    > .tr {
+      > .td {
+        @apply px-3 py-2;
+      }
+    }
+  }
+}
+
+.table-hover {
+  > tbody {
+    > tr:hover {
+      > * {
+        @apply bg-gray-100/50 dark:bg-gray-700/40;
+      }
+    }
+  }
+
+  > .tbody {
+    > .tr:hover {
+      > * {
+        @apply bg-gray-100/50 dark:bg-gray-700/40;
+      }
+    }
+  }
+}
+
+.table-resizer {
+  @apply right-0 h-full absolute top-0 z-10 border-r-2 border-gray-200 dark:border-gray-600 w-2;
+  touch-action: none;
+
+  &.resizing {
+  }
+}
+
+th,
+td {
+  word-wrap: break-word;
+}
