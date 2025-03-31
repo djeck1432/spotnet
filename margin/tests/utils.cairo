@@ -1,6 +1,6 @@
-use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 use starknet::{ContractAddress, contract_address_const, get_contract_address};
-use margin::interface::{IMarginDispatcher};
+use margin::interface::{IMarginDispatcher, IPragmaOracleDispatcher};
 use snforge_std::cheatcodes::execution_info::caller_address::{
     start_cheat_caller_address, stop_cheat_caller_address,
 };
@@ -8,12 +8,14 @@ use snforge_std::{declare, ContractClassTrait, DeclareResultTrait};
 use alexandria_math::fast_power::fast_power;
 use margin::types::TokenAmount;
 use super::constants::contracts::EKUBO_CORE_SEPOLIA;
+use ekubo::{interfaces::core::{ICoreDispatcher}};
 
 #[derive(Drop)]
 pub struct MarginTestSuite {
     pub margin: IMarginDispatcher,
     pub token: IERC20Dispatcher,
     pub owner: ContractAddress,
+    pub pragma: IPragmaOracleDispatcher,
 }
 
 pub fn ERC20_MOCK_CONTRACT() -> ContractAddress {
@@ -22,6 +24,10 @@ pub fn ERC20_MOCK_CONTRACT() -> ContractAddress {
 
 pub fn ERC20_MOCK_CONTRACT_2() -> ContractAddress {
     contract_address_const::<'ERC20Mock2'>()
+}
+
+pub fn PRAGMA_MOCK_CONTRACT() -> ContractAddress {
+    contract_address_const::<'PragmaMock'>()
 }
 
 pub fn deploy_erc20_mock() -> ContractAddress {
@@ -39,6 +45,13 @@ pub fn deploy_erc20_mock() -> ContractAddress {
 
     let (contract_addr, _) = contract.deploy_at(@calldata, ERC20_MOCK_CONTRACT()).unwrap();
 
+    contract_addr
+}
+
+pub fn deploy_pragma_mock() -> ContractAddress {
+    let contract = declare("PragmaMock").unwrap().contract_class();
+    let mut calldata: Array<felt252> = array![];
+    let (contract_addr, _) = contract.deploy_at(@calldata, PRAGMA_MOCK_CONTRACT()).unwrap();
     contract_addr
 }
 
@@ -61,14 +74,23 @@ pub fn deploy_erc20_mock_2() -> ContractAddress {
 }
 
 
-pub fn setup_test_suite(owner: ContractAddress, token_address: ContractAddress) -> MarginTestSuite {
+pub fn setup_test_suite(
+    owner: ContractAddress, token_address: ContractAddress, oracle_address: ContractAddress,
+) -> MarginTestSuite {
     let contract = declare("Margin").unwrap().contract_class();
+    let ekubo = ICoreDispatcher {
+        contract_address: contract_address_const::<EKUBO_CORE_SEPOLIA>(),
+    };
 
-    let (margin_contract, _) = contract.deploy(@array![EKUBO_CORE_SEPOLIA]).unwrap();
+    let mut calldata: Array<felt252> = array![];
+    Serde::serialize(@ekubo, ref calldata);
+    Serde::serialize(@oracle_address, ref calldata);
+    let (margin_contract, _) = contract.deploy(@calldata).unwrap();
 
     MarginTestSuite {
         margin: IMarginDispatcher { contract_address: margin_contract },
         token: IERC20Dispatcher { contract_address: token_address },
+        pragma: IPragmaOracleDispatcher { contract_address: oracle_address },
         owner,
     }
 }

@@ -1,6 +1,6 @@
 #[starknet::contract]
 pub mod Margin {
-    use openzeppelin_token::erc20::interface::IERC20DispatcherTrait;
+    use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
     use core::num::traits::Zero;
     use starknet::{
         event::EventEmitter,
@@ -8,10 +8,18 @@ pub mod Margin {
         ContractAddress, get_contract_address, get_caller_address,
     };
     use margin::{
-        interface::IMargin,
+        interface::{
+            IMargin, IERC20MetadataForPragmaDispatcherTrait, IERC20MetadataForPragmaDispatcher,
+            IPragmaOracleDispatcher, IPragmaOracleDispatcherTrait,
+        },
         types::{Position, TokenAmount, PositionParameters, SwapData, EkuboSlippageLimits},
     };
-    use openzeppelin_token::erc20::interface::{IERC20Dispatcher};
+    use margin::mocks::erc20_mock::{};
+    use alexandria_math::{BitShift, U256BitShift};
+
+    use openzeppelin::token::erc20::interface::{IERC20Dispatcher};
+    use pragma_lib::types::{DataType, PragmaPricesResponse};
+
     use ekubo::{
         interfaces::core::{ICoreDispatcher, ILocker, ICoreDispatcherTrait},
         types::{keys::PoolKey, delta::Delta},
@@ -46,12 +54,16 @@ pub mod Margin {
         treasury_balances: Map<(ContractAddress, ContractAddress), TokenAmount>,
         pools: Map<ContractAddress, TokenAmount>,
         positions: Map<ContractAddress, Position>,
-        risk_factors: Map<ContractAddress, u128>
+        oracle_address: ContractAddress,
+        risk_factors: Map<ContractAddress, u128>,
     }
 
     #[constructor]
-    fn constructor(ref self: ContractState, ekubo_core: ICoreDispatcher) {
+    fn constructor(
+        ref self: ContractState, ekubo_core: ICoreDispatcher, oracle_address: ContractAddress,
+    ) {
         self.ekubo_core.write(ekubo_core);
+        self.oracle_address.write(oracle_address);
     }
 
 
@@ -59,6 +71,21 @@ pub mod Margin {
     pub impl InternalImpl of InternalTrait {
         fn swap(ref self: ContractState, swap_data: SwapData) -> Delta {
             call_core_with_callback(self.ekubo_core.read(), @swap_data)
+        }
+
+        fn get_data(self: @ContractState, token: ContractAddress) -> PragmaPricesResponse {
+            let token_symbol: felt252 = IERC20MetadataForPragmaDispatcher {
+                contract_address: token,
+            }
+                .symbol();
+
+            let token_symbol_u256: u256 = token_symbol.into();
+            let pair_id = BitShift::shl(token_symbol_u256, 4) + '/USD';
+
+            IPragmaOracleDispatcher { contract_address: self.oracle_address.read() }
+                .get_data_median(
+                    DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')),
+                )
         }
     }
 
@@ -119,7 +146,6 @@ pub mod Margin {
             ekubo_limits: EkuboSlippageLimits,
         ) {}
     }
-
 
     #[abi(embed_v0)]
     impl Locker of ILocker<ContractState> {

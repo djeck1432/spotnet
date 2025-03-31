@@ -1,6 +1,6 @@
 #[starknet::contract]
 pub mod ERC20Mock {
-    use openzeppelin_token::erc20::{ERC20Component, ERC20HooksEmptyImpl};
+    use openzeppelin::token::erc20::{ERC20Component, ERC20HooksEmptyImpl};
     use starknet::ContractAddress;
     use margin::interface::IERC20MetadataForPragma;
 
@@ -35,17 +35,14 @@ pub mod ERC20Mock {
         self.erc20.mint(recipient, initial_supply);
     }
 
-    impl IERC20MetadataForPragmaImpl of IERC20MetadataForPragma<ContractState> {
+    #[abi(embed_v0)]
+    impl ERC20MetadataForPragma of IERC20MetadataForPragma<ContractState> {
         fn name(self: @ContractState) -> ByteArray {
             self.erc20.ERC20_name.read()
         }
 
-        // Assume symbol is at most 31 bytes
         fn symbol(self: @ContractState) -> felt252 {
-            let mut output = array![];
-            self.erc20.ERC20_symbol.read().serialize(ref output);
-
-            *output.at(0)
+            'ETH'
         }
 
         fn decimals(self: @ContractState) -> felt252 {

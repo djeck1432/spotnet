@@ -17,41 +17,100 @@ version = "0.1.0"
 dependencies = [
  "alexandria_math",
  "ekubo",
- "openzeppelin_token",
+ "openzeppelin",
+ "pragma_lib",
  "snforge_std",
+]
+
+[[package]]
+name = "openzeppelin"
+version = "1.0.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
+dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_account",
+ "openzeppelin_finance",
+ "openzeppelin_governance",
+ "openzeppelin_introspection",
+ "openzeppelin_merkle_tree",
+ "openzeppelin_presets",
+ "openzeppelin_security",
+ "openzeppelin_token",
+ "openzeppelin_upgrades",
+ "openzeppelin_utils",
 ]
 
 [[package]]
 name = "openzeppelin_access"
 version = "1.0.0"
-source = "registry+https://scarbs.xyz/"
-checksum = "sha256:a39a4ea1582916c637bf7e3aee0832c3fe1ea3a3e39191955e8dc39d08327f9b"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
+dependencies = [
+ "openzeppelin_introspection",
+]
+
+[[package]]
+name = "openzeppelin_account"
+version = "1.0.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
 dependencies = [
  "openzeppelin_introspection",
  "openzeppelin_utils",
 ]
 
 [[package]]
-name = "openzeppelin_account"
+name = "openzeppelin_finance"
 version = "1.0.0"
-source = "registry+https://scarbs.xyz/"
-checksum = "sha256:7e943a2de32ddca4d48e467e52790e380ab1f49c4daddbbbc4634dd930d0243f"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
 dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_token",
+]
+
+[[package]]
+name = "openzeppelin_governance"
+version = "1.0.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
+dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_account",
  "openzeppelin_introspection",
+ "openzeppelin_token",
  "openzeppelin_utils",
 ]
 
 [[package]]
 name = "openzeppelin_introspection"
 version = "1.0.0"
-source = "registry+https://scarbs.xyz/"
-checksum = "sha256:34e088ecf19e0b3012481a29f1fbb20e600540cb9a5db1c3002a97ebb7f5a32a"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
+
+[[package]]
+name = "openzeppelin_merkle_tree"
+version = "1.0.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
+
+[[package]]
+name = "openzeppelin_presets"
+version = "1.0.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
+dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_account",
+ "openzeppelin_finance",
+ "openzeppelin_introspection",
+ "openzeppelin_token",
+ "openzeppelin_upgrades",
+ "openzeppelin_utils",
+]
+
+[[package]]
+name = "openzeppelin_security"
+version = "1.0.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
 
 [[package]]
 name = "openzeppelin_token"
 version = "1.0.0"
-source = "registry+https://scarbs.xyz/"
-checksum = "sha256:33fcb84a1a76d2d3fff9302094ff564f78d45b743548fd7568c130b272473f66"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
 dependencies = [
  "openzeppelin_access",
  "openzeppelin_account",
@@ -60,10 +119,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "openzeppelin_upgrades"
+version = "1.0.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
+
+[[package]]
 name = "openzeppelin_utils"
 version = "1.0.0"
-source = "registry+https://scarbs.xyz/"
-checksum = "sha256:fd348b31c4a4407add33adc3c2b8f26dca71dbd7431faaf726168f37a91db0c1"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git#88083c4c2a1096ddff766b5d28d89dce6d090f3d"
+
+[[package]]
+name = "pragma_lib"
+version = "1.0.0"
+source = "git+https://github.com/astraly-labs/pragma-lib?tag=2.9.2#cf9c4ccf51e8294f4502392b296062a167295ee2"
+dependencies = [
+ "openzeppelin",
+]
 
 [[package]]
 name = "snforge_scarb_plugin"
