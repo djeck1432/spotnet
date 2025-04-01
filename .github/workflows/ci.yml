@@ -41,8 +41,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Create .env file
-        run: cp .env.dev .env
-        working-directory: ${{env.working-directory}}
+        run: cp spotnet/.env.dev .env
 
       - name: Start services and initialize database
         run: |
@@ -53,7 +52,6 @@ jobs:
           docker compose -f devops/docker-compose.spotnet.dev.yaml exec -T backend poetry run alembic -c web_app/alembic.ini revision --autogenerate -m "Initial migration"
           # Run migrations
           docker compose -f devops/docker-compose.spotnet.dev.yaml exec -T backend poetry run alembic -c web_app/alembic.ini upgrade head
-        working-directory: ${{env.working-directory}}
 
 
       - name: Run tests

@@ -51,7 +51,7 @@ jobs:
 
       - name: Build and Start Containers
         run: |
-          docker compose -f devops/docker-compose.spotnet.dev.yaml --env-file spotnet/.env up -d --build
+          docker compose -f devops/docker-compose.spotnet.dev.yaml --env-file .env up -d --build
           echo "Waiting for containers to be ready..."
           sleep 30
 
