@@ -10,6 +10,7 @@ COPY .env.dev .env
 
 RUN yarn
 RUN yarn test:run
+RUN yarn cache clean --all
 RUN yarn build
 
 # Stage 2: Set up Nginx to serve the built app
