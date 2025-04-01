@@ -18,7 +18,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-        working-directory: ./spotnet/cairo
+        working-directory: ./spotnet
 
     services:
       postgres:
