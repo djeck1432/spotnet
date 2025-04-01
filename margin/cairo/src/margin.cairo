@@ -55,6 +55,7 @@ pub mod Margin {
         pools: Map<ContractAddress, TokenAmount>,
         positions: Map<ContractAddress, Position>,
         oracle_address: ContractAddress,
+        risk_factors: Map<ContractAddress, u128>,
     }
 
     #[constructor]

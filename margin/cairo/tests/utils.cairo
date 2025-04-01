@@ -128,3 +128,11 @@ pub fn get_pool_value(margin_address: ContractAddress, token: ContractAddress) -
     let pool_value = snforge_std::load(margin_address, pool_key, 1);
     (*pool_value[0]).into()
 }
+
+pub fn store_risk_factor(asset: ContractAddress, risk_factor: u128){
+    let margin_address = get_contract_address();
+    snforge_std::store(
+        margin_address, selector!("risk_factors"), 
+        array![asset.into(), risk_factor.into()].span(),
+    );
+}
