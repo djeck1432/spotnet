@@ -32,7 +32,6 @@ class UserCRUD(DBConnector):
             result = await session.execute(text("SELECT version()"))
             return f"PostgreSQL version: {result.scalar()}"
 
-
     async def create_user(self, wallet_id: str) -> User:
         """
         Create a new user in the database.
@@ -41,7 +40,6 @@ class UserCRUD(DBConnector):
         """
         new_user = User(wallet_id=wallet_id)
         return await self.write_to_db(new_user)
-
 
     async def update_user(self, user_id: UUID, **kwargs) -> Optional[User]:
         """
@@ -67,11 +65,10 @@ class UserCRUD(DBConnector):
         :param user_id: UUID
         :return: None
         """
-        await self.delete_object_by_id(User, user_id)
+        await self.delete_object_by_id(user_id)
 
     async def add_deposit(
-        self, user_id: UUID, amount: Decimal,
-        token: str, transaction_id: str
+        self, user_id: UUID, amount: Decimal, token: str, transaction_id: str
     ) -> Deposit:
         """
         Add a deposit to a user's account.
@@ -82,24 +79,20 @@ class UserCRUD(DBConnector):
         :return: Deposit
         """
 
-        if not await self.get_object(User, user_id):
+        if not await self.get_object(user_id):
             raise ValueError(f"User {user_id} does not exist.")
 
         new_deposit = Deposit(
-            user_id=user_id,
-            amount=amount,
-            token=token,
-            transaction_id=transaction_id
+            user_id=user_id, amount=amount, token=token, transaction_id=transaction_id
         )
         return await self.write_to_db(new_deposit)
 
-
-
     async def add_margin_position(
-        self, user_id: UUID,
+        self,
+        user_id: UUID,
         borrowed_amount: Decimal,
         multiplier: int,
-        transaction_id: str
+        transaction_id: str,
     ) -> MarginPosition:
         """
         Add a margin position to a user's account.
@@ -110,17 +103,19 @@ class UserCRUD(DBConnector):
         :return: MarginPosition
         """
 
-        if not await self.get_object(User, user_id):
+        if not await self.get_object(user_id):
             raise ValueError(f"User {user_id} does not exist.")
         new_margin_position = MarginPosition(
             user_id=user_id,
             borrowed_amount=borrowed_amount,
             multiplier=multiplier,
-            transaction_id=transaction_id
+            transaction_id=transaction_id,
         )
         return await self.write_to_db(new_margin_position)
 
-    async def get_object_by_field(self, field: str, value:str, model = User) -> Optional[User]:
+    async def get_object_by_field(
+        self, field: str, value: str,
+    ) -> Optional[User]:
         """
         Retrieves an object by a specified field from the database.
         :param model: = User
@@ -128,27 +123,7 @@ class UserCRUD(DBConnector):
         :param value: str = None
         :return: Base | None
         """
-        return await super().get_object_by_field(model, field, value)
+        return await super().get_object_by_field(field, value)
 
 
-    async def get_all(
-        self, limit: Optional[int] = None, offset: Optional[int] = None
-    ) -> UserGetAllResponse:
-        """
-        Retrieves all users.
-        :param limit: Optional[int] - max users to be retrieved
-        :param offset: Optional[int] - start retrieving at.
-        :return: UserGetAllResponse
-        """
-        users, total = await asyncio.gather(
-            self.get_objects(User, limit, offset),
-            self.get_objects_amounts(User)
-        )        
-        return UserGetAllResponse(
-            users=users,
-            total=total
-        )
-
-
-
-user_crud = UserCRUD()
+user_crud = UserCRUD(User)

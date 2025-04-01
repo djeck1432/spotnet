@@ -28,25 +28,6 @@ class PoolCRUD(DBConnector):
         pool_entry: Pool = Pool(token=token, risk_status=risk_status)
         return await self.write_to_db(pool_entry)
 
-    async def get_all_pools(self) -> PoolGetAllResponse:
-        """
-        Fetches all pool entries from the database.
-        :return: PoolGetAllResponse
-            where:
-            pools:List[Pool] List of all pool records fetched from the database
-            total:int total number of pools.
-        """
-        pools, total = await asyncio.gather(
-            self.get_objects(Pool),
-            self.get_objects_amounts(Pool)
-        )        
-        return PoolGetAllResponse(
-            pools=pools,
-            total=total
-        )
-    
-        return await self.get_objects(Pool)
-
     async def get_pool_by_id(self, pool_id: uuid.UUID) -> Optional[Pool]:
         """
         Fetches a pool by its ID.
@@ -99,7 +80,7 @@ class UserPoolCRUD(DBConnector):
         async with self.session() as db:
             user_pool = await db.get(UserPool, user_pool_id)
             if not user_pool:
-                return None  # Not found
+                return None  
 
             if amount:
                 user_pool.amount = amount
@@ -108,20 +89,6 @@ class UserPoolCRUD(DBConnector):
             await db.refresh(user_pool)
             return user_pool
 
-    async def get_all_user_pools(
-        self, limit: Optional[int] = None, offset: Optional[int] = None
-    ) -> list[UserPool]:
-        """
-        Fetches all user pool entries from the database.
 
-        Parameters:
-        - limit: Optional[int] - maximum number of user pools to be retrieved
-        - offset: Optional[int] - skip N first user pools
-
-        :return: List[UserPool]: List of all pool records fetched from the database
-        """
-        return await self.get_objects(UserPool, limit, offset)
-
-
-pool_crud = PoolCRUD()
-user_pool_crud = UserPoolCRUD()
+pool_crud = PoolCRUD(Pool)
+user_pool_crud = UserPoolCRUD(UserPool)

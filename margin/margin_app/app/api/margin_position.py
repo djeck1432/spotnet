@@ -12,9 +12,12 @@ from app.crud.liquidation import liquidation_crud
 from app.crud.margin_position import margin_position_crud
 from app.models.margin_position import MarginPosition
 from app.schemas.liquidation import LiquidationRequest, LiquidationResponse
-from app.schemas.margin_position import (CloseMarginPositionResponse,
-                                         MarginPositionCreate,
-                                         MarginPositionResponse)
+from app.schemas.margin_position import (
+    CloseMarginPositionResponse,
+    MarginPositionCreate,
+    MarginPositionResponse,
+    MarginPositionGetAllResponse,
+)
 
 router = APIRouter()
 
@@ -75,21 +78,26 @@ async def close_margin_position(
 
 @router.get(
     "/all",
-    response_model=List[MarginPositionResponse],
+    response_model=MarginPositionGetAllResponse,
     status_code=status.HTTP_200_OK,
 )
 async def get_all_positions(
-    limit: Optional[int] = Query(None, description="Limit margin positions"),
-    offset: int = Query(0, description="Offset for margin positions"),
-) -> List[MarginPositionResponse]:
+    limit: Optional[int] = Query(25, gt=0),
+    offset: Optional[int] = Query(0, ge=0),
+) -> MarginPositionGetAllResponse:
     """
     Get all margin positions.
     :param limit: Limit of margin positions to return
     :param offset: offset of margin positions to return
-    :return: List of margin positions
+    :return: MarginPositionGetAllResponse - The margin positions object
     """
-    mediator = GetAllMediator(margin_position_crud.get_all_positions, limit, offset)
-    return await mediator.execute()
+    mediator = GetAllMediator(
+        crud_object=margin_position_crud,
+        limit=limit,
+        offset=offset,
+    )
+    mediator = await mediator()
+    return MarginPositionGetAllResponse(items=mediator["items"], total=mediator["total"])
 
 
 @router.get(

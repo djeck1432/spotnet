@@ -12,7 +12,12 @@ from sqlalchemy.exc import IntegrityError
 from app.api.common import GetAllMediator
 from app.crud.admin import admin_crud
 from app.models.admin import Admin
-from app.schemas.admin import AdminRequest, AdminResponse, AdminResetPassword
+from app.schemas.admin import (
+    AdminRequest,
+    AdminResponse,
+    AdminResetPassword,
+    AdminGetAllResponse,
+)
 from app.services.auth.base import get_admin_user_from_state
 from app.services.auth.security import get_password_hash, verify_password
 from app.services.emails import email_service
@@ -65,22 +70,27 @@ async def add_admin(
 
 @router.get(
     "/all",
-    response_model=List[AdminResponse],
+    response_model=AdminGetAllResponse,
     status_code=status.HTTP_200_OK,
     summary="Get all admin",
 )
 async def get_all_admin(
-    limit: Optional[int] = Query(25, description="Number of admins to retrieve"),
-    offset: Optional[int] = Query(0, description="Number of admins to skip"),
-) -> List[AdminResponse]:
+    limit: Optional[int] = Query(25, gt=0),
+    offset: Optional[int] = Query(0, ge=0),
+) -> AdminGetAllResponse:
     """
     Get all admins.
     :param limit: Limit of admins to return
     :param offset: Offset of admins to return
-    :return: Response with list of admins
+    :return: AdminGetAllResponse: List of admins and total number of admins
     """
-    mediator = GetAllMediator(admin_crud.get_all, limit, offset)
-    return await mediator.execute()
+    mediator = GetAllMediator(
+        crud_object=admin_crud,
+        limit=limit,
+        offset=offset,
+    )
+    mediator = await mediator()
+    return AdminGetAllResponse(items=mediator["items"], total=mediator["total"])
 
 
 @router.get(

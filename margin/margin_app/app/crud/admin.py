@@ -9,6 +9,7 @@ from app.services.auth.security import get_password_hash
 from app.models.admin import Admin
 from .base import DBConnector
 
+
 class AdminCRUD(DBConnector):
     """
     AdminCRUD class for handling database operations for the Admin model.
@@ -20,7 +21,7 @@ class AdminCRUD(DBConnector):
         :param email: str
         :return: Optional[Admin]
         """
-        return await self.get_object_by_field(Admin, "email", email)
+        return await self.get_object_by_field("email", email)
 
     async def get_super_admins(self) -> List[Admin]:
         """
@@ -29,23 +30,16 @@ class AdminCRUD(DBConnector):
         """
         async with self.session() as db:
             result = await db.execute(
-                select(Admin).where(Admin.is_super_admin.is_(True))
+                select(self.model).where(self.model.is_super_admin.is_(True))
             )
             return list(result.scalars().all())
 
-    async def get_all(
-        self, limit: Optional[int] = None, offset: Optional[int] = None
-    ) -> list[Admin]:
-        """
-        Retrieves all admins.
-        :param limit: Optional[int] - max admins to be retrieved
-        :param offset: Optional[int] - start retrieving at.
-        :return: list[Admin]
-        """
-        return await self.get_objects(Admin, limit, offset)
-
     async def create_admin(
-        self, email: str, name: str, password: Optional[str] = None, is_super_admin: bool = False
+        self,
+        email: str,
+        name: str,
+        password: Optional[str] = None,
+        is_super_admin: bool = False,
     ) -> Admin:
         """
         Create a new admin in the database.
@@ -60,7 +54,7 @@ class AdminCRUD(DBConnector):
             name=name,
             email=email,
             password=hashed_password,
-            is_super_admin=is_super_admin
+            is_super_admin=is_super_admin,
         )
         return await self.write_to_db(new_admin)
 
@@ -71,7 +65,7 @@ class AdminCRUD(DBConnector):
         :param model: Admin - The admin model with updated fields
         :return: Optional[Admin]
         """
-        admin = await self.get_object_by_field(Admin, "id", admin_id)
+        admin = await self.get_object_by_field("id", admin_id)
         if not admin:
             return None
 
@@ -86,4 +80,4 @@ class AdminCRUD(DBConnector):
 
         return await self.write_to_db(admin)
 
-admin_crud = AdminCRUD()
+admin_crud = AdminCRUD(Admin)

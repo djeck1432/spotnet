@@ -1,9 +1,10 @@
 """
 This module contains Pydantic schemas for admin.
 """
+
 from uuid import UUID
 from typing import Optional
-
+from .base import GetAll
 from pydantic import BaseModel, EmailStr, ConfigDict
 
 
@@ -41,3 +42,10 @@ class AdminResponse(AdminBase):
     id: UUID
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class AdminGetAllResponse(GetAll[AdminResponse]):
+    """
+    Admin get all response model
+    """
+    pass

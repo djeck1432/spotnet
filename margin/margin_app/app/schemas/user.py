@@ -6,8 +6,9 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 from app.schemas.deposit import DepositResponse
+from pydantic import ConfigDict
 from app.models.margin_position import MarginPositionStatus
-from .base import BaseSchema
+from .base import BaseSchema, GetAll
 
 
 class UserBase(BaseSchema):
@@ -35,13 +36,11 @@ class UserResponse(UserBase):
     deposit: list[DepositResponse] = []
 
 
-class UserGetAllResponse(BaseSchema):
+class UserGetAllResponse(GetAll[UserResponse]):
     """
     User response model for getting all users
     """
-
-    users: list[UserResponse]
-    total: int
+    pass
 
 
 class AddUserDepositRequest(BaseSchema):

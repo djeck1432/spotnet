@@ -10,10 +10,16 @@ from loguru import logger
 
 from app.api.common import GetAllMediator
 from app.crud.pool import pool_crud, user_pool_crud
-from app.schemas.pools import (PoolGetAllResponse, PoolResponse,
-                               PoolRiskStatus, UserPoolCreate,
-                               UserPoolResponse, UserPoolUpdate,
-                               UserPoolUpdateResponse)
+from app.schemas.pools import (
+    PoolGetAllResponse,
+    PoolResponse,
+    PoolRiskStatus,
+    UserPoolCreate,
+    UserPoolResponse,
+    UserPoolUpdate,
+    UserPoolUpdateResponse,
+    UserPoolGetAllResponse,
+)
 
 router = APIRouter()
 
@@ -47,7 +53,9 @@ async def create_pool(token: str, risk_status: PoolRiskStatus) -> PoolResponse:
 
 
 @router.get("/pools", response_model=PoolGetAllResponse, status_code=status.HTTP_200_OK)
-async def get_all_pools() -> PoolGetAllResponse:
+async def get_all_pools(
+    limit: Optional[int] = Query(25, gt=0), offset: Optional[int] = Query(0, ge=0)
+) -> PoolGetAllResponse:
     """
     Fetch all pools
 
@@ -56,13 +64,40 @@ async def get_all_pools() -> PoolGetAllResponse:
         pools:List[Pool] List of all pool records fetched from the database
         total:int total number of pools.
     """
-    try:
-        return await pool_crud.get_all_pools()
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Something went wrong.",
-        ) from e
+    mediator = GetAllMediator(
+        crud_object=pool_crud,
+        limit=limit,
+        offset=offset,
+    )
+    mediator = await mediator()
+    return UserPoolGetAllResponse(items=mediator["items"], total=mediator["total"])
+
+
+@router.get(
+    "/user_pools", response_model=UserPoolGetAllResponse, status_code=status.HTTP_200_OK
+)
+async def get_all_user_pools(
+    limit: Optional[int] = Query(25, gt=0), offset: Optional[int] = Query(0, ge=0)
+) -> UserPoolGetAllResponse:
+    """
+    Fetch all user pools
+
+    Parameters:
+    - limit: Optional[int] - maximum number of user pools to be retrieved
+    - offset: Optional[int] - skip N first user pools
+
+    :return: UserPoolGetAllResponse
+        where:
+        total: int - total number of user pools
+        records: List[UserPoolResponse] - list of user pool records fetched from the database
+    """
+    mediator = GetAllMediator(
+        crud_object=user_pool_crud,
+        limit=limit,
+        offset=offset,
+    )
+    mediator = await mediator()
+    return UserPoolGetAllResponse(items=mediator["items"], total=mediator["total"])
 
 
 @router.get(
@@ -159,23 +194,3 @@ async def update_user_pool(user_pool: UserPoolUpdate) -> UserPoolUpdateResponse:
         ) from e
 
     return updated_pool
-
-
-@router.get(
-    "/user_pools", response_model=list[UserPoolResponse], status_code=status.HTTP_200_OK
-)
-async def get_all_user_pools(
-    limit: Optional[int] = Query(25, gt=0), offset: Optional[int] = Query(0, ge=0)
-) -> list[UserPoolResponse]:
-    """
-    Fetch all user pools
-
-    Parameters:
-    - limit: Optional[int] - maximum number of user pools to be retrieved
-    - offset: Optional[int] - skip N first user pools
-
-    :return: List[UserPoolResponse] - List of all user pool entries fetched from the database.
-        An empty list is returned if no user pools exist)
-    """
-    mediator = GetAllMediator(user_pool_crud.get_all_user_pools, limit, offset)
-    return await mediator.execute()

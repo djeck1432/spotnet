@@ -10,7 +10,12 @@ from fastapi import APIRouter, HTTPException, Query, status
 from app.api.common import GetAllMediator
 from app.crud.deposit import deposit_crud
 from app.models.deposit import Deposit
-from app.schemas.deposit import DepositCreate, DepositResponse, DepositUpdate
+from app.schemas.deposit import (
+    DepositCreate,
+    DepositResponse,
+    DepositUpdate,
+    DepositGetAllResponse,
+)
 
 router = APIRouter()
 
@@ -58,20 +63,26 @@ async def update_deposit(
 
 
 @router.get(
-    "/all", response_model=List[DepositResponse], status_code=status.HTTP_200_OK
+    "/all", response_model=DepositGetAllResponse, status_code=status.HTTP_200_OK
 )
 async def get_all_deposits(
-    limit: Optional[int] = Query(25, description="Number of deposits to retrieve"),
-    offset: Optional[int] = Query(0, description="Number of deposits to skip"),
-) -> List[DepositResponse]:
+    limit: Optional[int] = Query(25, gt=0),
+    offset: Optional[int] = Query(0, ge=0),
+) -> DepositGetAllResponse:
     """
     Fetch all deposits from the database.
     :param limit: set the limit of deposits to return
     :param offset: offset of deposits to return
-    :return:
+    :return: DepositGetAllResponse: A dictionary containing the
+    total count and the list of deposits.
     """
-    mediator = GetAllMediator(deposit_crud.get_objects, limit, offset)
-    return await mediator.execute()
+    mediator = GetAllMediator(
+        crud_object=deposit_crud,
+        limit=limit,
+        offset=offset,
+    )
+    mediator = await mediator()
+    return DepositGetAllResponse(items=mediator["items"], total=mediator["total"])
 
 
 @router.get(

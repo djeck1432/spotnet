@@ -11,9 +11,7 @@ class LiquidationCRUD(DBConnector):
     """Handles database operations for liquidations."""
 
     async def liquidate_position(
-        self, margin_position_id: UUID,
-        bonus_amount: Decimal,
-        bonus_token: str
+        self, margin_position_id: UUID, bonus_amount: Decimal, bonus_token: str
     ) -> Liquidation:
         """
         Liquidates a position by creating a liquidation record in the database.
@@ -26,9 +24,9 @@ class LiquidationCRUD(DBConnector):
         liquidation_entry = Liquidation(
             margin_position_id=margin_position_id,
             bonus_amount=bonus_amount,
-            bonus_token=bonus_token
+            bonus_token=bonus_token,
         )
         return await self.write_to_db(liquidation_entry)
 
 
-liquidation_crud = LiquidationCRUD()
+liquidation_crud = LiquidationCRUD(Liquidation)

@@ -1,3 +1,4 @@
+
 """
 Pydantic schemas for user_order operations.
 """
@@ -6,6 +7,7 @@ import uuid
 from decimal import Decimal
 
 from app.models.user_order import UserOrder
+from .base import GetAll
 from pydantic import BaseModel, Field, ConfigDict
 
 
@@ -33,10 +35,6 @@ class UserOrderResponse(BaseModel):
         from_attributes = True
 
 
-class UserOrderGetAllResponse(BaseModel):
+class UserOrderGetAllResponse(GetAll[UserOrderResponse]):
     """Schema retrieving all users"""
-
-    orders: list[UserOrderResponse]
-    total: int
-
-    model_config = ConfigDict(from_attributes=True)
+    pass

@@ -10,7 +10,6 @@ from typing import Optional
 
 from app.crud.base import DBConnector
 from app.models.user_order import UserOrder
-from app.schemas.order import UserOrderGetAllResponse
 
 logger = logging.getLogger(__name__)
 
@@ -24,24 +23,6 @@ class UserOrderCRUD(DBConnector):
     - execute_order: Process and execute an existing order
     """
 
-    async def get_all(
-        self, limit: Optional[int] = None, offset:  Optional[int] = None
-    ) -> UserOrderGetAllResponse:
-        """
-        Retrieves all orders.
-        :param limit: Optional[int] - max orders to be retrieved
-        :param offset: Optional[int] - start retrieving at.
-        :return: list[UUserOrderser]
-        """
-        
-        orders, total = await asyncio.gather(
-            self.get_objects(UserOrder, limit, offset),
-            self.get_objects_amounts(UserOrder)
-        )
-        return UserOrderGetAllResponse(
-            orders=orders,
-            total=total
-        )
 
     async def add_new_order(
         self, user_id: uuid.UUID, price: Decimal, token: str, position: uuid.UUID
@@ -72,7 +53,7 @@ class UserOrderCRUD(DBConnector):
         Returns:
             bool: True if the order was successfully executed, False otherwise
         """
-        order = await self.get_object(UserOrder, order_id)
+        order = await self.get_object(order_id)
         if not order:
             return False
 
@@ -81,14 +62,14 @@ class UserOrderCRUD(DBConnector):
 
     async def get_by_id(self, order_id: uuid.UUID) -> UserOrder | None:
         """Get order by ID from database
-        
+
         Args:
             order_id (uuid.UUID): ID of the order to get
 
         Returns:
             UserOrder | None: The order object if found, None otherwise
         """
-        return await self.get_object(UserOrder, order_id)
+        return await self.get_object(order_id)
 
 
-order_crud = UserOrderCRUD()
+order_crud = UserOrderCRUD(UserOrder)

@@ -10,10 +10,15 @@ from loguru import logger
 from app.api.common import GetAllMediator
 from app.crud.deposit import deposit_crud
 from app.crud.user import user_crud
-from app.schemas.user import (AddMarginPositionRequest,
-                              AddMarginPositionResponse, AddUserDepositRequest,
-                              AddUserDepositResponse, UserCreate,
-                              UserGetAllResponse, UserResponse)
+from app.schemas.user import (
+    AddMarginPositionRequest,
+    AddMarginPositionResponse,
+    AddUserDepositRequest,
+    AddUserDepositResponse,
+    UserCreate,
+    UserGetAllResponse,
+    UserResponse,
+)
 
 router = APIRouter()
 
@@ -65,8 +70,13 @@ async def get_all_users(
     :param offset: offset of users to return
     :return: UserGetAllResponse
     """
-    mediator = GetAllMediator(user_crud.get_all, limit, offset)
-    return await mediator.execute()
+    mediator = GetAllMediator(
+        crud_object=user_crud,
+        limit=limit,
+        offset=offset,
+    )
+    mediator = await mediator()
+    return UserGetAllResponse(items=mediator["items"], total=mediator["total"])
 
 
 @router.get(

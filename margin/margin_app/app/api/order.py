@@ -10,14 +10,19 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.crud.order import order_crud
 from app.models.user_order import UserOrder
-from app.schemas.order import (UserOrderCreate, UserOrderGetAllResponse,
-                               UserOrderResponse)
+from app.schemas.order import (
+    UserOrderCreate,
+    UserOrderGetAllResponse,
+    UserOrderResponse,
+)
+from app.api.common import GetAllMediator
 
 router = APIRouter()
 
 
 @router.get(
     "/all",
+    response_model=UserOrderGetAllResponse,
     status_code=status.HTTP_200_OK,
     summary="Get all orders",
     description="Gets all orders from database",
@@ -38,14 +43,14 @@ async def get_all_orders(
     Raises:
         HTTPException: If there's an error retrieving orders
     """
-    try:
-        return await order_crud.get_all(limit, offset)
-    except SQLAlchemyError as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get orders: {str(e)}",
-        )
-
+    mediator = GetAllMediator(
+        crud_object=order_crud,
+        limit=limit,
+        offset=offset,
+    )
+    mediator = await mediator()
+    return UserOrderGetAllResponse(items=mediator["items"], total=mediator["total"])
+    
 
 @router.post(
     "/create_order",

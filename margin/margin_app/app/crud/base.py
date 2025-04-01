@@ -33,12 +33,15 @@ class DBConnector:
     - get_objects: Retrieves all objects from the database.
     """
 
-    def __init__(self):
+    def __init__(self, model: Type[ModelType]):
         """
-        Initialize the database connection and session factory.
+        Initialize the database connection, session factory, and table model.
+
+        :param model: Type[ModelType] - The SQLAlchemy model to operate on.
         """
         self.engine = create_async_engine(settings.db_url)
         self.session_maker = async_sessionmaker(bind=self.engine)
+        self.model = model
 
     @asynccontextmanager
     async def session(self) -> AsyncIterator[AsyncSession]:
@@ -86,46 +89,39 @@ class DBConnector:
             await db.refresh(obj)
             return obj
 
-    async def get_object(
-        self, model: Type[ModelType] = None, obj_id: uuid = None
-    ) -> ModelType | None:
+    async def get_object(self, obj_id: uuid = None) -> ModelType | None:
         """
         Retrieves an object by its ID from the database.
-        :param: model: type[Base] = None
-        :param: obj_id: uuid = None
+        :param obj_id: uuid = None
         :return: Base | None
         """
         async with self.session() as db:
-            return await db.get(model, obj_id)
+            return await db.get(self.model, obj_id)
 
     async def get_object_by_field(
-        self, model: Type[ModelType] = None, field: str = None, value: str = None
+        self, field: str = None, value: str = None
     ) -> ModelType | None:
         """
         Retrieves an object by a specified field from the database.
-        :param model: type[Base] = None
         :param field: str = None
         :param value: str = None
         :return: Base | None
         """
         async with self.session() as db:
             result = await db.execute(
-                select(model).where(getattr(model, field) == value)
+                select(self.model).where(getattr(self.model, field) == value)
             )
             return result.scalar_one_or_none()
 
-    async def delete_object_by_id(
-        self, model: Type[ModelType] = None, obj_id: uuid = None
-    ) -> None:
+    async def delete_object_by_id(self, obj_id: uuid = None) -> None:
         """
         Delete an object by its ID from the database. Rolls back if the operation fails.
-        :param model: type[Base] = None
         :param obj_id: uuid = None
         :return: None
         :raise SQLAlchemyError: If the database operation fails
         """
         async with self.session() as db:
-            obj = await db.get(model, obj_id)
+            obj = await db.get(self.model, obj_id)
             if obj:
                 await db.delete(obj)
                 await db.commit()
@@ -141,7 +137,6 @@ class DBConnector:
 
     async def get_objects(
         self,
-        model: Type[ModelType] = None,
         limit: Optional[int] = None,
         offset: Optional[int] = None,
         where_clause: Optional[Any] = None,
@@ -149,7 +144,6 @@ class DBConnector:
     ) -> list[ModelType] | None:
         """
         Retrieves objects by filter from the database.
-        :param model: type[Base] = None - Model class to query
         :param limit: Optional[int] = None
         :param offset: Optional[int] = None
         :param where_clause: Optional[Any] = None - SQLAlchemy expression for filtering
@@ -157,7 +151,7 @@ class DBConnector:
         :return: list[Base] | None
         """
         async with self.session() as db:
-            query = select(model).limit(limit).offset(offset)
+            query = select(self.model).limit(limit).offset(offset)
 
             # Apply where_clause if provided (for complex SQLAlchemy expressions)
             if where_clause is not None:
@@ -169,7 +163,6 @@ class DBConnector:
 
             result = await db.execute(query)
             return result.scalars().all()
-    
 
     async def test_connection(self):
         """
@@ -179,16 +172,12 @@ class DBConnector:
         async with self.session() as session:
             result = await session.execute(text("SELECT version()"))
             return f"PostgreSQL version: {result.scalar()}"
-        
 
-    async def get_objects_amounts(self, model: ModelType) -> int:
+    async def get_objects_amounts(self) -> int:
         """
-        Count total number of objects.     
-        :param model: type[Base] = None - Model class to query.   
+        Count total number of objects.
         :return int.
         """
         async with self.session() as db:
-            result = await db.execute(select(func.count()).select_from(model))           
+            result = await db.execute(select(func.count()).select_from(self.model))
             return result.scalar()
-        
-

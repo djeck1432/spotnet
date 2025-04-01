@@ -14,12 +14,16 @@ from app.schemas.margin_position import MarginPositionResponse
 
 
 class MarginPositionCRUD(DBConnector):
-    """"Handles margin position database operations"""
+    """
+    Handles margin position database operations
+    """
+
     async def open_margin_position(
-        self, user_id: uuid.UUID,
+        self,
+        user_id: uuid.UUID,
         borrowed_amount: Decimal,
         multiplier: int,
-        transaction_id: str
+        transaction_id: str,
     ) -> MarginPosition:
         """
         Opens a margin position by creating an entry record in the database.
@@ -33,41 +37,25 @@ class MarginPositionCRUD(DBConnector):
             user_id=user_id,
             borrowed_amount=borrowed_amount,
             multiplier=multiplier,
-            transaction_id=transaction_id
+            transaction_id=transaction_id,
         )
         position = await self.write_to_db(position_entry)
         return position
 
-    async def close_margin_position(self, position_id: uuid.UUID) -> MarginPositionStatus:
+    async def close_margin_position(
+        self, position_id: uuid.UUID
+    ) -> MarginPositionStatus:
         """
         Closes a margin position by updating the position status in the database.
         :param position_id: uuid
         :return: MarginPositionStatus
         """
 
-        position = await self.get_object(MarginPosition, position_id)
+        position = await self.get_object(position_id)
         if position:
             position.status = MarginPositionStatus.CLOSED
             await self.write_to_db(position)
             return position.status
-
-    async def get_all_positions(
-            self,
-            limit: Optional[int] = None,
-            offset: Optional[int] = None,
-    ) -> List[MarginPositionResponse]:
-        """
-        Retrieves all margin positions from the database.
-
-        params:
-            - limit: optional limit count for get margin position.
-            - offset: optional offset object in database if limit used.
-
-        Returns:
-            List[MarginPositionResponse]: List of all margin positions
-        """
-        positions = await self.get_objects(model=MarginPosition, limit=limit, offset=offset)
-        return [MarginPositionResponse.model_validate(position) for position in positions]
 
     async def get_all_liquidated_positions(self) -> List[MarginPositionResponse]:
         """
@@ -83,10 +71,9 @@ class MarginPositionCRUD(DBConnector):
         """
         try:
             positions = await self.get_objects(
-                model=MarginPosition,
                 limit=None,  # No limit to return all liquidated positions
                 offset=0,
-                where_clause=MarginPosition.liquidated_at.isnot(None)
+                where_clause=MarginPosition.liquidated_at.isnot(None),
             )
             return [MarginPositionResponse.model_validate(pos) for pos in positions]
         except Exception as e:
@@ -94,4 +81,4 @@ class MarginPositionCRUD(DBConnector):
             raise Exception(f"Error retrieving liquidated positions: {str(e)}") from e
 
 
-margin_position_crud = MarginPositionCRUD()
+margin_position_crud = MarginPositionCRUD(MarginPosition)

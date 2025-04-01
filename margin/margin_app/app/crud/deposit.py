@@ -10,7 +10,7 @@ from typing import Any, Dict, Optional
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.crud.base import DBConnector 
+from app.crud.base import DBConnector
 from app.models.deposit import Deposit
 
 logger = logging.getLogger(__name__)
@@ -60,13 +60,14 @@ class DepositCRUD(DBConnector):
             logger.error(f"Failed to create deposit: {e}")
             raise Exception("Could not create deposit") from e
 
-    async def update_deposit(self, deposit_id: uuid.UUID,
-                             update_data: Dict[str, Any]) -> Optional[Deposit]:
+    async def update_deposit(
+        self, deposit_id: uuid.UUID, update_data: Dict[str, Any]
+    ) -> Optional[Deposit]:
         """
         Updates the deposit amount for a given deposit ID.
         Args:
             deposit_id (uuid.UUID): The unique identifier of the deposit to update.
-            update_data (Dict[str, Any]): Dictionary containing the fields to update. 
+            update_data (Dict[str, Any]): Dictionary containing the fields to update.
             May include: token, amount, transaction_id
         Returns:
             Optional[Deposit]: The updated deposit object if found, None otherwise.
@@ -94,4 +95,5 @@ class DepositCRUD(DBConnector):
             logger.error(f"Error updating deposit with ID {deposit_id}: {e}")
             raise
 
-deposit_crud = DepositCRUD()
+
+deposit_crud = DepositCRUD(Deposit)
