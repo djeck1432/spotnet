@@ -27,13 +27,16 @@ This guide explains how to start the development environment for the project usi
 ### Version Requirements
 
 1. **Check Docker version:**
+
    ```sh
    docker --version
    # Should output something like: Docker version 24.0.7, build afdd53b
    ```
+
    If your version is below 20.10.0, please update Docker following the [official upgrade guide](https://docs.docker.com/engine/install/).
 
 2. **Check Docker Compose version:**
+
    ```sh
    # For Docker Compose V2
    docker compose version
@@ -41,6 +44,7 @@ This guide explains how to start the development environment for the project usi
    ```
 
    If you get a "command not found" error, you might have the older version. Check with:
+
    ```sh
    docker compose version
    ```
@@ -48,6 +52,7 @@ This guide explains how to start the development environment for the project usi
 ### Installing/Updating Docker
 
 1. **For Ubuntu/Debian:**
+
    ```sh
    # Remove old versions
    sudo apt-get remove docker docker-engine docker.io containerd runc
@@ -77,13 +82,13 @@ This guide explains how to start the development environment for the project usi
    To build and run the entire development environment, use the following command:
 
    ```sh
-   docker compose -f devops/docker-compose.dev.yaml up --build
+   docker compose -f devops/docker-compose.spotnet.dev.yaml up --build
    ```
 
    For Windows users, use this command to build and start the development environment:
 
    ```sh
-   docker compose -f devops/docker-compose.dev-windows.yaml up --build
+   docker compose -f devops/docker-compose.spotnet.dev-windows.yaml up --build
    ```
 
    This command will:
@@ -121,18 +126,25 @@ To simplify repetitive tasks and ensure consistency, a `Makefile` is included in
 2. **Examples**:
 
    - To set up the production environment:
+
      ```sh
      make prod
      ```
+
    - To set up the development environment:
+
      ```sh
      make dev
      ```
+
    - For Windows-specific setup:
+
      ```sh
      make windows
      ```
+
    - To start backend services:
+
      ```sh
      make back
      ```
@@ -149,13 +161,13 @@ To simplify repetitive tasks and ensure consistency, a `Makefile` is included in
 - **Docker Build Issues**: If changes in dependencies are not reflected, you may need to clear Docker's cache:
 
   ```sh
-  docker compose -f devops/docker-compose.dev.yaml build --no-cache
+  docker compose -f devops/docker-compose.spotnet.dev.yaml build --no-cache
   ```
 
   Windows users:
 
   ```sh
-  docker compose -f devops/docker-compose.dev-windows.yaml build --no-cache
+  docker compose -f devops/docker-compose.spotnet.dev-windows.yaml build --no-cache
   ```
 
 ## How to run test cases
@@ -183,13 +195,13 @@ poetry run pytest
 To stop the environment and remove containers, use:
 
 ```sh
-docker compose -f devops/docker-compose.dev.yaml down
+docker compose -f devops/docker-compose.spotnet.dev.yaml down
 ```
 
 windows users:
 
 ```sh
-docker compose -f devops/docker-compose.dev-windows.yaml down
+docker compose -f devops/docker-compose.spotnet.dev-windows.yaml down
 ```
 
 This command stops all running containers and removes them, but the data volumes will persist.
@@ -199,13 +211,13 @@ This command stops all running containers and removes them, but the data volumes
 If you have made changes to the code or Docker configuration, rebuild the containers:
 
 ```sh
-docker compose -f devops/docker-compose.dev.yaml up --build
+docker compose -f devops/docker-compose.spotnet.dev.yaml up --build
 ```
 
 windows users:
 
 ```sh
-docker compose -f devops/docker-compose.dev-windows.yaml up --build
+docker compose -f devops/docker-compose.spotnet.dev-windows.yaml up --build
 ```
 
 ## About Celery
@@ -247,13 +259,13 @@ docker compose run --rm celery celery -A spotnet_tracker.celery_config purge
 1. Run dev container
 
 ```
-docker compose -f devops/docker-compose.dev.yaml up --build
+docker compose -f devops/docker-compose.spotnet.dev.yaml up --build
 ```
 
 windows only:
 
 ```
-docker compose -f devops/docker-compose.dev-windows.yaml up --build
+docker compose -f devops/docker-compose.spotnet.dev-windows.yaml up --build
 ```
 
 2. In new terminal window run command to populate db
@@ -262,18 +274,18 @@ docker compose -f devops/docker-compose.dev-windows.yaml up --build
 docker exec -ti backend_dev python -m web_app.db.seed_data
 ```
 
-## How to create migration file:
+## How to create migration file
 
 Run up docker containers
 
 ```bash
-docker compose -f devops/docker-compose.dev.yaml up --build
+docker compose -f devops/docker-compose.spotnet.dev.yaml up --build
 ```
 
 Windows users:
 
 ```bash
-docker compose -f devops/docker-compose.dev-windows.yaml up --build
+docker compose -f devops/docker-compose.spotnet.dev-windows.yaml up --build
 ```
 
 Go to backend container in new terminal window
@@ -293,10 +305,13 @@ alembic -c web_app/alembic.ini revision --autogenerate -m "migration message"
 To ensure code quality, install pre-commit hooks locally:
 
 1. Install pre-commit:
+
    ```bash
    pip3 install pre-commit
    ```
+
 2. Install hooks:
+
    ```bash
    pre-commit install
    ```
