@@ -11,6 +11,7 @@ from pydantic import ConfigDict
 from pydantic import BaseModel
 from .base import GetAll
 
+
 class MarginPositionStatus(str, Enum):
     """
     Enumeration of possible margin position statuses.
@@ -78,4 +79,5 @@ class MarginPositionGetAllResponse(GetAll[MarginPositionResponse]):
     """
     Pydantic model for getting all MarginPositions.
     """
+
     pass

@@ -80,4 +80,5 @@ class AdminCRUD(DBConnector):
 
         return await self.write_to_db(admin)
 
+
 admin_crud = AdminCRUD(Admin)

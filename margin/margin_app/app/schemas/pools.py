@@ -62,6 +62,7 @@ class UserPoolGetAllResponse(GetAll[UserPoolResponse]):
     """
     User pool get all response model
     """
+
     pass
 
 
@@ -98,4 +99,5 @@ class PoolGetAllResponse(GetAll[PoolResponse]):
     """
     User pool update model
     """
+
     pass

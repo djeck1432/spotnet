@@ -1,4 +1,3 @@
-
 """
 This module contains Pydantic schemas for Deposit models.
 """
@@ -55,4 +54,5 @@ class DepositGetAllResponse(GetAll[DepositResponse]):
     """
     Pydantic model for getting all deposits.
     """
+
     pass

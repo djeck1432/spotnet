@@ -80,7 +80,7 @@ class UserPoolCRUD(DBConnector):
         async with self.session() as db:
             user_pool = await db.get(UserPool, user_pool_id)
             if not user_pool:
-                return None  
+                return None
 
             if amount:
                 user_pool.amount = amount

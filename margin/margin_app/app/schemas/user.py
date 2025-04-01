@@ -40,6 +40,7 @@ class UserGetAllResponse(GetAll[UserResponse]):
     """
     User response model for getting all users
     """
+
     pass
 
 

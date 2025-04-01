@@ -114,7 +114,9 @@ class UserCRUD(DBConnector):
         return await self.write_to_db(new_margin_position)
 
     async def get_object_by_field(
-        self, field: str, value: str,
+        self,
+        field: str,
+        value: str,
     ) -> Optional[User]:
         """
         Retrieves an object by a specified field from the database.

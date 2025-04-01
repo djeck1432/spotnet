@@ -1,4 +1,3 @@
-
 """
 Pydantic schemas for user_order operations.
 """
@@ -37,4 +36,5 @@ class UserOrderResponse(BaseModel):
 
 class UserOrderGetAllResponse(GetAll[UserOrderResponse]):
     """Schema retrieving all users"""
+
     pass

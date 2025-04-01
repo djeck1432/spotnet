@@ -48,4 +48,5 @@ class AdminGetAllResponse(GetAll[AdminResponse]):
     """
     Admin get all response model
     """
+
     pass

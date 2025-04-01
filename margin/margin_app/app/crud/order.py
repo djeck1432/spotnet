@@ -23,7 +23,6 @@ class UserOrderCRUD(DBConnector):
     - execute_order: Process and execute an existing order
     """
 
-
     async def add_new_order(
         self, user_id: uuid.UUID, price: Decimal, token: str, position: uuid.UUID
     ) -> UserOrder:
