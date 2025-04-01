@@ -1,15 +1,24 @@
-"""Tests for LiquidationCRUD in spotnet/margin_app/app/crud/liquidation.py"""
+"""Tests for LiquidationCRUD class operations."""
 
 import pytest
-from app.crud.liquidation import liquidation_crud
+from unittest.mock import AsyncMock, patch
+from app.crud.liquidation import LiquidationCRUD
+from app.models.liquidation import Liquidation
 from app.crud.margin_position import margin_position_crud
 from app.crud.user import UserCRUD
+from app.models.user import User
+
+
+@pytest.fixture
+def liquidation_crud():
+    """Fixture to create a LiquidationCRUD instance for testing."""
+    return LiquidationCRUD(Liquidation)
 
 
 @pytest.mark.asyncio
-async def test_create_liquidation_success(db_connector):
-    """Test creating a liquidation record with valid data."""
-    user_crud = UserCRUD()
+async def test_create_liquidation_success(liquidation_crud):
+    """Test successfully creating a liquidation."""
+    user_crud = UserCRUD(User)
     user = await user_crud.create_user("asdasda")
     margin = await margin_position_crud.open_margin_position(
         user_id=user.id, borrowed_amount=12, multiplier=12, transaction_id="asdas"

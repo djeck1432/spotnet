@@ -115,7 +115,7 @@ async def get_margin_by_id(
     :return: MarginPositionResponse - The margin position object
     """
 
-    position = await margin_position_crud.get_object(MarginPosition, margin_position_id)
+    position = await margin_position_crud.get_object(margin_position_id)
 
     if not position:
         raise HTTPException(

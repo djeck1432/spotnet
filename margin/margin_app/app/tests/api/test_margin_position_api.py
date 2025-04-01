@@ -164,7 +164,7 @@ def test_get_margin_by_id_success(client, valid_position_data, mock_get_object):
     assert response.json()["multiplier"] == 5
     assert response.json()["liquidated_at"] is None
 
-    mock_get_object.assert_called_once_with(MarginPosition, position_id)
+    mock_get_object.assert_called_once_with(position_id)
 
 
 def test_get_margin_by_id_not_found(client, mock_get_object):
@@ -177,7 +177,7 @@ def test_get_margin_by_id_not_found(client, mock_get_object):
     assert response.status_code == 404
     assert "not found" in response.json()["detail"]
 
-    mock_get_object.assert_called_once_with(MarginPosition, position_id)
+    mock_get_object.assert_called_once_with(position_id)
 
 
 def test_get_margin_by_id_invalid_uuid(client):

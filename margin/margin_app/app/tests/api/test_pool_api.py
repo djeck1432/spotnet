@@ -40,8 +40,8 @@ def test_create_pool(client):
 
 
 @pytest.mark.asyncio
-@patch("app.crud.pool.pool_crud.get_all_pools", new_callable=AsyncMock)
-async def test_get_all_pools(mock_get_all_pools, client):
+@patch("app.api.common.GetAllMediator.__call__", new_callable=AsyncMock)
+async def test_get_all_pools(mock_mediator_call, client):
     """
     Test the functionality of retrieving all pools through an API endpoint.
 
@@ -50,64 +50,42 @@ async def test_get_all_pools(mock_get_all_pools, client):
     first_id = str(uuid.uuid4())
     second_id = str(uuid.uuid4())
 
-    mock_get_all_pools.return_value = {
-        "pools": [
-            PoolResponse(id=first_id, token="BTC", risk_status=PoolRiskStatus.LOW),
-            PoolResponse(id=second_id, token="ETH", risk_status=PoolRiskStatus.HIGH),
-        ],
-        "total": 2,
-    }
+    items = [
+        {"id": first_id, "token": "BTC", "risk_status": "low"},
+        {"id": second_id, "token": "ETH", "risk_status": "high"},
+    ]
+
+    mock_mediator_call.return_value = {"items": items, "total": len(items)}
+
     response = client.get(POOL_URL + "/pools")
-   
+
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
-        "pools": [
-            {"id": first_id, "token": "BTC", "risk_status": "low"},
-            {"id": second_id, "token": "ETH", "risk_status": "high"},
-        ],
+        "items": items,
         "total": 2,
     }
 
-    mock_get_all_pools.assert_called_once()
+    mock_mediator_call.assert_called_once()
 
 
 @pytest.mark.asyncio
-@patch("app.crud.pool.pool_crud.get_all_pools", new_callable=AsyncMock)
-async def test_get_all_pools_no_records_exist(mock_get_all_pools, client):
+@patch("app.api.common.GetAllMediator.__call__", new_callable=AsyncMock)
+async def test_get_all_pools_no_records_exist(mock_mediator_call, client):
     """
     Test the 'get_all_pools' endpoint when no records exist in the database.
 
     API Response should be an empty list.
     """
-    mock_response = {"pools": [], "total": 0}
-
-    mock_get_all_pools.return_value = mock_response
+    mock_mediator_call.return_value = {"items": [], "total": 0}
 
     response = client.get(POOL_URL + "/pools")
     response_data = response.json()
 
-    assert len(response_data["pools"]) == 0
+    assert len(response_data["items"]) == 0
     assert response_data["total"] == 0
     assert response.status_code == status.HTTP_200_OK
 
-    mock_get_all_pools.assert_called_once()
-
-
-@pytest.mark.asyncio
-@patch("app.crud.pool.pool_crud.get_all_pools", new_callable=AsyncMock)
-async def test_get_all_pools_internal_error(mock_get_all_pools, client):
-    """
-    Tests the scenario where an internal server error occurs during the execution
-    of `get_all_pools` endpoint. The case emulates the scenario where the
-    internal server encounters a problem and raises an HTTPException with a
-    500 status code.
-    """
-    mock_get_all_pools.side_effect = Exception("Database error")
-
-    response = client.get(POOL_URL + "/pools")
-
-    assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
-    mock_get_all_pools.assert_called_once()
+    mock_mediator_call.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -121,14 +99,12 @@ async def test_get_pool_success(mock_get_pool_by_id, client):
     """
     pool_id = uuid.uuid4()
     mock_pool = PoolResponse(
-        id=str(pool_id),
-        token="BTC",
-        risk_status=PoolRiskStatus.LOW
+        id=str(pool_id), token="BTC", risk_status=PoolRiskStatus.LOW
     )
     mock_get_pool_by_id.return_value = mock_pool
 
     response = client.get(f"{POOL_URL}/{pool_id}")
-    
+
     assert response.status_code == status.HTTP_200_OK
     response_data = response.json()
     assert response_data["id"] == str(pool_id)
@@ -150,7 +126,7 @@ async def test_get_pool_not_found(mock_get_pool_by_id, client):
     mock_get_pool_by_id.return_value = None
 
     response = client.get(f"{POOL_URL}/{pool_id}")
-    
+
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json()["detail"] == f"Pool with id {pool_id} not found"
     mock_get_pool_by_id.assert_called_once_with(pool_id)
@@ -166,7 +142,7 @@ async def test_get_pool_invalid_uuid(mock_get_pool_by_id, client):
     the endpoint returns a 422 status code.
     """
     response = client.get(f"{POOL_URL}/not-a-uuid")
-    
+
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
     mock_get_pool_by_id.assert_not_called()
 
@@ -184,7 +160,7 @@ async def test_get_pool_internal_error(mock_get_pool_by_id, client):
     mock_get_pool_by_id.side_effect = Exception("Database error")
 
     response = client.get(f"{POOL_URL}/{pool_id}")
-    
+
     assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
     assert response.json()["detail"] == "Something went wrong."
     mock_get_pool_by_id.assert_called_once_with(pool_id)

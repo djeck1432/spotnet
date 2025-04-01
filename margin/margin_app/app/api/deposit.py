@@ -99,7 +99,7 @@ async def get_deposit_by_id(
     :param deposit_id: UUID - The ID of the deposit to retrieve
     :return: DepositResponse - The deposit object
     """
-    deposit = await deposit_crud.get_object(Deposit, deposit_id)
+    deposit = await deposit_crud.get_object(deposit_id)
 
     if not deposit:
         raise HTTPException(

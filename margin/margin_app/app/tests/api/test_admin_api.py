@@ -8,8 +8,6 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastapi import status
 from app.services.auth.base import create_access_token
-from app.models.admin import Admin
-from app.crud.admin import admin_crud
 
 ADMIN_URL = "/api/admin/"
 
@@ -22,56 +20,59 @@ test_admin_object = {
 
 
 @pytest.fixture
-def mock_get_all_admin():
+def mock_admin_crud():
     """
-    Mock the get_all method of crud_get_all.
+    Mock the admin_crud object.
     """
-    with patch("app.crud.admin.AdminCRUD.get_all", new_callable=AsyncMock) as mock:
+    with patch("app.crud.admin.AdminCRUD", new_callable=AsyncMock) as mock:
         yield mock
 
 
 @pytest.fixture
 def mock_get_admin_by_email():
     """
-    Mock the get_all method of crud_get_all.
+    Mock the get_by_email method of AdminCRUD.
+    This will use the get_object_by_field from the base DBConnector class.
     """
     with patch(
-        "app.crud.admin.AdminCRUD.get_object_by_field", new_callable=AsyncMock
+        "app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock
     ) as mock:
+        mock.return_value = test_admin_object
         yield mock
 
 
-@pytest.mark.parametrize(
-    "limit, offset",
-    [
-        (5, 0),
-        (5, 5),
-        (5, 10),
-    ],
-)
-def test_get_all_admins(
-    client, mock_get_all_admin, mock_get_admin_by_email, limit, offset
-):
-    """Test successfully return all admins with limit and offset applied."""
-    admins = []
-    for i in range(10):
-        admins.append(
-            {
-                "name": f"name{str(i)}",
-                "id": str(uuid.uuid4()),
-                "email": f"email{str(i)}@test.com",
-            }
-        )
+@pytest.fixture
+def mock_get_all_admin():
+    """
+    Mock the get_objects method of DBConnector to retrieve all admin records.
+    """
+    with patch("app.crud.base.DBConnector.get_objects", new_callable=AsyncMock) as mock:
+        yield mock
 
-    mock_get_all_admin.return_value = admins[:3]
 
-    test_token = create_access_token(test_admin_object.get("email"))
-    mock_get_admin_by_email.return_value = test_admin_object
+@pytest.mark.asyncio
+@patch("app.api.common.GetAllMediator.__call__", new_callable=AsyncMock)
+async def test_get_all_admins(mock_mediator_call, client):
+    """
+    Test successfully return all admins using the GetAllMediator.
+    """
 
+    admins = [
+        {
+            "name": f"name{str(i)}",
+            "id": str(uuid.uuid4()),
+            "email": f"email{str(i)}@test.com",
+        }
+        for i in range(5)
+    ]
+
+    mock_mediator_call.return_value = {"items": admins, "total": len(admins)}
+    token = create_access_token(test_admin_object["email"])
     response = client.get(
-        url=ADMIN_URL + "all" + f"?limit={limit}&offset={offset}",
-        headers={"Authorization": f"Bearer {test_token}"},
+        ADMIN_URL + "all", headers={"Authorization": f"Bearer {token}"}
     )
 
     assert response.status_code == 200
-    assert response.json() == admins[:3]
+    assert response.json() == {"items": admins, "total": 5}
+
+    mock_mediator_call.assert_called_once()

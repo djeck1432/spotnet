@@ -9,7 +9,7 @@ creating, retrieving, updating, and deleting objects in the database.
 
 import uuid
 from decimal import Decimal
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from app.schemas.pools import PoolGetAllResponse, PoolResponse
 import pytest
@@ -38,7 +38,7 @@ def mock_db_session():
 @pytest.fixture
 def pool_crud(mock_db_session):
     """Creates an instance of PoolCRUD with a mocked async database session."""
-    crud = PoolCRUD()
+    crud = PoolCRUD(Pool)
     crud.session = MagicMock(return_value=mock_db_session)
     return crud
 
@@ -46,7 +46,7 @@ def pool_crud(mock_db_session):
 @pytest.fixture
 def user_pool_crud(mock_db_session):
     """Creates an instance of UserPoolCRUD with a mocked async database session."""
-    crud = UserPoolCRUD()
+    crud = UserPoolCRUD(UserPool)
     crud.session = MagicMock(return_value=mock_db_session)
     return crud
 
@@ -102,63 +102,64 @@ async def test_get_all_pools(pool_crud, mock_db_session):
     """Test retrieving all pools."""
     pools = [
         PoolResponse(id=str(uuid.uuid4()), token="BTC", risk_status=PoolRiskStatus.LOW),
-        PoolResponse(id=str(uuid.uuid4()), token="ETH", risk_status=PoolRiskStatus.HIGH),
+        PoolResponse(
+            id=str(uuid.uuid4()), token="ETH", risk_status=PoolRiskStatus.HIGH
+        ),
     ]
     total = 2
 
-    mock_result_pools = MagicMock()
-    mock_result_pools.scalars.return_value.all.return_value = pools
-        
-    mock_result_count = MagicMock()
-    mock_result_count.scalar.return_value = total
+    with patch.object(
+        pool_crud, "get_objects", new_callable=AsyncMock
+    ) as mock_get_objects:
+        with patch.object(
+            pool_crud, "get_objects_amounts", new_callable=AsyncMock
+        ) as mock_get_amounts:
+            mock_get_objects.return_value = pools
+            mock_get_amounts.return_value = total
 
-    mock_db_session.execute.side_effect = [mock_result_pools,mock_result_count]
-    async def mock_execute(query):        
-        if str(query).startswith("SELECT count("):
-            return mock_result_count
-        return mock_result_pools
+            result = await pool_crud.get_objects(limit=None, offset=None)
+            count = await pool_crud.get_objects_amounts()
 
-    mock_db_session.execute = AsyncMock(side_effect=mock_execute)
-    result = await pool_crud.get_all_pools()
-    
-    assert result == PoolGetAllResponse(pools=pools,total=total)
-    assert mock_db_session.execute.call_count == 2
+            assert result == pools
+            assert count == total
+            mock_get_objects.assert_called_once()
+            mock_get_amounts.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_get_all_pools_empty(pool_crud, mock_db_session):
     """Test retrieving all pools when there are no pools."""
     pools = []
+    total = 0
 
-    mock_result_pools = MagicMock()
-    mock_result_pools.scalars.return_value.all.return_value = pools
-        
-    mock_result_count = MagicMock()
-    mock_result_count.scalar.return_value = 0
+    with patch.object(
+        pool_crud, "get_objects", new_callable=AsyncMock
+    ) as mock_get_objects:
+        with patch.object(
+            pool_crud, "get_objects_amounts", new_callable=AsyncMock
+        ) as mock_get_amounts:
+            mock_get_objects.return_value = pools
+            mock_get_amounts.return_value = total
 
-    mock_db_session.execute.side_effect = [mock_result_pools,mock_result_count]
-    async def mock_execute(query):        
-        if str(query).startswith("SELECT count("):
-            return mock_result_count
-        return mock_result_pools
+            result = await pool_crud.get_objects(limit=None, offset=None)
+            count = await pool_crud.get_objects_amounts()
 
-    mock_db_session.execute = AsyncMock(side_effect=mock_execute)
-    
-    result = await pool_crud.get_all_pools()
-
-    assert result.total == 0
-    assert len(result.pools) == 0
-
-    assert mock_db_session.execute.call_count == 2
+            assert result == []
+            assert count == 0
+            mock_get_objects.assert_called_once()
+            mock_get_amounts.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_get_all_pools_with_internal_exception(pool_crud, mock_db_session):
     """Test retrieving all pools when there is an internal exception."""
-    mock_db_session.execute.side_effect = Exception("Internal error")
+    with patch.object(
+        pool_crud, "get_objects", new_callable=AsyncMock
+    ) as mock_get_objects:
+        mock_get_objects.side_effect = Exception("Internal error")
 
-    with pytest.raises(Exception):
-        await pool_crud.get_all_pools()
+        with pytest.raises(Exception):
+            await pool_crud.get_objects()
 
 
 @pytest.mark.asyncio

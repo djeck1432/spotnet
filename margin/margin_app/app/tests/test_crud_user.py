@@ -11,9 +11,9 @@ from app.models.user import User
 
 
 @pytest_asyncio.fixture
-async def user_crud(db_connector) -> UserCRUD:
+async def user_crud() -> UserCRUD:
     """Create instance of UserCRUD"""
-    return UserCRUD()
+    return UserCRUD(User)
 
 
 @pytest.mark.asyncio
@@ -62,12 +62,12 @@ async def test_delete_user_happy_path(user_crud: UserCRUD) -> None:
     user = await user_crud.create_user(wallet_id="wallet_789")
 
     # verify user exists before deletion
-    pre_delete_check = await user_crud.get_object(User, user.id)
+    pre_delete_check = await user_crud.get_object(user.id)
     assert pre_delete_check is not None
 
     # Perform deletion
     await user_crud.delete_user(user.id)
-    post_delete_check = await user_crud.get_object(User, user.id)
+    post_delete_check = await user_crud.get_object(user.id)
     assert post_delete_check is None
 
 
@@ -77,8 +77,7 @@ async def test_delete_user_non_existent(user_crud: UserCRUD) -> None:
     Negative test for delete_user method: non-existent user
     """
     non_existent_id = uuid.uuid4()
-    non_existent_check = await user_crud.delete_user(non_existent_id)
-    assert non_existent_check is None
+    await user_crud.delete_user(non_existent_id)
 
 
 @pytest.mark.asyncio

@@ -8,6 +8,7 @@ from app.models.base import BaseModel
 from app.main import app
 import os
 
+
 def set_test_env_vars():
     """Sets environment variables for running tests."""
     print("Setting test environment variables...")

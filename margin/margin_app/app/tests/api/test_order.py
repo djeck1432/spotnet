@@ -44,9 +44,11 @@ def mock_add_new_order():
 @pytest.fixture
 def mock_get_all():
     """
-    Mock the get_all method of order_crud.
+    Mock the GetAllMediator __call__ method.
     """
-    with patch("app.crud.order.order_crud.get_all", new_callable=AsyncMock) as mock:
+    with patch(
+        "app.api.common.GetAllMediator.__call__", new_callable=AsyncMock
+    ) as mock:
         yield mock
 
 
@@ -136,12 +138,10 @@ def test_create_order_database_error(client, mock_add_new_order):
     assert "Failed to create order" in data["detail"]
 
 
-
 def test_get_all_orders_success(client, mock_get_all):
     """Test get_all_orders successfully return all orders and total count"""
-    total = 10
     orders = []
-    for i in range(total):
+    for i in range(10):
         orders.append(
             {
                 "id": str(uuid.uuid4()),
@@ -151,10 +151,18 @@ def test_get_all_orders_success(client, mock_get_all):
                 "position": str(uuid.uuid4()),
             }
         )
-    mock_get_all.return_value = {"orders": orders, "total": total}
-    response = client.get("/order/all")
+
+    mock_get_all.return_value = {"items": orders[:3], "total": 3}
+
+    response = client.get("/order/all?limit=3")
     assert response.status_code == 200
-    assert response.json() == {"orders": orders, "total": total}
+    assert response.json() == {"items": orders[:3], "total": 3}
+
+    mock_get_all.return_value = {"items": orders[-3:], "total": 3}
+
+    response = client.get("/order/all?limit=3&offset=7")
+    assert response.status_code == 200
+    assert response.json() == {"items": orders[-3:], "total": 3}
 
 
 def test_get_order_success(client, mock_get_order):

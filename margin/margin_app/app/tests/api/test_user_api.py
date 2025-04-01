@@ -59,9 +59,11 @@ def mock_add_margin_position():
 @pytest.fixture
 def mock_get_all():
     """
-    Mock the get_all method of crud_create_user.
+    Mock the GetAllMediator __call__ method.
     """
-    with patch("app.crud.user.UserCRUD.get_all", new_callable=AsyncMock) as mock:
+    with patch(
+        "app.api.common.GetAllMediator.__call__", new_callable=AsyncMock
+    ) as mock:
         yield mock
 
 
@@ -229,23 +231,23 @@ def test_add_margin_position_success(client, mock_add_margin_position):
     mock_position.borrowed_amount = request_data["borrowed_amount"]
     mock_position.transaction_id = request_data["transaction_id"]
     mock_position.liquidated_at = liquidated_at
-    mock_position.status = (positionStatus)    
+    mock_position.status = positionStatus
 
     mock_add_margin_position.return_value = mock_position
 
     response = client.post(USER_URL + "add_margin_position", json=request_data)
-    
+
     assert response.status_code == status.HTTP_200_OK
-    assert response.json() =={
+    assert response.json() == {
         "margin_position_id": str(position_id),
         "user_id": str(user_id),
         "multiplier": request_data["multiplier"],
         "borrowed_amount": request_data["borrowed_amount"],
         "transaction_id": request_data["transaction_id"],
         "liquidated_at": (liquidated_at.isoformat()),
-        "status": "Open"
-        }
-    
+        "status": "Open",
+    }
+
     mock_add_margin_position.assert_called_once_with(
         user_id=user_id,
         borrowed_amount=Decimal("100.0"),
@@ -316,34 +318,41 @@ def test_add_margin_position_invalid_multiplier(client):
 
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
-def test_get_all_users(client, mock_get_all):
+
+@pytest.mark.asyncio
+async def test_get_all_users(client, mock_get_all):
     """Test successfully return all users with limit and offset applied."""
     users = []
     for i in range(10):
-        users.append({
-            "wallet_id": str(i),
-            "id": str(uuid.uuid4()),
-            "deposit": [],
-        })
-        
-    mock_get_all.return_value = {"users": users[:3], "total": 3}  
+        users.append(
+            {
+                "wallet_id": str(i),
+                "id": str(uuid.uuid4()),
+                "deposit": [],
+            }
+        )
+
+    mock_get_all.return_value = {"items": users[:3], "total": 3}
+
     response = client.get(USER_URL + "all" + "?limit=3")
     assert response.status_code == 200
-    assert response.json() == {"users": users[:3], "total": 3} 
+    assert response.json() == {"items": users[:3], "total": 3}
 
-    mock_get_all.return_value = {"users": users[-3:], "total": 3}  
+    mock_get_all.return_value = {"items": users[-3:], "total": 3}
+
     response = client.get(USER_URL + "all" + "?limit=3&offset=7")
     assert response.status_code == 200
-    assert response.json() =={"users": users[-3:], "total": 3}
-    
-    mock_get_all.return_value ={"users":  users[-5:], "total": 5} 
+    assert response.json() == {"items": users[-3:], "total": 3}
+
+    mock_get_all.return_value = {"items": users[-5:], "total": 5}
+
     response = client.get(USER_URL + "all" + "?offset=5")
     assert response.status_code == 200
-    assert response.json() =={"users":  users[-5:], "total": 5} 
+    assert response.json() == {"items": users[-5:], "total": 5}
 
 
-
-def test_get_all_users_invalid_params(client, mock_get_all):
+@pytest.mark.asyncio
+async def test_get_all_users_invalid_params(client):
     """Test fails when limit < 1 or offset < 0"""
     invalid_params = [
         {"limit": 0, "offset": 0},
@@ -353,7 +362,7 @@ def test_get_all_users_invalid_params(client, mock_get_all):
     ]
 
     for params in invalid_params:
-        limit = f"limit={params["limit"]}"
-        offset = f"offset={params["offset"]}"
+        limit = f"limit={params['limit']}"
+        offset = f"offset={params['offset']}"
         response = client.get(USER_URL + "all" + f"?{limit}&{offset}")
         assert response.status_code == 422

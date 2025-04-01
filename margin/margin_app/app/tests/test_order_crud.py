@@ -22,7 +22,7 @@ TEST_TOKEN = "BTC"
 @pytest.fixture
 def order_crud():
     """Fixture to create an OrderCRUD instance for testing"""
-    return UserOrderCRUD()
+    return UserOrderCRUD(UserOrder)
 
 
 @pytest.fixture
@@ -87,7 +87,7 @@ async def test_execute_order_success(order_crud, mock_order):
 
         result = await order_crud.execute_order(TEST_ORDER_ID)
 
-        mock_get_object.assert_called_once_with(UserOrder, TEST_ORDER_ID)
+        mock_get_object.assert_called_once_with(TEST_ORDER_ID)
         assert result is True
 
 
@@ -101,7 +101,7 @@ async def test_execute_order_not_found(order_crud):
 
         result = await order_crud.execute_order(TEST_ORDER_ID)
 
-        mock_get_object.assert_called_once_with(UserOrder, TEST_ORDER_ID)
+        mock_get_object.assert_called_once_with(TEST_ORDER_ID)
         assert result is False
 
 
@@ -116,7 +116,7 @@ async def test_execute_order_exception(order_crud):
         with pytest.raises(Exception):
             _ = await order_crud.execute_order(TEST_ORDER_ID)
 
-        mock_get_object.assert_called_once_with(UserOrder, TEST_ORDER_ID)
+        mock_get_object.assert_called_once_with(TEST_ORDER_ID)
 
 
 @pytest.mark.asyncio

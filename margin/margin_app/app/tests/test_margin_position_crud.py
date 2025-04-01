@@ -17,7 +17,7 @@ def margin_crud():
     """
     Fixture for the MarginPositionCRUD instance.
     """
-    return MarginPositionCRUD()
+    return MarginPositionCRUD(MarginPosition)
 
 
 @pytest.fixture
@@ -101,7 +101,7 @@ async def test_close_margin_position_success(
                 position_id=sample_position_id
             )
 
-            mock_get.assert_called_once_with(MarginPosition, sample_position_id)
+            mock_get.assert_called_once_with(sample_position_id)
             assert mock_write.called
             assert result == MarginPositionStatus.CLOSED
             assert sample_margin_position.status == MarginPositionStatus.CLOSED
@@ -136,7 +136,7 @@ async def test_close_margin_position_not_found(margin_crud, sample_position_id):
     with patch.object(margin_crud, "get_object", return_value=None) as mock_get:
         result = await margin_crud.close_margin_position(position_id=sample_position_id)
 
-        mock_get.assert_called_once_with(MarginPosition, sample_position_id)
+        mock_get.assert_called_once_with(sample_position_id)
         assert result is None
 
 
@@ -157,7 +157,7 @@ async def test_close_margin_position_already_closed(
                 position_id=sample_position_id
             )
 
-            mock_get.assert_called_once_with(MarginPosition, sample_position_id)
+            mock_get.assert_called_once_with(sample_position_id)
             assert mock_write.called
             assert result == MarginPositionStatus.CLOSED
 

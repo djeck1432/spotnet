@@ -50,9 +50,9 @@ async def test_get_current_user_success():
 
     return_value = {
         "id": str(user_id),
-        "email": email,       
-        "name":"Alex",
-        "password":"hash"
+        "email": email,
+        "name": "Alex",
+        "password": "hash",
     }
 
     token = create_access_token(email)
@@ -95,7 +95,7 @@ async def test_get_current_user_fails_with_invalid_jwt():
 
 @pytest.mark.asyncio
 async def test_get_current_user_fails_if_usr_not_found():
-    """Test fails with invalid jwt"""  
+    """Test fails with invalid jwt"""
     to_encode = {
         "sub": "xxx",
         "exp": datetime.now(timezone.utc) + timedelta(minutes=25),

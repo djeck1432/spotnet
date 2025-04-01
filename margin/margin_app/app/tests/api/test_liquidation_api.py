@@ -80,7 +80,7 @@ class TestLiquidation:
         request_data = {
             "margin_position_id": str(self.test_margin_position_id),
             "bonus_amount": str(self.test_bonus_amount),
-            "bonus_token": self.test_bonus_token
+            "bonus_token": self.test_bonus_token,
         }
         response = client.post(MARGIN_POSITION_URL + "/liquidate", json=request_data)
         assert response.status_code == status.HTTP_200_OK
@@ -120,7 +120,7 @@ class TestLiquidation:
         request_data = {
             "margin_position_id": str(self.test_margin_position_id),
             "bonus_amount": str(self.test_bonus_amount),
-            "bonus_token": self.test_bonus_token
+            "bonus_token": self.test_bonus_token,
         }
 
         response = client.post(MARGIN_POSITION_URL + "/liquidate", json=request_data)

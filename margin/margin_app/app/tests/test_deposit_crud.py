@@ -15,7 +15,7 @@ from app.models.deposit import Deposit
 @pytest.fixture
 def deposit_crud():
     """Fixture to create an instance of DepositCRUD."""
-    return DepositCRUD()
+    return DepositCRUD(Deposit)
 
 
 @pytest.fixture
