@@ -38,6 +38,6 @@ jobs:
           ssh -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
             mkdir -p ${{ secrets.PROJECT_PATH }}
             cd ${{ secrets.PROJECT_PATH }}
-            docker compose -f devops/docker-compose.yaml pull
-            docker compose -f devops/docker-compose.yaml up --detach --remove-orphans
+            docker compose -f devops/docker-compose.spotnet.yaml pull
+            docker compose -f devops/docker-compose.spotnet.yaml up --detach --remove-orphans
           EOF
