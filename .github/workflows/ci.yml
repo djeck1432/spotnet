@@ -46,13 +46,15 @@ jobs:
 
       - name: Start services and initialize database
         run: |
-          docker compose -f devops/docker-compose.spotnet.dev.yaml --env-file spotnet/.env up -d --build
+          docker compose -f devops/docker-compose.spotnet.dev.yaml --env-file .env up -d --build
           # Wait for services to be ready
           sleep 10
           # Create initial migration if it doesn't exist
           docker compose -f devops/docker-compose.spotnet.dev.yaml exec -T backend poetry run alembic -c web_app/alembic.ini revision --autogenerate -m "Initial migration"
           # Run migrations
           docker compose -f devops/docker-compose.spotnet.dev.yaml exec -T backend poetry run alembic -c web_app/alembic.ini upgrade head
+        working-directory: ${{env.working-directory}}
+
 
       - name: Run tests
         run: |
