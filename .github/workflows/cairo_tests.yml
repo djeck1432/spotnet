@@ -5,20 +5,20 @@ on:
     branches:
       - main
     paths:
-      - 'spotnet/**/*.rs'
-      - 'spotnet/**/*.cairo'
-      - spotnet/Scarb.toml
-      - spotnet/Scarb.lock
-      - spotnet/.tool-versions
+      - 'spotnet/cairo/*/*.rs'
+      - 'spotnet/cairo/*/*.cairo'
+      - spotnet/cairo/Scarb.toml
+      - spotnet/cairo/Scarb.lock
+      - spotnet/cairo/.tool-versions
   pull_request:
     branches:
       - main
     paths:
-      - 'spotnet/**/*.rs'
-      - 'spotnet/**/*.cairo'
-      - spotnet/Scarb.toml
-      - spotnet/Scarb.lock
-      - spotnet/.tool-versions
+      - 'spotnet/cairo/*/*.rs'
+      - 'spotnet/cairo/*/*.cairo'
+      - spotnet/cairo/Scarb.toml
+      - spotnet/cairo/Scarb.lock
+      - spotnet/cairo/.tool-versions
 
 jobs:
   build-and-test:
