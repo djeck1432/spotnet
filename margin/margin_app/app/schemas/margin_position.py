@@ -79,5 +79,3 @@ class MarginPositionGetAllResponse(GetAll[MarginPositionResponse]):
     """
     Pydantic model for getting all MarginPositions.
     """
-
-    pass

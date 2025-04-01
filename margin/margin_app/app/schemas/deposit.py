@@ -27,8 +27,6 @@ class DepositCreate(DepositBase):
     Represents the schema for a deposit transaction creation
     """
 
-    pass
-
 
 class DepositUpdate(BaseSchema):
     """
@@ -54,5 +52,3 @@ class DepositGetAllResponse(GetAll[DepositResponse]):
     """
     Pydantic model for getting all deposits.
     """
-
-    pass

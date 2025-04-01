@@ -82,7 +82,7 @@ async def get_all_deposits(
         offset=offset,
     )
     mediator = await mediator()
-    return DepositGetAllResponse(items=mediator["items"], total=mediator["total"])
+    return mediator
 
 
 @router.get(

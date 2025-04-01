@@ -29,8 +29,6 @@ class UserPoolCreate(UserPoolBase):
     User pool create model
     """
 
-    pass
-
 
 class UserPoolUpdate(BaseSchema):
     """
@@ -62,8 +60,6 @@ class UserPoolGetAllResponse(GetAll[UserPoolResponse]):
     """
     User pool get all response model
     """
-
-    pass
 
 
 class PoolBase(BaseSchema):
@@ -99,5 +95,3 @@ class PoolGetAllResponse(GetAll[PoolResponse]):
     """
     User pool update model
     """
-
-    pass

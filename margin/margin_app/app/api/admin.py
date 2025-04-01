@@ -90,7 +90,7 @@ async def get_all_admin(
         offset=offset,
     )
     mediator = await mediator()
-    return AdminGetAllResponse(items=mediator["items"], total=mediator["total"])
+    return mediator
 
 
 @router.get(

@@ -24,8 +24,6 @@ class UserCreate(UserBase):
     User create model
     """
 
-    pass
-
 
 class UserResponse(UserBase):
     """
@@ -40,8 +38,6 @@ class UserGetAllResponse(GetAll[UserResponse]):
     """
     User response model for getting all users
     """
-
-    pass
 
 
 class AddUserDepositRequest(BaseSchema):

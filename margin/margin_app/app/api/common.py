@@ -1,3 +1,7 @@
+"""
+Common API for get all endpoints.
+"""
+
 # Define a generic mediator for "get all" endpoints
 from typing import Any, Optional
 

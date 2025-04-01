@@ -49,7 +49,7 @@ async def get_all_orders(
         offset=offset,
     )
     mediator = await mediator()
-    return UserOrderGetAllResponse(items=mediator["items"], total=mediator["total"])
+    return mediator
 
 
 @router.post(

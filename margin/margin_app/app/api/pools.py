@@ -70,7 +70,7 @@ async def get_all_pools(
         offset=offset,
     )
     mediator = await mediator()
-    return UserPoolGetAllResponse(items=mediator["items"], total=mediator["total"])
+    return mediator
 
 
 @router.get(
@@ -97,7 +97,7 @@ async def get_all_user_pools(
         offset=offset,
     )
     mediator = await mediator()
-    return UserPoolGetAllResponse(items=mediator["items"], total=mediator["total"])
+    return mediator
 
 
 @router.get(

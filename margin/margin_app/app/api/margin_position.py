@@ -97,9 +97,7 @@ async def get_all_positions(
         offset=offset,
     )
     mediator = await mediator()
-    return MarginPositionGetAllResponse(
-        items=mediator["items"], total=mediator["total"]
-    )
+    return mediator
 
 
 @router.get(

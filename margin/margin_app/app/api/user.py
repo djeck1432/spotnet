@@ -76,7 +76,7 @@ async def get_all_users(
         offset=offset,
     )
     mediator = await mediator()
-    return UserGetAllResponse(items=mediator["items"], total=mediator["total"])
+    return mediator
 
 
 @router.get(
