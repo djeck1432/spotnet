@@ -106,12 +106,7 @@ pub mod Margin {
                 )
         }
 
-        fn get_max_asset_multiplier(self: @ContractState, token: ContractAddress) -> u256 {
-            let token_risk_factor: u256 = self.risk_factors.entry(token).read().into();
-            token_risk_factor * 10 / (SCALE_NUMBER - token_risk_factor)
-        }
-
-        /// Calculates the amount of `debt_token` to borrow based on the input `amount` of
+<<<<<<<         /// Calculates the amount of `debt_token` to borrow based on the input `amount` of
         /// `initial_token`, their respective prices, and a leverage `multiplier`.
         ///
         /// # Arguments
@@ -143,6 +138,12 @@ pub mod Margin {
                 / debt_token_price.into();
 
             debt_amount
+        }
+
+        fn get_max_asset_multiplier(self: @ContractState, token: ContractAddress) -> u256 {
+            let token_risk_factor: u256 = self.risk_factors.entry(token).read().into();
+            token_risk_factor * 10 / (SCALE_NUMBER - token_risk_factor)
+        }
         }
     }
 
@@ -212,8 +213,8 @@ pub mod Margin {
         /// @param address The contract address used to retrieve the position and risk factor.
         /// @return u256 The computed health factor as a 256-bit unsigned integer.
         fn get_health_factor(ref self: ContractState, address: ContractAddress) -> u256 {
-            let position: Position = self.positions.entry(address).read();
-            let risk_factor = self.risk_factors.entry(position.initial_token).read();
+            let position = self.positions.entry(address).read();
+            let risk_factor = self.risk_factors.entry(address).read();
 
             assert(position.traded_amount > 0, 'Traded amount is zero');
             assert(position.debt > 0, 'Debt is zero');
@@ -233,8 +234,8 @@ pub mod Margin {
         fn set_risk_factor(ref self: ContractState, token: ContractAddress, risk_factor: u128) {
             self.ownable.assert_only_owner();
             let risk_factor_check = (risk_factor*10).into() / SCALE_NUMBER;
-            assert(risk_factor_check >= 1, 'Risk factor less than needed');
-            assert(risk_factor_check <= 10, 'Risk factor more than needed');
+            assert(risk_factor_check >= 1, 'Incorrect risk factor');
+            assert(risk_factor_check <= 10, 'Incorrect risk factor');
             self.risk_factors.entry(token).write(risk_factor);
         }
 
