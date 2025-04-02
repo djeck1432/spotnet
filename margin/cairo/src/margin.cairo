@@ -82,13 +82,12 @@ pub mod Margin {
         self.oracle_address.write(oracle_address);
     }
 
-    /// @notice Calculates the health factor for a given contract address based on its position and associated risk factor.
+    /// Calculates the health factor for a given contract address based on its position and associated risk factor.
     /// @dev The health factor is determined by multiplying the traded amount with the price of the initial token, the scaling constant (SCALE_NUMBER),
     ///      and the risk factor, then dividing by the product of the debt, the price of the debt token, and the scaling constant (SCALE_NUMBER).
     /// Requirements:
     /// - The traded_amount in the position must be greater than zero.
     /// - The debt in the position must be greater than zero.
-    /// @param self A mutable reference to the contract state containing positions and risk factors.
     /// @param address The contract address used to retrieve the position and risk factor.
     /// @return u256 The computed health factor as a 256-bit unsigned integer.
     fn get_health_factor(ref self: ContractState, address: ContractAddress) -> u256 {
@@ -100,6 +99,22 @@ pub mod Margin {
         
         (position.traded_amount * self.get_data(position.initial_token).price.into() * SCALE_NUMBER * risk_factor.into())
         / (position.debt * self.get_data(position.debt_token).price.into() * SCALE_NUMBER)
+    }
+
+    /// Sets the risk factor for a given token in the contract state.
+    /// @dev Only the contract owner can call this function. The risk factor is scaled by multiplying by 10 and dividing by SCALE_NUMBER.
+    ///      The resulting value must be between 1 and 10 (inclusive); otherwise, the function will revert with an error.
+    /// Requirements:
+    /// - Only the owner can execute this function.
+    /// - The risk factor, when adjusted according to the scaling factor, must be at least 1 and at most 10.
+    /// @param token The contract address representing the token for which the risk factor is being set.
+    /// @param risk_factor The unscaled risk factor value to assign to the token.
+    fn set_risk_factor(ref self: ContractState, token: ContractAddress, risk_factor: u128) {
+        self.ownable.assert_only_owner();
+        let risk_factor_check = (risk_factor*10).into() / SCALE_NUMBER;
+        assert(risk_factor_check >= 1, 'Incorrect risk factor');
+        assert(risk_factor_check <= 10, 'Incorrect risk factor');
+        self.risk_factors.entry(token).write(risk_factor);
     }
 
 
