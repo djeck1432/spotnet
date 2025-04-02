@@ -14,6 +14,7 @@ pub mod Margin {
             IPragmaOracleDispatcher, IPragmaOracleDispatcherTrait,
         },
         types::{Position, TokenAmount, PositionParameters, SwapData, EkuboSlippageLimits},
+        constants::SCALE_NUMBER,
     };
     use margin::mocks::erc20_mock::{};
     use alexandria_math::{BitShift, U256BitShift};
@@ -65,6 +66,26 @@ pub mod Margin {
     ) {
         self.ekubo_core.write(ekubo_core);
         self.oracle_address.write(oracle_address);
+    }
+
+    /// @notice Calculates the health factor for a given contract address based on its position and associated risk factor.
+    /// @dev The health factor is determined by multiplying the traded amount with the price of the initial token, the scaling constant (SCALE_NUMBER),
+    ///      and the risk factor, then dividing by the product of the debt, the price of the debt token, and the scaling constant (SCALE_NUMBER).
+    /// Requirements:
+    /// - The traded_amount in the position must be greater than zero.
+    /// - The debt in the position must be greater than zero.
+    /// @param self A mutable reference to the contract state containing positions and risk factors.
+    /// @param address The contract address used to retrieve the position and risk factor.
+    /// @return u256 The computed health factor as a 256-bit unsigned integer.
+    fn get_health_factor(ref self: ContractState, address: ContractAddress) -> u256 {
+        let position = self.positions.entry(address).read();
+        let risk_factor = self.risk_factors.entry(address).read();
+
+        assert(position.traded_amount > 0, 'Traded amount is zero');
+        assert(position.debt > 0, 'Debt is zero');
+        
+        (position.traded_amount * self.get_data(position.initial_token).price.into() * SCALE_NUMBER * risk_factor.into())
+        / (position.debt * self.get_data(position.debt_token).price.into() * SCALE_NUMBER)
     }
 
 
