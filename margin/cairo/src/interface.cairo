@@ -25,6 +25,8 @@ pub trait IMargin<TContractState> {
         pool_key: PoolKey,
         ekubo_limits: EkuboSlippageLimits,
     );
+    fn get_health_factor(ref self: TContractState, address: ContractAddress) -> u256;
+    fn set_risk_factor(ref self: TContractState, token: ContractAddress, risk_factor: u128);
 }
 
 #[starknet::interface]
