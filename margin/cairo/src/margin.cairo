@@ -232,6 +232,13 @@ pub mod Margin {
             assert(risk_factor_check <= 10, 'Incorrect risk factor');
             self.risk_factors.entry(token).write(risk_factor);
         }
+
+        /// Checks if the position for a given contract address is healthy based on its health factor.
+        /// @param address The contract address used to retrieve the health factor.
+        fn is_position_healthy(ref self: ContractState, address: ContractAddress) -> bool {
+            let health_factor = self.get_health_factor(address);
+            health_factor > SCALE_NUMBER
+        }
     }
 
     #[abi(embed_v0)]

@@ -27,6 +27,7 @@ pub trait IMargin<TContractState> {
     );
     fn get_health_factor(ref self: TContractState, address: ContractAddress) -> u256;
     fn set_risk_factor(ref self: TContractState, token: ContractAddress, risk_factor: u128);
+    fn is_position_healthy(ref self: TContractState, address: ContractAddress) -> bool;
 }
 
 #[starknet::interface]
