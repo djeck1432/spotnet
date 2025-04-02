@@ -1,6 +1,5 @@
 #[starknet::contract]
 pub mod Margin {
-    use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
     use core::num::traits::Zero;
     use starknet::{
         event::EventEmitter,
@@ -19,7 +18,8 @@ pub mod Margin {
     use margin::mocks::erc20_mock::{};
     use alexandria_math::{BitShift, U256BitShift};
 
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher};
+    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin::access::ownable::OwnableComponent;
     use pragma_lib::types::{DataType, PragmaPricesResponse};
 
     use ekubo::{
@@ -27,6 +27,14 @@ pub mod Margin {
         types::{keys::PoolKey, delta::Delta},
         components::shared_locker::{consume_callback_data, handle_delta, call_core_with_callback},
     };
+
+    component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
+
+    /// Ownable
+    #[abi(embed_v0)]
+    impl OwnableTwoStepMixinImpl =
+        OwnableComponent::OwnableTwoStepMixinImpl<ContractState>;
+    impl OwnableInternalImpl = OwnableComponent::InternalImpl<ContractState>;
 
     #[derive(starknet::Event, Drop)]
     struct Deposit {
@@ -46,12 +54,16 @@ pub mod Margin {
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
+        #[flat]
+        OwnableEvent: OwnableComponent::Event,
         Deposit: Deposit,
         Withdraw: Withdraw,
     }
 
     #[storage]
     struct Storage {
+        #[substorage(v0)]
+        ownable: OwnableComponent::Storage,
         ekubo_core: ICoreDispatcher,
         treasury_balances: Map<(ContractAddress, ContractAddress), TokenAmount>,
         pools: Map<ContractAddress, TokenAmount>,
@@ -62,8 +74,10 @@ pub mod Margin {
 
     #[constructor]
     fn constructor(
-        ref self: ContractState, ekubo_core: ICoreDispatcher, oracle_address: ContractAddress,
+        ref self: ContractState, owner: ContractAddress, 
+        ekubo_core: ICoreDispatcher, oracle_address: ContractAddress,
     ) {
+        self.ownable.initializer(owner);
         self.ekubo_core.write(ekubo_core);
         self.oracle_address.write(oracle_address);
     }

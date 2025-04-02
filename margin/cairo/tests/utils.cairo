@@ -83,6 +83,7 @@ pub fn setup_test_suite(
     };
 
     let mut calldata: Array<felt252> = array![];
+    Serde::serialize(@owner, ref calldata);
     Serde::serialize(@ekubo, ref calldata);
     Serde::serialize(@oracle_address, ref calldata);
     let (margin_contract, _) = contract.deploy(@calldata).unwrap();
