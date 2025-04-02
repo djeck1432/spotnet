@@ -4,21 +4,21 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'spotnet/cairo/*/*.rs'
-      - 'spotnet/cairo/*/*.cairo'
-      - spotnet/cairo/Scarb.toml
-      - spotnet/cairo/Scarb.lock
-      - spotnet/cairo/.tool-versions
+    # paths:
+    #   - 'spotnet/cairo/*/*.rs'
+    #   - 'spotnet/cairo/*/*.cairo'
+    #   - spotnet/cairo/Scarb.toml
+    #   - spotnet/cairo/Scarb.lock
+    #   - spotnet/cairo/.tool-versions
   pull_request:
     branches:
       - main
-    paths:
-      - 'spotnet/cairo/*/*.rs'
-      - 'spotnet/cairo/*/*.cairo'
-      - spotnet/cairo/Scarb.toml
-      - spotnet/cairo/Scarb.lock
-      - spotnet/cairo/.tool-versions
+    # paths:
+    #   - 'spotnet/cairo/*/*.rs'
+    #   - 'spotnet/cairo/*/*.cairo'
+    #   - spotnet/cairo/Scarb.toml
+    #   - spotnet/cairo/Scarb.lock
+    #   - spotnet/cairo/.tool-versions
 
 jobs:
   build-and-test:
@@ -29,8 +29,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Compy .tool_version file into root
+        run: cp ${{env.working-directory}}/.tool-versions .tool-versions
+
       - name: Install asdf & tools
         uses: asdf-vm/actions/install@v3
+
 
       - name: Install Rust
         run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
