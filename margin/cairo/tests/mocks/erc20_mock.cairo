@@ -1,6 +1,5 @@
 #[starknet::contract]
 pub mod ERC20Mock {
-    use openzeppelin::utils::bytearray::ByteArrayExtTrait;
     use openzeppelin::token::erc20::{ERC20Component, ERC20HooksEmptyImpl};
     use starknet::ContractAddress;
     use margin::interface::IERC20MetadataForPragma;

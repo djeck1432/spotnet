@@ -1,7 +1,6 @@
 use margin::margin::Margin;
 use super::utils::{setup_test_suite, deploy_erc20_mock, deploy_pragma_mock, ERC20_MOCK_CONTRACT};
 use margin::margin::Margin::{InternalTrait};
-use pragma_lib::types::{PragmaPricesResponse};
 use core::starknet::{storage::{StoragePointerWriteAccess}, contract_address_const};
 use margin::interface::{IMockPragmaOracleDispatcherTrait};
 
