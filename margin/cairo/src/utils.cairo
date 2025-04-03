@@ -25,5 +25,13 @@ mod tests {
         let byte_array: ByteArray = "ETH";
         let result = byte_array_to_felt252(byte_array);
         assert_eq!(result, 'ETH');
+
+        let byte_array: ByteArray = "STRK";
+        let result = byte_array_to_felt252(byte_array);
+        assert_eq!(result, 'STRK');
+
+        let byte_array: ByteArray = "ETH/STRK";
+        let result = byte_array_to_felt252(byte_array);
+        assert_eq!(result, 'ETH/STRK');
     }
 }
