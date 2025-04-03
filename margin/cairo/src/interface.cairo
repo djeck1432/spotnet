@@ -54,5 +54,8 @@ pub trait IMockPragmaOracle<TContractState> {
         num_sources_aggregated: u32,
         expiration_timestamp: Option<u64>,
     );
+
+    fn get_price(self: @TContractState, token: ContractAddress) -> u128;
+    fn set_price_token(ref self: TContractState, token: ContractAddress, price: u128);
 }
 

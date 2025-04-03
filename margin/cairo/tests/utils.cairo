@@ -1,6 +1,6 @@
 use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 use starknet::{ContractAddress, contract_address_const, get_contract_address};
-use margin::interface::{IMarginDispatcher, IPragmaOracleDispatcher};
+use margin::interface::{IMarginDispatcher, IPragmaOracleDispatcher, IMockPragmaOracleDispatcher};
 use snforge_std::cheatcodes::execution_info::caller_address::{
     start_cheat_caller_address, stop_cheat_caller_address,
 };
@@ -16,6 +16,7 @@ pub struct MarginTestSuite {
     pub token: IERC20Dispatcher,
     pub owner: ContractAddress,
     pub pragma: IPragmaOracleDispatcher,
+    pub pragma_mock: IMockPragmaOracleDispatcher,
 }
 
 pub fn ERC20_MOCK_CONTRACT() -> ContractAddress {
@@ -30,10 +31,9 @@ pub fn PRAGMA_MOCK_CONTRACT() -> ContractAddress {
     contract_address_const::<'PragmaMock'>()
 }
 
-pub fn deploy_erc20_mock() -> ContractAddress {
+pub fn deploy_erc20_mock(contract_address: ContractAddress, symbol: ByteArray) -> ContractAddress {
     let contract = declare("ERC20Mock").unwrap().contract_class();
     let name: ByteArray = "erc20 mock";
-    let symbol: ByteArray = "ERC20MOCK";
     let initial_supply: u256 = 100 * fast_power(10, 18);
     let recipient: ContractAddress = get_contract_address();
 
@@ -43,7 +43,7 @@ pub fn deploy_erc20_mock() -> ContractAddress {
     Serde::serialize(@initial_supply, ref calldata);
     Serde::serialize(@recipient, ref calldata);
 
-    let (contract_addr, _) = contract.deploy_at(@calldata, ERC20_MOCK_CONTRACT()).unwrap();
+    let (contract_addr, _) = contract.deploy_at(@calldata, contract_address).unwrap();
 
     contract_addr
 }
@@ -91,6 +91,7 @@ pub fn setup_test_suite(
         margin: IMarginDispatcher { contract_address: margin_contract },
         token: IERC20Dispatcher { contract_address: token_address },
         pragma: IPragmaOracleDispatcher { contract_address: oracle_address },
+        pragma_mock: IMockPragmaOracleDispatcher { contract_address: oracle_address },
         owner,
     }
 }
@@ -129,10 +130,9 @@ pub fn get_pool_value(margin_address: ContractAddress, token: ContractAddress) -
     (*pool_value[0]).into()
 }
 
-pub fn store_risk_factor(asset: ContractAddress, risk_factor: u128){
+pub fn store_risk_factor(asset: ContractAddress, risk_factor: u128) {
     let margin_address = get_contract_address();
     snforge_std::store(
-        margin_address, selector!("risk_factors"), 
-        array![asset.into(), risk_factor.into()].span(),
+        margin_address, selector!("risk_factors"), array![asset.into(), risk_factor.into()].span(),
     );
 }

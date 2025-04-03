@@ -6,7 +6,7 @@ use snforge_std::cheatcodes::execution_info::caller_address::{
 use margin::interface::{IMarginDispatcherTrait};
 use super::utils::{
     setup_test_suite, deploy_erc20_mock, setup_user, get_treasury_balance, get_pool_value,
-    deploy_pragma_mock,
+    deploy_pragma_mock, ERC20_MOCK_CONTRACT,
 };
 use super::constants::{HYPOTHETICAL_OWNER_ADDR, DEPOSIT_MOCK_USER, DEPOSIT_MOCK_USER_2};
 
@@ -16,7 +16,9 @@ use super::constants::{HYPOTHETICAL_OWNER_ADDR, DEPOSIT_MOCK_USER, DEPOSIT_MOCK_
 fn test_deposit_zero_amount() {
     // Setup
     let suite = setup_test_suite(
-        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
+        deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
+        deploy_pragma_mock(),
     );
     let zero_amount = 0_u256;
 
@@ -33,7 +35,9 @@ fn test_deposit_zero_amount() {
 fn test_deposit_insufficient_allowance() {
     // Setup
     let suite = setup_test_suite(
-        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
+        deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
+        deploy_pragma_mock(),
     );
     let deposit_amount: u256 = 1000;
     let user: ContractAddress = DEPOSIT_MOCK_USER.try_into().unwrap();
@@ -52,7 +56,9 @@ fn test_deposit_insufficient_allowance() {
 fn test_deposit_insufficient_balance() {
     // Setup
     let suite = setup_test_suite(
-        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
+        deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
+        deploy_pragma_mock(),
     );
     let deposit_amount: u256 = 1000000000000000000000; // Very large amount
     let user: ContractAddress = DEPOSIT_MOCK_USER.try_into().unwrap();
@@ -72,7 +78,9 @@ fn test_deposit_insufficient_balance() {
 fn test_deposit_success() {
     // Setup
     let suite = setup_test_suite(
-        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
+        deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
+        deploy_pragma_mock(),
     );
     let deposit_amount: u256 = 1000;
     let user: ContractAddress = DEPOSIT_MOCK_USER.try_into().unwrap();
@@ -103,7 +111,9 @@ fn test_deposit_success() {
 fn test_multiple_deposits() {
     // Setup
     let suite = setup_test_suite(
-        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
+        deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
+        deploy_pragma_mock(),
     );
     let deposit_amount1: u256 = 1000;
     let deposit_amount2: u256 = 500;
@@ -128,7 +138,9 @@ fn test_multiple_deposits() {
 fn test_multiple_users_deposit() {
     // Setup
     let suite = setup_test_suite(
-        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
+        deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
+        deploy_pragma_mock(),
     );
     let deposit_amount1: u256 = 1000;
     let deposit_amount2: u256 = 2000;
@@ -158,7 +170,9 @@ fn test_multiple_users_deposit() {
 fn test_storage_updates() {
     // Setup
     let suite = setup_test_suite(
-        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+        HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
+        deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
+        deploy_pragma_mock(),
     );
     let deposit_amount: u256 = 1000;
     let user: ContractAddress = DEPOSIT_MOCK_USER.try_into().unwrap();

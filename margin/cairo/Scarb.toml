@@ -8,6 +8,7 @@ edition = "2023_11"
 [dependencies]
 starknet = "2.9.4"
 openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git" }
+
 alexandria_math = { git = "https://github.com/keep-starknet-strange/alexandria.git" }
 ekubo = { git = "https://github.com/ekuboprotocol/abis", rev = "edb6de8" }
 pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib", tag = "2.9.2" }

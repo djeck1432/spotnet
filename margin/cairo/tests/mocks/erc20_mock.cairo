@@ -1,9 +1,10 @@
 #[starknet::contract]
 pub mod ERC20Mock {
+    use openzeppelin::utils::bytearray::ByteArrayExtTrait;
     use openzeppelin::token::erc20::{ERC20Component, ERC20HooksEmptyImpl};
     use starknet::ContractAddress;
     use margin::interface::IERC20MetadataForPragma;
-
+    use margin::utils::byte_array_to_felt252;
     component!(path: ERC20Component, storage: erc20, event: ERC20Event);
 
     #[abi(embed_v0)]
@@ -42,7 +43,7 @@ pub mod ERC20Mock {
         }
 
         fn symbol(self: @ContractState) -> felt252 {
-            'ETH'
+            byte_array_to_felt252(self.erc20.ERC20_symbol.read())
         }
 
         fn decimals(self: @ContractState) -> felt252 {

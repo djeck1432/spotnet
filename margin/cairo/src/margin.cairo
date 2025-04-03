@@ -7,6 +7,7 @@ pub mod Margin {
         storage::{StoragePointerReadAccess, StoragePointerWriteAccess, StoragePathEntry, Map},
         ContractAddress, get_contract_address, get_caller_address,
     };
+    use margin::constants::ONE_HUNDRED_PERCENT_IN_BPS;
     use margin::{
         interface::{
             IMargin, IERC20MetadataForPragmaDispatcherTrait, IERC20MetadataForPragmaDispatcher,
@@ -79,13 +80,49 @@ pub mod Margin {
             }
                 .symbol();
 
+            assert(token_symbol != 0, 'Token symbol is zero');
+
             let token_symbol_u256: u256 = token_symbol.into();
-            let pair_id = BitShift::shl(token_symbol_u256, 4) + '/USD';
+            let pair_id = BitShift::shl(token_symbol_u256, 32) + '/USD';
 
             IPragmaOracleDispatcher { contract_address: self.oracle_address.read() }
                 .get_data_median(
                     DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')),
                 )
+        }
+
+        /// Calculates the amount of `debt_token` to borrow based on the input `amount` of
+        /// `initial_token`, their respective prices, and a leverage `multiplier`.
+        ///
+        /// # Arguments
+        /// - `self`: Reference to the contract state for accessing token price data.
+        /// - `initial_token`: Address of the token being used as collateral.
+        /// - `debt_token`: Address of the token to borrow.
+        /// - `amount`: Quantity of the `initial_token`.
+        /// - `multiplier`: Leverage multiplier in bps (e.g., 20000 for 2x leverage).
+        ///
+        /// # Returns
+        /// - `TokenAmount`: Calculated amount of `debt_token` to borrow.
+        fn get_borrow_amount(
+            self: @ContractState,
+            initial_token: ContractAddress,
+            debt_token: ContractAddress,
+            amount: TokenAmount,
+            multiplier: u64,
+        ) -> TokenAmount {
+            let initial_token_price = self.get_data(initial_token).price;
+            let debt_token_price = self.get_data(debt_token).price;
+            assert(debt_token_price > 0, 'Debt token price is zero');
+            assert(initial_token_price > 0, 'Initial token price is zero');
+
+            // Convert multiplier to u256 for precision
+            let debt_amount: u256 = amount
+                * initial_token_price.into()
+                * (multiplier - ONE_HUNDRED_PERCENT_IN_BPS).into()
+                / ONE_HUNDRED_PERCENT_IN_BPS.into()
+                / debt_token_price.into();
+
+            debt_amount
         }
     }
 
