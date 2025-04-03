@@ -1,33 +1,25 @@
-name: Cairo Tests
+name: Shared Cairo Tests Workflow
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'spotnet/cairo/*/*.rs'
-      - 'spotnet/cairo/*/*.cairo'
-      - spotnet/cairo/Scarb.toml
-      - spotnet/cairo/Scarb.lock
-      - spotnet/cairo/.tool-versions
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'spotnet/cairo/*/*.rs'
-      - 'spotnet/cairo/*/*.cairo'
-      - spotnet/cairo/Scarb.toml
-      - spotnet/cairo/Scarb.lock
-      - spotnet/cairo/.tool-versions
+  workflow_call:
+    inputs:
+      working-directory:
+        description: "The working directory to run tests into"
+        required: true
+        type: string
 
 jobs:
-  build-and-test:
+  shared-cairo-test:
     runs-on: ubuntu-latest
     env:
-        working-directory: ./spotnet/cairo
+        working-directory: ${{inputs.working-directory}}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Copy .tool_version file into root
+        run: cp ${{env.working-directory}}/.tool-versions .tool-versions
 
       - name: Install asdf & tools
         uses: asdf-vm/actions/install@v3
