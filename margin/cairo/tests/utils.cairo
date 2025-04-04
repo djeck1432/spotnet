@@ -6,8 +6,10 @@ use snforge_std::cheatcodes::execution_info::caller_address::{
 };
 use snforge_std::{declare, ContractClassTrait, DeclareResultTrait};
 use alexandria_math::fast_power::fast_power;
-use margin::types::TokenAmount;
-use super::constants::contracts::EKUBO_CORE_SEPOLIA;
+use margin::types::{TokenAmount, Position};
+use margin::constants::SCALE_NUMBER;
+use margin::margin::{Margin, Margin::InternalTrait};
+use super::constants::{contracts::EKUBO_CORE_SEPOLIA, tokens};
 use ekubo::{interfaces::core::{ICoreDispatcher}};
 
 #[derive(Drop)]
@@ -150,4 +152,49 @@ pub fn get_risk_factor(margin_address: ContractAddress, asset: ContractAddress) 
 
     let risk_factor = snforge_std::load(margin_address, risk_factor_key, 1);
     (*risk_factor[0]).try_into().unwrap()
+}
+
+
+// Helper function to calculate health factor using test contract state
+pub fn calculate_health_factor(suite: @MarginTestSuite, risk_factor: u128) -> u256 {
+    let mut state = Margin::contract_state_for_testing();
+    state.oracle_address.write((*suite.pragma.contract_address));
+    let position_key = snforge_std::map_entry_address(
+        selector!("positions"), array![(*suite.owner).into()].span(),
+    ); 
+
+    let position_array = snforge_std::load((*suite.margin.contract_address), position_key, 6);
+    let position = Position{
+        initial_token: (*position_array[0]).try_into().unwrap(),
+        debt_token: (*position_array[1]).try_into().unwrap(),
+        traded_amount: (*position_array[2]).into(),
+        debt: (*position_array[3]).into(),
+        is_open: (*position_array[4]).into() != 0,
+        open_time: (*position_array[5]).try_into().unwrap(),
+    };
+
+    (position.traded_amount * state.get_data(position.initial_token).price.into() * SCALE_NUMBER * risk_factor.into())
+    / (position.debt * state.get_data(position.debt_token).price.into() * SCALE_NUMBER)
+}
+
+
+pub fn store_position_data_for_health_factor(suite: @MarginTestSuite){
+    let mut position_params = array![];
+
+    Serde::serialize(@tokens::ETH, ref position_params);
+    Serde::serialize(@tokens::USDC, ref position_params);
+    Serde::serialize(@1000, ref position_params);
+    Serde::serialize(@2000, ref position_params);
+    Serde::serialize(@true, ref position_params);
+    Serde::serialize(@1743790352, ref position_params);
+
+    // Store position data in the contract's storage
+    
+    snforge_std::store(
+        (*suite.margin.contract_address), 
+        snforge_std::map_entry_address(
+            selector!("positions"), array![(*suite.owner).into()].span()
+        ), 
+        position_params.span(),
+    );
 }
