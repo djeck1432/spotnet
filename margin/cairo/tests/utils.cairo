@@ -131,9 +131,23 @@ pub fn get_pool_value(margin_address: ContractAddress, token: ContractAddress) -
     (*pool_value[0]).into()
 }
 
-pub fn store_risk_factor(asset: ContractAddress, risk_factor: u128) {
-    let margin_address = get_contract_address();
+<// Helper function to store risk factor in storage
+pub fn store_risk_factor(margin_address: ContractAddress, asset: ContractAddress, risk_factor: u128) {
     snforge_std::store(
         margin_address, selector!("risk_factors"), array![asset.into(), risk_factor.into()].span(),
     );
+}
+    snforge_std::store(
+        margin_address, selector!("risk_factors"), array![asset.into(), risk_factor.into()].span(),
+    );
+
+
+// Helper function to read risk factor from storage
+pub fn get_risk_factor(margin_address: ContractAddress, asset: ContractAddress) -> u128 {
+    let risk_factor_key = snforge_std::map_entry_address(
+        selector!("risk_factors"), array![asset.into()].span(),
+    );
+
+    let risk_factor = snforge_std::load(margin_address, risk_factor_key, 1);
+    (*risk_factor[0]).try_into().unwrap()
 }

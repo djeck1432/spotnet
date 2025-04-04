@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 use crate::types::{TokenAmount, PositionParameters, EkuboSlippageLimits};
-use pragma_lib::types::{AggregationMode, DataType, PragmaPricesResponse};
+use pragma_lib::types::{DataType, PragmaPricesResponse};
 use ekubo::types::keys::PoolKey;
 
 #[starknet::interface]
