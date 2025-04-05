@@ -21,6 +21,14 @@ pub struct Position {
     pub open_time: Timestamp,
 }
 
+impl PositionIntoSpan of Into<Position, Span<felt252>> {
+    fn into(self: Position) -> Span<felt252> {
+        let mut serialized_struct: Array<felt252> = array![];
+        self.serialize(ref serialized_struct);
+        serialized_struct.span()
+    }
+}
+
 #[derive(Copy, Serde, Drop)]
 pub struct SwapData {
     pub params: SwapParameters,

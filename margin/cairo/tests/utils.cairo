@@ -173,14 +173,14 @@ pub fn calculate_health_factor(suite: @MarginTestSuite, risk_factor: u128) -> u2
 
 
 pub fn store_position_data_for_health_factor(suite: @MarginTestSuite){
-    let mut position_params = array![];
-
-    Serde::serialize(@tokens::ETH, ref position_params);
-    Serde::serialize(@tokens::USDC, ref position_params);
-    Serde::serialize(@1000, ref position_params);
-    Serde::serialize(@2000, ref position_params);
-    Serde::serialize(@true, ref position_params);
-    Serde::serialize(@1743790352, ref position_params);
+    let position = Position {
+        initial_token: tokens::ETH.try_into().unwrap(),
+        debt_token: tokens::USDC.try_into().unwrap(),
+        traded_amount: 1000,
+        debt: 2000,
+        is_open: true,
+        open_time: 1743790352,
+    };
 
     // Store position data in the contract's storage
     
@@ -189,6 +189,6 @@ pub fn store_position_data_for_health_factor(suite: @MarginTestSuite){
         snforge_std::map_entry_address(
             selector!("positions"), array![(*suite.owner).into()].span()
         ), 
-        position_params.span(),
+        position.into(),
     );
 }
