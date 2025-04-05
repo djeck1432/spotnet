@@ -341,8 +341,8 @@ pub impl InternalImpl of InternalTrait {
         fn set_risk_factor(ref self: ContractState, token: ContractAddress, risk_factor: u128) {
             self.ownable.assert_only_owner();
             let risk_factor_check = (risk_factor*10).into() / SCALE_NUMBER;
-            assert(risk_factor_check >= 1, 'Incorrect risk factor');
-            assert(risk_factor_check <= 10, 'Incorrect risk factor');
+            assert(risk_factor_check >= 1, 'Risk factor less than needed');
+            assert(risk_factor_check <= 10, 'Risk factor more than needed');
             self.risk_factors.entry(token).write(risk_factor);
         }
 

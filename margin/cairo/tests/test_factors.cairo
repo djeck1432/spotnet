@@ -27,7 +27,7 @@ fn test_set_risk_not_owner() {
 
 
 #[test]
-#[should_panic(expected: 'Incorrect risk factor')]
+#[should_panic(expected: 'Risk factor less than needed')]
 fn test_set_risk_less_than() {
     let owner: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
     let risk_factor: u128 = 10000000000000000000000000;
@@ -40,7 +40,7 @@ fn test_set_risk_less_than() {
 
 
 #[test]
-#[should_panic(expected: 'Incorrect risk factor')]
+#[should_panic(expected: 'Risk factor more than needed')]
 fn test_set_risk_more_than() {
     let owner: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
     let risk_factor: u128 = 1100000000000000000000000000;
