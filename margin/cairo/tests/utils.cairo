@@ -163,15 +163,8 @@ pub fn calculate_health_factor(suite: @MarginTestSuite, risk_factor: u128) -> u2
         selector!("positions"), array![(*suite.owner).into()].span(),
     ); 
 
-    let position_array = snforge_std::load((*suite.margin.contract_address), position_key, 6);
-    let position = Position{
-        initial_token: (*position_array[0]).try_into().unwrap(),
-        debt_token: (*position_array[1]).try_into().unwrap(),
-        traded_amount: (*position_array[2]).into(),
-        debt: (*position_array[3]).into(),
-        is_open: (*position_array[4]).into() != 0,
-        open_time: (*position_array[5]).try_into().unwrap(),
-    };
+    let mut position_array = snforge_std::load((*suite.margin.contract_address), position_key, 8).span();
+    let position: Position = Serde::deserialize(ref position_array).unwrap();
 
     (position.traded_amount * state.get_data(position.initial_token).price.into() * SCALE_NUMBER * risk_factor.into())
     / (position.debt * state.get_data(position.debt_token).price.into() * SCALE_NUMBER)

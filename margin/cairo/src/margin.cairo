@@ -320,8 +320,8 @@ pub impl InternalImpl of InternalTrait {
         /// @param address The contract address used to retrieve the position and risk factor.
         /// @return u256 The computed health factor as a 256-bit unsigned integer.
         fn get_health_factor(ref self: ContractState, address: ContractAddress) -> u256 {
-            let position = self.positions.entry(address).read();
-            let risk_factor = self.risk_factors.entry(address).read();
+            let position: Position = self.positions.entry(address).read();
+            let risk_factor = self.risk_factors.entry(position.initial_token).read();
 
             assert(position.traded_amount > 0, 'Traded amount is zero');
             assert(position.debt > 0, 'Debt is zero');
