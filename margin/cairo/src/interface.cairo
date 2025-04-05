@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 use crate::types::{TokenAmount, PositionParameters, EkuboSlippageLimits};
-use pragma_lib::types::{AggregationMode, DataType, PragmaPricesResponse};
+use pragma_lib::types::{DataType, PragmaPricesResponse};
 use ekubo::types::keys::PoolKey;
 
 #[starknet::interface]
@@ -25,6 +25,9 @@ pub trait IMargin<TContractState> {
         pool_key: PoolKey,
         ekubo_limits: EkuboSlippageLimits,
     );
+    fn get_health_factor(ref self: TContractState, address: ContractAddress) -> u256;
+    fn set_risk_factor(ref self: TContractState, token: ContractAddress, risk_factor: u128);
+    fn is_position_healthy(ref self: TContractState, address: ContractAddress) -> bool;
 }
 
 #[starknet::interface]

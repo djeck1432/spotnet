@@ -1,6 +1,5 @@
 #[starknet::contract]
 pub mod Margin {
-    use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
     use core::num::traits::Zero;
     use starknet::{
         event::EventEmitter,
@@ -14,11 +13,13 @@ pub mod Margin {
             IPragmaOracleDispatcher, IPragmaOracleDispatcherTrait,
         },
         types::{Position, TokenAmount, PositionParameters, SwapData, EkuboSlippageLimits},
+        constants::SCALE_NUMBER,
     };
     use margin::mocks::erc20_mock::{};
     use alexandria_math::{BitShift, U256BitShift};
 
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher};
+    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin::access::ownable::OwnableComponent;
     use pragma_lib::types::{DataType, PragmaPricesResponse};
 
     use ekubo::{
@@ -26,6 +27,14 @@ pub mod Margin {
         types::{keys::PoolKey, delta::Delta},
         components::shared_locker::{consume_callback_data, handle_delta, call_core_with_callback},
     };
+
+    component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
+
+    /// Ownable
+    #[abi(embed_v0)]
+    impl OwnableTwoStepMixinImpl =
+        OwnableComponent::OwnableTwoStepMixinImpl<ContractState>;
+    impl OwnableInternalImpl = OwnableComponent::InternalImpl<ContractState>;
 
     #[derive(starknet::Event, Drop)]
     struct Deposit {
@@ -45,12 +54,16 @@ pub mod Margin {
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
+        #[flat]
+        OwnableEvent: OwnableComponent::Event,
         Deposit: Deposit,
         Withdraw: Withdraw,
     }
 
     #[storage]
     struct Storage {
+        #[substorage(v0)]
+        ownable: OwnableComponent::Storage,
         ekubo_core: ICoreDispatcher,
         treasury_balances: Map<(ContractAddress, ContractAddress), TokenAmount>,
         pools: Map<ContractAddress, TokenAmount>,
@@ -61,8 +74,10 @@ pub mod Margin {
 
     #[constructor]
     fn constructor(
-        ref self: ContractState, ekubo_core: ICoreDispatcher, oracle_address: ContractAddress,
+        ref self: ContractState, owner: ContractAddress, 
+        ekubo_core: ICoreDispatcher, oracle_address: ContractAddress,
     ) {
+        self.ownable.initializer(owner);
         self.ekubo_core.write(ekubo_core);
         self.oracle_address.write(oracle_address);
     }
@@ -89,6 +104,11 @@ pub mod Margin {
                 .get_data_median(
                     DataType::SpotEntry(pair_id.try_into().expect('pair id overflows')),
                 )
+        }
+
+        fn get_max_asset_multiplier(self: @ContractState, token: ContractAddress) -> u256 {
+            let token_risk_factor: u256 = self.risk_factors.entry(token).read().into();
+            token_risk_factor * 10 / (SCALE_NUMBER - token_risk_factor)
         }
 
         /// Calculates the amount of `debt_token` to borrow based on the input `amount` of
@@ -182,6 +202,48 @@ pub mod Margin {
             pool_key: PoolKey,
             ekubo_limits: EkuboSlippageLimits,
         ) {}
+
+        /// Calculates the health factor for a given contract address based on its position and associated risk factor.
+        /// @dev The health factor is determined by multiplying the traded amount with the price of the initial token, the scaling constant (SCALE_NUMBER),
+        ///      and the risk factor, then dividing by the product of the debt, the price of the debt token, and the scaling constant (SCALE_NUMBER).
+        /// Requirements:
+        /// - The traded_amount in the position must be greater than zero.
+        /// - The debt in the position must be greater than zero.
+        /// @param address The contract address used to retrieve the position and risk factor.
+        /// @return u256 The computed health factor as a 256-bit unsigned integer.
+        fn get_health_factor(ref self: ContractState, address: ContractAddress) -> u256 {
+            let position: Position = self.positions.entry(address).read();
+            let risk_factor = self.risk_factors.entry(position.initial_token).read();
+
+            assert(position.traded_amount > 0, 'Traded amount is zero');
+            assert(position.debt > 0, 'Debt is zero');
+            
+            (position.traded_amount * self.get_data(position.initial_token).price.into() * SCALE_NUMBER * risk_factor.into())
+            / (position.debt * self.get_data(position.debt_token).price.into() * SCALE_NUMBER)
+        }
+
+        /// Sets the risk factor for a given token in the contract state.
+        /// @dev Only the contract owner can call this function. The risk factor is scaled by multiplying by 10 and dividing by SCALE_NUMBER.
+        ///      The resulting value must be between 1 and 10 (inclusive); otherwise, the function will revert with an error.
+        /// Requirements:
+        /// - Only the owner can execute this function.
+        /// - The risk factor, when adjusted according to the scaling factor, must be at least 1 and at most 10.
+        /// @param token The contract address representing the token for which the risk factor is being set.
+        /// @param risk_factor The unscaled risk factor value to assign to the token.
+        fn set_risk_factor(ref self: ContractState, token: ContractAddress, risk_factor: u128) {
+            self.ownable.assert_only_owner();
+            let risk_factor_check = (risk_factor*10).into() / SCALE_NUMBER;
+            assert(risk_factor_check >= 1, 'Incorrect risk factor');
+            assert(risk_factor_check <= 10, 'Incorrect risk factor');
+            self.risk_factors.entry(token).write(risk_factor);
+        }
+
+        /// Checks if the position for a given contract address is healthy based on its health factor.
+        /// @param address The contract address used to retrieve the health factor.
+        fn is_position_healthy(ref self: ContractState, address: ContractAddress) -> bool {
+            let health_factor = self.get_health_factor(address);
+            health_factor > SCALE_NUMBER
+        }
     }
 
     #[abi(embed_v0)]

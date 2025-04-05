@@ -1,6 +1,6 @@
 #[starknet::contract]
 pub mod PragmaMock {
-    use margin::interface::{IPragmaOracle, IMockPragmaOracle, IERC20MetadataForPragmaDispatcher};
+    use margin::interface::{IPragmaOracle, IMockPragmaOracle};
     use pragma_lib::types::{DataType, PragmaPricesResponse};
     use starknet::{storage::{StoragePointerWriteAccess, Map}, ContractAddress};
     use alexandria_math::{BitShift, U256BitShift};
