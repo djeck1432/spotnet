@@ -1,15 +1,14 @@
 use starknet::ContractAddress;
 use snforge_std::cheatcodes::execution_info::caller_address::{
-    start_cheat_caller_address, stop_cheat_caller_address,
+    start_cheat_caller_address, stop_cheat_caller_address
 };
 use margin::interface::IMarginDispatcherTrait;
 use super::utils::{
-    setup_test_suite, deploy_erc20_mock, get_risk_factor, 
-    deploy_pragma_mock, store_risk_factor, calculate_health_factor,
-    store_position_data_for_health_factor
+    setup_test_suite, deploy_erc20_mock_2, get_risk_factor, 
+    deploy_pragma_mock, calculate_health_factor,
+    store_data_for_health_factor
 };
 use super::constants::{HYPOTHETICAL_OWNER_ADDR, DEPOSIT_MOCK_USER};
-
 
 #[test]
 #[should_panic(expected: 'Caller is not the owner')]
@@ -25,7 +24,6 @@ fn test_set_risk_not_owner() {
     stop_cheat_caller_address(suite.margin.contract_address);
 }
 
-
 #[test]
 #[should_panic(expected: 'Risk factor less than needed')]
 fn test_set_risk_less_than() {
@@ -38,7 +36,6 @@ fn test_set_risk_less_than() {
     stop_cheat_caller_address(suite.margin.contract_address);
 }
 
-
 #[test]
 #[should_panic(expected: 'Risk factor more than needed')]
 fn test_set_risk_more_than() {
@@ -50,7 +47,6 @@ fn test_set_risk_more_than() {
     suite.margin.set_risk_factor(suite.token.contract_address, risk_factor);
     stop_cheat_caller_address(suite.margin.contract_address);
 }
-
 
 #[test]
 fn test_set_risk_ok() {
@@ -72,9 +68,7 @@ fn test_get_health_factor() {
     let risk_factor: u128 = 500000000000000000000000000;
     let suite = setup_test_suite(owner, deploy_erc20_mock(), deploy_pragma_mock());
 
-    // Store risk factor in storage
-    store_position_data_for_health_factor(@suite);
-    store_risk_factor(suite.margin.contract_address, suite.token.contract_address, risk_factor);
+    store_data_for_health_factor(@suite, risk_factor);
 
     // Get health factor
     start_cheat_caller_address(suite.margin.contract_address, owner);

@@ -1,6 +1,9 @@
 use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 use starknet::{ContractAddress, contract_address_const, get_contract_address};
-use margin::interface::{IMarginDispatcher, IPragmaOracleDispatcher, IMockPragmaOracleDispatcher};
+use margin::interface::{
+    IMarginDispatcher, IPragmaOracleDispatcher, 
+    IMockPragmaOracleDispatcher, IMockPragmaOracleDispatcherTrait
+};
 use snforge_std::cheatcodes::execution_info::caller_address::{
     start_cheat_caller_address, stop_cheat_caller_address,
 };
@@ -9,7 +12,7 @@ use alexandria_math::fast_power::fast_power;
 use margin::types::{TokenAmount, Position};
 use margin::constants::SCALE_NUMBER;
 use margin::margin::{Margin, Margin::InternalTrait};
-use super::constants::{contracts::EKUBO_CORE_SEPOLIA, tokens};
+use super::constants::{contracts::EKUBO_CORE_SEPOLIA};
 use ekubo::{interfaces::core::{ICoreDispatcher}};
 
 #[derive(Drop)]
@@ -172,10 +175,20 @@ pub fn calculate_health_factor(suite: @MarginTestSuite, risk_factor: u128) -> u2
 }
 
 
-pub fn store_position_data_for_health_factor(suite: @MarginTestSuite){
+pub fn store_data_for_health_factor(suite: @MarginTestSuite, risk_factor: u128) {
+    let eth_contract_address = contract_address_const::<'ETH'>();
+    let strk_contract_address = contract_address_const::<'STRK'>();
+
+    // deploy eth and strk tokens
+    let _ = deploy_erc20_mock(eth_contract_address, "ETH");
+    let _ = deploy_erc20_mock(strk_contract_address, "STRK");
+
+    (*suite.pragma_mock).set_price_token(eth_contract_address, 2000_00000000);
+    (*suite.pragma_mock).set_price_token(strk_contract_address, 5_0000000);
+
     let position = Position {
-        initial_token: tokens::ETH.try_into().unwrap(),
-        debt_token: tokens::USDC.try_into().unwrap(),
+        initial_token: eth_contract_address,
+        debt_token: strk_contract_address,
         traded_amount: 1000,
         debt: 2000,
         is_open: true,
@@ -191,4 +204,6 @@ pub fn store_position_data_for_health_factor(suite: @MarginTestSuite){
         ), 
         position.into(),
     );
+
+    store_risk_factor((*suite.margin).contract_address, eth_contract_address, risk_factor);
 }
