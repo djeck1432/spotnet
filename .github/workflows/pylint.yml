@@ -28,5 +28,4 @@ jobs:
 
       - name: Analysing the code with pylint
         run: |
-          pylint $(git ls-files '*.py') --disable=all --enable=C0114,C0115,C0116,C0301
-
+          pylint $(git ls-files '*.py') --rcfile=.pylintrc
