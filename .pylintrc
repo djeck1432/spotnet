@@ -1,0 +1,16 @@
+[MASTER]
+disable=
+    C0114,  # Missing module docstring
+    C0115,  # Missing class docstring
+    C0116,  # Missing function or method docstring
+    C0301   # Line too long
+
+[MESSAGES CONTROL]
+enable=
+    C0114,
+    C0115,
+    C0116,
+    C0301
+
+[REPORTS]
+output-format = colorized
