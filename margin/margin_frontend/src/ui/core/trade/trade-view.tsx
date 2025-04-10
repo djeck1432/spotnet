@@ -64,14 +64,14 @@ export function TradeView({ className = "" }: TradeViewProps) {
   }
 
   return (
-    <div className={classBuilder(className, "w-full max-w-[300px]")}>
+    <div className={classBuilder(className, "trade-view w-[27vw]")}>
       <div className="flex justify-between items-center w-full font-bricolageGrotesque">
         <div className="flex items-center  h-[37px] gap-[16px] text-[#556571]">
           {["Trade", "Send", "Receive"].map((tab, index) => (
             <span
               className={classBuilder(
                 index === currentTab &&
-                  "nt-extrabold text-[#00D1FF]  border-y-1 border-y-[#00D1FF]",
+                "nt-extrabold text-[#00D1FF]  border-y-1 border-y-[#00D1FF]",
                 "p-[10px] cursor-pointer",
               )}
               key={index}

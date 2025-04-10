@@ -289,15 +289,18 @@ export function Graph({ className = "" }: GraphProps) {
     }
   }
 
+  const verticalLabels = ["1H", "1H", "1H", "1H", "1H"];
+  const horizontalLabels = Array(12).fill("1H");
+
   return (
     <div
       className={classBuilder(
         className,
-        `w-full h-[426px] bg-[#0E1116] p-[20px] flex flex-col
+        `graph-container w-[50vw] h-[60vh] bg-[#0E1116] p-[20px] flex flex-col
 				 border-1 border-[#12181F]  rounded-[12px]`,
       )}
     >
-      <div className="flex items-center">
+      <div className="flex items-center components-title">
         <button className="px-[8px] py-[4px] text-[#A2B1C6] flex items-center gap-[8px] cursor-pointer">
           <span>ETH / USD</span>
           <svg
@@ -321,17 +324,17 @@ export function Graph({ className = "" }: GraphProps) {
           <span>UTC 9:45</span>
         </div>
       </div>
-      <div className="mt-[24px] flex justify-between">
+      <div className="mt-[24px] flex justify-between graph-components">
         <div>
           <div className="font-bricolageGrotesque font-semibold">
-            <span className=" text-[#F1F7FF] text-[32px]">$2,505.58</span>
+            <span className="price text-[#F1F7FF] text-[32px]">$2,505.58</span>
             <span className="ml-1 text-sm text-[#B4B4B4]">USD</span>
           </div>
           <span className="bg-[#12181F] text-[#E5E5E5] px-[12px] py-[6px] rounded-full text-sm">
             0.51(0.08%)
           </span>
         </div>
-        <div className="flex h-[59px] font-bricolageGrotesque gap-[20px]">
+        <div className="flex h-[59px] font-bricolageGrotesque gap-[20px] unside-components">
           <div className="">
             <div className="text-xs text-[#556571]">Market Cap</div>
             <div className="font-bold text-[#F1F7FF] text-sm mt-[8px]">
@@ -355,46 +358,35 @@ export function Graph({ className = "" }: GraphProps) {
 
       <div
         className="h-full mt-[24px] flex flex-col text-[#556571] text-xs relative
-									font-bricolageGrotesque font-bold"
+									font-bricolageGrotesque font-bold graph-table"
       >
         <div className="flex w-full grow relative">
           <div
             className="flex flex-col justify-around h-full items-center
-							 w-[35px] pb-[35px] border-r-1"
+							 w-[35px] pb-[35px] border-r-1 border-[#17191B]"
           >
-            <div>1H</div>
-            <div>1H</div>
-            <div>1H</div>
-            <div>1H</div>
-            <div>1H</div>
+              {verticalLabels.map((label, index) => (
+                  <div key={index}>{label}</div>
+              ))}
           </div>
           <div className="flex-1 grow flex flex-col">
             <div
-              className="bg-[url('src/assets/img/trade-graph-bg.png')] absolute
-                          left-[35px] top-0 right-[70px] bottom-[35px] bg-repeat opacity-30"
+                className="bg-[url('src/assets/img/trade-graph-bg.png')] absolute
+                          left-[35px] top-0 right-[70px] bottom-[35px] bg-repeat opacity-30 graph-border"
             ></div>
 
             <canvas
               ref={canvasRef}
-              className="w-full h-full max-h-[200px] pr-[10px]"
+              className="w-full h-[80%] pr-[10px]"
             ></canvas>
 
             <div
               className="absolute bottom-0 flex  justify-around items-center  h-[35px]
-							 border-t-1 left-[35px]  right-[70px] "
+							 border-t-1 left-[35px]  right-[70px] border-[#17191B]"
             >
-              <div>1H</div>
-              <div>1H</div>
-              <div>1H</div>
-              <div>1H</div>
-              <div>1H</div>
-              <div>1H</div>
-              <div>1H</div>
-              <div>1H</div>
-              <div>1H</div>
-              <div>1H</div>
-              <div>1H</div>
-              <div>1H</div>
+              {horizontalLabels.map((label, index) => (
+                  <div key={index}>{label}</div>
+              ))}
             </div>
           </div>
           <div className="flex flex-col justify-around h-full  px-[10px]">

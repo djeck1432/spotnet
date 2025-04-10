@@ -19,7 +19,7 @@ export function PeriodPicker({ className = "" }: PeriodPickerProps) {
         <div
           className={classBuilder(
             index === current &&
-              "text-[#F1F7FF] font-bold bg-[#12181F] rounded-[6px]",
+            "text-[#F1F7FF] font-bold bg-[#12181F] rounded-[6px]",
             "w-[32px] h-[32px] flex items-center justify-center cursor-pointer",
           )}
           onClick={() => setCurrent(index)}
