@@ -81,7 +81,7 @@ export function Slider({ className = "" }: SliderProps) {
           <div
               className="absolute rounded-full bg-[#00D1FF] z-8"
               style={{
-                right: `calc(${100 - value}% - 10px)`,
+                right: `calc(${100 - value}% + 5px)`,
                 width: "40px",
                 height: "17px",
                 top: "-4px"
@@ -89,9 +89,9 @@ export function Slider({ className = "" }: SliderProps) {
           ></div>
 
           <div
-              className="no-select absolute -top-[4px] z-10 text-[#06336E] text-[10px] font-semibold"
+              className="no-select absolute text-center w-[40px] -top-[4px] z-10 text-[#06336E] text-[10px] font-semibold"
               style={{
-                left: `calc(${value}% - 18px)`
+                left: `calc(${value}% - 45px)`
               }}
           >
             {multiplier}
