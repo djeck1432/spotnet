@@ -1,27 +1,20 @@
 """Module for generating seed data"""
 
-import sys
 import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-from faker import Faker
 from asyncio import run
+from datetime import datetime
+from hashlib import sha256
+
+from app.db.sessions import AsyncSessionLocal
+from app.models import (Admin, Deposit, Liquidation, MarginPosition, Pool,
+                        Transaction, User, UserOrder, UserPool)
+from faker import Faker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.models import (
-    User,
-    Deposit,
-    MarginPosition,
-    Pool,
-    UserPool,
-    Admin,
-    Liquidation,
-    UserOrder,
-)
-from app.db.sessions import AsyncSessionLocal
-from hashlib import sha256
-from datetime import datetime
 
 
 class SeedDataGenerator:
@@ -216,6 +209,31 @@ class SeedDataGenerator:
         session.add_all(user_orders)
         await session.commit()
 
+    async def generate_transactions(self, session: AsyncSession):
+        """
+        Generate transaction records for each position and add them to the session.
+
+        :param session: The database session.
+        """
+
+        transactions = []
+        positions = await session.execute(select(MarginPosition))
+        positions = positions.scalars().all()
+        transaction_types = ["deposit", "withdrawal", "interest", "liquidation"]
+
+        for position in positions:
+            for _ in range(self.faker.random_int(min=2, max=4)):
+                transaction = Transaction(
+                    transaction_id=self.generate_hex(),
+                    event_name=self.faker.random_element(transaction_types),
+                    user_id=position.user_id,
+                )
+                transactions.append(transaction)
+
+        session.add_all(transactions)
+        await session.commit()
+        print(f"Successfully generated {len(transactions)} transactions")
+
     async def generate_all(self):
         """
         Generate all types of records and add them to the session.
@@ -237,6 +255,8 @@ class SeedDataGenerator:
             print("Successfully generated liquidations")
             await self.generate_user_orders(session)
             print("Successfully generated orders")
+            await self.generate_transactions(session)
+            print("Successfully generated transactions")
 
 
 if __name__ == "__main__":
