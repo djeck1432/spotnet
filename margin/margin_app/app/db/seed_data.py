@@ -232,7 +232,6 @@ class SeedDataGenerator:
 
         session.add_all(transactions)
         await session.commit()
-        print(f"Successfully generated {len(transactions)} transactions")
 
     async def generate_all(self):
         """
