@@ -3,6 +3,7 @@ This module contains the UserPoolCRUD class, which provides
 CRUD operations for the UserPool model.
 """
 
+from collections.abc import Sequence
 from datetime import timedelta
 import uuid
 from decimal import Decimal
@@ -42,7 +43,7 @@ class PoolCRUD(DBConnector):
 
     async def fetch_all_with_amount_delta(
         self, amount_for_delta: timedelta
-    ) -> sa.Result[tuple[Pool, Decimal, Decimal]]:
+    ) -> Sequence[tuple[Pool, Decimal, Decimal]]:
         p = aliased(Pool)
         latest_amount_per_day_subq = aliased(
             (
@@ -73,7 +74,7 @@ class PoolCRUD(DBConnector):
         stmt = (
             sa.select(
                 p,
-                sa.func.coalesce(sa.func.sum(up.amount).label("total_amount"), 0),
+                sa.func.coalesce(sa.func.sum(up.amount), 0).label("total_amount"),
                 (
                     latest_amount_per_day_subq.c.amount
                     - earliest_amount_per_day_subq.c.amount
@@ -90,7 +91,8 @@ class PoolCRUD(DBConnector):
             )
         )
         async with self.session() as db:
-            return await db.execute(stmt)
+            res = await db.execute(stmt)
+            return [tuple(row) for row in res.all()]
 
 
 class UserPoolCRUD(DBConnector):

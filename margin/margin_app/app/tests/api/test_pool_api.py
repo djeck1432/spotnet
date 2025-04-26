@@ -1,5 +1,9 @@
 """The module contains tests for `margin_app/app/api/pools.py`"""
 
+from datetime import timedelta
+from decimal import Decimal
+import random
+import string
 import uuid
 from http import HTTPStatus
 from unittest.mock import AsyncMock, patch
@@ -8,6 +12,7 @@ import pytest
 from fastapi.testclient import TestClient
 from starlette import status
 
+from app.models.pool import Pool
 from app.schemas.pools import (
     PoolGetAllResponse,
     PoolResponse,
@@ -243,3 +248,53 @@ def test_update_user_pool_not_found(client):
         )
         assert response.status_code == 500
         assert response.content == b""
+
+
+@pytest.mark.asyncio
+async def test_get_pools_stat(client):
+    """
+    Test the 'get_pools_stat' endpoint when no records exist in the database.
+
+    API Response should be an array of objects containing tokens returned from mocked method
+    """
+    with patch(
+        "app.crud.pool.pool_crud.fetch_all_with_amount_delta", new_callable=AsyncMock
+    ) as mock_fetch_all_with_amount_delta:
+        test_tokens = "".join(random.choices(string.ascii_uppercase, k=3))
+        mock_fetch_all_with_amount_delta.return_value = [
+            (
+                Pool(token=token, risk_status=random.choice(list(PoolRiskStatus))),
+                Decimal(random.randint(1000, 1000000)),
+                Decimal(random.randint(-1000000, 1000000)),
+            )
+            for token in test_tokens
+        ]
+
+        response = client.get(POOL_URL + "/pool_statistic")
+        response_data = response.json()
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response_data) == len(mock_fetch_all_with_amount_delta.return_value)
+        for token_stat in response_data:
+            assert token_stat["token"] in test_tokens
+
+        mock_fetch_all_with_amount_delta.assert_called_once_with(timedelta(hours=24))
+
+
+@pytest.mark.asyncio
+async def test_get_pools_stat_no_record_exist(client):
+    """
+    Test the functionality of 'get_pools_stat' endpoint
+
+    API Response should be an empty list.
+    """
+    with patch(
+        "app.crud.pool.pool_crud.fetch_all_with_amount_delta", new_callable=AsyncMock
+    ) as mock_fetch_all_with_amount_delta:
+        mock_fetch_all_with_amount_delta.return_value = []
+
+        response = client.get(POOL_URL + "/pool_statistic")
+        response_data = response.json()
+
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response_data) == 0
+        mock_fetch_all_with_amount_delta.assert_called_once_with(timedelta(hours=24))
