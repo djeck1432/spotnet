@@ -44,6 +44,13 @@ class PoolCRUD(DBConnector):
     async def fetch_all_with_amount_delta(
         self, amount_for_delta: timedelta
     ) -> Sequence[tuple[Pool, Decimal, Decimal]]:
+        """
+        Fetches all pools with additional data:
+            - total_amount - sum of related user pools amount
+            - amount_delta_per_day - user pool's amount change calculated as:
+                <amount of latest user pool> -
+                <amount of earliest created user pool within 24 hours>
+        """
         p = aliased(Pool)
         latest_amount_per_day_subq = aliased(
             (
