@@ -95,3 +95,12 @@ class PoolGetAllResponse(GetAll[PoolResponse]):
     """
     User pool update model
     """
+
+
+class PoolStatisticResponse(PoolBase):
+    """
+    Pool statistic response model
+    """
+
+    total_amount: Decimal
+    amount_delta_per_day: Decimal

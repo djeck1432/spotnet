@@ -2,6 +2,7 @@
 This module contains the API routes for the pools.
 """
 
+from datetime import timedelta
 from typing import Optional
 from uuid import UUID
 
@@ -14,6 +15,7 @@ from app.schemas.pools import (
     PoolGetAllResponse,
     PoolResponse,
     PoolRiskStatus,
+    PoolStatisticResponse,
     UserPoolCreate,
     UserPoolResponse,
     UserPoolUpdate,
@@ -50,6 +52,30 @@ async def create_pool(token: str, risk_status: PoolRiskStatus) -> PoolResponse:
         ) from e
 
     return created_pool
+
+
+@router.get("/pool_statistic", response_model=list[PoolStatisticResponse])
+async def get_pools_stat() -> list[PoolStatisticResponse]:
+    """
+    Get statistic about pools
+
+    :return: PoolStatisticResponse
+        where:
+        total_amount: sum of all user pools amount
+        amount_delta_per_day: indicates how amount changed within 24 hours
+    """
+    rows = await pool_crud.fetch_all_with_amount_delta(timedelta(hours=24))
+    return [
+        PoolStatisticResponse.model_validate(
+            {
+                "token": row[0].token,
+                "risk_status": row[0].risk_status,
+                "total_amount": row[1],
+                "amount_delta_per_day": row[2],
+            }
+        )
+        for row in rows
+    ]
 
 
 @router.get("/pools", response_model=PoolGetAllResponse, status_code=status.HTTP_200_OK)
