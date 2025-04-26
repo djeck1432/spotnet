@@ -2,6 +2,9 @@
 Core configuration settings for the application.
 """
 
+import os
+from sqlalchemy.engine.url import URL
+import sys
 from pydantic import Field, computed_field
 from pydantic_settings import BaseSettings
 from sqlalchemy import URL
@@ -20,13 +23,17 @@ class Settings(BaseSettings):
     host: str = "localhost"
     forget_password_url: str = "/admin/reset-password"
 
+    class Config:
+        env_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ".env.test" if "pytest" in sys.modules else ".env.dev")
+        env_file_encoding = "utf-8"
+
     # Database settings
     db_driver: str = "postgresql+asyncpg"
     db_name: str = Field(default="db_name", alias="POSTGRES_DB")
     db_user: str = Field(default="user", alias="POSTGRES_USER")
     db_password: str = Field(default="password", alias="POSTGRES_PASSWORD")
-    db_host: str = "localhost"
-    db_port: int = 5432
+    db_host: str = Field(default="localhost", alias="DB_HOST")
+    db_port: int = Field(default=5432, alias="DB_PORT")
 
     # Email settings
     sendgrid_api_key: Optional[str] = None

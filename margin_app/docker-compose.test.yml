@@ -1,0 +1,58 @@
+networks:
+  test_network:
+    driver: bridge
+
+services:
+  db_test:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=spotnet_test
+    ports:
+      - "5432:5432"
+    networks:
+      - test_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d spotnet_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - INSTALL_DEV=true
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=spotnet_test
+      - DB_HOST=db_test
+      - DB_PORT=5432
+      - HOST=localhost
+      - ENVIRONMENT=test
+      - TESTING=1
+      - FORGET_PASSWORD_URL=/admin/reset-password
+      - SENDGRID_API_KEY=test_sendgrid_key
+      - EMAIL_SENDER=test@test.com
+      - EMAIL_SENDER_NAME=Test App
+      - EMAIL_TEST_MODE=True
+      - GOOGLE_CLIENT_ID=test_client_id
+      - GOOGLE_CLIENT_SECRET=test_client_secret
+      - GOOGLE_REDIRECT_URI=http://localhost:8000/auth/callback
+    volumes:
+      - .:/src
+      - ./tests:/src/tests
+    depends_on:
+      db_test:
+        condition: service_healthy
+    networks:
+      - test_network
+    entrypoint: ["/bin/sh", "-c", "poetry run alembic upgrade head && poetry run pytest -v web_app/test_integration/ margin_app/app/tests/ -s"]
+
+volumes:
+  postgres_test_data:
