@@ -40,5 +40,18 @@ services:
     networks:
       - app_network
 
+  frontend:
+    build: ../margin/margin_frontend
+    restart: always
+    volumes:
+      - ../margin/margin_frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - app_network
+
 volumes:
   pgdata: { }

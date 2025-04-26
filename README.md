@@ -315,3 +315,62 @@ To ensure code quality, install pre-commit hooks locally:
    ```bash
    pre-commit install
    ```
+
+## Margin App Docker Setup
+
+This section explains how to set up and manage the Margin App using Docker.
+
+### Services Overview
+
+The Margin App consists of three main services:
+- **Database (PostgreSQL)**: Stores application data
+- **Backend**: API server for the Margin App
+- **Frontend**: React-based user interface
+
+### Running Margin App with Docker
+
+1. **Build and Start Services**
+
+   To build and run the entire Margin App environment, use the following command:
+
+   ```sh
+   docker compose -f devops/docker-compose.margin.back.yml up --build
+   ```
+
+   This command will:
+   - Build the backend, frontend, and database Docker images
+   - Start all three containers
+   - Set up the necessary networks and volumes
+
+2. **Access the Application**
+
+   - **Backend API**: Accessible at [http://localhost:8000](http://localhost:8000)
+   - **Frontend**: Accessible at [http://localhost:3000](http://localhost:3000)
+   - **PostgreSQL Database**: Accessible at `localhost:5432` (use credentials from the `.env` file)
+
+3. **Stopping the Containers**
+
+   To stop the Margin App services:
+
+   ```sh
+   docker compose -f devops/docker-compose.margin.back.yml down
+   ```
+
+   To stop but keep volumes (to preserve database data):
+
+   ```sh
+   docker compose -f devops/docker-compose.margin.back.yml stop
+   ```
+
+4. **Rebuild or Update**
+
+   If you have made changes to the code or Docker configuration, rebuild the containers:
+
+   ```sh
+   docker compose -f devops/docker-compose.margin.back.yml up --build
+   ```
+
+### Troubleshooting
+
+- **Database Connection Issues**: Ensure your `.env` file in the `margin/margin_app` directory has the correct database credentials
+- **Port Conflicts**: Make sure ports 3000, 8000, and 5432 are available on your system
