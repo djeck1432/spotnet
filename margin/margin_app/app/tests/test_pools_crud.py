@@ -7,13 +7,15 @@ fixtures to set up and tear down test environments, as well as tests for
 creating, retrieving, updating, and deleting objects in the database.
 """
 
+from datetime import timedelta
 import uuid
 from decimal import Decimal
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
 from app.schemas.pools import PoolGetAllResponse, PoolResponse
 import pytest
 from isort.io import Empty
+import sys, pathlib
 
 from app.crud.pool import PoolCRUD, UserPoolCRUD
 from app.models.pool import Pool, PoolRiskStatus, UserPool
@@ -216,3 +218,28 @@ async def test_update_user_pool_not_found(user_pool_crud, mock_db_session):
 
     assert result is None
     mock_db_session.get.assert_called_once_with(UserPool, user_pool_id)
+
+
+@pytest.mark.asyncio
+async def test_fetch_all_with_amount_delta(pool_crud, mock_db_session):
+    """Test fetching all pools with total amount of user pools and calculated delta"""
+    expected_res = [
+        (
+            Pool(id=uuid.uuid4(), token="BTC", risk_status=PoolRiskStatus.LOW),
+            Decimal(123),
+            Decimal(456),
+        ),
+        (
+            Pool(id=uuid.uuid4(), token="ETH", risk_status=PoolRiskStatus.HIGH),
+            Decimal(789),
+            Decimal(123456),
+        ),
+    ]
+    mock_res_all = Mock(return_value=expected_res)
+    mock_execute = AsyncMock()
+    mock_execute.return_value.all = mock_res_all
+    mock_db_session.execute = mock_execute
+    res = await pool_crud.fetch_all_with_amount_delta(timedelta(hours=5))
+    assert res == expected_res
+    mock_res_all.assert_called_once()
+    mock_execute.assert_awaited_once()
