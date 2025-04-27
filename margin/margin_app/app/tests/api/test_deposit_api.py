@@ -114,10 +114,29 @@ async def test_deposit_update_for_invalid_id(client: TestClient):
     """
     Test updating a deposit with invalid data.
 
-    This test ensures that updating a deposit with invalid data
-    results in a 400 Bad Request response from the API.
-    It mocks the `update_deposit` method of the `DepositCRUD` class
-    to raise an exception and verifies that the API returns a 400 response.
+    This test ensures that updating a deposit with invalid (non UUID) id
+    results in validation error (422)
+    :param client: TestClient instance for making requests to the API.
+    """
+    with patch(
+        "app.crud.deposit.DepositCRUD.update_deposit", new_callable=AsyncMock
+    ) as mock_update_deposit:
+        response = client.post(
+            f"{BASE_URL}/123",
+            json={"amount": "2000.00"},
+        )
+
+        assert response.status_code == 422
+        assert "detail" in response.json()
+
+        mock_update_deposit.assert_not_awaited()
+
+
+@pytest.mark.anyio
+def test_update_deposit_not_found(client: TestClient):
+    """
+    This test ensures that if deposit is not found by supplied id
+    hence update_deposit returns None api endpoint must return 404 error
 
     :param client: TestClient instance for making requests to the API.
     """
@@ -131,7 +150,8 @@ async def test_deposit_update_for_invalid_id(client: TestClient):
             json={"amount": "2000.00"},
         )
 
-        assert response.json() == mock_update_deposit.return_value
+        assert response.status_code == 404
+        assert "detail" in response.json()
 
         mock_update_deposit.assert_called_once()
 
@@ -239,31 +259,3 @@ def test_get_deposit_by_invalid_id(client: TestClient):
         assert "detail" in response.json()
 
         mock_get_object.assert_called_once()
-
-
-@pytest.mark.anyio
-def test_update_invalid_deposits(client: TestClient):
-    """
-    Test updating deposits with invalid data.
-
-    This test ensures that updating deposits with invalid data
-    results in a 400 Bad Request response from the API.
-    It mocks the `update_deposit` method of the `DepositCRUD` class
-    to raise an exception and verifies that the API returns a 400 response.
-
-    :param client: TestClient instance for making requests to the API.
-    """
-    with patch(
-        "app.crud.deposit.DepositCRUD.update_deposit", new_callable=AsyncMock
-    ) as mock_update_deposit:
-        mock_update_deposit.return_value = None
-
-        response = client.post(
-            f"{BASE_URL}/{MOCK_ID}",
-            json={"amount": "2000.00"},
-        )
-
-        assert response.status_code == 400
-        assert "detail" in response.json()
-
-        mock_update_deposit.assert_called_once()

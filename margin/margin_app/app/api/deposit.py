@@ -49,17 +49,22 @@ async def create_deposit(deposit_in: DepositCreate) -> DepositResponse:
 async def update_deposit(
     deposit_id: UUID,
     deposit_update: DepositUpdate,
-):
+) -> Deposit:
     """
     Update a deposit by ID.
-    :param deposit_id: str
+    :param deposit_id: UUID
     :param deposit_update: DepositUpdate data
 
     :return: Deposit
     """
-    return await deposit_crud.update_deposit(
+    deposit = await deposit_crud.update_deposit(
         deposit_id, deposit_update.model_dump(exclude_none=True)
     )
+    if deposit is None:
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND, f"Deposit with ID {deposit_id} not found"
+        )
+    return deposit
 
 
 @router.get(

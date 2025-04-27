@@ -52,7 +52,7 @@ def mock_get_all_admin():
 
 @pytest.mark.asyncio
 @patch("app.api.common.GetAllMediator.__call__", new_callable=AsyncMock)
-async def test_get_all_admins(mock_mediator_call, client):
+async def test_get_all_admins(mock_mediator_call, mock_get_admin_by_email, client):
     """
     Test successfully return all admins using the GetAllMediator.
     """

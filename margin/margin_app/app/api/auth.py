@@ -100,7 +100,7 @@ async def change_password(
     Returns:
         JSONResponse: A response indicating that the reset password email was successfully sent.
     """
-    admin = await admin_crud.get_object_by_field(field="email", value=admin_email)
+    admin = await admin_crud.get_by_email(admin_email)
 
     if not admin:
         raise HTTPException(

@@ -132,9 +132,11 @@ async def test_delete_nonexistent_object(db_connector):
 
 async def test_write_invalid_object(db_connector):
     """Test attempting to write an invalid object, expecting an Exception."""
-    db_connector.write_to_db = AsyncMock(
-        side_effect=lambda obj: Exception("Cannot write None") if obj is None else obj
-    )
+
+    def side_effect(obj):
+        raise Exception("Cannot write None") if obj is None else obj
+
+    db_connector.write_to_db = AsyncMock(side_effect=side_effect)
 
     with pytest.raises(Exception):
         await db_connector.write_to_db(None)

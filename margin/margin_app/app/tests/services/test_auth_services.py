@@ -58,13 +58,13 @@ async def test_get_current_user_success():
     token = create_access_token(email)
 
     with patch.object(
-        admin_crud, "get_object_by_field", new_callable=AsyncMock
-    ) as get_object_by_field:
-        get_object_by_field.return_value = return_value
+        admin_crud, "get_by_email", new_callable=AsyncMock
+    ) as get_by_email:
+        get_by_email.return_value = return_value
 
         user = await get_current_user(token)
         assert user == return_value
-        get_object_by_field.assert_awaited_once_with(field="email", value=email)
+        get_by_email.assert_awaited_once_with(email)
 
 
 @pytest.mark.asyncio
@@ -103,8 +103,8 @@ async def test_get_current_user_fails_if_usr_not_found():
     token = jwt.encode(to_encode, settings.secret_key, algorithm=ALGORITHM)
 
     with patch.object(
-        admin_crud, "get_object_by_field", new_callable=AsyncMock
-    ) as get_object_by_field:
-        get_object_by_field.return_value = None
+        admin_crud, "get_by_email", new_callable=AsyncMock
+    ) as get_by_email:
+        get_by_email.return_value = None
         with pytest.raises(Exception, match="User not found"):
             await get_current_user(token)
