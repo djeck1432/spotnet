@@ -19,18 +19,21 @@
         "@tanstack/react-router": "^1.111.11",
         "@tanstack/react-table": "^8.21.2",
         "@testing-library/react": "^16.2.0",
+        "apexcharts": "^4.7.0",
         "class-variance-authority": "^0.7.1",
         "classnames": "^2.5.1",
         "clsx": "^2.1.1",
         "ky": "^1.7.5",
         "lucide-react": "^0.476.0",
         "react": "^19.0.0",
+        "react-apexcharts": "^1.7.0",
         "react-dom": "^19.0.0",
         "react-number-format": "^5.4.3",
         "react-redux": "^9.2.0",
         "react-router-dom": "^7.4.0",
         "tailwind-merge": "^3.0.1",
-        "tailwindcss": "^4.0.15"
+        "tailwindcss": "^4.0.15",
+        "twin.macro": "^3.4.1"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
