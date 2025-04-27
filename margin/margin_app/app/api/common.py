@@ -7,9 +7,10 @@ import logging
 from fastapi import HTTPException, status
 
 
-class PaginationCrudI(Protocol):
+class PaginationCrudInterface(Protocol):
     """
-    Interface for crud_object to require support of used pagination methods
+    Interface for GetAllMediator.crud_object which requires
+    support of used pagination methods
     """
 
     async def get_objects(self, limit: Optional[int], offset: Optional[int]) -> Any:
@@ -27,7 +28,10 @@ class GetAllMediator:
     """
 
     def __init__(
-        self, crud_object: PaginationCrudI, limit: Optional[int], offset: Optional[int]
+        self,
+        crud_object: PaginationCrudInterface,
+        limit: Optional[int],
+        offset: Optional[int],
     ):
         self.crud_object = crud_object
         self.limit = limit
