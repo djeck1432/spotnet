@@ -1,22 +1,29 @@
-import { theme } from 'twin.macro';
+// Define default Tailwind colors directly
+const defaultColors = {
+  indigo: { '600': '#4f46e5', '100': '#e0e7ff' },
+  blue: { '500': '#3b82f6', '100': '#dbeafe' },
+  emerald: { '500': '#10b981', '100': '#d1fae5' },
+  amber: { '500': '#f59e0b', '100': '#fef3c7' },
+  red: { '500': '#ef4444', '100': '#fee2e2' },
+  purple: { '500': '#a855f7', '100': '#f3e8ff' },
+  cyan: { '500': '#06b6d4', '100': '#cffafe' },
+};
 
-const twColor: Record<string, string> = theme`colors`;
+export const COLOR_1 = defaultColors.indigo['600'];
+export const COLOR_2 = defaultColors.blue['500'];
+export const COLOR_3 = defaultColors.emerald['500'];
+export const COLOR_4 = defaultColors.amber['500'];
+export const COLOR_5 = defaultColors.red['500'];
+export const COLOR_6 = defaultColors.purple['500'];
+export const COLOR_7 = defaultColors.cyan['500'];
 
-export const COLOR_1 = twColor.indigo['600'];
-export const COLOR_2 = twColor.blue['500'];
-export const COLOR_3 = twColor.emerald['500'];
-export const COLOR_4 = twColor.amber['500'];
-export const COLOR_5 = twColor.red['500'];
-export const COLOR_6 = twColor.purple['500'];
-export const COLOR_7 = twColor.cyan['500'];
-
-export const COLOR_1_LIGHT = twColor.indigo['100'];
-export const COLOR_2_LIGHT = twColor.blue['100'];
-export const COLOR_3_LIGHT = twColor.emerald['100'];
-export const COLOR_4_LIGHT = twColor.amber['100'];
-export const COLOR_5_LIGHT = twColor.red['100'];
-export const COLOR_6_LIGHT = twColor.purple['100'];
-export const COLOR_7_LIGHT = twColor.cyan['100'];
+export const COLOR_1_LIGHT = defaultColors.indigo['100'];
+export const COLOR_2_LIGHT = defaultColors.blue['100'];
+export const COLOR_3_LIGHT = defaultColors.emerald['100'];
+export const COLOR_4_LIGHT = defaultColors.amber['100'];
+export const COLOR_5_LIGHT = defaultColors.red['100'];
+export const COLOR_6_LIGHT = defaultColors.purple['100'];
+export const COLOR_7_LIGHT = defaultColors.cyan['100'];
 
 export const COLORS = [
   COLOR_1,

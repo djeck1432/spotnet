@@ -8,8 +8,8 @@ const AdminDashboard: React.FC = () => {
     coinSymbol: ['BTC', 'ETH', 'SOL'], // Coin ticker symbols
   };
   return (
-    <div className='text-white'>
-      <Assets className='2xl:col-span-8 xl:col-span-7' data={mockAssetsData} />
+    <div className='text-white '>
+      <Assets className='w-full max-w-[900px]' data={mockAssetsData} />
     </div>
   );
 };

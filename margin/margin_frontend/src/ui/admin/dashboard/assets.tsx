@@ -2,7 +2,6 @@ import isEmpty from 'lodash/isEmpty';
 import Chart from '../../core/chart';
 import { COLORS } from '../../../constants/chart.constant';
 import { Card } from '../../core/card';
-import { Badge } from '../../core/badge';
 
 type AssetsProps = {
   className?: string;
@@ -27,16 +26,16 @@ const Assets = ({ data = {}, className }: AssetsProps) => {
               type='donut'
               height={230}
             />
+
             <div>
               {data.values?.length === data.coinValues?.length && (
                 <div className='mt-6'>
                   {data.values?.map((value: number, index: number) => (
                     <div key={index} className='flex justify-between mb-6'>
                       <div key={value} className='flex gap-1'>
-                        <Badge
-                          className='mt-1.5'
-                          color={COLORS[index]}
-                          name={data.labels?.[index]}
+                        <div
+                          className={`my-auto h-2.5 w-2.5 rounded-full  `}
+                          style={{ backgroundColor: COLORS[index] }}
                         />
                         <div>
                           <h6 className='font-bold text-sm'>

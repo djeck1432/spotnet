@@ -32,8 +32,7 @@
         "react-redux": "^9.2.0",
         "react-router-dom": "^7.4.0",
         "tailwind-merge": "^3.0.1",
-        "tailwindcss": "^4.0.15",
-        "twin.macro": "^3.4.1"
+        "tailwindcss": "^4.0.15"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
