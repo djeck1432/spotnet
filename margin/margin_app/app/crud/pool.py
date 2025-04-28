@@ -82,9 +82,10 @@ class PoolCRUD(DBConnector):
             sa.select(
                 p,
                 sa.func.coalesce(sa.func.sum(up.amount), 0).label("total_amount"),
-                (
+                sa.func.coalesce(
                     latest_amount_per_day_subq.c.amount
-                    - earliest_amount_per_day_subq.c.amount
+                    - earliest_amount_per_day_subq.c.amount,
+                    0,
                 ).label("amount_delta_per_day"),
             )
             .select_from(p)

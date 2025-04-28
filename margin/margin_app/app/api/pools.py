@@ -55,16 +55,22 @@ async def create_pool(token: str, risk_status: PoolRiskStatus) -> PoolResponse:
 
 
 @router.get("/pool_statistic", response_model=list[PoolStatisticResponse])
-async def get_pools_stat() -> list[PoolStatisticResponse]:
+async def get_pools_stat(
+    delta: timedelta = Query(
+        default=timedelta(hours=24),
+        description="Duration in ISO 8601 duration format (e.g: P1D = 1 day)",
+    ),
+) -> list[PoolStatisticResponse]:
     """
     Get statistic about pools
 
+    :param delta: specifies time duration to get amount delta withint it
     :return: PoolStatisticResponse
         where:
         total_amount: sum of all user pools amount
         amount_delta_per_day: indicates how amount changed within 24 hours
     """
-    rows = await pool_crud.fetch_all_with_amount_delta(timedelta(hours=24))
+    rows = await pool_crud.fetch_all_with_amount_delta(delta)
     return [
         PoolStatisticResponse.model_validate(
             {
