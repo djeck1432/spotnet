@@ -51,6 +51,7 @@ class PoolCRUD(DBConnector):
                 <amount of latest user pool> -
                 <amount of earliest created user pool within 24 hours>
         """
+        # TODO: Rework/simplify the query below
         p = aliased(Pool)
         latest_amount_per_day_subq = aliased(
             (
