@@ -68,7 +68,8 @@ This guide explains how to start the development environment for the project usi
 3. **For other systems:**
    - Follow the [official Docker installation guide](https://docs.docker.com/engine/install/)
 
-## Starting the Development Environment
+
+## Starting the Development Environment - Spotnet
 
 1. **Clone the Repository**
 
@@ -315,3 +316,73 @@ To ensure code quality, install pre-commit hooks locally:
    ```bash
    pre-commit install
    ```
+
+## Starting the Development Environment - Margin App
+
+1. **Clone the Repository**
+
+   ```sh
+   git clone <repository-url>
+   cd <repository-folder>
+   ```
+
+2. **Build and Start Services**
+
+   To build and run the entire development environment, use the following command:
+
+   ```sh
+   docker compose -f devops/docker-compose.margin.back.yml up --build
+   ```
+
+3. **Access the Application**
+
+   - **Backend API**: Accessible at [http://localhost:8000](http://localhost:8000).
+   - **Frontend**: Accessible at [http://localhost:6173](http://localhost:6173).
+   - **PostgreSQL Database**: Accessible at `localhost:5433` (make sure to use the `POSTGRES_USER` and `POSTGRES_PASSWORD` from the `.env` file).
+
+
+## Stopping the Development Environment
+
+To stop the environment and remove containers, use:
+
+```sh
+docker compose -f devops/docker-compose.margin.back.yaml down
+```
+
+## Rebuild or Update
+
+If you have made changes to the code or Docker configuration, rebuild the containers:
+
+```sh
+docker compose -f devops/docker-compose.margin.back.yaml up --build
+```
+
+## How to add test data
+
+1. Run dev container
+
+```
+docker compose -f devops/docker-compose.margin.back.yaml up --build
+```
+
+2. In new terminal window run command to populate db
+
+```
+docker compose -f devops/docker-compose.margin.back.yml exec backend python app/db/seed_data.py
+```
+
+
+## How to create migration file
+
+Run up docker containers
+
+```bash
+docker compose -f devops/docker-compose.margin.back.yaml up --build
+```
+
+Run command to create migration file
+
+```bash
+docker compose -f devops/docker-compose.margin.back.yml exec backend alembic revision --autogenerate -m "migration message"
+```
+
