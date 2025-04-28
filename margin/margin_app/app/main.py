@@ -6,6 +6,7 @@ import sys
 
 from fastapi import FastAPI, Request, Depends
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.middleware.cors import CORSMiddleware
 from loguru import logger
 from starlette.responses import JSONResponse
 
@@ -30,6 +31,14 @@ app = FastAPI(
 app.add_middleware(
     SessionMiddleware,
     secret_key=settings.secret_key,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
