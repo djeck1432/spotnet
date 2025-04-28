@@ -6,10 +6,10 @@ from uuid import UUID
 from decimal import Decimal
 from typing import Literal, Optional
 
-from pydantic import BaseModel
+from app.schemas.base import BaseSchema
 
 
-class LiquidationRequest(BaseModel):
+class LiquidationRequest(BaseSchema):
     """Request schema for a liquidation request."""
 
     margin_position_id: UUID
@@ -21,3 +21,8 @@ class LiquidationResponse(LiquidationRequest):
     """Response schema for a liquidation request."""
 
     status: Optional[Literal["success", "failure"]] = None
+
+
+class LiquidatedTotalResponse(BaseSchema):
+    token: str
+    amount: Decimal

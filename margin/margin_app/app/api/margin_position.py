@@ -2,16 +2,22 @@
 This module contains the API routes for margin positions.
 """
 
+from datetime import date
 from typing import List, Optional
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Query, status
+from loguru import logger
 
 from app.api.common import GetAllMediator
 from app.crud.liquidation import liquidation_crud
 from app.crud.margin_position import margin_position_crud
 from app.models.margin_position import MarginPosition
-from app.schemas.liquidation import LiquidationRequest, LiquidationResponse
+from app.schemas.liquidation import (
+    LiquidationRequest,
+    LiquidationResponse,
+    LiquidatedTotalResponse,
+)
 from app.schemas.margin_position import (
     CloseMarginPositionResponse,
     MarginPositionCreate,
@@ -98,6 +104,23 @@ async def get_all_positions(
     )
     mediator = await mediator()
     return mediator
+
+
+# ! Important to register it before /{margin_position_id} route to don't overlap
+@router.get("/get_liquidated_total", response_model=list[LiquidatedTotalResponse])
+async def get_liquidated_total() -> list[LiquidatedTotalResponse]:
+    """Get all liquidation's tokens with their amount summed up"""
+    try:
+        data = await liquidation_crud.get_totals_for_date(date.today())
+        return [
+            LiquidatedTotalResponse(token=token, amount=amount)
+            for token, amount in data
+        ]
+    except Exception as e:
+        logger.error("Failed to retrieve liquidated total")
+        raise HTTPException(
+            status_code=500, detail="Error retrieving liquidated total"
+        ) from e
 
 
 @router.get(
