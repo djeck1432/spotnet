@@ -29,6 +29,10 @@ export interface ChartProps {
   donutTitle?: string | ReactNode;
   donutText?: string | ReactNode;
   className?: string;
+  donutTitleColor?: string;
+  donutTitleFontSize?: string;
+  donutTextColor?: string;
+  donutTextFontSize?: string;
 }
 
 const Chart = (props: ChartProps) => {
@@ -43,6 +47,10 @@ const Chart = (props: ChartProps) => {
     donutTitle,
     donutText,
     className,
+    donutTitleColor,
+    donutTitleFontSize,
+    donutTextColor,
+    donutTextFontSize,
     ...rest
   } = props;
 
@@ -99,11 +107,37 @@ const Chart = (props: ChartProps) => {
   }
 
   if (type === 'donut') {
+    // Ensure plotOptions and subsequent properties exist
+    options.plotOptions = options.plotOptions || {};
+    options.plotOptions.pie = options.plotOptions.pie || {};
+    options.plotOptions.pie.donut = options.plotOptions.pie.donut || {};
+    options.plotOptions.pie.donut.labels =
+      options.plotOptions.pie.donut.labels || {};
+    options.plotOptions.pie.donut.labels.total =
+      options.plotOptions.pie.donut.labels.total || {};
+    options.plotOptions.pie.donut.labels.value =
+      options.plotOptions.pie.donut.labels.value || {};
+
+    // Apply total label (donutTitle) specific styles
     if (donutTitle) {
       options.plotOptions.pie.donut.labels.total.label = donutTitle;
     }
+    if (donutTitleColor) {
+      options.plotOptions.pie.donut.labels.total.color = donutTitleColor;
+    }
+    if (donutTitleFontSize) {
+      options.plotOptions.pie.donut.labels.total.fontSize = donutTitleFontSize;
+    }
+
+    // Apply value/formatter (donutText) specific styles
     if (donutText) {
       options.plotOptions.pie.donut.labels.total.formatter = () => donutText;
+    }
+    if (donutTextColor) {
+      options.plotOptions.pie.donut.labels.value.color = donutTextColor;
+    }
+    if (donutTextFontSize) {
+      options.plotOptions.pie.donut.labels.value.fontSize = donutTextFontSize;
     }
   }
 

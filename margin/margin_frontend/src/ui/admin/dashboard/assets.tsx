@@ -25,6 +25,10 @@ const Assets = ({ data = {}, className }: AssetsProps) => {
               customOptions={{ labels: data.labels }}
               type='donut'
               height={230}
+              donutTitleColor='#FFFFFF'
+              donutTitleFontSize='22px'
+              donutTextColor='#FFFFFF'
+              donutTextFontSize='16px'
             />
 
             <div>
@@ -33,15 +37,18 @@ const Assets = ({ data = {}, className }: AssetsProps) => {
                   {data.values?.map((value: number, index: number) => (
                     <div key={index} className='flex justify-between mb-6'>
                       <div key={value} className='flex gap-1'>
-                        <div
-                          className={`my-auto h-2.5 w-2.5 rounded-full  `}
-                          style={{ backgroundColor: COLORS[index] }}
-                        />
                         <div>
-                          <h6 className='font-bold text-sm'>
-                            {data.labels?.[index]}
-                          </h6>
-                          <p>
+                          <div className='flex space-x-1'>
+                            <div
+                              className={`my-auto h-2.5 w-2.5 rounded-full  `}
+                              style={{ backgroundColor: COLORS[index] }}
+                            />
+
+                            <h6 className='font-bold text-sm'>
+                              {data.labels?.[index]}
+                            </h6>
+                          </div>
+                          <p className='ml-[14px]'>
                             {data.coinValues?.[index]}{' '}
                             {data.coinSymbol?.[index]}
                           </p>
