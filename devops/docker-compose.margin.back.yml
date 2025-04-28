@@ -21,7 +21,7 @@ services:
     networks:
       - app_network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -40,5 +40,19 @@ services:
     networks:
       - app_network
 
+  frontend:
+    build: ../margin/margin_frontend
+    restart: always
+    volumes:
+      - ../margin/margin_frontend:/src
+      - node_modules:/src/node_modules
+    env_file:
+      - ../margin/margin_frontend/.env
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
 volumes:
   pgdata: { }
+  node_modules: 
