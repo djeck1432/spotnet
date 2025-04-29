@@ -25,13 +25,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create .env file
-        run: cp margin_app/.env.dev margin_app/.env
+      - name: Create .env files
+        run: |
+          cp margin_app/.env.dev margin_app/.env
+          cp margin_frontend/.env.dev margin_frontend/.env
         working-directory: ${{env.working-directory}}
 
       - name: Build and Start Containers
         run: |
-          docker compose -f devops/docker-compose.margin.back.yml --env-file margin/margin_app/.env up -d --build
+          docker compose -f devops/docker-compose.margin.back.yml up -d --build backend
           echo "Waiting for containers to be ready..."
           sleep 30
 
