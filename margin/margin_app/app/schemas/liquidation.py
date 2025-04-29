@@ -24,5 +24,7 @@ class LiquidationResponse(LiquidationRequest):
 
 
 class LiquidatedTotalResponse(BaseSchema):
+    """Response schema for a get_liquidated_total endpoint"""
+
     token: str
     amount: Decimal

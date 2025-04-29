@@ -9,6 +9,9 @@ from app.core.config import settings
 from app.models.base import BaseModel
 from app.main import app
 import os
+import faker
+
+fake = faker.Faker()
 
 
 def set_test_env_vars():

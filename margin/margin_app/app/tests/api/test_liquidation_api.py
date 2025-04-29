@@ -2,7 +2,9 @@
 Tests for liquidation API endpoints.
 """
 
+from datetime import date
 from decimal import Decimal
+from unittest.mock import AsyncMock, patch
 from uuid import UUID, uuid4
 
 import pytest
@@ -126,3 +128,29 @@ class TestLiquidation:
         response = client.post(MARGIN_POSITION_URL + "/liquidate", json=request_data)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "detail" in response.json()
+
+    @pytest.mark.asyncio
+    async def test_get_liquidated_total(self, client: TestClient):
+        """
+        Test a successful fetching of liquidations within current date
+        with total amount and token. Verifies that objects from result set
+        are equal to those returned from crud function
+        """
+        expected_liquidations_rows = [
+            (1, "BTC", Decimal(15000)),
+            (2, "ETH", Decimal(2000)),
+        ]
+        with patch(
+            "app.crud.liquidation.liquidation_crud.get_totals_for_date",
+            new_callable=AsyncMock,
+        ) as get_totals_for_date_mock:
+            get_totals_for_date_mock.return_value = expected_liquidations_rows
+            response = client.get(MARGIN_POSITION_URL + "/get_liquidated_total")
+            assert response.status_code == status.HTTP_200_OK
+            get_totals_for_date_mock.assert_awaited_once_with(date.today())
+            resp_data = response.json()
+            assert len(resp_data)
+            for i, obj in enumerate(resp_data):
+                _, expected_token, expected_amount = expected_liquidations_rows[i]
+                assert obj["token"] == expected_token
+                assert obj["amount"] == str(expected_amount)

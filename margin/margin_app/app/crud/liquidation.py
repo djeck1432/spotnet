@@ -30,20 +30,26 @@ class LiquidationCRUD(DBConnector):
         )
         return await self.write_to_db(liquidation_entry)
 
-    async def get_totals_for_date(self, date: dt.date) -> Sequence[tuple[str, Decimal]]:
+    async def get_totals_for_date(
+        self, date: dt.date
+    ) -> Sequence[tuple[int, str, Decimal]]:
         """
         Retrieves Liquidation.bonus_token with summed up it's bonus_amount
         grouped by bonus_token within provided date
         """
         stmt = (
-            sa.select(Liquidation.bonus_token, sa.func.sum(Liquidation.bonus_amount))
+            sa.select(
+                Liquidation.id,
+                Liquidation.id,
+                sa.func.sum(Liquidation.bonus_amount),
+            )
             .where(
                 sa.and_(
                     Liquidation.created_at >= date,
                     Liquidation.created_at < date + dt.timedelta(days=1),
                 )
             )
-            .group_by(Liquidation.bonus_token)
+            .group_by(Liquidation.id, Liquidation.id)
         )
         async with self.session() as session:
             res = await session.execute(stmt)
