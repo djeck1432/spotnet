@@ -189,7 +189,7 @@ async def liquidate_position(data: LiquidationRequest) -> LiquidationResponse:
         return LiquidationResponse(
             margin_position_id=liquidation_entry.margin_position_id,
             bonus_amount=liquidation_entry.bonus_amount,
-            bonus_token=liquidation_entry.id,
+            bonus_token=liquidation_entry.bonus_token,
             status="success",
         )
     except Exception as e:
