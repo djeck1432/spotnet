@@ -137,8 +137,8 @@ class TestLiquidation:
         are equal to those returned from crud function
         """
         expected_liquidations_rows = [
-            (1, "BTC", Decimal(15000)),
-            (2, "ETH", Decimal(2000)),
+            ("BTC", Decimal(15000)),
+            ("ETH", Decimal(2000)),
         ]
         with patch(
             "app.crud.liquidation.liquidation_crud.get_totals_for_date",
@@ -151,6 +151,6 @@ class TestLiquidation:
             resp_data = response.json()
             assert len(resp_data)
             for i, obj in enumerate(resp_data):
-                _, expected_token, expected_amount = expected_liquidations_rows[i]
+                expected_token, expected_amount = expected_liquidations_rows[i]
                 assert obj["token"] == expected_token
                 assert obj["amount"] == str(expected_amount)

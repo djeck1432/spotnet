@@ -114,10 +114,10 @@ async def get_liquidated_total() -> list[LiquidatedTotalResponse]:
         data = await liquidation_crud.get_totals_for_date(date.today())
         return [
             LiquidatedTotalResponse(token=token, amount=amount)
-            for _, token, amount in data
+            for token, amount in data
         ]
     except Exception as e:
-        logger.error("Failed to retrieve liquidated total")
+        logger.error(f"Failed to retrieve liquidated total. Error: {e}")
         raise HTTPException(
             status_code=500, detail="Error retrieving liquidated total"
         ) from e
