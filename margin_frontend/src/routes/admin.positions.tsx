@@ -1,5 +1,6 @@
+// Updated to resolve merge conflicts
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query"; // Додаємо useQueryClient
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import ky from "ky";
 import {
@@ -38,7 +39,7 @@ function AdminPositions() {
     pageSize: 5,
   });
 
-  const queryClient = useQueryClient(); // Ініціалізуємо queryClient для оновлення даних
+  const queryClient = useQueryClient();
 
   const { data, error, isLoading } = useQuery<ApiResponse>({
     queryKey: ["positions", pagination.pageIndex, pagination.pageSize],
