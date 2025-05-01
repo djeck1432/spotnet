@@ -20,7 +20,6 @@ import { Route as DashboardImport } from './routes/dashboard'
 import { Route as ChangePasswordImport } from './routes/change-password'
 import { Route as IndexImport } from './routes/index'
 import { Route as AdminPositionsImport } from './routes/admin.positions'
-import { Route as AdminDashboardImport } from './routes/admin/dashboard'
 
 // Create/Update Routes
 
@@ -75,12 +74,6 @@ const IndexRoute = IndexImport.update({
 const AdminPositionsRoute = AdminPositionsImport.update({
   id: '/admin/positions',
   path: '/admin/positions',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AdminDashboardRoute = AdminDashboardImport.update({
-  id: '/admin/dashboard',
-  path: '/admin/dashboard',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -144,13 +137,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TradeImport
       parentRoute: typeof rootRoute
     }
-    '/admin/dashboard': {
-      id: '/admin/dashboard'
-      path: '/admin/dashboard'
-      fullPath: '/admin/dashboard'
-      preLoaderRoute: typeof AdminDashboardImport
-      parentRoute: typeof rootRoute
-    }
     '/admin/positions': {
       id: '/admin/positions'
       path: '/admin/positions'
@@ -172,7 +158,6 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-up': typeof SignUpRoute
   '/trade': typeof TradeRoute
-  '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/positions': typeof AdminPositionsRoute
 }
 
@@ -185,7 +170,6 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-up': typeof SignUpRoute
   '/trade': typeof TradeRoute
-  '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/positions': typeof AdminPositionsRoute
 }
 
@@ -199,7 +183,6 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-up': typeof SignUpRoute
   '/trade': typeof TradeRoute
-  '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/positions': typeof AdminPositionsRoute
 }
 
@@ -214,7 +197,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-up'
     | '/trade'
-    | '/admin/dashboard'
     | '/admin/positions'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -226,7 +208,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-up'
     | '/trade'
-    | '/admin/dashboard'
     | '/admin/positions'
   id:
     | '__root__'
@@ -238,7 +219,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-up'
     | '/trade'
-    | '/admin/dashboard'
     | '/admin/positions'
   fileRoutesById: FileRoutesById
 }
@@ -252,7 +232,6 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignUpRoute: typeof SignUpRoute
   TradeRoute: typeof TradeRoute
-  AdminDashboardRoute: typeof AdminDashboardRoute
   AdminPositionsRoute: typeof AdminPositionsRoute
 }
 
@@ -265,7 +244,6 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SignUpRoute: SignUpRoute,
   TradeRoute: TradeRoute,
-  AdminDashboardRoute: AdminDashboardRoute,
   AdminPositionsRoute: AdminPositionsRoute,
 }
 
@@ -287,7 +265,6 @@ export const routeTree = rootRoute
         "/reset-password",
         "/sign-up",
         "/trade",
-        "/admin/dashboard",
         "/admin/positions"
       ]
     },
@@ -314,9 +291,6 @@ export const routeTree = rootRoute
     },
     "/trade": {
       "filePath": "trade.tsx"
-    },
-    "/admin/dashboard": {
-      "filePath": "admin/dashboard.tsx"
     },
     "/admin/positions": {
       "filePath": "admin.positions.tsx"
