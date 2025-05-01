@@ -27,3 +27,4 @@ dist-ssr
 .cursor*
 ../../devops/spotnet/
 .env
+package-lock.json
