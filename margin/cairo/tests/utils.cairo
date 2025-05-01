@@ -140,7 +140,7 @@ pub fn store_risk_factor(margin_address: ContractAddress, asset: ContractAddress
     let risk_factor_key = snforge_std::map_entry_address(
         selector!("risk_factors"), array![asset.into()].span(),
     );
-    snforge_std::store(margin_address, risk_factor_key, array![risk_factor.into()].span(),);
+    snforge_std::store(margin_address, risk_factor_key, array![risk_factor.into()].span());
 }
    
 
