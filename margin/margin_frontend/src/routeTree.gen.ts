@@ -10,18 +10,6 @@
 
 // Import Routes
 
-<<<<<<< HEAD
-import { Route as rootRoute } from './routes/__root';
-import { Route as TradeImport } from './routes/trade';
-import { Route as SignUpImport } from './routes/sign-up';
-import { Route as ResetPasswordImport } from './routes/reset-password';
-import { Route as PoolImport } from './routes/pool';
-import { Route as LoginImport } from './routes/login';
-import { Route as DashboardImport } from './routes/dashboard';
-import { Route as ChangePasswordImport } from './routes/change-password';
-import { Route as IndexImport } from './routes/index';
-import { Route as AdminDashboardImport } from './routes/admin/dashboard';
-=======
 import { Route as rootRoute } from './routes/__root'
 import { Route as TradeImport } from './routes/trade'
 import { Route as SignUpImport } from './routes/sign-up'
@@ -32,7 +20,7 @@ import { Route as DashboardImport } from './routes/dashboard'
 import { Route as ChangePasswordImport } from './routes/change-password'
 import { Route as IndexImport } from './routes/index'
 import { Route as AdminPositionsImport } from './routes/admin.positions'
->>>>>>> final cleaning, some minor chages due to new project structure
+import { Route as AdminDashboardImport } from './routes/admin/dashboard'
 
 // Create/Update Routes
 
@@ -40,59 +28,59 @@ const TradeRoute = TradeImport.update({
   id: '/trade',
   path: '/trade',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const SignUpRoute = SignUpImport.update({
   id: '/sign-up',
   path: '/sign-up',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const ResetPasswordRoute = ResetPasswordImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const PoolRoute = PoolImport.update({
   id: '/pool',
   path: '/pool',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const DashboardRoute = DashboardImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const ChangePasswordRoute = ChangePasswordImport.update({
   id: '/change-password',
   path: '/change-password',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any);
-
-const AdminDashboardRoute = AdminDashboardImport.update({
-  id: '/admin/dashboard',
-  path: '/admin/dashboard',
-  getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const AdminPositionsRoute = AdminPositionsImport.update({
   id: '/admin/positions',
   path: '/admin/positions',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminDashboardRoute = AdminDashboardImport.update({
+  id: '/admin/dashboard',
+  path: '/admin/dashboard',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -101,74 +89,66 @@ const AdminPositionsRoute = AdminPositionsImport.update({
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
-      id: '/';
-      path: '/';
-      fullPath: '/';
-      preLoaderRoute: typeof IndexImport;
-      parentRoute: typeof rootRoute;
-    };
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
     '/change-password': {
-      id: '/change-password';
-      path: '/change-password';
-      fullPath: '/change-password';
-      preLoaderRoute: typeof ChangePasswordImport;
-      parentRoute: typeof rootRoute;
-    };
+      id: '/change-password'
+      path: '/change-password'
+      fullPath: '/change-password'
+      preLoaderRoute: typeof ChangePasswordImport
+      parentRoute: typeof rootRoute
+    }
     '/dashboard': {
-      id: '/dashboard';
-      path: '/dashboard';
-      fullPath: '/dashboard';
-      preLoaderRoute: typeof DashboardImport;
-      parentRoute: typeof rootRoute;
-    };
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
-      id: '/login';
-      path: '/login';
-      fullPath: '/login';
-      preLoaderRoute: typeof LoginImport;
-      parentRoute: typeof rootRoute;
-    };
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
     '/pool': {
-      id: '/pool';
-      path: '/pool';
-      fullPath: '/pool';
-      preLoaderRoute: typeof PoolImport;
-      parentRoute: typeof rootRoute;
-    };
+      id: '/pool'
+      path: '/pool'
+      fullPath: '/pool'
+      preLoaderRoute: typeof PoolImport
+      parentRoute: typeof rootRoute
+    }
     '/reset-password': {
-      id: '/reset-password';
-      path: '/reset-password';
-      fullPath: '/reset-password';
-      preLoaderRoute: typeof ResetPasswordImport;
-      parentRoute: typeof rootRoute;
-    };
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordImport
+      parentRoute: typeof rootRoute
+    }
     '/sign-up': {
-      id: '/sign-up';
-      path: '/sign-up';
-      fullPath: '/sign-up';
-      preLoaderRoute: typeof SignUpImport;
-      parentRoute: typeof rootRoute;
-    };
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpImport
+      parentRoute: typeof rootRoute
+    }
     '/trade': {
-<<<<<<< HEAD
-      id: '/trade';
-      path: '/trade';
-      fullPath: '/trade';
-      preLoaderRoute: typeof TradeImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/admin/dashboard': {
-      id: '/admin/dashboard';
-      path: '/admin/dashboard';
-      fullPath: '/admin/dashboard';
-      preLoaderRoute: typeof AdminDashboardImport;
-      parentRoute: typeof rootRoute;
-    };
-=======
       id: '/trade'
       path: '/trade'
       fullPath: '/trade'
       preLoaderRoute: typeof TradeImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/admin/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardImport
       parentRoute: typeof rootRoute
     }
     '/admin/positions': {
@@ -178,49 +158,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPositionsImport
       parentRoute: typeof rootRoute
     }
->>>>>>> final cleaning, some minor chages due to new project structure
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-<<<<<<< HEAD
-  '/': typeof IndexRoute;
-  '/change-password': typeof ChangePasswordRoute;
-  '/dashboard': typeof DashboardRoute;
-  '/login': typeof LoginRoute;
-  '/pool': typeof PoolRoute;
-  '/reset-password': typeof ResetPasswordRoute;
-  '/sign-up': typeof SignUpRoute;
-  '/trade': typeof TradeRoute;
-  '/admin/dashboard': typeof AdminDashboardRoute;
-}
-
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute;
-  '/change-password': typeof ChangePasswordRoute;
-  '/dashboard': typeof DashboardRoute;
-  '/login': typeof LoginRoute;
-  '/pool': typeof PoolRoute;
-  '/reset-password': typeof ResetPasswordRoute;
-  '/sign-up': typeof SignUpRoute;
-  '/trade': typeof TradeRoute;
-  '/admin/dashboard': typeof AdminDashboardRoute;
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute;
-  '/': typeof IndexRoute;
-  '/change-password': typeof ChangePasswordRoute;
-  '/dashboard': typeof DashboardRoute;
-  '/login': typeof LoginRoute;
-  '/pool': typeof PoolRoute;
-  '/reset-password': typeof ResetPasswordRoute;
-  '/sign-up': typeof SignUpRoute;
-  '/trade': typeof TradeRoute;
-  '/admin/dashboard': typeof AdminDashboardRoute;
-=======
   '/': typeof IndexRoute
   '/change-password': typeof ChangePasswordRoute
   '/dashboard': typeof DashboardRoute
@@ -229,6 +172,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-up': typeof SignUpRoute
   '/trade': typeof TradeRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/positions': typeof AdminPositionsRoute
 }
 
@@ -241,6 +185,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-up': typeof SignUpRoute
   '/trade': typeof TradeRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/positions': typeof AdminPositionsRoute
 }
 
@@ -254,12 +199,12 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-up': typeof SignUpRoute
   '/trade': typeof TradeRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/positions': typeof AdminPositionsRoute
->>>>>>> final cleaning, some minor chages due to new project structure
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/change-password'
@@ -269,13 +214,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-up'
     | '/trade'
-<<<<<<< HEAD
-    | '/admin/dashboard';
-  fileRoutesByTo: FileRoutesByTo;
-=======
+    | '/admin/dashboard'
     | '/admin/positions'
   fileRoutesByTo: FileRoutesByTo
->>>>>>> final cleaning, some minor chages due to new project structure
   to:
     | '/'
     | '/change-password'
@@ -285,11 +226,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-up'
     | '/trade'
-<<<<<<< HEAD
-    | '/admin/dashboard';
-=======
+    | '/admin/dashboard'
     | '/admin/positions'
->>>>>>> final cleaning, some minor chages due to new project structure
   id:
     | '__root__'
     | '/'
@@ -300,22 +238,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-up'
     | '/trade'
-<<<<<<< HEAD
-    | '/admin/dashboard';
-  fileRoutesById: FileRoutesById;
-}
-
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  ChangePasswordRoute: typeof ChangePasswordRoute;
-  DashboardRoute: typeof DashboardRoute;
-  LoginRoute: typeof LoginRoute;
-  PoolRoute: typeof PoolRoute;
-  ResetPasswordRoute: typeof ResetPasswordRoute;
-  SignUpRoute: typeof SignUpRoute;
-  TradeRoute: typeof TradeRoute;
-  AdminDashboardRoute: typeof AdminDashboardRoute;
-=======
+    | '/admin/dashboard'
     | '/admin/positions'
   fileRoutesById: FileRoutesById
 }
@@ -329,8 +252,8 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignUpRoute: typeof SignUpRoute
   TradeRoute: typeof TradeRoute
+  AdminDashboardRoute: typeof AdminDashboardRoute
   AdminPositionsRoute: typeof AdminPositionsRoute
->>>>>>> final cleaning, some minor chages due to new project structure
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -342,17 +265,13 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SignUpRoute: SignUpRoute,
   TradeRoute: TradeRoute,
-<<<<<<< HEAD
   AdminDashboardRoute: AdminDashboardRoute,
-};
-=======
   AdminPositionsRoute: AdminPositionsRoute,
 }
->>>>>>> final cleaning, some minor chages due to new project structure
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -368,11 +287,8 @@ export const routeTree = rootRoute
         "/reset-password",
         "/sign-up",
         "/trade",
-<<<<<<< HEAD
-        "/admin/dashboard"
-=======
+        "/admin/dashboard",
         "/admin/positions"
->>>>>>> final cleaning, some minor chages due to new project structure
       ]
     },
     "/": {
@@ -399,13 +315,11 @@ export const routeTree = rootRoute
     "/trade": {
       "filePath": "trade.tsx"
     },
-<<<<<<< HEAD
     "/admin/dashboard": {
       "filePath": "admin/dashboard.tsx"
-=======
+    },
     "/admin/positions": {
       "filePath": "admin.positions.tsx"
->>>>>>> final cleaning, some minor chages due to new project structure
     }
   }
 }
