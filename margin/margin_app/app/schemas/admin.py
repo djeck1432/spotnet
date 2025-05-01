@@ -32,6 +32,7 @@ class AdminResetPassword(BaseModel):
 
     old_password: str
     new_password: str
+    new_password: str
 
 
 class AdminResponse(AdminBase):

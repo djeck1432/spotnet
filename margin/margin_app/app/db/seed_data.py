@@ -208,6 +208,7 @@ class SeedDataGenerator:
             user_orders.append(user_order)
         session.add_all(user_orders)
         await session.commit()
+        await session.commit()
 
     async def generate_transactions(self, session: AsyncSession):
         """
