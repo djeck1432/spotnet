@@ -4,7 +4,7 @@ pub mod Margin {
     use starknet::{
         event::EventEmitter,
         storage::{StoragePointerReadAccess, StoragePointerWriteAccess, StoragePathEntry, Map},
-        ContractAddress, get_contract_address, get_caller_address,
+        ContractAddress, get_contract_address, get_caller_address, get_block_timestamp
     };
     use margin::constants::ONE_HUNDRED_PERCENT_IN_BPS;
     use margin::{
@@ -20,21 +20,28 @@ pub mod Margin {
 
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use openzeppelin::access::ownable::OwnableComponent;
+    use openzeppelin::security::ReentrancyGuardComponent;
     use pragma_lib::types::{DataType, PragmaPricesResponse};
 
     use ekubo::{
-        interfaces::core::{ICoreDispatcher, ILocker, ICoreDispatcherTrait},
-        types::{keys::PoolKey, delta::Delta},
+        interfaces::core::{ICoreDispatcher, ILocker, ICoreDispatcherTrait, SwapParameters},
+        types::{keys::PoolKey, delta::Delta, i129::i129},
         components::shared_locker::{consume_callback_data, handle_delta, call_core_with_callback},
     };
 
     component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
+    component!(
+        path: ReentrancyGuardComponent, storage: reentrancy_guard, event: ReentrancyGuardEvent
+    );
 
     /// Ownable
     #[abi(embed_v0)]
     impl OwnableTwoStepMixinImpl =
         OwnableComponent::OwnableTwoStepMixinImpl<ContractState>;
     impl OwnableInternalImpl = OwnableComponent::InternalImpl<ContractState>;
+
+    /// ReentrancyGuard
+    impl ReentrancyInternalImpl = ReentrancyGuardComponent::InternalImpl<ContractState>;
 
     #[derive(starknet::Event, Drop)]
     struct Deposit {
@@ -56,10 +63,40 @@ pub mod Margin {
     enum Event {
         #[flat]
         OwnableEvent: OwnableComponent::Event,
+        #[flat]
+        ReentrancyGuardEvent: ReentrancyGuardComponent::Event,
         Deposit: Deposit,
         Withdraw: Withdraw,
     }
 
+
+    /// @field ownable: OwnableComponent::Storage
+    /// - Holds ownership information for the contract.
+    /// - Managed using substorage for modular ownership control.
+    
+    /// @field ekubo_core: ICoreDispatcher
+    /// - Acts as the dispatcher for core operations.
+    /// - Facilitates interaction with the core logic of the system.
+    
+    /// @field treasury_balances: Map<(ContractAddress, ContractAddress), TokenAmount>
+    /// - Maps a tuple (depositor address, token address) to the amount of token held.
+    /// - Used to track treasury token balances associated with each depositor and token.
+    
+    /// @field pools: Map<ContractAddress, TokenAmount>
+    /// - Maps pool contract addresses to their corresponding token amounts.
+    /// - Represents liquidity available in different pools.
+    
+    /// @field positions: Map<ContractAddress, Position>
+    /// - Maps contract addresses to their associated positions.
+    /// - Stores details of open positions tied to specific contracts.
+    
+    /// @field oracle_address: ContractAddress
+    /// - Specifies the address of the oracle contract.
+    /// - Used for fetching external data such as market prices.
+    
+    /// @field risk_factors: Map<ContractAddress, u128>
+    /// - Maps token addresses to their risk factor values.
+    /// - Helps in determining risk weights or multipliers for associated tokens.
     #[storage]
     struct Storage {
         #[substorage(v0)]
@@ -70,6 +107,8 @@ pub mod Margin {
         positions: Map<ContractAddress, Position>,
         oracle_address: ContractAddress,
         risk_factors: Map<ContractAddress, u128>,
+        #[substorage(v0)]
+        reentrancy_guard: ReentrancyGuardComponent::Storage,
     }
 
     #[constructor]
@@ -192,7 +231,77 @@ pub mod Margin {
             position_parameters: PositionParameters,
             pool_key: PoolKey,
             ekubo_limits: EkuboSlippageLimits,
-        ) {}
+        ) {
+            self.reentrancy_guard.start();
+            let caller = get_caller_address();
+            // Ensure the caller does not have an active position already.
+            let existing_position = self.positions.entry(caller).read();
+            assert(existing_position.is_open, 'User already has a position');
+
+            let PositionParameters{ initial_token, debt_token, amount, multiplier } = position_parameters;
+
+            let (is_token1, borrowing_token, sqrt_ratio_limit) = if initial_token == pool_key.token0 {
+                (true, pool_key.token1, ekubo_limits.upper)
+            } else {
+                assert(pool_key.token0 == debt_token, 'Incorrect pool key');
+                (false, pool_key.token0, ekubo_limits.lower)
+            };
+
+            // Verify that both tokens are supported on Pragma by checking their prices.
+            let initial_token_data = self.get_data(initial_token);
+            let debt_token_data = self.get_data(debt_token);
+            assert(initial_token_data.price > 0, 'Initial token not supported');
+            assert(debt_token_data.price > 0, 'Debt token not supported');
+
+            // Validate that the two tokens are different.
+            assert(initial_token != debt_token, 'Tokens must be different');
+
+            // Validate allowance and balance for the initial token (collateral).
+            let initial_token_disp = IERC20Dispatcher { contract_address: initial_token };
+            let contract_addr = get_contract_address();
+            let allowance = initial_token_disp.allowance(caller, contract_addr);
+            assert(allowance >= amount, 'Insufficient allowance');
+            let balance = initial_token_disp.balance_of(caller);
+            assert(balance >= amount, 'Insufficient balance');
+
+            let borrow_amount = self.get_borrow_amount(initial_token, debt_token, amount, multiplier);
+            let amount_from_pool = self.pools.entry(borrowing_token).read();
+            assert(amount_from_pool > borrow_amount, 'Invalid borrow amount');
+            self.pools.entry(debt_token).write(amount_from_pool - amount);
+
+            // Transfer collateral from the user to the contract.
+            initial_token_disp.transfer_from(caller, contract_addr, amount);
+            let delta = self.swap(
+                SwapData {
+                    params: SwapParameters {
+                        amount: i129 { mag: amount.try_into().unwrap(), sign: false },
+                        is_token1,
+                        sqrt_ratio_limit,
+                        skip_ahead: 0
+                    },
+                    pool_key,
+                    caller
+                }
+            );
+
+            let amount_swapped: u256 = if is_token1 {
+                delta.amount0.mag.into()
+            } else {
+                delta.amount1.mag.into()
+            };
+
+            self.positions.entry(caller).write(
+                Position {
+                    initial_token,
+                    debt_token,
+                    traded_amount: amount,
+                    debt: amount_swapped,
+                    is_open: true,
+                    open_time: get_block_timestamp()
+                }
+            );
+            self.reentrancy_guard.end();
+        }
         fn close_position(
             ref self: ContractState, pool_key: PoolKey, ekubo_limits: EkuboSlippageLimits,
         ) {}
