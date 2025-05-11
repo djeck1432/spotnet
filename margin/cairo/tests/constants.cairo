@@ -7,6 +7,7 @@ pub const HYPOTHETICAL_OWNER_ADDR: felt252 =
 pub mod tokens {
     pub const ETH: felt252 = 0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7;
     pub const USDC: felt252 = 0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8;
+    pub const STRK: felt252 = 0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d;
 }
 
 pub mod pool_key {
@@ -20,4 +21,6 @@ pub mod contracts {
         0x00000005dd3d2f4429af886cd1a3b08289dbcea99a294197e9eb43b0e0325b4b;
     pub const EKUBO_CORE_SEPOLIA: felt252 =
         0x0444a09d96389aa7148f1aada508e30b71299ffe650d9c97fdaae38cb9a23384;
+    pub const PRAGMA_MAINNET: felt252 =
+        0x02a85bd616f912537c50a49a4076db02c00b29b2cdc8a197ce92ed1837fa875b;
 }

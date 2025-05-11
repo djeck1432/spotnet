@@ -15,6 +15,7 @@ fn test_get_borrow_amount() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
 
     let eth_contract_address = contract_address_const::<'ETH'>();

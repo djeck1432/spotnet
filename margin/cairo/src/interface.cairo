@@ -8,7 +8,6 @@ pub trait IMargin<TContractState> {
     fn deposit(ref self: TContractState, token: ContractAddress, amount: TokenAmount);
     fn withdraw(ref self: TContractState, token: ContractAddress, amount: TokenAmount);
 
-    // TODO: Add Ekubo data for swap
     fn open_margin_position(
         ref self: TContractState,
         position_parameters: PositionParameters,
@@ -25,7 +24,7 @@ pub trait IMargin<TContractState> {
         pool_key: PoolKey,
         ekubo_limits: EkuboSlippageLimits,
     );
-    fn get_health_factor(ref self: TContractState, address: ContractAddress) -> u256;
+    fn get_health_factor(self: @TContractState, address: ContractAddress) -> u256;
     fn set_risk_factor(ref self: TContractState, token: ContractAddress, risk_factor: u128);
     fn is_position_healthy(ref self: TContractState, address: ContractAddress) -> bool;
 }

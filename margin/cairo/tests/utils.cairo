@@ -1,8 +1,8 @@
 use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 use starknet::{ContractAddress, contract_address_const, get_contract_address};
 use margin::interface::{
-    IMarginDispatcher, IPragmaOracleDispatcher, 
-    IMockPragmaOracleDispatcher, IMockPragmaOracleDispatcherTrait
+    IMarginDispatcher, IPragmaOracleDispatcher, IMockPragmaOracleDispatcher,
+    IMockPragmaOracleDispatcherTrait,
 };
 use snforge_std::cheatcodes::execution_info::caller_address::{
     start_cheat_caller_address, stop_cheat_caller_address,
@@ -12,7 +12,7 @@ use alexandria_math::fast_power::fast_power;
 use margin::types::{TokenAmount, Position};
 use margin::constants::SCALE_NUMBER;
 use margin::margin::{Margin, Margin::InternalTrait};
-use super::constants::{contracts::EKUBO_CORE_SEPOLIA};
+use super::constants::{contracts::{EKUBO_CORE_SEPOLIA, EKUBO_CORE_MAINNET}};
 use ekubo::{interfaces::core::{ICoreDispatcher}};
 
 #[derive(Drop)]
@@ -80,11 +80,18 @@ pub fn deploy_erc20_mock_2() -> ContractAddress {
 
 
 pub fn setup_test_suite(
-    owner: ContractAddress, token_address: ContractAddress, oracle_address: ContractAddress,
+    owner: ContractAddress,
+    token_address: ContractAddress,
+    oracle_address: ContractAddress,
+    is_mainnet: bool // TODO: Replace with settings strucuture to add new parameters easier
 ) -> MarginTestSuite {
     let contract = declare("Margin").unwrap().contract_class();
     let ekubo = ICoreDispatcher {
-        contract_address: contract_address_const::<EKUBO_CORE_SEPOLIA>(),
+        contract_address: if is_mainnet {
+            contract_address_const::<EKUBO_CORE_MAINNET>()
+        } else {
+            contract_address_const::<EKUBO_CORE_SEPOLIA>()
+        },
     };
 
     let mut calldata: Array<felt252> = array![];
@@ -137,11 +144,13 @@ pub fn get_pool_value(margin_address: ContractAddress, token: ContractAddress) -
 }
 
 // Helper function to store risk factor in storage
-pub fn store_risk_factor(margin_address: ContractAddress, asset: ContractAddress, risk_factor: u128) {
+pub fn store_risk_factor(
+    margin_address: ContractAddress, asset: ContractAddress, risk_factor: u128,
+) {
     let risk_factor_key = snforge_std::map_entry_address(
         selector!("risk_factors"), array![asset.into()].span(),
     );
-    snforge_std::store(margin_address, risk_factor_key, array![risk_factor.into()].span(),);
+    snforge_std::store(margin_address, risk_factor_key, array![risk_factor.into()].span());
 }
 
 // Helper function to read risk factor from storage
@@ -161,13 +170,17 @@ pub fn calculate_health_factor(suite: @MarginTestSuite, risk_factor: u128) -> u2
     state.oracle_address.write((*suite.pragma.contract_address));
     let position_key = snforge_std::map_entry_address(
         selector!("positions"), array![(*suite.owner).into()].span(),
-    ); 
+    );
 
-    let mut position_array = snforge_std::load((*suite.margin.contract_address), position_key, 8).span();
+    let mut position_array = snforge_std::load((*suite.margin.contract_address), position_key, 8)
+        .span();
     let position: Position = Serde::deserialize(ref position_array).unwrap();
 
-    (position.traded_amount * state.get_data(position.initial_token).price.into() * SCALE_NUMBER * risk_factor.into())
-    / (position.debt * state.get_data(position.debt_token).price.into() * SCALE_NUMBER)
+    (position.traded_amount
+        * state.get_data(position.initial_token).price.into()
+        * SCALE_NUMBER
+        * risk_factor.into())
+        / (position.debt * state.get_data(position.debt_token).price.into() * SCALE_NUMBER)
 }
 
 
@@ -192,12 +205,12 @@ pub fn store_data_for_health_factor(suite: @MarginTestSuite, risk_factor: u128) 
     };
 
     // Store position data in the contract's storage
-    
+
     snforge_std::store(
-        (*suite.margin.contract_address), 
+        (*suite.margin.contract_address),
         snforge_std::map_entry_address(
-            selector!("positions"), array![(*suite.owner).into()].span()
-        ), 
+            selector!("positions"), array![(*suite.owner).into()].span(),
+        ),
         position.into(),
     );
 

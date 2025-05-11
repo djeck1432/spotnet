@@ -15,6 +15,7 @@ fn test_pragma() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
 
     suite.pragma_mock.set_price_token(ERC20_MOCK_CONTRACT(), 2000_00000000);
