@@ -1,4 +1,5 @@
 use alexandria_math::{BitShift, U256BitShift};
+use core::asserts::{assert_eq};
 
 // convert a byte array to felt252, assume that the byte array consist only one single felt252
 // Will be truncated if the byte array is larger than 1 felt252
