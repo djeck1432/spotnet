@@ -1,0 +1,104 @@
+name: Integration Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'spotnet/web_app/**'
+      - 'devops/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'spotnet/web_app/**'
+      - 'devops/**'
+jobs:
+  shared:
+    uses: ./.github/workflows/shared_workflow.yml
+    with:
+      python-version: "3.x"
+      env-vars: |
+        DB_PORT=5432
+        DB_NAME=spotnet
+        DB_USER=postgres
+        DB_PASSWORD=password
+        DB_HOST=db
+        STARKNET_NODE_URL=http://51.195.57.196:6060/v0_7
+        REDIS_HOST=redis
+        REDIS_PORT=6379
+        ENV_VERSION=DEV
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          cat << EOF > /home/runner/work/spotnet/spotnet/.env
+          ENV_VERSION=DEV
+          STARKNET_NODE_URL=${{ env.STARKNET_NODE_URL }}
+          DB_USER=${{ env.DB_USER }}
+          DB_PASSWORD=${{ env.DB_PASSWORD }}
+          DB_NAME=${{ env.DB_NAME }}
+          DB_HOST=${{ env.DB_HOST }}
+          DB_PORT=${{ env.DB_PORT }}
+          REDIS_HOST=${{ env.REDIS_HOST }}
+          REDIS_PORT=${{ env.REDIS_PORT }}
+          EOF
+
+      - name: Build and Start Containers
+        run: |
+          docker compose -f devops/docker-compose.spotnet.dev.yaml --env-file .env up -d --build
+          echo "Waiting for containers to be ready..."
+          sleep 30
+
+      - name: Install Test Dependencies in Container
+        run: |
+          docker exec backend_dev pip install pytest pytest-cov
+          docker exec backend_dev pip freeze  # Debug: show installed packages
+
+      - name: Wait for Backend Service
+        timeout-minutes: 5
+        run: |
+          while ! curl -s http://localhost:8000/health > /dev/null; do
+            echo "Waiting for backend service..."
+            sleep 30
+
+            # Check if the container is still running before logging
+            if ! docker ps | grep -q backend; then
+              echo "Backend container is not running!"
+              docker compose -f devops/docker-compose.spotnet.dev.yaml logs backend || true
+              exit 1
+            fi
+
+            # Log the backend service status for debugging purposes.
+            docker compose -f devops/docker-compose.spotnet.dev.yaml logs backend || true
+          done
+
+      - name: Apply Migrations
+        run: |
+          docker exec backend_dev alembic -c web_app/alembic.ini upgrade head || {
+            echo "Migration failed. Showing backend logs:"
+            docker compose -f devops/docker-compose.spotnet.dev.yaml logs backend || true
+            exit 1
+          }
+
+      - name: Run Integration Tests with Coverage
+        run: |
+          docker compose -f devops/docker-compose.spotnet.dev.yaml exec backend bash -c "cd /app && python -m pytest web_app/test_integration/ -v"
+
+      - name: Clean Up
+        if: always()
+        run: |
+          docker compose -f devops/docker-compose.spotnet.dev.yaml logs > docker-logs.txt || true
+          docker compose -f devops/docker-compose.spotnet.dev.yaml down -v
+
+      - name: Upload Docker Logs on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-logs
+          path: docker-logs.txt

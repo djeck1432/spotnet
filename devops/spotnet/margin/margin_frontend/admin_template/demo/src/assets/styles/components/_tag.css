@@ -1,0 +1,15 @@
+.tag {
+  @apply rounded-full py-1 px-2.5 border items-center border-gray-200 dark:border-gray-600 inline-flex text-xs font-semibold whitespace-nowrap;
+}
+
+.tag-affix {
+  @apply h-2 w-2 rounded-full bg-gray-300;
+}
+
+.tag-prefix {
+  @apply mr-1.5 rtl:ml-1.5;
+}
+
+.tag-suffix {
+  @apply ml-1.5 rtl:mr-1.5;
+}

@@ -1,0 +1,11 @@
+.skeleton {
+  @apply bg-gray-200 dark:bg-gray-600 flex;
+}
+
+.skeleton-circle {
+  @apply rounded-full w-10 h-10;
+}
+
+.skeleton-block {
+  @apply rounded h-2.5 w-full;
+}

@@ -1,0 +1,65 @@
+version: "3.8"
+
+networks:
+  app_network:
+    driver: bridge
+
+services:
+  backend:
+    build: ../spotnet
+    command: ["/app/entrypoint.sh"]
+    container_name: backend_dev
+    volumes:
+      - ../spotnet/entrypoint.sh:/app/entrypoint.sh
+      - ../spotnet:/app
+    env_file:
+      - ../spotnet/.env.dev
+    ports:
+      - "8000:8000"
+    networks:
+      - app_network
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=spotnet
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+
+  db:
+    image: postgres:16
+    container_name: postgres_dev
+    environment:
+      POSTGRES_DB: spotnet
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ../spotnet/init-db:/docker-entrypoint-initdb.d
+    networks:
+      - app_network
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ../spotnet/frontend
+      dockerfile: Dockerfile.dev
+    container_name: frontend_dev
+    volumes:
+      - ../spotnet/frontend:/app
+    ports:
+      - "3000:80"
+    networks:
+      - app_network
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data_dev:

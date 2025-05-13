@@ -1,0 +1,46 @@
+[package]
+name = "margin"
+version = "0.1.0"
+edition = "2023_11"
+
+# See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest.html
+
+[dependencies]
+starknet = "2.9.4"
+openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git" }
+
+alexandria_math = { git = "https://github.com/keep-starknet-strange/alexandria.git" }
+ekubo = { git = "https://github.com/ekuboprotocol/abis", rev = "edb6de8" }
+pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib", tag = "2.9.2" }
+
+
+[dev-dependencies]
+snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry", tag = "v0.37.0" }
+assert_macros = "2.9.4"
+
+[[target.starknet-contract]]
+sierra = true
+
+
+[scripts]
+test = "snforge test"
+
+[profile.dev.cairo]
+unstable-add-statements-code-locations-debug-info = true
+unstable-add-statements-functions-debug-info = true
+inlining-strategy = "avoid"
+
+[tool.snforge]
+fuzzer_runs = 50
+
+[[tool.snforge.fork]]
+name = "MAINNET"
+url = "http://51.195.57.196:6060/v0_7"
+block_id.tag = "latest"
+
+[[tool.snforge.fork]]
+name = "SEPOLIA"
+url = "http://51.195.57.196:6062/v0_7"
+block_id.tag = "latest"
+
+# Visit https://foundry-rs.github.io/starknet-foundry/appendix/scarb-toml.html for more information

@@ -1,0 +1,137 @@
+{
+    "nav": {
+        "apps": "تطبيقات",
+        "appsProject": {
+            "project": "مشروع",
+            "dashboard": "لوحة القيادة",
+            "projectList": "قائمة المشروع",
+            "scrumBoard": "مجلس سكرم",
+            "issue": "القضية"
+        },
+        "appsCrm": {
+            "crm": "إدارة علاقات العملاء",
+            "dashboard": "لوحة القيادة",
+            "calendar": "تقويم",
+            "customers": "عملاء",
+            "customerDetails": "تفاصيل العميل",
+            "mail": "بريد"
+        },
+        "appsSales": {
+            "sales": "مبيعات",
+            "dashboard": "لوحة القيادة",
+            "productList": "قائمة المنتجات",
+            "productEdit": "المنتج تحرير",
+            "productNew": "أضف منتج",
+            "orderList": "لائحة الطلبات",
+            "orderDetails": "تفاصيل الطلب"
+        },
+        "appsCrypto": {
+            "crypto": "التشفير",
+            "dashboard": "لوحة القيادة",
+            "portfolio": "محفظة التشفير",
+            "market": "سوق",
+            "wallets": "محافظ التشفير"
+        },
+        "appsknowledgeBase": {
+            "knowledgeBase": "قاعدة المعرفة",
+            "helpCenter": "مركز المساعدة",
+            "article": "مقالة - سلعة",
+            "manageArticles": "إدارة المقالات",
+            "editArticle": "تحرير المادة"
+        },
+        "appsAccount": {
+            "account": "الحساب",
+            "settings": "الإعدادات",
+            "invoice": "فاتورة",
+            "activityLog": "سجل النشاطات",
+            "kycForm": "نموذج kyc"
+        },
+        "uiComponents": "مكونات واجهة المستخدم",
+        "uiComponentsCommon": {
+            "common": "مشترك",
+            "grid": "شبكة",
+            "button": "زر",
+            "typography": "الطباعة",
+            "icons": "الرموز"
+        },
+        "uiComponentsFeeback": {
+            "feedback": "استجابة",
+            "alert": "إنذار",
+            "dialog": "الحوار",
+            "drawer": "الدرج",
+            "progress": "تقدم",
+            "skeleton": "هيكل عظمي",
+            "spinner": "الدوار",
+            "toast": "خبز محمص"
+        },
+        "uiComponentsDataDisplay": {
+            "dataDisplay": "عرض البيانات",
+            "avatar": "الصورة الرمزية",
+            "badge": "شارة",
+            "calendar": "تقويم",
+            "cards": "البطاقات",
+            "table": "ملزمة",
+            "tag": "بطاقة شعار",
+            "timeline": "الجدول الزمني",
+            "tooltip": "تلميح"
+        },
+        "uiComponentsForms": {
+            "forms": "نماذج",
+            "checkbox": "خانة الاختيار",
+            "datePicker": "منتقي التاريخ",
+            "formControl": "التحكم بالشكل",
+            "input": "الإدخال",
+            "inputGroup": "مجموعة الإدخال",
+            "radio": "صندوق واحد",
+            "segment": "مقطع",
+            "select": "محدد",
+            "switcher": "الجلاد",
+            "timeInput": "إدخال الوقت",
+            "upload": "تحميل"
+        },
+        "uiComponentsNavigation": {
+            "navigation": "ارشاد",
+            "dropdown": "اسقاط",
+            "menu": "قائمة الطعام",
+            "pagination": "ترقيم الصفحات",
+            "steps": "خطوات",
+            "tabs": "نوافذ التبويب"
+        },
+        "uiComponentsGraph": {
+            "graph": "رسم بياني",
+            "charts": "الرسوم البيانية",
+            "maps": "خرائط"
+        },
+        "pages": {
+            "pages": "الصفحات",
+            "welcome": "أهلا بك",
+            "accessDenied": "تم الرفض"
+        },
+        "authentication": {
+            "authentication": "المصادقة",
+            "signIn": "تسجيل الدخول",
+            "signInSimple": "بسيط",
+            "signInSide": "جانب",
+            "signInCover": "التغطية",
+            "signUp": "اشتراك",
+            "signUpSimple": "بسيط",
+            "signUpSide": "جانب",
+            "signUpCover": "التغطية",
+            "forgotPassword": "هل نسيت كلمة السر",
+            "forgotPasswordSimple": "بسيط",
+            "forgotPasswordSide": "جانب",
+            "forgotPasswordCover": "التغطية",
+            "resetPassword": "إعادة تعيين كلمة المرور",
+            "resetPasswordSimple": "بسيط",
+            "resetPasswordSide": "جانب",
+            "resetPasswordCover": "التغطية"
+        },
+        "docs": {
+            "guide": "يرشد",
+            "documentation": "توثيق",
+            "sharedComponentDoc": "مكون مشترك",
+            "utilsDoc": "المرافق",
+            "changeLog": "سجل التغيير"
+        }
+    }
+}

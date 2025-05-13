@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@tanstack/react-query": "^5.59.17",
+    "starknetkit": "^2.3.0"
+  },
+  "devDependencies": {
+    "eslint-plugin-import": "^2.29.1"
+  }
+}

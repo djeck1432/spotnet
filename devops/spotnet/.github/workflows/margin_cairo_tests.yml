@@ -1,0 +1,27 @@
+name: Margin Cairo Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'margin/cairo/*/*.rs'
+      - 'margin/cairo/*/*.cairo'
+      - margin/cairo/Scarb.toml
+      - margin/cairo/Scarb.lock
+      - margin/cairo/.tool-versions
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'margin/cairo/*/*.rs'
+      - 'margin/cairo/*/*.cairo'
+      - margin/cairo/Scarb.toml
+      - margin/cairo/Scarb.lock
+      - margin/cairo/.tool-versions
+
+jobs:
+  test:
+    uses: ./.github/workflows/cairo_shared_workflow.yml
+    with:
+      working-directory: ./margin/cairo

@@ -1,0 +1,154 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.trade-container input:focus{
+  border: transparent;
+  outline: none;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+@media (min-width:1900px) {
+  .graph-container {
+    width: 55vw;
+  }
+
+  .trade-container {
+    max-width: 100vw;
+  }
+
+  .trade-form {
+    width: 60%;
+  }
+
+  .trade-view {
+    width: 60%;
+  }
+
+}
+
+@media (max-width: 1899px) {
+  .trade-container {
+    max-width: 100vw;
+  }
+
+  .trade-form {
+    width: 80%;
+  }
+
+  .trade-view {
+    width: 80%;
+  }
+
+  .slider-button {
+    width: 100px;
+  }
+}
+
+@media (max-width: 1415px) {
+  .trade-view {
+    width: 100%;
+  }
+
+  .trade-container {
+    width: 50vw;
+  }
+
+  .trade-form {
+    max-width: 100%;
+  }
+
+  .graph-container{
+    background-color: transparent;
+  }
+}
+
+@media (max-width: 1115px) {
+  .graph-container{
+    width: 67vw;
+  }
+
+  .trade-container {
+    width: 67vw;
+  }
+
+  .price{
+    font-size: 3vw;
+  }
+}
+
+@media (max-width: 770px) {
+  .trade-form{
+    width: 100%;
+  }
+  .side-bar{
+    display: none;
+  }
+
+  .graph-container{
+    width: 90vw;
+  }
+
+  .trade-container {
+    width: 90vw;
+    margin: 10px auto;
+  }
+}
+
+@media (max-width: 500px) {
+  .price{
+    font-size: 23px;
+  }
+
+  .graph-components{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .graph-container{
+    border: none;
+  }
+
+  .unside-components{
+    margin-top: 10px;
+  }
+
+  .unside-components div{
+    font-size: 15px;
+  }
+
+  .graph-table{
+    position: relative;
+    right: 40px;
+    width: 100vw;
+  }
+
+  .graph-border{
+    display: none;
+  }
+
+  .trade-description{
+    width: 100vw;
+    padding: 10px;
+  }
+
+  .trade-title{
+    margin-left: 10px;
+  }
+
+  .graph-components{
+    position: relative;
+    right: 30px;
+  }
+
+  .components-title{
+    position: relative;
+    right: 40px;
+  }
+}

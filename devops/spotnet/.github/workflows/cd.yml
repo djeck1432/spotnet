@@ -1,0 +1,43 @@
+name: CD Pipeline
+on:
+  workflow_run:
+    workflows: ["CI Workflow"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: unnecessary
+          if_key_exists: replace
+
+      - name: Add known hosts
+        run: |
+          ssh-keyscan -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Prepare environment file
+        run: |
+          # Creating .env file using secrets
+          echo "SERVER_PORT=${{ secrets.SERVER_PORT }}" >> .env
+          echo "SERVER_HOST=${{ secrets.SERVER_HOST }}" >> .env
+          echo "SERVER_USER=${{ secrets.SERVER_USER }}" >> .env
+          echo "PROJECT_PATH=${{ secrets.PROJECT_PATH }}" >> .env
+
+      - name: Deploy to server
+        run: |
+          ssh -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            mkdir -p ${{ secrets.PROJECT_PATH }}
+            cd ${{ secrets.PROJECT_PATH }}
+            docker compose -f devops/docker-compose.spotnet.yaml pull
+            docker compose -f devops/docker-compose.spotnet.yaml up --detach --remove-orphans
+          EOF

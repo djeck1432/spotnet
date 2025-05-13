@@ -1,0 +1,27 @@
+name: Spotnet Cairo Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'spotnet/cairo/*/*.rs'
+      - 'spotnet/cairo/*/*.cairo'
+      - spotnet/cairo/Scarb.toml
+      - spotnet/cairo/Scarb.lock
+      - spotnet/cairo/.tool-versions
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'spotnet/cairo/*/*.rs'
+      - 'spotnet/cairo/*/*.cairo'
+      - spotnet/cairo/Scarb.toml
+      - spotnet/cairo/Scarb.lock
+      - spotnet/cairo/.tool-versions
+
+jobs:
+  test:
+    uses: ./.github/workflows/cairo_shared_workflow.yml
+    with:
+      working-directory: ./spotnet/cairo

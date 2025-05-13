@@ -1,0 +1,39 @@
+name: Run Margin App Frontend Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'margin_frontend/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'margin_frontend/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+        working-directory: ./margin/margin_frontend
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22'
+
+    - name: Create .env file
+      run: cp .env.example .env
+      working-directory: ${{env.working-directory}}
+
+    - name: Install dependencies
+      run: yarn install
+      working-directory: ${{env.working-directory}}
+
+    - name: Run tests
+      run: yarn test
+      working-directory: ${{env.working-directory}}

@@ -1,0 +1,20 @@
+{
+	"files": [],
+	"references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
+  "include": ["src/**/*", "components/PostsDemo.tsx"],
+	"compilerOptions": {
+		"baseUrl": "./",
+		"allowUnreachableCode": false,
+		"strict": true,
+		"jsx": "react-jsx",
+		"paths": {
+			"@/*": ["src/*"]
+		},
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"outDir": "./dist",
+		"declaration": true,
+		"emitDeclarationOnly": false
+	}
+	
+}

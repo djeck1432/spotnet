@@ -1,0 +1,57 @@
+name: Margin CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'margin/margin_app/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'margin/margin_app/**'
+jobs:
+  shared:
+    uses: ./.github/workflows/shared_workflow.yml
+    with:
+      python-version: "3.12"
+
+  margin-ci:
+    runs-on: ubuntu-latest
+    env:
+        working-directory: ./margin
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: cp margin_app/.env.dev margin_app/.env
+        working-directory: ${{env.working-directory}}
+
+      - name: Build and Start Containers
+        run: |
+          docker compose -f devops/docker-compose.margin.back.yml --env-file margin/margin_app/.env up -d --build
+          echo "Waiting for containers to be ready..."
+          sleep 30
+
+      - name: Check generator
+        run: |
+          docker compose -f devops/docker-compose.margin.back.yml exec backend python app/db/seed_data.py
+
+      - name: Run Integration Tests with Coverage
+        run: |
+          docker compose -f devops/docker-compose.margin.back.yml exec backend python -m pytest app/tests -v
+
+      - name: Clean Up
+        if: always()
+        run: |
+          docker compose -f devops/docker-compose.margin.back.yml  logs > docker-logs.txt || true
+          docker compose -f devops/docker-compose.margin.back.yml  down -v
+
+      - name: Upload Docker Logs on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-logs
+          path: docker-logs.txt

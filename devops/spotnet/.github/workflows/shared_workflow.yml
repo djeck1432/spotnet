@@ -1,0 +1,39 @@
+name: Shared Setup Workflow
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        description: "The Python version to set up"
+        required: true
+        type: string
+      env-vars:
+        description: "Environment variables as a multi-line string"
+        required: false
+        type: string
+
+jobs:
+  shared-setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Create .env file
+        if: ${{ inputs.env-vars != '' }}
+        run: |
+          echo "${{ inputs.env-vars }}" > .env

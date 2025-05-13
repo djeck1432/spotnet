@@ -1,0 +1,45 @@
+.progress {
+  @apply inline-block;
+
+  &.circle {
+    @apply relative w-full;
+  }
+
+  &.line {
+    @apply relative w-full flex items-center;
+  }
+}
+
+.progress-bg {
+  @apply rounded-full transition-all duration-200;
+}
+
+.progress-info {
+  &.line {
+    @apply ltr:ml-2 rtl:mr-2;
+  }
+}
+
+.progress-inner {
+  @apply relative w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-600;
+}
+
+.progress-wrapper {
+  @apply w-full;
+}
+
+.progress-circle {
+  @apply relative;
+}
+
+.progress-circle-info {
+  @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+}
+
+.progress-circle-trail {
+  @apply stroke-current text-gray-100 dark:text-gray-600;
+}
+
+.progress-circle-stroke {
+  @apply stroke-current transition-all duration-200;
+}

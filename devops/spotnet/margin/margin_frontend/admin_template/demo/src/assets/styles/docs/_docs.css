@@ -1,0 +1,6 @@
+.demo-card .demo-card-description code,
+.demo-api-table code {
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+  @apply rounded font-mono bg-gray-100 dark:bg-gray-600;
+}

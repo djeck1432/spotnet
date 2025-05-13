@@ -1,0 +1,27 @@
+.pagination {
+  @apply relative z-0 inline-flex items-center rounded-md;
+}
+
+.pagination-pager {
+  @apply cursor-pointer relative mx-1 rounded inline-flex items-center h-8 w-8 justify-center text-sm font-semibold select-none;
+}
+
+.pagination-pager-inactive {
+  @apply text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-600;
+}
+
+.pagination-pager-disabled {
+  @apply cursor-not-allowed text-gray-300 dark:text-gray-600;
+}
+
+.pagination-total {
+  @apply font-semibold mr-3 text-gray-500 dark:text-gray-400;
+}
+
+.pagination-pager-next {
+  @apply mr-1 rtl:rotate-180;
+}
+
+.pagination-pager-prev {
+  @apply ml-1 rtl:rotate-180;
+}

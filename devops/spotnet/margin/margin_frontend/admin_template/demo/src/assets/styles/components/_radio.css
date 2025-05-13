@@ -1,0 +1,43 @@
+.radio {
+  @apply h-5 
+    w-5 
+    border 
+    border-gray-300
+    dark:border-gray-600
+    rounded-full 
+    cursor-pointer 
+    inline-block 
+    align-middle 
+    flex-shrink-0 
+    p-0 
+    appearance-none
+    transition-colors
+    duration-150
+    ease-in-out
+    shadow-sm;
+
+  &:checked {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+    @apply bg-current border-transparent;
+  }
+
+  &.disabled {
+    @apply text-gray-200 bg-gray-100 dark:bg-gray-600 dark:text-gray-400 cursor-not-allowed;
+  }
+}
+
+.radio-label {
+  @apply items-center cursor-pointer inline-flex;
+
+  &.disabled {
+    @apply cursor-not-allowed;
+  }
+}
+
+.radio-group {
+  @apply inline-flex;
+
+  &.vertical {
+    @apply flex-col;
+  }
+}
