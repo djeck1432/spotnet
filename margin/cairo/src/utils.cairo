@@ -1,5 +1,5 @@
 use alexandria_math::{BitShift, U256BitShift};
-use core::asserts::{assert_eq};
+
 
 // convert a byte array to felt252, assume that the byte array consist only one single felt252
 // Will be truncated if the byte array is larger than 1 felt252
@@ -20,6 +20,7 @@ pub fn byte_array_to_felt252(byte_array: ByteArray) -> felt252 {
 
 mod tests {
     use super::*;
+    use core::asserts::{assert_eq};
 
     #[test]
     fn test_byte_array_to_felt252() {
