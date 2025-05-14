@@ -14,6 +14,7 @@ from app.models.admin import Admin
 from app.schemas.admin import AdminResponse
 from app.services.auth.security import verify_password
 
+
 def get_expire_time(minutes: int) -> datetime:
     """
     Get the expiration time for the token.
@@ -22,6 +23,7 @@ def get_expire_time(minutes: int) -> datetime:
     :return: The expiration time.
     """
     return datetime.utcnow() + timedelta(minutes=minutes)
+
 
 def create_access_token(email: str, expires_delta: timedelta | None = None):
     """
@@ -39,6 +41,7 @@ def create_access_token(email: str, expires_delta: timedelta | None = None):
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode = {"sub": email, "exp": expire}
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
+
 
 async def get_current_user(token: str) -> Admin:
     """
@@ -62,17 +65,19 @@ async def get_current_user(token: str) -> Admin:
         email = payload.get("sub")
         if email is None:
             raise Exception("Invalid jwt")
-        user = await admin_crud.get_object_by_field(field="email", value=email)
+        user = await admin_crud.get_by_email(email)
         if user is None:
             raise Exception("User not found")
         return user
     except InvalidTokenError as e:
         raise Exception("jwt expired") from e
 
+
 class GoogleAuth:
     """
     Google authentication service.
     """
+
     google_login_url = (
         f"https://accounts.google.com/o/oauth2/auth?"
         f"response_type=code&client_id={settings.google_client_id}"
@@ -114,7 +119,7 @@ class GoogleAuth:
         response.raise_for_status()
         return response.json()
 
-    async def get_user(self, code: str) -> dict:
+    async def get_user(self, code: str) -> AdminResponse:
         """
         Authenticate with Google OAuth and create an access token.
 
@@ -132,14 +137,16 @@ class GoogleAuth:
 
         email = user_info["email"]
         name = user_info["name"]
-        user = await admin_crud.get_object_by_field(field="email", value=email)
+        user = await admin_crud.get_by_email(email)
         if not user:
             return AdminResponse.model_validate(
                 await admin_crud.create_admin(email=email, name=name)
             )
         return AdminResponse(id=user.id, name=user.name, email=user.email)
 
+
 google_auth = GoogleAuth()
+
 
 async def get_admin_user_from_state(req: Request) -> Admin | None:
     """
@@ -149,4 +156,4 @@ async def get_admin_user_from_state(req: Request) -> Admin | None:
 
     :return: Admin | None - The admin user if it exists, None otherwise.
     """
-    return getattr(req.state, "admin_user", None) 
+    return getattr(req.state, "admin_user", None)

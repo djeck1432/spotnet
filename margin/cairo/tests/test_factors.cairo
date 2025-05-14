@@ -10,12 +10,19 @@ deploy_pragma_mock, calculate_health_factor, store_data_for_health_factor
 
 use super::constants::{HYPOTHETICAL_OWNER_ADDR, DEPOSIT_MOCK_USER};
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f
 #[test]
 #[should_panic(expected: 'Caller is not the owner')]
 fn test_set_risk_not_owner() {
     let suite = setup_test_suite(
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+<<<<<<< HEAD
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(), deploy_erc20_mock(), deploy_pragma_mock(),
+=======
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f
     );
 
     start_cheat_caller_address(
@@ -25,38 +32,59 @@ fn test_set_risk_not_owner() {
     stop_cheat_caller_address(suite.margin.contract_address);
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f
 #[test]
 #[should_panic(expected: 'Risk factor less than needed')]
 fn test_set_risk_less_than() {
     let owner: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
     let risk_factor: u128 = 10000000000000000000000000;
     let suite = setup_test_suite(owner, deploy_erc20_mock(), deploy_pragma_mock());
+<<<<<<< HEAD
     let suite = setup_test_suite(owner, deploy_erc20_mock(), deploy_pragma_mock());
+=======
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f
 
     start_cheat_caller_address(suite.margin.contract_address, owner);
     suite.margin.set_risk_factor(suite.token.contract_address, risk_factor);
     stop_cheat_caller_address(suite.margin.contract_address);
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f
 #[test]
 #[should_panic(expected: 'Risk factor more than needed')]
 fn test_set_risk_more_than() {
     let owner: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
     let risk_factor: u128 = 1100000000000000000000000000;
     let suite = setup_test_suite(owner, deploy_erc20_mock(), deploy_pragma_mock());
+<<<<<<< HEAD
     let suite = setup_test_suite(owner, deploy_erc20_mock(), deploy_pragma_mock());
+=======
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f
 
     start_cheat_caller_address(suite.margin.contract_address, owner);
     suite.margin.set_risk_factor(suite.token.contract_address, risk_factor);
     stop_cheat_caller_address(suite.margin.contract_address);
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f
 #[test]
 fn test_set_risk_ok() {
     let owner: ContractAddress = HYPOTHETICAL_OWNER_ADDR.try_into().unwrap();
     let risk_factor: u128 = 500000000000000000000000000;
     let suite = setup_test_suite(owner, deploy_erc20_mock(), deploy_pragma_mock());
+<<<<<<< HEAD
     let suite = setup_test_suite(owner, deploy_erc20_mock(), deploy_pragma_mock());
+=======
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f
 
     start_cheat_caller_address(suite.margin.contract_address, owner);
     suite.margin.set_risk_factor(suite.token.contract_address, risk_factor);

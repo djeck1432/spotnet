@@ -25,3 +25,10 @@ dist-ssr
 
 .env
 .cursor*
+../../devops/spotnet/
+.env
+package-lock.json
+src/types/
+admin_template/demo/src/types/
+devops/spotnet/
+package-lock.json

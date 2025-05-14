@@ -8,4 +8,8 @@ mod test_factors;
 pub mod mocks {
     pub mod erc20_mock;
     pub mod pragma_mock;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f

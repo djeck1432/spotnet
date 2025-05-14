@@ -1,5 +1,9 @@
 // Updated to resolve merge conflicts
+<<<<<<< HEAD
 
+=======
+import React from "react";
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -30,7 +34,11 @@ interface ApiResponse {
   total: number;
 }
 
+<<<<<<< HEAD
 export const Route = createFileRoute("/admin/positions")({
+=======
+export const Route = createFileRoute("admin.positions" as keyof)({
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f
   component: AdminPositions,
 });
 

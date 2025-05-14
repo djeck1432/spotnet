@@ -130,12 +130,21 @@ pub mod Margin {
             assert(debt_token_price > 0, 'Debt token price is zero');
             assert(initial_token_price > 0, 'Initial token price is zero');
 
+<<<<<<< HEAD
         // Convert multiplier to u256 for precision
         let debt_amount: u256 = amount
             * initial_token_price.into()
             * (multiplier - ONE_HUNDRED_PERCENT_IN_BPS).into()
             / ONE_HUNDRED_PERCENT_IN_BPS.into()
             / debt_token_price.into();
+=======
+            // Convert multiplier to u256 for precision
+            let debt_amount: u256 = amount
+                * initial_token_price.into()
+                * (multiplier - ONE_HUNDRED_PERCENT_IN_BPS).into()
+                / ONE_HUNDRED_PERCENT_IN_BPS.into()
+                / debt_token_price.into();
+>>>>>>> d63f8de888095118a7f0d6e58fde8de5641f113f
 
             debt_amount
         }
