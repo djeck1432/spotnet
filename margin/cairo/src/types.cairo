@@ -2,13 +2,14 @@ use starknet::ContractAddress;
 use ekubo::{interfaces::core::SwapParameters, types::keys::PoolKey};
 
 pub type TokenAmount = u256;
-pub type Timestamp = u128;
+pub type Timestamp = u64;
 
 #[derive(Serde, Drop)]
 pub struct PositionParameters {
     pub initial_token: ContractAddress,
     pub debt_token: ContractAddress,
     pub amount: TokenAmount,
+    pub multiplier: u64,
 }
 
 #[derive(Serde, starknet::Store, Drop)]

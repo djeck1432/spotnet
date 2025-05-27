@@ -19,6 +19,7 @@ fn test_deposit_zero_amount() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let zero_amount = 0_u256;
 
@@ -38,6 +39,7 @@ fn test_deposit_insufficient_allowance() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount: u256 = 1000;
     let user: ContractAddress = DEPOSIT_MOCK_USER.try_into().unwrap();
@@ -59,6 +61,7 @@ fn test_deposit_insufficient_balance() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount: u256 = 1000000000000000000000; // Very large amount
     let user: ContractAddress = DEPOSIT_MOCK_USER.try_into().unwrap();
@@ -81,6 +84,7 @@ fn test_deposit_success() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount: u256 = 1000;
     let user: ContractAddress = DEPOSIT_MOCK_USER.try_into().unwrap();
@@ -114,6 +118,7 @@ fn test_multiple_deposits() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount1: u256 = 1000;
     let deposit_amount2: u256 = 500;
@@ -141,6 +146,7 @@ fn test_multiple_users_deposit() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount1: u256 = 1000;
     let deposit_amount2: u256 = 2000;
@@ -173,6 +179,7 @@ fn test_storage_updates() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount: u256 = 1000;
     let user: ContractAddress = DEPOSIT_MOCK_USER.try_into().unwrap();
