@@ -51,6 +51,14 @@ def mock_get_all():
     ) as mock:
         yield mock
 
+@pytest.fixture
+def mock_update_order():
+    """
+    Mock the update_order method of order_crud.
+    """
+    with patch("app.api.order.order_crud.update_order") as mock:
+        yield mock
+
 
 def create_mock_order():
     """Helper function to create a mock Order instance"""
@@ -195,6 +203,68 @@ def test_get_order_invalid_id(client):
     """Test order retrieval with invalid UUID."""
     response = client.get("/order/not-a-uuid")
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+
+def test_update_order_success(client, mock_update_order):
+    mock_order = create_mock_order()
+    mock_update_order.return_value = mock_order
+
+    update_payload = {
+        "price": mock_order.price,
+        "token": mock_order.token,
+        "position": str(mock_order.position)
+    }
+
+    response = client.post(f"/order/{mock_order.id}", json=update_payload)
+
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    assert data["id"] == str(mock_order.id)
+    assert data["price"] == str(mock_order.price)
+    assert data["token"] == mock_order.token
+    assert data["position"] == str(mock_order.position)
+
+    mock_update_order.assert_called_once_with(
+        mock_order.id,
+        {"price": mock_order.price, "token": mock_order.token, "position": mock_order.position},
+    )
+
+
+def test_update_order_not_found(client, mock_update_order):
+    mock_update_order.return_value = None
+    order_id = uuid.uuid4()
+
+    response = client.post(
+        f"/order/{order_id}",
+        json={"price": 120.00},
+    )
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json()["detail"] == "Order not found"
+
+
+def test_update_order_invalid_id(client):
+    response = client.post("/order/invalid-uuid", json={"price": 120.00})
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+
+def test_update_order_invalid_payload(client):
+    order_id = uuid.uuid4()
+    response = client.post(f"/order/{order_id}", json={"price": "invalid"})
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+
+def test_update_order_db_error(client, mock_update_order):
+    mock_update_order.side_effect = SQLAlchemyError("DB Error")
+    order_id = uuid.uuid4()
+
+    response = client.post(
+        f"/order/{order_id}",
+        json={"price": 120.00},
+    )
+
+    assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    assert "Failed to update order" in response.json()["detail"]
 
 
 @pytest.fixture

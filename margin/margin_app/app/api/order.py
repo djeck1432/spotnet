@@ -14,6 +14,7 @@ from app.schemas.order import (
     UserOrderCreate,
     UserOrderGetAllResponse,
     UserOrderResponse,
+    UserOrderUpdate
 )
 from app.api.common import GetAllMediator
 
@@ -118,3 +119,33 @@ async def get_order(order_id: uuid.UUID) -> UserOrder:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get order: {str(e)}",
         )
+    
+
+@router.post(
+    "/{order_id}",
+    response_model=UserOrderUpdate,
+    status_code=status.HTTP_200_OK,
+    summary="Update an existing order",
+    description="Updates fields of an existing Order",
+)
+async def update_order(order_id: uuid.UUID, update_data: UserOrderUpdate) -> UserOrder:
+    """
+    Update Order By ID
+
+    Args:
+        order_id: UUID of the order
+        update_data: Fields to update
+
+    Returns:
+        Updated Order object
+
+    Raises:
+        HTTPException: If order not found or Database error
+    """
+    try:
+        updated_order = await order_crud.update_order(order_id, update_data.dict(exclude_unset=True))
+        if not updated_order:
+            raise HTTPException(status_code=404, detail="Order Not Found")
+        return updated_order
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update order: {str(e)}",)

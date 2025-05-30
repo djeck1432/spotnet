@@ -69,6 +69,20 @@ class UserOrderCRUD(DBConnector):
             UserOrder | None: The order object if found, None otherwise
         """
         return await self.get_object(order_id)
+    
+    async def update_order(self, order_id: uuid.UUID, update_data: dict) -> Optional[UserOrder]:
+        """
+        
+        """
+        order = await UserOrder.get(order_id)
+        if not order:
+            return None
+        
+        for key, value in update_data.items():
+            if value is not None:
+                setattr(order, key, value)
+        await order.save()
+        return order
 
 
 order_crud = UserOrderCRUD(UserOrder)

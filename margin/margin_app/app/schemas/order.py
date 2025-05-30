@@ -8,6 +8,7 @@ from decimal import Decimal
 from app.models.user_order import UserOrder
 from .base import GetAll
 from pydantic import BaseModel, Field, ConfigDict
+from typing import Optional
 
 
 class UserOrderCreate(BaseModel):
@@ -36,3 +37,11 @@ class UserOrderResponse(BaseModel):
 
 class UserOrderGetAllResponse(GetAll[UserOrderResponse]):
     """Schema retrieving all users"""
+
+
+class UserOrderUpdate(BaseModel):
+    """Schema for updating an order"""
+
+    price: Optional[float] = None
+    token: Optional[str] = None
+    position: Optional[str] = None

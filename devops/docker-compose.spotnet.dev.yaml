@@ -12,6 +12,8 @@ services:
     volumes:
       - ../spotnet/entrypoint.sh:/app/entrypoint.sh
       - ../spotnet:/app
+      - ../margin:/app/margin
+
     env_file:
       - ../spotnet/.env.dev
     ports:

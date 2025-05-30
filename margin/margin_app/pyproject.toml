@@ -20,7 +20,7 @@ isort = "^5.13.2"
 loguru = "^0.7.3"
 pydantic-settings = "^2.7.1"
 asyncpg = "^0.30.0"
-pydantic = {extras = ["email"], version = "^2.10.5"}
+pydantic = {extras = ["email"], version = "^2.11.5"}
 greenlet = "^3.1.1"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 argon2-cffi = "^23.1.0"
