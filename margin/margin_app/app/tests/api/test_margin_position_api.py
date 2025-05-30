@@ -37,6 +37,17 @@ def mock_close_margin_position():
 
 
 @pytest.fixture
+def mock_update_margin_position():
+    """
+    Mock the update_margin_position method of margin_position_crud.
+    """
+    with patch(
+        "app.api.margin_position.margin_position_crud.update_margin_position"
+    ) as mock:
+        yield mock
+
+
+@pytest.fixture
 def valid_position_data():
     """
     Create valid position data for testing.
@@ -46,6 +57,17 @@ def valid_position_data():
         "borrowed_amount": 1000.00,
         "multiplier": 5,
         "transaction_id": "txn_123456789",
+    }
+
+
+@pytest.fixture
+def valid_update_data():
+    """
+    Create valid update data for testing.
+    """
+    return {
+        "borrowed_amount": 1500.00,
+        "multiplier": 7,
     }
 
 
@@ -75,6 +97,133 @@ def test_open_margin_position_success(
     assert response.json()["multiplier"] == data["multiplier"]
     assert response.json()["status"] == "Open"
     mock_open_margin_position.assert_called_once()
+
+
+def test_update_margin_position_success(
+    client, valid_position_data, valid_update_data, mock_update_margin_position
+):
+    """Test successfully updating a margin position."""
+    position_id = uuid.uuid4()
+    
+    # Create the updated position response
+    updated_data = valid_position_data.copy()
+    updated_data.update(valid_update_data)
+    
+    updated_position_response = MarginPositionResponse(
+        id=position_id, status="Open", liquidated_at=None, **updated_data
+    )
+    mock_update_margin_position.return_value = updated_position_response
+
+    response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=valid_update_data)
+    
+    assert response.status_code == 200
+    assert response.json()["id"] == str(position_id)
+    assert response.json()["borrowed_amount"] == str(valid_update_data["borrowed_amount"])
+    assert response.json()["multiplier"] == valid_update_data["multiplier"]
+    assert response.json()["status"] == "Open"
+    mock_update_margin_position.assert_called_once()
+
+
+def test_update_margin_position_partial_update(
+    client, valid_position_data, mock_update_margin_position
+):
+    """Test updating a margin position with partial data (only multiplier)."""
+    position_id = uuid.uuid4()
+    partial_update_data = {"multiplier": 10}
+    
+    # Create response with only multiplier updated
+    updated_data = valid_position_data.copy()
+    updated_data["multiplier"] = partial_update_data["multiplier"]
+    
+    updated_position_response = MarginPositionResponse(
+        id=position_id, status="Open", liquidated_at=None, **updated_data
+    )
+    mock_update_margin_position.return_value = updated_position_response
+
+    response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=partial_update_data)
+    
+    assert response.status_code == 200
+    assert response.json()["multiplier"] == partial_update_data["multiplier"]
+    mock_update_margin_position.assert_called_once()
+
+
+def test_update_margin_position_not_found(client, valid_update_data, mock_update_margin_position):
+    """Test updating a non-existent margin position."""
+    position_id = uuid.uuid4()
+    mock_update_margin_position.return_value = None
+
+    response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=valid_update_data)
+    
+    assert response.status_code == 404
+    assert "not found" in response.json()["detail"]
+    mock_update_margin_position.assert_called_once()
+
+
+def test_update_margin_position_closed_position(client, valid_update_data, mock_update_margin_position):
+    """Test updating a closed margin position."""
+    position_id = uuid.uuid4()
+    mock_update_margin_position.side_effect = ValueError("Cannot update a closed margin position")
+
+    response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=valid_update_data)
+    
+    assert response.status_code == 400
+    assert "Cannot update a closed margin position" in response.json()["detail"]
+    mock_update_margin_position.assert_called_once()
+
+
+def test_update_margin_position_invalid_multiplier(client, mock_update_margin_position):
+    """Test updating a margin position with invalid multiplier."""
+    position_id = uuid.uuid4()
+    invalid_update_data = {"multiplier": 25}  # Invalid multiplier > 20
+    mock_update_margin_position.side_effect = ValueError("Multiplier must be between 1 and 20")
+
+    response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=invalid_update_data)
+    
+    assert response.status_code == 400
+    assert "Multiplier must be between 1 and 20" in response.json()["detail"]
+    mock_update_margin_position.assert_called_once()
+
+
+def test_update_margin_position_invalid_uuid(client, valid_update_data):
+    """Test updating a margin position with invalid UUID format."""
+    invalid_id = "not-a-uuid"
+
+    response = client.post(f"{MARGIN_POSITION_URL}/{invalid_id}", json=valid_update_data)
+    
+    assert response.status_code == 422
+
+
+def test_update_margin_position_empty_data(client, mock_update_margin_position):
+    """Test updating a margin position with empty data."""
+    position_id = uuid.uuid4()
+    empty_data = {}
+    
+    # Mock should still be called and return updated position
+    mock_update_margin_position.return_value = MarginPositionResponse(
+        id=position_id,
+        user_id=str(uuid.uuid4()),
+        borrowed_amount=1000.00,
+        multiplier=5,
+        transaction_id="txn_123",
+        status="Open",
+        liquidated_at=None
+    )
+
+    response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=empty_data)
+    
+    assert response.status_code == 200
+    mock_update_margin_position.assert_called_once()
+
+
+def test_update_margin_position_negative_borrowed_amount(client):
+    """Test updating a margin position with negative borrowed amount."""
+    position_id = uuid.uuid4()
+    invalid_data = {"borrowed_amount": -100.00}
+
+    response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=invalid_data)
+    
+    # Should be handled by Pydantic validation
+    assert response.status_code == 422
 
 
 def test_close_margin_position_success(client, mock_close_margin_position):

@@ -7,6 +7,7 @@ from decimal import Decimal
 from enum import Enum
 from uuid import UUID
 from pydantic import ConfigDict
+from typing import Optional
 
 from pydantic import BaseModel
 from .base import GetAll
@@ -52,6 +53,21 @@ class MarginPositionCreate(BaseModel):
     borrowed_amount: Decimal
     multiplier: int
     transaction_id: str
+
+
+class MarginPositionUpdate(BaseModel):
+    """
+    Pydantic model for updating a MarginPosition.
+    Only borrowed_amount and multiplier can be updated.
+    """
+
+    borrowed_amount: Optional[Decimal] = None
+    multiplier: Optional[int] = None
+
+    class Config:
+        """Pydantic configuration class"""
+
+        from_attributes = True
 
 
 class MarginPositionResponse(BaseModel):

@@ -10,7 +10,7 @@ from typing import List, Optional
 from app.crud.base import DBConnector
 from app.models.margin_position import MarginPosition
 from app.models.margin_position import MarginPositionStatus
-from app.schemas.margin_position import MarginPositionResponse
+from app.schemas.margin_position import MarginPositionResponse, MarginPositionUpdate
 
 
 class MarginPositionCRUD(DBConnector):
@@ -41,6 +41,43 @@ class MarginPositionCRUD(DBConnector):
         )
         position = await self.write_to_db(position_entry)
         return position
+
+    async def update_margin_position(
+        self,
+        position_id: uuid.UUID,
+        update_data: MarginPositionUpdate,
+    ) -> Optional[MarginPosition]:
+        """
+        Updates a margin position with the provided data.
+        
+        :param position_id: UUID of the position to update
+        :param update_data: MarginPositionUpdate containing fields to update
+        :return: Updated MarginPosition or None if not found
+        :raises ValueError: If position is closed or if multiplier is out of range
+        """
+        position = await self.get_object(position_id)
+        if not position:
+            return None
+        
+        # Check if position is closed
+        if position.status == MarginPositionStatus.CLOSED:
+            raise ValueError("Cannot update a closed margin position")
+        
+        # Validate multiplier range if provided
+        if update_data.multiplier is not None:
+            if update_data.multiplier < 1 or update_data.multiplier > 20:
+                raise ValueError("Multiplier must be between 1 and 20")
+        
+        # Update only provided fields
+        if update_data.borrowed_amount is not None:
+            position.borrowed_amount = update_data.borrowed_amount
+        
+        if update_data.multiplier is not None:
+            position.multiplier = update_data.multiplier
+        
+        # Save changes to database
+        updated_position = await self.write_to_db(position)
+        return updated_position
 
     async def close_margin_position(
         self, position_id: uuid.UUID

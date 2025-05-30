@@ -23,6 +23,7 @@ from app.schemas.margin_position import (
     MarginPositionCreate,
     MarginPositionResponse,
     MarginPositionGetAllResponse,
+    MarginPositionUpdate,
 )
 
 router = APIRouter()
@@ -52,6 +53,42 @@ async def open_margin_position(
             transaction_id=position_data.transaction_id,
         )
         return position
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.post("/{margin_position_id}", response_model=MarginPositionResponse)
+async def update_margin_position(
+    margin_position_id: UUID,
+    update_data: MarginPositionUpdate,
+) -> MarginPositionResponse:
+    """
+    Updates a margin position with the provided data.
+
+    Args:
+        margin_position_id (UUID): The unique identifier of the margin position to update
+        update_data (MarginPositionUpdate): The data to update the position with
+
+    Returns:
+        MarginPositionResponse: The updated margin position
+
+    Raises:
+        HTTPException: 404 error if the position is not found
+        HTTPException: 400 error if the position cannot be updated (e.g., closed position, invalid data)
+    """
+    try:
+        updated_position = await margin_position_crud.update_margin_position(
+            position_id=margin_position_id,
+            update_data=update_data,
+        )
+        
+        if not updated_position:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Margin position with id {margin_position_id} not found"
+            )
+        
+        return updated_position
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
 

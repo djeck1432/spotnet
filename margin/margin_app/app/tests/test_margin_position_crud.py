@@ -10,6 +10,7 @@ import pytest
 
 from app.crud.margin_position import MarginPositionCRUD
 from app.models.margin_position import MarginPosition, MarginPositionStatus
+from app.schemas.margin_position import MarginPositionUpdate
 
 
 @pytest.fixture
@@ -181,3 +182,292 @@ async def test_close_margin_position_db_error(
             assert mock_get.called
             assert mock_write.called
             assert "Database error" in str(exc_info.value)
+
+
+@pytest.fixture
+def sample_position():
+    """Create a sample margin position for testing."""
+    return MarginPosition(
+        id=uuid.uuid4(),
+        user_id=uuid.uuid4(),
+        borrowed_amount=Decimal("1000.00"),
+        multiplier=5,
+        transaction_id="txn_123456789",
+        status=MarginPositionStatus.OPEN,
+        liquidated_at=None
+    )
+
+
+@pytest.fixture
+def closed_position():
+    """Create a sample closed margin position for testing."""
+    return MarginPosition(
+        id=uuid.uuid4(),
+        user_id=uuid.uuid4(),
+        borrowed_amount=Decimal("1000.00"),
+        multiplier=5,
+        transaction_id="txn_123456789",
+        status=MarginPositionStatus.CLOSED,
+        liquidated_at=None
+    )
+
+
+class TestMarginPositionCRUD:
+    """
+    Test the MarginPositionCRUD class
+    """
+
+    @pytest.mark.asyncio
+    async def test_update_margin_position_success(self, margin_crud, sample_position):
+        """Test successfully updating a margin position."""
+        position_id = sample_position.id
+        update_data = MarginPositionUpdate(
+            borrowed_amount=Decimal("1500.00"),
+            multiplier=7
+        )
+        
+        # Mock get_object to return the sample position
+        with patch.object(
+            margin_crud, "get_object", return_value=sample_position
+        ) as mock_get, patch.object(
+            margin_crud, "write_to_db", return_value=sample_position
+        ) as mock_write:
+            
+            result = await margin_crud.update_margin_position(
+                position_id, update_data
+            )
+            
+            assert result == sample_position
+            assert result.borrowed_amount == Decimal("1500.00")
+            assert result.multiplier == 7
+            mock_get.assert_called_once_with(position_id)
+            mock_write.assert_called_once_with(sample_position)
+
+    @pytest.mark.asyncio
+    async def test_update_margin_position_partial_update(self, margin_crud, sample_position):
+        """Test updating a margin position with partial data."""
+        position_id = sample_position.id
+        update_data = MarginPositionUpdate(multiplier=10)  # Only update multiplier
+        
+        original_borrowed_amount = sample_position.borrowed_amount
+        
+        with patch.object(
+            margin_crud, "get_object", return_value=sample_position
+        ) as mock_get, patch.object(
+            margin_crud, "write_to_db", return_value=sample_position
+        ) as mock_write:
+            
+            result = await margin_crud.update_margin_position(
+                position_id, update_data
+            )
+            
+            assert result == sample_position
+            assert result.borrowed_amount == original_borrowed_amount
+            assert result.multiplier == 10
+            mock_get.assert_called_once_with(position_id)
+            mock_write.assert_called_once_with(sample_position)
+
+    @pytest.mark.asyncio
+    async def test_update_margin_position_not_found(self, margin_crud):
+        """Test updating a non-existent margin position."""
+        position_id = uuid.uuid4()
+        update_data = MarginPositionUpdate(borrowed_amount=Decimal("1500.00"))
+        
+        with patch.object(
+            margin_crud, "get_object", return_value=None
+        ) as mock_get:
+            
+            result = await margin_crud.update_margin_position(
+                position_id, update_data
+            )
+            
+            assert result is None
+            mock_get.assert_called_once_with(position_id)
+
+    @pytest.mark.asyncio
+    async def test_update_margin_position_closed_position(self, margin_crud, closed_position):
+        """Test updating a closed margin position should raise ValueError."""
+        position_id = closed_position.id
+        update_data = MarginPositionUpdate(borrowed_amount=Decimal("1500.00"))
+        
+        with patch.object(
+            margin_crud, "get_object", return_value=closed_position
+        ) as mock_get:
+            
+            with pytest.raises(ValueError, match="Cannot update a closed margin position"):
+                await margin_crud.update_margin_position(
+                    position_id, update_data
+                )
+            
+            mock_get.assert_called_once_with(position_id)
+
+    @pytest.mark.asyncio
+    async def test_update_margin_position_invalid_multiplier_too_high(self, margin_crud, sample_position):
+        """Test updating with multiplier > 20 should raise ValueError."""
+        position_id = sample_position.id
+        update_data = MarginPositionUpdate(multiplier=25)  # Invalid: > 20
+        
+        with patch.object(
+            margin_crud, "get_object", return_value=sample_position
+        ) as mock_get:
+            
+            with pytest.raises(ValueError, match="Multiplier must be between 1 and 20"):
+                await margin_crud.update_margin_position(
+                    position_id, update_data
+                )
+            
+            mock_get.assert_called_once_with(position_id)
+
+    @pytest.mark.asyncio
+    async def test_update_margin_position_invalid_multiplier_too_low(self, margin_crud, sample_position):
+        """Test updating with multiplier < 1 should raise ValueError."""
+        position_id = sample_position.id
+        update_data = MarginPositionUpdate(multiplier=0)  # Invalid: < 1
+        
+        with patch.object(
+            margin_crud, "get_object", return_value=sample_position
+        ) as mock_get:
+            
+            with pytest.raises(ValueError, match="Multiplier must be between 1 and 20"):
+                await margin_crud.update_margin_position(
+                    position_id, update_data
+                )
+            
+            mock_get.assert_called_once_with(position_id)
+
+    @pytest.mark.asyncio
+    async def test_update_margin_position_valid_multiplier_boundaries(self, margin_crud, sample_position):
+        """Test updating with multiplier at valid boundaries (1 and 20)."""
+        position_id = sample_position.id
+        
+        # Test multiplier = 1
+        update_data_1 = MarginPositionUpdate(multiplier=1)
+        with patch.object(
+            margin_crud, "get_object", return_value=sample_position
+        ), patch.object(
+            margin_crud, "write_to_db", return_value=sample_position
+        ):
+            result = await margin_crud.update_margin_position(
+                position_id, update_data_1
+            )
+            assert result.multiplier == 1
+        
+        # Test multiplier = 20
+        update_data_20 = MarginPositionUpdate(multiplier=20)
+        with patch.object(
+            margin_crud, "get_object", return_value=sample_position
+        ), patch.object(
+            margin_crud, "write_to_db", return_value=sample_position
+        ):
+            result = await margin_crud.update_margin_position(
+                position_id, update_data_20
+            )
+            assert result.multiplier == 20
+
+    @pytest.mark.asyncio
+    async def test_update_margin_position_empty_update(self, margin_crud, sample_position):
+        """Test updating with no data should still work."""
+        position_id = sample_position.id
+        update_data = MarginPositionUpdate()  # No fields to update
+        
+        original_borrowed_amount = sample_position.borrowed_amount
+        original_multiplier = sample_position.multiplier
+        
+        with patch.object(
+            margin_crud, "get_object", return_value=sample_position
+        ) as mock_get, patch.object(
+            margin_crud, "write_to_db", return_value=sample_position
+        ) as mock_write:
+            
+            result = await margin_crud.update_margin_position(
+                position_id, update_data
+            )
+            
+            assert result == sample_position
+            assert result.borrowed_amount == original_borrowed_amount
+            assert result.multiplier == original_multiplier
+            mock_get.assert_called_once_with(position_id)
+            mock_write.assert_called_once_with(sample_position)
+
+    @pytest.mark.asyncio
+    async def test_close_margin_position_success(self):
+        """Test successfully closing a margin position."""
+        position_id = uuid.uuid4()
+        mock_position = MarginPosition(
+            id=position_id,
+            user_id=uuid.uuid4(),
+            borrowed_amount=Decimal("1000.00"),
+            multiplier=5,
+            transaction_id="test",
+            status=MarginPositionStatus.OPEN,
+        )
+
+        with patch.object(
+            margin_crud, "get_object", return_value=mock_position
+        ) as mock_get, patch.object(
+            margin_crud, "write_to_db", return_value=mock_position
+        ) as mock_write:
+
+            result = await margin_crud.close_margin_position(position_id)
+
+            assert result == MarginPositionStatus.CLOSED
+            assert mock_position.status == MarginPositionStatus.CLOSED
+            mock_get.assert_called_once_with(position_id)
+            mock_write.assert_called_once_with(mock_position)
+
+    @pytest.mark.asyncio
+    async def test_close_margin_position_not_found(self):
+        """Test closing a non-existent margin position."""
+        position_id = uuid.uuid4()
+
+        with patch.object(
+            margin_crud, "get_object", return_value=None
+        ) as mock_get:
+
+            result = await margin_crud.close_margin_position(position_id)
+
+            assert result is None
+            mock_get.assert_called_once_with(position_id)
+
+    @pytest.mark.asyncio
+    async def test_get_all_liquidated_positions_success(self):
+        """Test getting all liquidated positions successfully."""
+        liquidated_positions = [
+            MarginPosition(
+                id=uuid.uuid4(),
+                user_id=uuid.uuid4(),
+                borrowed_amount=Decimal("1000.00"),
+                multiplier=5,
+                transaction_id="test1",
+                liquidated_at="2023-01-01T00:00:00",
+            ),
+            MarginPosition(
+                id=uuid.uuid4(),
+                user_id=uuid.uuid4(),
+                borrowed_amount=Decimal("2000.00"),
+                multiplier=3,
+                transaction_id="test2",
+                liquidated_at="2023-01-02T00:00:00",
+            ),
+        ]
+
+        with patch.object(
+            margin_crud, "get_objects", return_value=liquidated_positions
+        ) as mock_get_objects:
+
+            result = await margin_crud.get_all_liquidated_positions()
+
+            assert len(result) == 2
+            mock_get_objects.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_get_all_liquidated_positions_error(self):
+        """Test error handling when getting liquidated positions fails."""
+        with patch.object(
+            margin_crud, "get_objects", side_effect=Exception("Database error")
+        ) as mock_get_objects:
+
+            with pytest.raises(Exception, match="Error retrieving liquidated positions"):
+                await margin_crud.get_all_liquidated_positions()
+
+            mock_get_objects.assert_called_once()
