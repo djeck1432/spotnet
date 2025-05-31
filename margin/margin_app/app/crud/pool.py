@@ -155,6 +155,19 @@ class UserPoolCRUD(DBConnector):
             await db.refresh(user_pool)
             return user_pool
 
+    async def get_user_pool_by_id(self, user_pool_id: uuid.UUID) -> Optional[UserPool]:
+        """
+        Fetch a user pool by its ID.
+
+        Args:
+            user_pool_id (uuid.UUID): The ID of the user pool to fetch.
+
+        Returns:
+            Optional[UserPool]: The user pool if found, None otherwise.
+        """
+        async with self.session() as db:
+            return await db.get(UserPool, user_pool_id)        
+
 
 pool_crud = PoolCRUD(Pool)
 user_pool_crud = UserPoolCRUD(UserPool)

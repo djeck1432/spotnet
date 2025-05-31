@@ -233,3 +233,38 @@ async def update_user_pool(user_pool: UserPoolUpdate) -> UserPoolUpdateResponse:
         ) from e
 
     return updated_pool
+
+@router.get(
+    "/user_pool/{user_pool_id}",
+    response_model=UserPoolResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_user_pool(user_pool_id: UUID) -> UserPoolResponse:
+    """
+    Get a user pool by its ID
+
+    :param user_pool_id: UUID of the user pool to fetch
+    :return: UserPoolResponse - The user pool if found
+    :raises: HTTPException with 404 if user pool not found
+    """
+    try:
+        user_pool = await user_pool_crud.get_user_pool_by_id(user_pool_id)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        ) from e
+    except Exception as e:
+        logger.error(f"Error fetching user pool: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Something went wrong.",
+        ) from e
+
+    if not user_pool:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User pool with id {user_pool_id} not found",
+        )
+    return user_pool
+
