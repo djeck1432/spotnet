@@ -83,3 +83,12 @@ class AddMarginPositionResponse(BaseSchema):
     transaction_id: str
     liquidated_at: datetime
     status: MarginPositionStatus
+
+
+class UserLogin(BaseSchema):
+    """
+    Request model for user login
+    """
+
+    email: str
+    password: str

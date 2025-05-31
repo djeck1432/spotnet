@@ -43,6 +43,28 @@ def create_access_token(email: str, expires_delta: timedelta | None = None):
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
 
 
+def create_refresh_token(email: str, expires_delta: timedelta | None = None):
+    """
+    Generates auth jwt token for a given email address
+
+    Parameters:
+    - email: str, email of the user
+
+    Returns:
+    - str: The encoded JWT as a string
+    """
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        minutes = settings.refresh_token_expire_minutes
+        expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)
+    to_encode = {
+        "sub": email,
+        "exp": expire,
+     }
+    return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
+
+
 async def get_current_user(token: str) -> Admin:
     """
     Retrieves the current user based on the provided JWT token.
