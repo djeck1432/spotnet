@@ -13,7 +13,7 @@ const roles: {
 }[] = [
     { value: 'softwareEngineer', label: 'Developer', icon: <HiOutlineCode /> },
     { value: 'productManager', label: 'Manager', icon: <HiOutlineCube /> },
-    { value: 'designer', label: 'Designer', icon: <HiOutlinePencil /> },
+    { value: 'de`sign`er', label: 'Designer', icon: <HiOutlinePencil /> },
 ]
 
 const Example = () => {
