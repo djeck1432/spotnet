@@ -17,6 +17,7 @@ from app.schemas.admin import (
     AdminResponse,
     AdminResetPassword,
     AdminGetAllResponse,
+    AdminUpdateRequest
 )
 from app.services.auth.base import get_admin_user_from_state
 from app.services.auth.security import get_password_hash, verify_password
@@ -194,3 +195,43 @@ async def reset_password(data: AdminResetPassword, token: str):
     admin.password = get_password_hash(data.new_password)
     await admin_crud.write_to_db(admin)
     return JSONResponse(content={"message": "Password was changed"})
+
+
+@router.post(
+    "/{admin_id}",
+    response_model=AdminResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Update admin",
+    description="Update the name of an admin by ID",
+)
+async def update_admin_name(
+    admin_id: UUID,
+    data: AdminUpdateRequest,
+) -> AdminResponse:
+    """
+    Update an admin's name.
+
+    Parameters:
+    - admin_id: UUID of the admin to update
+    - data: AdminUpdateRequest containing updated fields
+
+    Returns:
+    - AdminResponse: Updated admin data
+
+    Raises:
+    - HTTPException: If admin is not found
+    """
+    admin = await admin_crud.get_object(admin_id)
+
+    if not admin:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Admin not found.",
+        )
+
+    if data.name:
+        admin.name = data.name
+
+    updated_admin = await admin_crud.write_to_db(admin)
+
+    return AdminResponse(id=updated_admin.id, name=updated_admin.name, email=updated_admin.email)

@@ -48,3 +48,10 @@ class AdminGetAllResponse(GetAll[AdminResponse]):
     """
     Admin get all response model
     """
+
+
+class AdminUpdateRequest(BaseModel):
+    """
+    Admin update request model (for updating admin fields)
+    """
+    name: Optional[str] = None
