@@ -37,6 +37,7 @@ sendgrid = "^6.9.0"
 requests = "^2.32.3"
 starlette = "^0.46.1"
 itsdangerous = "^2.2.0"
+mjml = "^0.11.1"
 
 [build-system]
 requires = ["poetry-core"]
