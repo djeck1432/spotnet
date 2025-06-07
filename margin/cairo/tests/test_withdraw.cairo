@@ -23,6 +23,7 @@ fn test_withdraw_zero_amount() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount: u256 = 1000;
     let zero_amount: u256 = 0;
@@ -46,6 +47,7 @@ fn test_withdraw_insufficient_balance() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount: u256 = 1000;
     let withdraw_amount: u256 = 2000; // More than deposited
@@ -68,6 +70,7 @@ fn test_withdraw_success() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount: u256 = 1000;
     let withdraw_amount: u256 = 500;
@@ -104,6 +107,7 @@ fn test_multiple_withdrawals() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount: u256 = 1000;
     let withdraw_amount1: u256 = 300;
@@ -141,6 +145,7 @@ fn test_withdraw_full_amount() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount: u256 = 1000;
     let user: ContractAddress = WITHDRAW_MOCK_USER.try_into().unwrap();
@@ -172,6 +177,7 @@ fn test_storage_updates_after_withdraw() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount: u256 = 1000;
     let withdraw_amount: u256 = 600;
@@ -212,6 +218,7 @@ fn test_multiple_users_withdraw() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     let deposit_amount1: u256 = 1000;
     let deposit_amount2: u256 = 2000;
@@ -267,6 +274,7 @@ fn test_withdraw_from_separate_pools() {
         HYPOTHETICAL_OWNER_ADDR.try_into().unwrap(),
         deploy_erc20_mock(ERC20_MOCK_CONTRACT(), "ERC20Mock"),
         deploy_pragma_mock(),
+        false,
     );
     // Deploy a second token
     let token2_address = deploy_erc20_mock_2();
