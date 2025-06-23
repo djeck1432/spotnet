@@ -24,7 +24,7 @@ import {
 } from './data/cryptoData'
 import {
     settingData,
-    settingIntergrationData,
+    settingIntegrationData,
     settingBillingData,
     invoiceData,
     logData,
@@ -67,7 +67,7 @@ export function mockServer({ environment = 'test' }) {
                 ordersData,
                 orderDetailsData,
                 settingData,
-                settingIntergrationData,
+                settingIntegrationData,
                 settingBillingData,
                 invoiceData,
                 logData,
