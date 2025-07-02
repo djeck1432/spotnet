@@ -3,7 +3,8 @@ This module contains Pydantic schemas for admin.
 """
 
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
+from decimal import Decimal
 from .base import GetAll, BaseSchema
 from pydantic import EmailStr, ConfigDict
 
@@ -69,3 +70,24 @@ class AdminLogin(BaseSchema):
 
     email: str
     password: str
+
+
+class AssetStatisticResponse(BaseSchema):
+    """
+    Asset statistic response model
+    """
+    token: str
+    total_amount: Decimal
+    total_value: Decimal
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class AssetStatisticsResponse(BaseSchema):
+    """
+    Asset statistics response model
+    """
+    assets: List[AssetStatisticResponse]
+    total_portfolio_value: Decimal
+
+    model_config = ConfigDict(from_attributes=True)

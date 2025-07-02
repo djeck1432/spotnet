@@ -254,3 +254,149 @@ def test_name_optional(
         headers={"Authorization": f"Bearer {token}"},
     )
     assert response.status_code == 201
+
+
+# Tests for the new asset statistics endpoint
+@patch("app.api.admin.get_admin_user_from_state", new_callable=AsyncMock)
+@patch("app.contract_tools.mixins.admin.AdminMixin.get_asset_statistics", new_callable=AsyncMock)
+def test_get_asset_statistics_success(
+    mock_get_asset_statistics, mock_get_admin_user, client
+):
+    """
+    Test successful retrieval of asset statistics.
+    """
+    # Mock admin authentication
+    mock_get_admin_user.return_value = make_admin_obj(test_admin_object)
+    
+    # Mock asset statistics data
+    mock_asset_data = [
+        {
+            "token": "ETH",
+            "total_amount": "15.5",
+            "total_value": "31000.0"
+        },
+        {
+            "token": "STRK", 
+            "total_amount": "100.0",
+            "total_value": "150.0"
+        }
+    ]
+    mock_get_asset_statistics.return_value = mock_asset_data
+    
+    token = create_access_token(test_admin_object["email"])
+    response = client.get(
+        ADMIN_URL + "statistic/assets",
+        headers={"Authorization": f"Bearer {token}"}
+    )
+    
+    assert response.status_code == 200
+    response_data = response.json()
+    assert "assets" in response_data
+    assert "total_portfolio_value" in response_data
+    assert len(response_data["assets"]) == 2
+    assert response_data["total_portfolio_value"] == "31150.0"  # 31000 + 150
+
+
+@patch("app.api.admin.get_admin_user_from_state", new_callable=AsyncMock)
+def test_get_asset_statistics_unauthorized(mock_get_admin_user, client):
+    """
+    Test that unauthenticated users cannot access asset statistics.
+    """
+    mock_get_admin_user.return_value = None
+    
+    token = create_access_token("nouser@example.com")
+    response = client.get(
+        ADMIN_URL + "statistic/assets",
+        headers={"Authorization": f"Bearer {token}"}
+    )
+    
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Authentication required"
+
+
+@patch("app.api.admin.get_admin_user_from_state", new_callable=AsyncMock)
+@patch("app.contract_tools.mixins.admin.AdminMixin.get_asset_statistics", new_callable=AsyncMock)
+def test_get_asset_statistics_empty_data(
+    mock_get_asset_statistics, mock_get_admin_user, client
+):
+    """
+    Test asset statistics endpoint with no data available.
+    """
+    mock_get_admin_user.return_value = make_admin_obj(test_admin_object)
+    mock_get_asset_statistics.return_value = []
+    
+    token = create_access_token(test_admin_object["email"])
+    response = client.get(
+        ADMIN_URL + "statistic/assets",
+        headers={"Authorization": f"Bearer {token}"}
+    )
+    
+    assert response.status_code == 200
+    response_data = response.json()
+    assert response_data["assets"] == []
+    assert response_data["total_portfolio_value"] == "0"
+
+
+@patch("app.api.admin.get_admin_user_from_state", new_callable=AsyncMock)
+@patch("app.contract_tools.mixins.admin.AdminMixin.get_asset_statistics", new_callable=AsyncMock)
+def test_get_asset_statistics_error_handling(
+    mock_get_asset_statistics, mock_get_admin_user, client
+):
+    """
+    Test asset statistics endpoint error handling.
+    """
+    mock_get_admin_user.return_value = make_admin_obj(test_admin_object)
+    mock_get_asset_statistics.side_effect = Exception("Database connection failed")
+    
+    token = create_access_token(test_admin_object["email"])
+    response = client.get(
+        ADMIN_URL + "statistic/assets",
+        headers={"Authorization": f"Bearer {token}"}
+    )
+    
+    assert response.status_code == 500
+    assert "Error calculating asset statistics" in response.json()["detail"]
+
+
+@patch("app.api.admin.get_admin_user_from_state", new_callable=AsyncMock)
+@patch("app.contract_tools.mixins.admin.AdminMixin.get_asset_statistics", new_callable=AsyncMock)
+def test_get_asset_statistics_single_token(
+    mock_get_asset_statistics, mock_get_admin_user, client
+):
+    """
+    Test asset statistics with a single token.
+    """
+    mock_get_admin_user.return_value = make_admin_obj(test_admin_object)
+    
+    mock_asset_data = [
+        {
+            "token": "ETH",
+            "total_amount": "10.0", 
+            "total_value": "20000.0"
+        }
+    ]
+    mock_get_asset_statistics.return_value = mock_asset_data
+    
+    token = create_access_token(test_admin_object["email"])
+    response = client.get(
+        ADMIN_URL + "statistic/assets",
+        headers={"Authorization": f"Bearer {token}"}
+    )
+    
+    assert response.status_code == 200
+    response_data = response.json()
+    assert len(response_data["assets"]) == 1
+    assert response_data["assets"][0]["token"] == "ETH"
+    assert response_data["assets"][0]["total_amount"] == "10.0"
+    assert response_data["assets"][0]["total_value"] == "20000.0"
+    assert response_data["total_portfolio_value"] == "20000.0"
+
+
+def test_get_asset_statistics_no_auth_header(client):
+    """
+    Test asset statistics endpoint without authorization header.
+    """
+    response = client.get(ADMIN_URL + "statistic/assets")
+    
+    # Should return 401 or 422 depending on auth middleware implementation
+    assert response.status_code in [401, 422]

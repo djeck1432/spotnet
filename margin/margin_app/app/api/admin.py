@@ -16,13 +16,17 @@ from app.schemas.admin import (
     AdminResponse,
     AdminResetPassword,
     AdminGetAllResponse,
-    AdminUpdateRequest
+    AdminUpdateRequest,
+    AssetStatisticsResponse,
+    AssetStatisticResponse
 )
 from app.services.auth.base import get_admin_user_from_state
 from app.services.auth.security import get_password_hash, verify_password
 from app.services.emails import email_service
+from app.contract_tools.mixins.admin import AdminMixin
 from fastapi.responses import JSONResponse
 from pydantic import EmailStr
+from decimal import Decimal
 
 router = APIRouter(prefix="")
 
@@ -261,3 +265,83 @@ async def update_admin_name(
     return AdminResponse(
         id=updated_admin.id, name=updated_admin.name, email=updated_admin.email
     )
+
+
+@router.get(
+    "/statistic/assets",
+    response_model=AssetStatisticsResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get asset statistics",
+    description="Retrieve asset statistics including total amounts and values for all tokens",
+)
+async def get_asset_statistics(
+    request: Request
+) -> AssetStatisticsResponse:
+    """
+    Get asset statistics by calculating the total amounts across all user pools
+    and multiplying them by their current prices.
+
+    This endpoint:
+    1. Retrieves all user pools from the database
+    2. Groups them by token and sums the amounts
+    3. Fetches current token prices from AVNU API
+    4. Calculates total values for each token
+    5. Returns comprehensive asset statistics
+
+    Parameters:
+        request: The request object containing the authenticated user state
+
+    Returns:
+        AssetStatisticsResponse: Comprehensive asset statistics including individual
+                                token data and total portfolio value
+
+    Raises:
+        HTTPException: If authentication fails or there's an error calculating statistics
+    """
+    # Verify admin authentication
+    current_admin = await get_admin_user_from_state(request)
+    if not current_admin:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail="Authentication required"
+        )
+
+    try:
+        logger.info("Starting asset statistics calculation for admin request")
+        
+        # Get asset statistics using the AdminMixin
+        asset_data = await AdminMixin.get_asset_statistics()
+        
+        if not asset_data:
+            logger.warning("No asset data found")
+            return AssetStatisticsResponse(
+                assets=[], 
+                total_portfolio_value=Decimal('0')
+            )
+
+        # Convert to response schema and calculate total portfolio value
+        assets = []
+        total_portfolio_value = Decimal('0')
+        
+        for asset in asset_data:
+            asset_response = AssetStatisticResponse(
+                token=asset['token'],
+                total_amount=asset['total_amount'],
+                total_value=asset['total_value']
+            )
+            assets.append(asset_response)
+            total_portfolio_value += asset['total_value']
+
+        logger.info(f"Successfully calculated statistics for {len(assets)} assets, total portfolio value: {total_portfolio_value}")
+        
+        return AssetStatisticsResponse(
+            assets=assets,
+            total_portfolio_value=total_portfolio_value
+        )
+
+    except Exception as e:
+        logger.error(f"Failed to calculate asset statistics: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error calculating asset statistics: {str(e)}"
+        ) from e
