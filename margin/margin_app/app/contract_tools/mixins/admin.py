@@ -87,8 +87,8 @@ class AdminMixin:
         
         try:
             # Get all user pools with their associated pool information
-            user_pools = await user_pool_crud.get_all_objects()
-            logger.debug(f"Retrieved {len(user_pools)} user pool entries")
+            user_pools = await user_pool_crud.get_objects()
+            logger.debug(f"Retrieved {len(user_pools) if user_pools else 0} user pool entries")
             
             if not user_pools:
                 logger.warning("No user pools found")

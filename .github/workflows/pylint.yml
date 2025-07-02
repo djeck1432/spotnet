@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch full git history for git ls-files to work
 
       - name: Install dependencies
         run: |
@@ -28,5 +30,22 @@ jobs:
 
       - name: Analysing the code with pylint
         run: |
-          pylint $(git ls-files '*.py') --disable=all --enable=C0114,C0115,C0116,C0301
+          # Try git ls-files first
+          files=$(git ls-files '*.py' 2>/dev/null || true)
+          
+          # If git ls-files doesn't work, fall back to find
+          if [ -z "$files" ]; then
+            echo "git ls-files didn't find any Python files, trying find..."
+            files=$(find . -name "*.py" -not -path "./.*" -not -path "./venv/*" -not -path "./.venv/*" | head -20)
+          fi
+          
+          # If still no files found, exit gracefully
+          if [ -z "$files" ]; then
+            echo "No Python files to lint."
+            exit 0
+          fi
+          
+          echo "Found Python files to lint:"
+          echo "$files"
+          pylint $files --disable=all --enable=C0114,C0115,C0116,C0301
 

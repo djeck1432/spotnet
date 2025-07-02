@@ -43,7 +43,8 @@ class RangeInterval(int):
 
 _old_interpret_range = Over._interpret_range
 
-type _IntOrRange = IntOrBaseRange | RangeInterval
+# Type alias for Python 3.11 compat (type statement requires Python 3.12+)
+_IntOrRange = IntOrBaseRange | RangeInterval
 
 
 def _interpret_range(
