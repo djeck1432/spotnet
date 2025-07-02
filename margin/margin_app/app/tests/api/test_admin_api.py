@@ -311,7 +311,7 @@ def test_get_asset_statistics_unauthorized(mock_get_admin_user, client):
     )
     
     assert response.status_code == 401
-    assert response.json()["detail"] == "Authentication required"
+    assert response.json()["detail"] == "Authentication error."
 
 
 @patch("app.api.admin.get_admin_user_from_state", new_callable=AsyncMock)

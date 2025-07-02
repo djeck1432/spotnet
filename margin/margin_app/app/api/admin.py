@@ -303,7 +303,7 @@ async def get_asset_statistics(
     if not current_admin:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, 
-            detail="Authentication required"
+            detail="Authentication error."
         )
 
     try:
