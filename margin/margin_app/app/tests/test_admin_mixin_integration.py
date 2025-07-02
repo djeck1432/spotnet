@@ -64,9 +64,9 @@ class TestAdminMixinIntegration:
         }
         
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.return_value = mock_user_pools
+            mock_crud.get_objects = AsyncMock(return_value=mock_user_pools)
             
-            with patch.object(AdminMixin, 'get_current_prices', return_value=mock_prices):
+            with patch.object(AdminMixin, 'get_current_prices', new_callable=AsyncMock, return_value=mock_prices):
                 result = await AdminMixin.get_asset_statistics()
                 
                 assert len(result) == 2
@@ -113,9 +113,9 @@ class TestAdminMixinIntegration:
         expected_value = expected_total * Decimal("2000.0")
         
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.return_value = mock_user_pools
+            mock_crud.get_objects = AsyncMock(return_value=mock_user_pools)
             
-            with patch.object(AdminMixin, 'get_current_prices', return_value=mock_prices):
+            with patch.object(AdminMixin, 'get_current_prices', new_callable=AsyncMock, return_value=mock_prices):
                 result = await AdminMixin.get_asset_statistics()
                 
                 assert len(result) == 1
@@ -155,9 +155,9 @@ class TestAdminMixinIntegration:
         mock_prices = {"ETH": Decimal("2000.123456789")}
         
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.return_value = mock_user_pools
+            mock_crud.get_objects = AsyncMock(return_value=mock_user_pools)
             
-            with patch.object(AdminMixin, 'get_current_prices', return_value=mock_prices):
+            with patch.object(AdminMixin, 'get_current_prices', new_callable=AsyncMock, return_value=mock_prices):
                 result = await AdminMixin.get_asset_statistics()
                 
                 assert len(result) == 1
@@ -194,9 +194,9 @@ class TestAdminMixinIntegration:
         expected_total = sum(user_amounts)
         
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.return_value = mock_user_pools
+            mock_crud.get_objects = AsyncMock(return_value=mock_user_pools)
             
-            with patch.object(AdminMixin, 'get_current_prices', return_value=mock_prices):
+            with patch.object(AdminMixin, 'get_current_prices', new_callable=AsyncMock, return_value=mock_prices):
                 result = await AdminMixin.get_asset_statistics()
                 
                 assert len(result) == 1
@@ -234,9 +234,9 @@ class TestAdminMixinIntegration:
         mock_prices = {"ETH": Decimal("2000.0")}
         
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.return_value = mock_user_pools
+            mock_crud.get_objects = AsyncMock(return_value=mock_user_pools)
             
-            with patch.object(AdminMixin, 'get_current_prices', return_value=mock_prices):
+            with patch.object(AdminMixin, 'get_current_prices', new_callable=AsyncMock, return_value=mock_prices):
                 result = await AdminMixin.get_asset_statistics()
                 
                 assert len(result) == 1
@@ -299,9 +299,9 @@ class TestAdminMixinIntegration:
         }
         
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.return_value = mock_user_pools
+            mock_crud.get_objects = AsyncMock(return_value=mock_user_pools)
             
-            with patch.object(AdminMixin, 'get_current_prices', return_value=mock_prices):
+            with patch.object(AdminMixin, 'get_current_prices', new_callable=AsyncMock, return_value=mock_prices):
                 result = await AdminMixin.get_asset_statistics()
                 
                 assert len(result) == 3

@@ -122,10 +122,10 @@ class TestAdminMixin:
 
         # Mock user_pool_crud
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.return_value = mock_user_pools
+            mock_crud.get_objects = AsyncMock(return_value=mock_user_pools)
 
             # Mock the get_current_prices method
-            with patch.object(AdminMixin, 'get_current_prices', return_value=mock_prices):
+            with patch.object(AdminMixin, 'get_current_prices', new_callable=AsyncMock, return_value=mock_prices):
                 result = await AdminMixin.get_asset_statistics()
 
                 assert len(result) == 2
@@ -146,7 +146,7 @@ class TestAdminMixin:
     async def test_get_asset_statistics_no_pools(self):
         """Test asset statistics with no user pools"""
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.return_value = []
+            mock_crud.get_objects = AsyncMock(return_value=[])
 
             result = await AdminMixin.get_asset_statistics()
 
@@ -163,10 +163,10 @@ class TestAdminMixin:
         ]
 
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.return_value = mock_user_pools
+            mock_crud.get_objects = AsyncMock(return_value=mock_user_pools)
 
             # Mock empty prices
-            with patch.object(AdminMixin, 'get_current_prices', return_value={}):
+            with patch.object(AdminMixin, 'get_current_prices', new_callable=AsyncMock, return_value={}):
                 result = await AdminMixin.get_asset_statistics()
 
                 assert len(result) == 1
@@ -179,7 +179,7 @@ class TestAdminMixin:
     async def test_get_asset_statistics_crud_error(self):
         """Test handling of database errors"""
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.side_effect = Exception("Database error")
+            mock_crud.get_objects = AsyncMock(side_effect=Exception("Database error"))
 
             with pytest.raises(Exception) as exc_info:
                 await AdminMixin.get_asset_statistics()
@@ -197,10 +197,10 @@ class TestAdminMixin:
         ]
 
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.return_value = mock_user_pools
+            mock_crud.get_objects = AsyncMock(return_value=mock_user_pools)
 
             # Mock price API error
-            with patch.object(AdminMixin, 'get_current_prices', side_effect=Exception("API error")):
+            with patch.object(AdminMixin, 'get_current_prices', new_callable=AsyncMock, side_effect=Exception("API error")):
                 with pytest.raises(Exception) as exc_info:
                     await AdminMixin.get_asset_statistics()
 
@@ -258,9 +258,9 @@ class TestAdminMixin:
         }
 
         with patch('app.contract_tools.mixins.admin.user_pool_crud') as mock_crud:
-            mock_crud.get_all_objects.return_value = mock_user_pools
+            mock_crud.get_objects = AsyncMock(return_value=mock_user_pools)
 
-            with patch.object(AdminMixin, 'get_current_prices', return_value=mock_prices):
+            with patch.object(AdminMixin, 'get_current_prices', new_callable=AsyncMock, return_value=mock_prices):
                 result = await AdminMixin.get_asset_statistics()
 
                 assert len(result) == 3
