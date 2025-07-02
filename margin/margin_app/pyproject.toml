@@ -1,5 +1,4 @@
 [tool.poetry]
-package-mode = false
 name = "starkhero"
 version = "0.1.0"
 description = ""
@@ -8,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 fastapi = {extras = ["standard"], version = "^0.115.6"}
 uvicorn = "^0.34.0"
 sqlalchemy = "^2.0.36"

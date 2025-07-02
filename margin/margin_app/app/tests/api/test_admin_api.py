@@ -257,14 +257,18 @@ def test_name_optional(
 
 
 # Tests for the new asset statistics endpoint
+@patch("app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock)
 @patch("app.api.admin.get_admin_user_from_state", new_callable=AsyncMock)
 @patch("app.contract_tools.mixins.admin.AdminMixin.get_asset_statistics", new_callable=AsyncMock)
 def test_get_asset_statistics_success(
-    mock_get_asset_statistics, mock_get_admin_user, client
+    mock_get_asset_statistics, mock_get_admin_user, mock_get_by_email, client
 ):
     """
     Test successful retrieval of asset statistics.
     """
+    # Mock middleware authentication (admin_crud.get_by_email)
+    mock_get_by_email.return_value = make_admin_obj(test_admin_object)
+    
     # Mock admin authentication
     mock_get_admin_user.return_value = make_admin_obj(test_admin_object)
     
@@ -314,14 +318,18 @@ def test_get_asset_statistics_unauthorized(mock_get_admin_user, client):
     assert response.json()["detail"] == "Authentication error."
 
 
+@patch("app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock)
 @patch("app.api.admin.get_admin_user_from_state", new_callable=AsyncMock)
 @patch("app.contract_tools.mixins.admin.AdminMixin.get_asset_statistics", new_callable=AsyncMock)
 def test_get_asset_statistics_empty_data(
-    mock_get_asset_statistics, mock_get_admin_user, client
+    mock_get_asset_statistics, mock_get_admin_user, mock_get_by_email, client
 ):
     """
     Test asset statistics endpoint with no data available.
     """
+    # Mock middleware authentication
+    mock_get_by_email.return_value = make_admin_obj(test_admin_object)
+    
     mock_get_admin_user.return_value = make_admin_obj(test_admin_object)
     mock_get_asset_statistics.return_value = []
     
@@ -337,14 +345,18 @@ def test_get_asset_statistics_empty_data(
     assert response_data["total_portfolio_value"] == "0"
 
 
+@patch("app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock)
 @patch("app.api.admin.get_admin_user_from_state", new_callable=AsyncMock)
 @patch("app.contract_tools.mixins.admin.AdminMixin.get_asset_statistics", new_callable=AsyncMock)
 def test_get_asset_statistics_error_handling(
-    mock_get_asset_statistics, mock_get_admin_user, client
+    mock_get_asset_statistics, mock_get_admin_user, mock_get_by_email, client
 ):
     """
     Test asset statistics endpoint error handling.
     """
+    # Mock middleware authentication
+    mock_get_by_email.return_value = make_admin_obj(test_admin_object)
+    
     mock_get_admin_user.return_value = make_admin_obj(test_admin_object)
     mock_get_asset_statistics.side_effect = Exception("Database connection failed")
     
@@ -358,14 +370,18 @@ def test_get_asset_statistics_error_handling(
     assert "Error calculating asset statistics" in response.json()["detail"]
 
 
+@patch("app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock)
 @patch("app.api.admin.get_admin_user_from_state", new_callable=AsyncMock)
 @patch("app.contract_tools.mixins.admin.AdminMixin.get_asset_statistics", new_callable=AsyncMock)
 def test_get_asset_statistics_single_token(
-    mock_get_asset_statistics, mock_get_admin_user, client
+    mock_get_asset_statistics, mock_get_admin_user, mock_get_by_email, client
 ):
     """
     Test asset statistics with a single token.
     """
+    # Mock middleware authentication
+    mock_get_by_email.return_value = make_admin_obj(test_admin_object)
+    
     mock_get_admin_user.return_value = make_admin_obj(test_admin_object)
     
     mock_asset_data = [
