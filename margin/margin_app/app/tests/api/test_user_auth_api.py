@@ -12,6 +12,7 @@ from fastapi.testclient import TestClient
 from fastapi import status
 from app.main import app
 from app.crud.user import user_crud
+from app.services.emails import email_service
 
 LOGIN_URL = "/api/auth/login"
 SIGNUP_URL = "/api/auth/signup"
@@ -101,7 +102,7 @@ def test_login_user_not_found_returns_404(client: TestClient, patch_get_user):
         return
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json() == {"detail": "User with this email not found."}
+    assert response.json() == {"detail": "Admin with this email not found."}
     patch_get_user.assert_awaited_once_with("email", "no_user@test.com")
 
 def test_login_invalid_password_returns_401(client: TestClient, patch_verify_pwd):
@@ -134,10 +135,7 @@ def patch_admin_get_by_email():
 @pytest.fixture
 def patch_send_confirmation_email():
     """Fixture to patch send_confirmation_email for email sending."""
-    with patch(
-        "app.services.emails.email_service.send_confirmation_email",
-        new_callable=AsyncMock,
-    ) as mock:
+    with patch.object(email_service, "send_confirmation_email", new_callable=AsyncMock) as mock:
         yield mock
 
 
