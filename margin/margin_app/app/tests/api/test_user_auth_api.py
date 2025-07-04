@@ -7,25 +7,11 @@ import pytest
 from datetime import timedelta
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
+
 from fastapi.testclient import TestClient
-
 from fastapi import status
-
 from app.main import app
 from app.crud.user import user_crud
-import app.services.auth.security
-from app.services.auth.base import create_access_token, create_refresh_token
-
-
-client = TestClient(app)
-# Ensure app.state exists
-if not hasattr(app, "state"):
-    from types import SimpleNamespace as _SimpleNamespace
-    app.state = _SimpleNamespace()
-app.state.settings = SimpleNamespace(
-    access_token_expire_minutes=30,
-    refresh_token_expire_days=7,
-)
 
 LOGIN_URL = "/api/auth/login"
 SIGNUP_URL = "/api/auth/signup"
@@ -69,7 +55,7 @@ def patch_tokens():
             yield (mock_access, mock_refresh)
 
 def test_login_success_sets_cookie_and_returns_access_token(
-    patch_get_user, patch_verify_pwd, patch_tokens):
+    client: TestClient, patch_get_user, patch_verify_pwd, patch_tokens):
     """ Test successful user login"""
     payload = {"email": test_user.email, "password": "correct-password"}
 
@@ -103,7 +89,7 @@ def test_login_success_sets_cookie_and_returns_access_token(
         expires_delta=timedelta(minutes=app.state.settings.refresh_token_expire_days),
     )
 
-def test_login_user_not_found_returns_404(patch_get_user):
+def test_login_user_not_found_returns_404(client: TestClient, patch_get_user):
     """ Test user when user not found"""
     patch_get_user.return_value = None
     payload = {"email": "no_user@test.com", "password": "whatever"}
@@ -118,7 +104,7 @@ def test_login_user_not_found_returns_404(patch_get_user):
     assert response.json() == {"detail": "User with this email not found."}
     patch_get_user.assert_awaited_once_with("email", "no_user@test.com")
 
-def test_login_invalid_password_returns_401(patch_verify_pwd):
+def test_login_invalid_password_returns_401(client: TestClient, patch_verify_pwd):
     """ Test user login with invalid password"""
     patch_verify_pwd.return_value = False
     payload = {"email": test_user.email, "password": "wrong-password"}
@@ -143,7 +129,7 @@ def patch_admin_get_by_email():
 
 @pytest.fixture
 def patch_send_confirmation_email():
-    with patch("app.services.emails.EmailService.send_confirmation_email", new_callable=AsyncMock) as mock:
+    with patch("app.services.emails.email_service.send_confirmation_email", new_callable=AsyncMock) as mock:
         yield mock
 
 
@@ -151,7 +137,7 @@ def patch_send_confirmation_email():
 
 
 def test_signup_new_user_sends_confirmation_email(
-    patch_admin_get_by_email, patch_send_confirmation_email
+    client: TestClient, patch_admin_get_by_email, patch_send_confirmation_email
 ):
     """
     Test that a new user signup sends a confirmation email successfully.
@@ -171,7 +157,7 @@ def test_signup_new_user_sends_confirmation_email(
 
 
 
-def test_signup_existing_user_returns_400(patch_admin_get_by_email):
+def test_signup_existing_user_returns_400(client: TestClient, patch_admin_get_by_email):
     """
     Test that signup with an existing user email returns 400 error.
     """
@@ -187,7 +173,7 @@ def test_signup_existing_user_returns_400(patch_admin_get_by_email):
 
 
 def test_signup_email_send_fails_returns_500(
-    patch_admin_get_by_email, patch_send_confirmation_email
+    client: TestClient, patch_admin_get_by_email, patch_send_confirmation_email
 ):
     """Test that signup returns 500 if confirmation email fails to send."""
     patch_admin_get_by_email.return_value = None
@@ -202,14 +188,14 @@ def test_signup_email_send_fails_returns_500(
 
 
 
-def test_signup_generates_correct_confirmation_link(patch_admin_get_by_email):
+def test_signup_generates_correct_confirmation_link(client: TestClient, patch_admin_get_by_email):
     """
     Test that signup generates a correct confirmation link in the email.
     """
     patch_admin_get_by_email.return_value = None
 
     with patch(
-        "app.services.emails.EmailService.send_confirmation_email",
+        "app.services.emails.email_service.send_confirmation_email",
         new_callable=AsyncMock,
     ) as mock_send:
         mock_send.return_value = True
