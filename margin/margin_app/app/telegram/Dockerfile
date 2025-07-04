@@ -1,6 +1,14 @@
 FROM python:3.12-slim
+
 WORKDIR /app
-COPY ../../pyproject.toml ../../poetry.lock ./
+
+# Copy poetry files from root of context
+COPY pyproject.toml poetry.lock ./
+
+# Install dependencies
 RUN pip install poetry && poetry install --no-root
-COPY . .
+
+# Copy the telegram bot code from telegram folder
+COPY app/telegram ./telegram
+
 CMD ["python", "-m", "telegram.main"]
