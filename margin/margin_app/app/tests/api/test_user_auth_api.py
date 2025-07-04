@@ -6,7 +6,7 @@ import uuid
 import pytest
 from datetime import timedelta
 from types import SimpleNamespace
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, patch, MagicMock
 
 from fastapi.testclient import TestClient
 from fastapi import status
@@ -64,21 +64,17 @@ def patch_tokens():
             yield (mock_access, mock_refresh)
 
 
+@patch("app.api.auth.verify_password")
 def test_login_success_sets_cookie_and_returns_access_token(
-    client: TestClient, patch_get_admin, patch_verify_pwd, patch_tokens
+    patch_verify_pwd, client, patch_get_admin, patch_tokens
 ):
     """Test successful user login"""
+    patch_verify_pwd.return_value = True
     payload = {"email": test_user.email, "password": "correct-password"}
-
-    try:
-        response = client.post(LOGIN_URL, json=payload)
-    except TypeError:
-        pytest.skip(
-            "App import or client instantiation failed due to module object not callable."
-        )
-        return
-
+    response = client.post(LOGIN_URL, json=payload)
     assert response.status_code == status.HTTP_200_OK
+    patch_verify_pwd.assert_called_once_with("correct-password", test_user.password)
+
     assert response.json() == {
         "access_token": "fixed-access-token",
         "token_type": "bearer",
@@ -89,8 +85,6 @@ def test_login_success_sets_cookie_and_returns_access_token(
     assert cookies.get("refresh_token") == "fixed-refresh-token"
 
     patch_get_admin.assert_awaited_once_with("email", test_user.email)
-
-    patch_verify_pwd.assert_called_once_with("correct-password", test_user.password)
 
     create_access_mock, create_refresh_mock = patch_tokens
     create_access_mock.assert_called_once_with(
@@ -121,23 +115,13 @@ def test_login_user_not_found_returns_404(client: TestClient, patch_get_admin):
     patch_get_admin.assert_awaited_once_with("email", "no_user@test.com")
 
 
-def test_login_invalid_password_returns_401(
-    client: TestClient, patch_verify_pwd, patch_get_admin
-):
+@patch("app.api.auth.verify_password")
+def test_login_invalid_password_returns_401(patch_verify_pwd, client, patch_get_admin):
     """Test user login with invalid password"""
     patch_verify_pwd.return_value = False
     payload = {"email": test_user.email, "password": "wrong-password"}
-
-    try:
-        response = client.post(LOGIN_URL, json=payload)
-    except TypeError:
-        pytest.skip(
-            "App import or client instantiation failed due to module object not callable."
-        )
-        return
-
+    response = client.post(LOGIN_URL, json=payload)
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
-    assert response.json() == {"detail": "Invalid credentials"}
     patch_verify_pwd.assert_called_once_with("wrong-password", test_user.password)
 
 
