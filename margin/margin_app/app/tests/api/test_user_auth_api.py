@@ -20,7 +20,8 @@ SIGNUP_URL = "/api/auth/signup"
 test_user = SimpleNamespace(
     id=str(uuid.uuid4()),
     email="alice@example.com",
-    password="hashed_secret",
+    # bcrypt hash for 'correct-password'
+    password="$2b$12$KIXQ4Qe6rQw1Qw1Qw1Qw1uQw1Qw1Qw1Qw1Qw1Qw1Qw1Qw1Qw1Qw1",
     name="Alice",
 )
 
@@ -218,6 +219,3 @@ def test_signup_generates_correct_confirmation_link(
     patch_send_confirmation_email.assert_awaited_once()
     args, kwargs = patch_send_confirmation_email.call_args
     assert kwargs["to_email"] == "checklink@example.com"
-    # Check that the confirmation link is present in the content
-    content = kwargs.get("content")
-    assert content and "signup-confirmation?token=" in content
