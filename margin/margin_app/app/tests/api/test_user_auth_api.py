@@ -124,12 +124,20 @@ def test_login_invalid_password_returns_401(client: TestClient, patch_verify_pwd
 
 @pytest.fixture
 def patch_admin_get_by_email():
-    with patch("app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock) as mock:
+    """Fixture to patch admin_crud.get_by_email for admin lookup."""
+    with patch(
+        "app.crud.admin.admin_crud.get_by_email", 
+        new_callable=AsyncMock
+    ) as mock:
         yield mock
 
 @pytest.fixture
 def patch_send_confirmation_email():
-    with patch("app.services.emails.email_service.send_confirmation_email", new_callable=AsyncMock) as mock:
+    """Fixture to patch send_confirmation_email for email sending."""
+    with patch(
+        "app.services.emails.email_service.send_confirmation_email",
+        new_callable=AsyncMock,
+    ) as mock:
         yield mock
 
 
