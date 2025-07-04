@@ -64,8 +64,9 @@ def test_auth_admin_user_middleware_guarded_url_invalid_authorization_header(
     assert expected_error_message == response.json().get("detail")
 
 
+@pytest.mark.asyncio
 @patch("app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock)
-def test_auth_admin_user_middleware_guarded_url_valid_authorization_header(
+async def test_auth_admin_user_middleware_guarded_url_valid_authorization_header(
     mock_get_by_email, client
 ):
     """

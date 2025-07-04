@@ -11,8 +11,8 @@ from unittest.mock import AsyncMock, patch
 from fastapi.testclient import TestClient
 from fastapi import status
 from app.main import app
-from app.crud.user import user_crud
 from app.services.emails import email_service
+from app.crud.admin import admin_crud
 
 LOGIN_URL = "/api/auth/login"
 SIGNUP_URL = "/api/auth/signup"
@@ -26,12 +26,12 @@ test_user = SimpleNamespace(
 
 
 @pytest.fixture(autouse=True)
-def patch_get_user():
+def patch_get_admin():
     """
-    patch user_crud.get_object_by_field(...) so it returns our test_user.
+    Patch admin_crud.get_object_by_field(...) so it returns our test_user.
     """
     with patch.object(
-        user_crud, "get_object_by_field", new_callable=AsyncMock
+        admin_crud, "get_object_by_field", new_callable=AsyncMock
     ) as mock_get:
         mock_get.return_value = test_user
         yield mock_get
@@ -64,7 +64,7 @@ def patch_tokens():
 
 
 def test_login_success_sets_cookie_and_returns_access_token(
-    client: TestClient, patch_get_user, patch_verify_pwd, patch_tokens
+    client: TestClient, patch_get_admin, patch_verify_pwd, patch_tokens
 ):
     """Test successful user login"""
     payload = {"email": test_user.email, "password": "correct-password"}
@@ -87,7 +87,7 @@ def test_login_success_sets_cookie_and_returns_access_token(
     assert "refresh_token" in cookies
     assert cookies.get("refresh_token") == "fixed-refresh-token"
 
-    patch_get_user.assert_awaited_once_with("email", test_user.email)
+    patch_get_admin.assert_awaited_once_with("email", test_user.email)
 
     patch_verify_pwd.assert_called_once_with("correct-password", test_user.password)
 
@@ -102,9 +102,9 @@ def test_login_success_sets_cookie_and_returns_access_token(
     )
 
 
-def test_login_user_not_found_returns_404(client: TestClient, patch_get_user):
+def test_login_user_not_found_returns_404(client: TestClient, patch_get_admin):
     """Test user when user not found"""
-    patch_get_user.return_value = None
+    patch_get_admin.return_value = None
     payload = {"email": "no_user@test.com", "password": "whatever"}
 
     try:
@@ -117,10 +117,12 @@ def test_login_user_not_found_returns_404(client: TestClient, patch_get_user):
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json() == {"detail": "Admin with this email not found."}
-    patch_get_user.assert_awaited_once_with("email", "no_user@test.com")
+    patch_get_admin.assert_awaited_once_with("email", "no_user@test.com")
 
 
-def test_login_invalid_password_returns_401(client: TestClient, patch_verify_pwd):
+def test_login_invalid_password_returns_401(
+    client: TestClient, patch_verify_pwd, patch_get_admin
+):
     """Test user login with invalid password"""
     patch_verify_pwd.return_value = False
     payload = {"email": test_user.email, "password": "wrong-password"}
@@ -216,5 +218,6 @@ def test_signup_generates_correct_confirmation_link(
     patch_send_confirmation_email.assert_awaited_once()
     args, kwargs = patch_send_confirmation_email.call_args
     assert kwargs["to_email"] == "checklink@example.com"
-    # The confirmation link is likely in the content or template_data, check for token presence
-    assert "token" in str(kwargs) or "signup-confirmation?token=" in str(kwargs)
+    # Check that the confirmation link is present in the content
+    content = kwargs.get("content")
+    assert content and "signup-confirmation?token=" in content
