@@ -11,6 +11,7 @@ from sendgrid.helpers.mail import Mail, Email, To, Content, TemplateId
 from app.core.config import settings
 from app.services.auth.base import (
     create_reset_password_token,
+    create_access_token,
 )
 from mjml import mjml2html
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -112,6 +113,34 @@ class EmailService:
         return await self.send_email(
             to_email=to_email,
             subject="Reset your password",
+            content=html_content,
+            is_html=True,
+        )
+
+    async def send_confirmation_email(self, to_email: str):
+        """
+        Sends a signup confirmation email to the specified recipient.
+
+        This method generates a signup confirmation token for the given email address
+        and sends an email containing a link to confirm the signup. The token has a
+        limited expiration time for security purposes.
+
+        Args:
+            to_email: The recipient's email address.
+            username: Optional username for personalization in the email.
+
+        Returns:
+            bool: True if email was sent successfully, False otherwise.
+        """
+        token = create_access_token(to_email)
+        confirmation_link = f"{settings.app_base_url}/signup-confirmation?token={token}"
+        html_content = self.render_mjml_template(
+            "signup_confirmation.mjml",
+            {"link": confirmation_link},
+        )
+        return await self.send_email(
+            to_email=to_email,
+            subject="Confirm your signup",
             content=html_content,
             is_html=True,
         )

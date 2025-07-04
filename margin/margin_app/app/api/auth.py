@@ -449,15 +449,7 @@ async def signup_user(payload: SignupRequest):
                 detail="Email already exists",
             )
 
-        # Generate a JWT token encoding the email
-        token = create_access_token(email)
-
-        # Send confirmation email
-        confirmation_link = f"{settings.app_base_url}/signup-confirmation?token={token}"
-        email_sent = await email_service.send_confirmation_email(
-            to_email=email,
-            link=confirmation_link,
-        )
+        email_sent = await email_service.send_confirmation_email(to_email=email)
 
         if not email_sent:
             raise HTTPException(

@@ -3,6 +3,7 @@ Test suite for admin authentication middleware.
 Covers all scenarios: missing/invalid/expired/malformed tokens, user not found, DB errors,
 case-insensitive Bearer, unguarded routes, and all admin paths.
 """
+
 import pytest
 from unittest.mock import AsyncMock, patch
 from fastapi import status
@@ -21,12 +22,14 @@ from types import SimpleNamespace
 API_ADMIN_URL = "/api/admin"
 ADMIN_ROUTE_TO_TEST = "/all"
 
+
 def test_auth_admin_user_middleware_not_guarded_url(client):
     """
     Test that not guarded URL works without admin user authentication.
     """
     response = client.get("/health")
     assert response.status_code == status.HTTP_200_OK
+
 
 def test_auth_admin_user_middleware_guarded_url_missing_authorization_header(client):
     """
@@ -35,6 +38,7 @@ def test_auth_admin_user_middleware_guarded_url_missing_authorization_header(cli
     response = client.get(API_ADMIN_URL + ADMIN_ROUTE_TO_TEST)
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     assert "Missing authorization header." == response.json().get("detail")
+
 
 @pytest.mark.parametrize(
     "auth_header_content, expected_error_message",
@@ -59,6 +63,7 @@ def test_auth_admin_user_middleware_guarded_url_invalid_authorization_header(
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     assert expected_error_message == response.json().get("detail")
 
+
 @patch("app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock)
 def test_auth_admin_user_middleware_guarded_url_valid_authorization_header(
     mock_get_by_email, client
@@ -67,11 +72,12 @@ def test_auth_admin_user_middleware_guarded_url_valid_authorization_header(
     Test that guarded URL returns success with valid authorization header.
     """
     from app.services.auth.base import create_access_token
+
     test_email = "test@admin.com"
     test_token = create_access_token(test_email)
     mock_admin = SimpleNamespace(
-    id="1", email=test_email, name="Test Admin", is_super_admin=True
-)
+        id="1", email=test_email, name="Test Admin", is_super_admin=True
+    )
     mock_get_by_email.return_value = mock_admin
 
     response = client.get(
@@ -79,6 +85,7 @@ def test_auth_admin_user_middleware_guarded_url_valid_authorization_header(
         headers={"Authorization": f"Bearer {test_token}"},
     )
     assert response.status_code in (200, 201)
+
 
 @patch("app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock)
 def test_auth_admin_user_middleware_user_not_found(mock_get_admin_by_email, client):
@@ -94,6 +101,7 @@ def test_auth_admin_user_middleware_user_not_found(mock_get_admin_by_email, clie
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     assert "Authentication error." == response.json().get("detail")
+
 
 def test_auth_admin_user_middleware_expired_token(client):
     """
@@ -116,6 +124,7 @@ def test_auth_admin_user_middleware_expired_token(client):
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     assert "Authentication error." == response.json().get("detail")
 
+
 def test_auth_admin_user_middleware_malformed_token(client):
     """
     Test that middleware returns authentication error when token is malformed.
@@ -128,6 +137,7 @@ def test_auth_admin_user_middleware_malformed_token(client):
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     assert "Authentication error." == response.json().get("detail")
+
 
 @patch("app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock)
 def test_auth_admin_user_middleware_database_error(mock_get_admin_by_email, client):
@@ -144,6 +154,7 @@ def test_auth_admin_user_middleware_database_error(mock_get_admin_by_email, clie
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     assert "Authentication error." == response.json().get("detail")
 
+
 def test_auth_admin_user_middleware_case_insensitive_bearer(client):
     """
     Test that middleware works with case-insensitive Bearer scheme.
@@ -155,6 +166,7 @@ def test_auth_admin_user_middleware_case_insensitive_bearer(client):
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     assert "Authentication error." == response.json().get("detail")
 
+
 def test_auth_admin_user_middleware_multiple_paths_covered(client):
     """
     Test that middleware only affects /api/admin paths and not other admin-related paths.
@@ -164,6 +176,7 @@ def test_auth_admin_user_middleware_multiple_paths_covered(client):
 
     response = client.get("/health")
     assert response.status_code == status.HTTP_200_OK
+
 
 @pytest.mark.parametrize(
     "test_path",
