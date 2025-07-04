@@ -153,7 +153,9 @@ def patch_send_confirmation_email():
 def test_signup_new_user_sends_confirmation_email(
     patch_admin_get_by_email, patch_send_confirmation_email
 ):
-    """Test that a new user signup sends a confirmation email successfully."""
+    """
+    Test that a new user signup sends a confirmation email successfully.
+    """
     patch_admin_get_by_email.return_value = None  # simulate user doesn't exist
     patch_send_confirmation_email.return_value = True
 
@@ -170,7 +172,9 @@ def test_signup_new_user_sends_confirmation_email(
 
 
 def test_signup_existing_user_returns_400(patch_admin_get_by_email):
-    """Test that signup with an existing user email returns 400 error."""
+    """
+    Test that signup with an existing user email returns 400 error.
+    """
     patch_admin_get_by_email.return_value = {"email": "existing@example.com"}
 
     payload = {"email": "existing@example.com"}
@@ -199,10 +203,15 @@ def test_signup_email_send_fails_returns_500(
 
 
 def test_signup_generates_correct_confirmation_link(patch_admin_get_by_email):
-    """Test that signup generates a correct confirmation link in the email."""
+    """
+    Test that signup generates a correct confirmation link in the email.
+    """
     patch_admin_get_by_email.return_value = None
 
-    with patch("app.services.emails.EmailService.send_confirmation_email", new_callable=AsyncMock) as mock_send:
+    with patch(
+        "app.services.emails.EmailService.send_confirmation_email",
+        new_callable=AsyncMock,
+    ) as mock_send:
         mock_send.return_value = True
         payload = {"email": "checklink@example.com"}
         response = client.post(SIGNUP_URL, json=payload)
