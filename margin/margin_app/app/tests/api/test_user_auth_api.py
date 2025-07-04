@@ -21,7 +21,7 @@ test_user = SimpleNamespace(
     id=str(uuid.uuid4()),
     email="alice@example.com",
     # bcrypt hash for 'correct-password'
-    password="$2b$12$KIXQ4Qe6rQw1Qw1Qw1Qw1uQw1Qw1Qw1Qw1Qw1Qw1Qw1Qw1Qw1Qw1",
+    password="$2b$12$HuAJhx.bdqbWkOaGhgX/wuUxzBGssMySgBagO2p4PVnez7VahZ50W",
     name="Alice",
 )
 
