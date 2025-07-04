@@ -6,13 +6,13 @@ import uuid
 import pytest
 from datetime import timedelta
 from types import SimpleNamespace
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, patch
 
 from fastapi.testclient import TestClient
 from fastapi import status
-from app.main import app
 from app.services.emails import email_service
 from app.crud.admin import admin_crud
+from app.core.config import settings
 
 LOGIN_URL = "/api/auth/login"
 SIGNUP_URL = "/api/auth/signup"
@@ -89,11 +89,11 @@ def test_login_success_sets_cookie_and_returns_access_token(
     create_access_mock, create_refresh_mock = patch_tokens
     create_access_mock.assert_called_once_with(
         test_user.email,
-        expires_delta=timedelta(minutes=app.state.settings.access_token_expire_minutes),
+        expires_delta=timedelta(minutes=settings.access_token_expire_minutes),
     )
     create_refresh_mock.assert_called_once_with(
         test_user.email,
-        expires_delta=timedelta(minutes=app.state.settings.refresh_token_expire_days),
+        expires_delta=timedelta(minutes=settings.refresh_token_expire_days),
     )
 
 
