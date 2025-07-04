@@ -143,8 +143,7 @@ def patch_admin_get_by_email():
 
 @pytest.fixture
 def patch_send_confirmation_email():
-    with patch("app.services.emails.email_service.send_confirmation_email", 
-               new_callable=AsyncMock) as mock:
+    with patch("app.services.emails.EmailService.send_confirmation_email", new_callable=AsyncMock) as mock:
         yield mock
 
 
@@ -203,8 +202,7 @@ def test_signup_generates_correct_confirmation_link(patch_admin_get_by_email):
     """Test that signup generates a correct confirmation link in the email."""
     patch_admin_get_by_email.return_value = None
 
-    with patch("app.services.emails.email_service.send_confirmation_email", 
-               new_callable=AsyncMock) as mock_send:
+    with patch("app.services.emails.EmailService.send_confirmation_email", new_callable=AsyncMock) as mock_send:
         mock_send.return_value = True
         payload = {"email": "checklink@example.com"}
         response = client.post(SIGNUP_URL, json=payload)
