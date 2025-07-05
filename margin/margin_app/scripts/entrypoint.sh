@@ -1,5 +1,4 @@
 echo "Run migration with alembic"
-source /src/.venv/bin/activate
 poetry run alembic upgrade head
 
 echo "Starting the server ..."

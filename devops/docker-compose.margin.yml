@@ -46,8 +46,8 @@ services:
     volumes:
       - ../margin/margin_frontend:/src
       - node_modules:/src/node_modules
-    # env_file:
-    #   - ../margin/margin_frontend/.env
+    env_file:
+      - ../margin/margin_frontend/.env
     ports:
       - "5173:5173"
     depends_on:
