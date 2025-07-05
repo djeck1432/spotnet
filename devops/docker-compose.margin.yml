@@ -53,6 +53,16 @@ services:
     depends_on:
       - backend
 
+  notification_bot:
+    build:
+      context: ../margin/margin_app
+      dockerfile: app/telegram/Dockerfile
+    restart: always
+    depends_on:
+      - backend
+    networks:
+      - app_network
+
 volumes:
   pgdata: {}
   node_modules:
