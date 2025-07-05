@@ -1,14 +1,20 @@
 FROM python:3.12-slim
 
+# Set working directory
 WORKDIR /app
 
-# Copy poetry files from root of context
+# Install Poetry
+RUN pip install poetry
+
+# Copy pyproject files from the root of the build context
 COPY pyproject.toml poetry.lock ./
 
-# Install dependencies
-RUN pip install poetry && poetry install --no-root
+# Install dependencies globally (no venv)
+RUN poetry config virtualenvs.create false \
+  && poetry install --no-root
 
-# Copy the telegram bot code from telegram folder
+# Copy telegram bot code
 COPY app/telegram ./telegram
 
+# Run the bot
 CMD ["python", "-m", "telegram.main"]
