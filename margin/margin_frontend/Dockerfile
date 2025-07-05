@@ -4,7 +4,8 @@ ENV PATH "/app/node_modules/.bin:$PATH"
 
 WORKDIR /src
 
-COPY ./package.json ./package-lock.json .
+COPY ./package.json .
+COPY ./yarn.lock .
 
 RUN npm install
 

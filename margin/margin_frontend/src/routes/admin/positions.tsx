@@ -1,43 +1,118 @@
-import  { useEffect, useState } from 'react';
-import { Table, Spin, Alert } from 'antd';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { createFileRoute } from '@tanstack/react-router';
+import Table from '../../ui/components/Table'; 
+import { toast } from 'react-hot-toast';
 
-const columns = [
-  { title: 'ID', dataIndex: 'id', key: 'id' },
-  { title: 'User ID', dataIndex: 'user_id', key: 'user_id' },
-  { title: 'Borrowed Amount', dataIndex: 'borrowed_amount', key: 'borrowed_amount' },
-  { title: 'Multiplier', dataIndex: 'multiplier', key: 'multiplier' },
-  { title: 'Transaction ID', dataIndex: 'transaction_id', key: 'transaction_id' },
-  { title: 'Status', dataIndex: 'status', key: 'status' },
-  { title: 'Liquidated At', dataIndex: 'liquidated_at', key: 'liquidated_at',
-    render: (text: string | null) => text ? new Date(text).toLocaleString() : '-' },
-];
+interface Position {
+  id: string;
+  user_id: string;
+  borrowed_amount: number;
+  multiplier: number;
+  transaction_id: string;
+  status: string;
+  liquidated_at: string | null;
+}
 
 const AdminPositions = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Position[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     axios.get('http://0.0.0.0:8000/api/margin/all?limit=25&offset=0')
       .then(res => {
-        setData(res.data.results || res.data || []);
+        setData(res.data.items || res.data || []);
         setLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setError('Failed to fetch positions');
         setLoading(false);
       });
   }, []);
 
-  if (loading) return <Spin />;
-  if (error) return <Alert type="error" message={error} />;
+  const copyToClipboard = (value: string) => {
+    navigator.clipboard.writeText(value);
+    toast.success('Copied to clipboard');
+  };
+
+  const columns = [
+    {
+      header: 'ID',
+      accessor: 'id',
+      cell: (row: Position) => (
+        <span
+          onClick={() => copyToClipboard(row.id)}
+          className="cursor-pointer text-blue-400 hover:underline"
+          title={row.id}
+        >
+          {row.id.slice(0, 6)}...{row.id.slice(-4)}
+        </span>
+      ),
+    },
+    {
+      header: 'User ID',
+      accessor: 'user_id',
+      cell: (row: Position) => (
+        <span
+          onClick={() => copyToClipboard(row.user_id)}
+          className="cursor-pointer text-blue-400 hover:underline"
+          title={row.user_id}
+        >
+          {row.user_id.slice(0, 6)}...{row.user_id.slice(-4)}
+        </span>
+      ),
+    },
+    {
+      header: 'Borrowed Amount',
+      accessor: 'borrowed_amount',
+    },
+    {
+      header: 'Multiplier',
+      accessor: 'multiplier',
+    },
+    {
+      header: 'Transaction ID',
+      accessor: 'transaction_id',
+      cell: (row: Position) => (
+        <span
+          onClick={() => copyToClipboard(row.transaction_id)}
+          className="cursor-pointer text-blue-400 hover:underline"
+          title={row.transaction_id}
+        >
+          {row.transaction_id.slice(0, 6)}...{row.transaction_id.slice(-4)}
+        </span>
+      ),
+    },
+    {
+      header: 'Status',
+      accessor: 'status',
+      cell: (row: Position) => (
+        <span className={row.status === 'Open' ? 'text-green-400' : 'text-red-400'}>
+          {row.status}
+        </span>
+      ),
+    },
+    {
+      header: 'Liquidated At',
+      accessor: 'liquidated_at',
+      cell: (row: Position) => (
+        row.liquidated_at
+          ? new Date(row.liquidated_at).toLocaleString()
+          : '-'
+      ),
+    },
+  ];
 
   return (
-    <div>
-      <h2>All Opened Positions</h2>
-      <Table columns={columns} dataSource={data} rowKey="id" pagination={false} />
+    <div className="p-6 min-h-screen bg-black text-white">
+      <h2 className="text-2xl font-semibold mb-6">All Opened Positions</h2>
+
+      {error ? (
+        <div className="text-red-500 text-center py-10">{error}</div>
+      ) : (
+        <Table data={data} columns={columns} loading={loading} />
+      )}
     </div>
   );
 };
