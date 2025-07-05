@@ -1,5 +1,9 @@
 """
 API endpoints for admin management.
+
+This module provides REST API endpoints for admin user management including
+creation, retrieval, password reset, and profile updates. All endpoints
+except password reset require authentication.
 """
 
 from typing import Optional
@@ -14,11 +18,10 @@ from app.crud.admin import admin_crud
 from app.schemas.admin import (
     AdminRequest,
     AdminResponse,
-    AdminResetPassword,
     AdminGetAllResponse,
-    AdminUpdateRequest
+    AdminUpdateRequest,
 )
-from app.services.auth.base import get_admin_user_from_state
+from app.services.auth.base import get_admin_user_from_state, get_current_user
 from app.services.auth.security import get_password_hash, verify_password
 from app.services.emails import email_service
 from fastapi.responses import JSONResponse
@@ -34,10 +37,7 @@ router = APIRouter(prefix="")
     summary="add a new admin",
     description="Adds a new admin in the application",
 )
-async def add_admin(
-    data: AdminRequest,
-    request: Request
-) -> AdminResponse:
+async def add_admin(data: AdminRequest, request: Request) -> AdminResponse:
     """
     Add a new admin with the provided admin data.
 
@@ -56,8 +56,7 @@ async def add_admin(
 
     if not current_admin:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication required"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required"
         )
 
     if not current_admin.is_super_admin:
@@ -66,15 +65,12 @@ async def add_admin(
         )
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only superadmins can create new admin users"
+            detail="Only superadmins can create new admin users",
         )
 
     try:
         new_admin = await admin_crud.create_admin(
-            email=data.email,
-            name=data.name,
-            password=None,
-            is_super_admin=False
+            email=data.email, name=data.name, password=None, is_super_admin=False
         )
 
     except IntegrityError as e:
@@ -182,37 +178,67 @@ async def change_password(
 
 
 @router.post(
-    "/reset_password/{token}",
+    "/reset_password/{reset_token}",
     status_code=status.HTTP_200_OK,
     summary="password reset for admin",
-    description="change password for admin",
+    description="Reset password for admin using token",
 )
-async def reset_password(data: AdminResetPassword, token: str):
+async def reset_password(
+    reset_token: str, new_password: str = Query(..., min_length=1)
+):
     """
-    Reset the password for an admin user.
-    This function verifies the provided old password, updates the password
-    to a new one if the verification is successful, and saves the changes
-    to the database.
+    Reset admin password using a secure reset token.
+
+    This endpoint allows admin users to reset their password using a valid
+    reset token received via email. The token is verified, the admin is
+    retrieved, and their password is securely hashed and updated.
+
     Args:
-        data (AdminResetPassword): An object containing the old and new passwords.
-        token (str): The authentication token of the current admin user.
-    Raises:
-        HTTPException: If the provided old password does not match the stored password.
+        reset_token: JWT token containing admin email and expiration.
+        new_password: New password with minimum length of 1 character.
+
     Returns:
-        JSONResponse: A response indicating that the password was successfully changed.
+        JSONResponse: Success message indicating password was reset.
+
+    Raises:
+        HTTPException: 400 for invalid/expired tokens, 404 for admin not found,
+                      500 for server errors.
     """
+    try:
+        admin = await get_current_user(reset_token)
 
-    admin = await get_admin_user_from_state(token=token)
+        if not admin:
+            logger.error("Admin not found for the provided token")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Admin not found",
+            )
 
-    if not verify_password(data.old_password, admin.password):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="The provided old password does not match",
-        )
+        admin.password = get_password_hash(new_password)
+        await admin_crud.write_to_db(admin)
 
-    admin.password = get_password_hash(data.new_password)
-    await admin_crud.write_to_db(admin)
-    return JSONResponse(content={"message": "Password was changed"})
+        logger.info(f"Password successfully reset for admin: {admin.email}")
+        return JSONResponse(content={"message": "Password was successfully reset"})
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during password reset: {str(e)}")
+        if "expired" in str(e).lower():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Reset token has expired",
+            )
+        elif "invalid" in str(e).lower():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid reset token",
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="An error occurred while resetting the password",
+            )
 
 
 @router.put(

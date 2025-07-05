@@ -103,7 +103,16 @@ async def auth_admin_user(request: Request, call_next):
     """
     if not request.url.path.startswith("/api/admin"):
         return await call_next(request)
+    
+    public_endpoints = [
+        "/api/admin/reset_password/",
+        "/api/admin/change_password"
+    ]
 
+    for endpoint in public_endpoints:
+        if request.url.path.startswith(endpoint):
+            return await call_next(request)
+        
     try:
         auth_header = request.headers.get("Authorization")
         if not auth_header:

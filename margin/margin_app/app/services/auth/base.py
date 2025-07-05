@@ -40,7 +40,9 @@ def decode_signup_token(token: str) -> str:
     - Exception("Token expired"): if token has expired
     """
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        payload = jwt.decode(
+            token, settings.secret_key, algorithms=[settings.algorithm]
+        )
         email = payload.get("sub")
         if email is None:
             raise Exception("Invalid token")
@@ -85,7 +87,7 @@ def create_refresh_token(email: str, expires_delta: timedelta | None = None):
     to_encode = {
         "sub": email,
         "exp": expire,
-     }
+    }
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
 
 
@@ -117,6 +119,24 @@ async def get_current_user(token: str) -> Admin:
         return user
     except InvalidTokenError as e:
         raise Exception("jwt expired") from e
+
+
+async def create_reset_password_token(email: str) -> str:
+    """
+    Creates a password reset token for the given email address.
+
+    This function generates a JWT token with a specific expiration time
+    for password reset purposes. The token contains the user's email
+    and expires after the configured reset password time.
+
+    Args:
+        email: The email address of the admin user requesting password reset.
+
+    Returns:
+        A JWT token string that can be used for password reset verification.
+    """
+    expires_delta = timedelta(minutes=settings.reset_password_expire_minutes)
+    return create_access_token(email, expires_delta)
 
 
 class GoogleAuth:

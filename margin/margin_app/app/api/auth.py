@@ -22,7 +22,7 @@ from app.services.auth.base import (
 from app.crud.admin import admin_crud
 from app.schemas.admin import AdminLogin
 from app.schemas.admin import AdminResetPassword
-from app.schemas.auth import SignupConfirmation
+from app.schemas.auth import SignupConfirmation, SignupRequest
 from app.services.auth.security import (
     get_password_hash,
     verify_password,
@@ -418,4 +418,54 @@ async def signup_confirmation(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to confirm signup",
+        )
+
+@router.post(
+    "/signup",
+    status_code=status.HTTP_200_OK,
+    summary="User signup",
+    description="Initiates the signup process by sending a confirmation email",
+)
+async def signup_user(payload: SignupRequest):
+    """
+    Handles user signup by sending a confirmation email with a token.
+
+    Args:
+        email (EmailStr): The email address of the user.
+
+    Raises:
+        HTTPException: If the email already exists in the database.
+
+    Returns:
+        JSONResponse: A response indicating that the confirmation email was sent.
+    """
+    email = payload.email
+    try:
+        # Check if the email already exists in the database
+        existing_user = await admin_crud.get_by_email(email)
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already exists",
+            )
+
+        email_sent = await email_service.send_confirmation_email(to_email=email)
+
+        if not email_sent:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to send confirmation email",
+            )
+
+        return JSONResponse(
+            content={"message": "Confirmation email sent successfully"}
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during signup: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error during signup",
         )
