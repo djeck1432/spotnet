@@ -39,7 +39,7 @@ const AdminPositions = () => {
   const columns = [
     {
       header: 'ID',
-      accessor: 'id',
+      accessor: 'id' as keyof Position,
       cell: (row: Position) => (
         <span
           onClick={() => copyToClipboard(row.id)}
@@ -52,7 +52,7 @@ const AdminPositions = () => {
     },
     {
       header: 'User ID',
-      accessor: 'user_id',
+      accessor: 'user_id' as keyof Position,
       cell: (row: Position) => (
         <span
           onClick={() => copyToClipboard(row.user_id)}
@@ -65,15 +65,15 @@ const AdminPositions = () => {
     },
     {
       header: 'Borrowed Amount',
-      accessor: 'borrowed_amount',
+      accessor: 'borrowed_amount' as keyof Position,
     },
     {
       header: 'Multiplier',
-      accessor: 'multiplier',
+      accessor: 'multiplier' as keyof Position,
     },
     {
       header: 'Transaction ID',
-      accessor: 'transaction_id',
+      accessor: 'transaction_id' as keyof Position,
       cell: (row: Position) => (
         <span
           onClick={() => copyToClipboard(row.transaction_id)}
@@ -86,7 +86,7 @@ const AdminPositions = () => {
     },
     {
       header: 'Status',
-      accessor: 'status',
+      accessor: 'status' as keyof Position,
       cell: (row: Position) => (
         <span className={row.status === 'Open' ? 'text-green-400' : 'text-red-400'}>
           {row.status}
@@ -95,7 +95,7 @@ const AdminPositions = () => {
     },
     {
       header: 'Liquidated At',
-      accessor: 'liquidated_at',
+      accessor: 'liquidated_at' as keyof Position,
       cell: (row: Position) => (
         row.liquidated_at
           ? new Date(row.liquidated_at).toLocaleString()
