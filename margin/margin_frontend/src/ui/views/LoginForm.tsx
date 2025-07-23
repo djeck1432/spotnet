@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
+
 
 import { Input } from "../core/input";
 import { Card } from "../core/card";
 import { Button } from "../core/button";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { loginUser, clearError } from "../../store/slices/authSlice";
 
 const textData = {
   h1: "Welcome back!",
@@ -30,14 +34,42 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
+
+  // Handle successful login
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate({ to: "/admin/dashboard" });
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Clear error when component unmounts or when user starts typing
+  useEffect(() => {
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
+
+  const handleInputChange = () => {
+    if (error) {
+      dispatch(clearError());
+    }
+  };
+
   const onSendForm = async () => {
-    const data: LoginFormSchema = {
-      email,
+    if (!email.trim() || !password.trim()) {
+      return;
+    }
+
+    const credentials: LoginFormSchema = {
+      email: email.trim(),
       password,
       rememberMe,
     };
 
-    console.log(data);
+    dispatch(loginUser(credentials));
   };
 
   return (
@@ -46,14 +78,23 @@ const LoginForm = () => {
         <h1 className="text-2xl font-bold text-center">{textData.h1}</h1>
         <p className="text-center">{textData.hint}</p>
       </div>
+      {error && (
+        <div className="text-red-500 text-sm text-center bg-red-500/10 p-3 rounded">
+          {error}
+        </div>
+      )}
       <div className="flex flex-col">
         <label>{textData.email}</label>
         <Input
           className="w-100"
           type="email"
           placeholder={textData.emailPlaceholder}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            handleInputChange();
+          }}
           value={email}
+          disabled={loading}
         />
       </div>
       <div className="flex flex-col">
@@ -63,8 +104,12 @@ const LoginForm = () => {
             className="w-100 pr-10"
             type={passwordVisibility ? "text" : "password"}
             placeholder={textData.passwordPlaceholder}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              handleInputChange();
+            }}
             value={password}
+            disabled={loading}
           />
           <svg
             onClick={() => setPasswordVisibility(!passwordVisibility)}
@@ -110,21 +155,17 @@ const LoginForm = () => {
           </svg>
         </div>
       </div>
-      <div className="flex items-center gap-4 place-content-between text-xs">
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={rememberMe}
-            onChange={() => setRememberMe(!rememberMe)}
-          />
-          {textData.rememberMe}
-        </label>
+      <div className="flex justify-end">
         <a href="/change-password" className="text-xs underline">
           {textData.forgotPassword}
         </a>
       </div>
-      <Button variant={"outline"} onClick={onSendForm}>
-        {textData.login}
+      <Button
+        variant={"outline"}
+        onClick={onSendForm}
+        disabled={loading || !email.trim() || !password.trim()}
+      >
+        {loading ? "Signing In..." : textData.login}
       </Button>
       <div className="flex justify-center gap-2 text-xs">
         <p>{textData.signUpHint}</p>
