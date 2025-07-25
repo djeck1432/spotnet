@@ -4,43 +4,9 @@ from fastapi import status
 from fastapi.testclient import TestClient
 from unittest.mock import patch, AsyncMock
 
-# A placeholder for the real application import
-# from app.main import app
+from app.main import app
 
-
-# Mock the application for now
-class MockApp:
-    """Mock FastAPI application."""
-
-    def __init__(self):
-        self.router = None
-
-
-app = MockApp()
-
-
-# Mock the TestClient
-class MockTestClient:
-    """Mock TestClient."""
-
-    def post(self, url, json):
-        """Mock POST request."""
-        return MockResponse()
-
-
-class MockResponse:
-    """Mock response."""
-
-    def __init__(self):
-        self.status_code = 200
-        self.json_data = {}
-
-    def json(self):
-        """Mock json method."""
-        return self.json_data
-
-
-client = MockTestClient()
+client = TestClient(app)
 
 
 @pytest.mark.asyncio
