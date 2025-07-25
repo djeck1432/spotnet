@@ -25,14 +25,12 @@ const textData = {
 type LoginFormSchema = {
   email: string;
   password: string;
-  rememberMe: boolean;
 };
 
 const LoginForm = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -62,11 +60,15 @@ const LoginForm = () => {
     if (!email.trim() || !password.trim()) {
       return;
     }
+    // regex check for email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return;
+    }
 
     const credentials: LoginFormSchema = {
       email: email.trim(),
       password,
-      rememberMe,
     };
 
     dispatch(loginUser(credentials));

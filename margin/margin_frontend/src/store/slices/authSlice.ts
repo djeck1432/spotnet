@@ -39,7 +39,7 @@ export const loginUser = createAsyncThunk(
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        if (response.status === 401 || response.status === 404) {
           throw new Error("Invalid credentials");
         }
         if (response.status >= 500) {
@@ -49,6 +49,7 @@ export const loginUser = createAsyncThunk(
       }
 
       const data = await response.json();
+
       return data;
     } catch (error: any) {
       if (error.message === "Invalid credentials" ||
@@ -84,8 +85,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.token = action.payload.access_token;
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
