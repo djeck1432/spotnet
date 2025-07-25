@@ -20,6 +20,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as DashboardImport } from './routes/dashboard'
 import { Route as ChangePasswordImport } from './routes/change-password'
 import { Route as IndexImport } from './routes/index'
+import { Route as AdminPositionsImport } from './routes/admin/positions'
 import { Route as AdminPoolsImport } from './routes/admin/pools'
 import { Route as AdminDashboardImport } from './routes/admin/dashboard'
 
@@ -76,6 +77,12 @@ const ChangePasswordRoute = ChangePasswordImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminPositionsRoute = AdminPositionsImport.update({
+  id: '/admin/positions',
+  path: '/admin/positions',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -172,6 +179,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPoolsImport
       parentRoute: typeof rootRoute
     }
+    '/admin/positions': {
+      id: '/admin/positions'
+      path: '/admin/positions'
+      fullPath: '/admin/positions'
+      preLoaderRoute: typeof AdminPositionsImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -189,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/trade': typeof TradeRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/pools': typeof AdminPoolsRoute
+  '/admin/positions': typeof AdminPositionsRoute
 }
 
 export interface FileRoutesByTo {
@@ -203,6 +218,7 @@ export interface FileRoutesByTo {
   '/trade': typeof TradeRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/pools': typeof AdminPoolsRoute
+  '/admin/positions': typeof AdminPositionsRoute
 }
 
 export interface FileRoutesById {
@@ -218,6 +234,7 @@ export interface FileRoutesById {
   '/trade': typeof TradeRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/pools': typeof AdminPoolsRoute
+  '/admin/positions': typeof AdminPositionsRoute
 }
 
 export interface FileRouteTypes {
@@ -234,6 +251,7 @@ export interface FileRouteTypes {
     | '/trade'
     | '/admin/dashboard'
     | '/admin/pools'
+    | '/admin/positions'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -247,6 +265,7 @@ export interface FileRouteTypes {
     | '/trade'
     | '/admin/dashboard'
     | '/admin/pools'
+    | '/admin/positions'
   id:
     | '__root__'
     | '/'
@@ -260,6 +279,7 @@ export interface FileRouteTypes {
     | '/trade'
     | '/admin/dashboard'
     | '/admin/pools'
+    | '/admin/positions'
   fileRoutesById: FileRoutesById
 }
 
@@ -275,6 +295,7 @@ export interface RootRouteChildren {
   TradeRoute: typeof TradeRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminPoolsRoute: typeof AdminPoolsRoute
+  AdminPositionsRoute: typeof AdminPositionsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -289,6 +310,7 @@ const rootRouteChildren: RootRouteChildren = {
   TradeRoute: TradeRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminPoolsRoute: AdminPoolsRoute,
+  AdminPositionsRoute: AdminPositionsRoute,
 }
 
 export const routeTree = rootRoute
@@ -311,7 +333,8 @@ export const routeTree = rootRoute
         "/signup",
         "/trade",
         "/admin/dashboard",
-        "/admin/pools"
+        "/admin/pools",
+        "/admin/positions"
       ]
     },
     "/": {
@@ -346,6 +369,9 @@ export const routeTree = rootRoute
     },
     "/admin/pools": {
       "filePath": "admin/pools.tsx"
+    },
+    "/admin/positions": {
+      "filePath": "admin/positions.tsx"
     }
   }
 }

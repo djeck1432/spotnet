@@ -1,60 +1,37 @@
 import React from 'react';
+import { Table as AntdTable } from 'antd';
 
-interface Column {
+interface Column<T> {
   header: string;
-  accessor: string;
-  cell?: (row: any) => React.ReactNode;
+  accessor: keyof T;
+  cell?: (row: T) => React.ReactNode;
 }
 
-interface TableProps {
-  data: any[];
-  columns: Column[];
+interface TableProps<T> {
+  data: T[];
+  columns: Column<T>[];
   loading?: boolean;
 }
 
-const Table: React.FC<TableProps> = ({ data, columns, loading }) => {
+const Table = <T extends object>({ data, columns, loading }: TableProps<T>) => {
+  const antdColumns = columns.map((col) => ({
+    title: col.header,
+    dataIndex: String(col.accessor),
+    key: String(col.accessor),
+    render: col.cell ? (_: any, record: T) => col.cell!(record) : undefined,
+  }));
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse bg-black">
-        <thead>
-          <tr className="text-left py-4 border-b border-grayborder">
-            {columns.map((column, i) => (
-              <th key={i} className="text-sm font-semibold pb-4 px-4 text-tableHeads uppercase">
-                {column.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-grayborder text-white">
-          {loading ? (
-            <tr>
-              <td colSpan={columns.length} className="px-4 py-6 text-center text-gray-400">
-                Loading...
-              </td>
-            </tr>
-          ) : !data || data.length === 0 ? (
-            <tr>
-              <td colSpan={columns.length} className="px-4 py-6 text-center text-gray-400">
-                No data available
-              </td>
-            </tr>
-          ) : (
-            data.map((row, i) => (
-              <tr key={i} className="hover:bg-[#1a1a1a]">
-                {columns.map((column, j) => (
-                  <td key={j} className="px-4 py-4 whitespace-nowrap">
-                    {column.cell && typeof column.cell === 'function' 
-                      ? column.cell(row) 
-                      : row[column.accessor] || '-'}
-                  </td>
-                ))}
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-    </div>
+    <AntdTable
+      columns={antdColumns}
+      dataSource={data}
+      loading={loading}
+      rowKey={(record) => (record as any).id}
+      pagination={false} 
+      scroll={{ x: true }} 
+      bordered
+    />
   );
 };
 
-export default Table; 
+export default Table;
