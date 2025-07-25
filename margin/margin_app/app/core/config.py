@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     reset_password_expire_minutes: int = 15
     refresh_token_expire_days: int = 7
     host: str = "localhost"
+    app_base_url: str = "http://localhost:8000"  # Added app_base_url
     forget_password_url: str = "/auth/reset_password"
 
     # Database settings

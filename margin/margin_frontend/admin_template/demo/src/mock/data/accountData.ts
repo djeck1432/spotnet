@@ -42,7 +42,7 @@ export const settingData = {
     },
 }
 
-export const settingIntergrationData = {
+export const settingIntegrationData = {
     installed: [
         {
             name: 'Google Drive',

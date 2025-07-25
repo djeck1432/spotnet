@@ -3,10 +3,10 @@ This module contains the base CRUD database configuration.
 """
 
 import logging
-import uuid
+from uuid import UUID
 
 from contextlib import asynccontextmanager
-from typing import AsyncIterator, Callable, Type, TypeVar, List, Optional, Any
+from typing import AsyncIterator, Type, TypeVar, Optional, Any
 
 
 from sqlalchemy import func, select
@@ -75,7 +75,7 @@ class DBConnector:
         finally:
             await session.close()
 
-    async def write_to_db(self, obj: ModelType = None) -> ModelType:
+    async def write_to_db(self, obj: ModelType) -> ModelType:
         """
         Writes an object to the database. Rolls back the transaction if there's an error.
         Refreshes the object to keep it attached to the session.
@@ -89,7 +89,7 @@ class DBConnector:
             await db.refresh(obj)
             return obj
 
-    async def get_object(self, obj_id: uuid = None) -> ModelType | None:
+    async def get_object(self, obj_id: UUID) -> ModelType | None:
         """
         Retrieves an object by its ID from the database.
         :param obj_id: uuid = None
@@ -99,7 +99,7 @@ class DBConnector:
             return await db.get(self.model, obj_id)
 
     async def get_object_by_field(
-        self, field: str = None, value: str = None
+        self, field: str, value: Optional[str] = None
     ) -> ModelType | None:
         """
         Retrieves an object by a specified field from the database.
@@ -113,7 +113,7 @@ class DBConnector:
             )
             return result.scalar_one_or_none()
 
-    async def delete_object_by_id(self, obj_id: uuid = None) -> None:
+    async def delete_object_by_id(self, obj_id: UUID) -> None:
         """
         Delete an object by its ID from the database. Rolls back if the operation fails.
         :param obj_id: uuid = None
@@ -162,7 +162,7 @@ class DBConnector:
                 query = query.filter_by(**kwargs)
 
             result = await db.execute(query)
-            return result.scalars().all()
+            return list(result.scalars().all())
 
     async def test_connection(self):
         """
@@ -185,4 +185,4 @@ class DBConnector:
                 query = query.where(where_clause)
 
             result = await db.execute(query)
-            return result.scalar()
+            return result.scalar_one()

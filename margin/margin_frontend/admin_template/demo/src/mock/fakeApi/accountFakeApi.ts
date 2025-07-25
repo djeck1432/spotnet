@@ -7,7 +7,7 @@ export default function accountFakeApi(server: Server, apiPrefix: string) {
     })
 
     server.get(`${apiPrefix}/account/setting/integration`, (schema) => {
-        return schema.db.settingIntergrationData[0]
+        return schema.db.settingIntegrationData[0]
     })
 
     server.get(`${apiPrefix}/account/setting/billing`, (schema) => {

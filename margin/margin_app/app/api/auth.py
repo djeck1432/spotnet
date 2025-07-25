@@ -20,10 +20,9 @@ from app.services.auth.base import (
     )
 
 from app.crud.admin import admin_crud
-from app.crud.user import user_crud
-from app.schemas.user import UserLogin
+from app.schemas.admin import AdminLogin
 from app.schemas.admin import AdminResetPassword
-from app.schemas.auth import SignupConfirmation
+from app.schemas.auth import SignupConfirmation, SignupRequest
 from app.services.auth.security import (
     get_password_hash,
     verify_password,
@@ -170,7 +169,7 @@ async def refresh_access_token(request: Request):
 
 
 @router.get("/google", status_code=status.HTTP_200_OK)
-async def auth_google(code: str, request: Request, response: Response):
+async def auth_google(code: str, response: Response):
     """
     Authenticate with Google OAuth, create an access token, and save it in the session.
 
@@ -191,8 +190,10 @@ async def auth_google(code: str, request: Request, response: Response):
 
         admin = await admin_crud.get_by_email(email=admin_data.email)
         if not admin:
-            logger.info(f"Creating new user with email: {admin_data.email}")
-            admin = await admin_crud.create_admin(email=admin_data.email, name=admin_data.name)
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Admin with this email not found.",
+            )
 
         access_token = create_access_token(
             admin_data.email,
@@ -225,44 +226,44 @@ async def auth_google(code: str, request: Request, response: Response):
 @router.post(
     "/login",
     status_code=status.HTTP_200_OK,
-    summary="user login",
-    description="login user with email and password",
+    summary="admin login",
+    description="login admin with email and password",
     )
-async def login_user(data: UserLogin, response: Response):
+async def login_admin(data: AdminLogin, response: Response):
     """
-    handles user login by email and password
+    handles admin login by email and password
     Args:
-        data (UserLogin): A JSON object containing email and password
+        data (AdminLogin): A JSON object containing email and password
     Raises:
-        HTTPException: If the user with the given email is not found.
+        HTTPException: If the admin with the given email is not found.
         HTTPException: if the password is incorrect
     Returns:
         JSONResponse: A response with the acess token
     """
 
-    user = await user_crud.get_object_by_field("email", data.email)
+    admin = await admin_crud.get_object_by_field("email", data.email)
 
-    if not user:
+    if not admin:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="User with this email not found.",
+            detail="Admin with this email not found.",
         )
 
-    if not verify_password(data.password, user.password):
+    if not verify_password(data.password, admin.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials",
         )
 
     access_token = create_access_token(
-            user.email,
-            expires_delta=timedelta(minutes=settings.access_token_expire_minutes),
-        )
+        admin.email,
+        expires_delta=timedelta(minutes=settings.access_token_expire_minutes),
+    )
 
     refresh_token = create_refresh_token(
-            user.email,
-            expires_delta=timedelta(minutes=settings.refresh_token_expire_days),
-        )
+        admin.email,
+        expires_delta=timedelta(minutes=settings.refresh_token_expire_days),
+    )
 
     response.set_cookie(
         key="refresh_token",
@@ -380,7 +381,7 @@ async def signup_confirmation(
 
         # Create new user
         hashed_password = get_password_hash(confirmation.password)
-        user = await admin_crud.create_admin(
+        await admin_crud.create_admin(
             email=email,
             name=confirmation.name,
             password=hashed_password,
@@ -417,4 +418,54 @@ async def signup_confirmation(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to confirm signup",
+        )
+
+@router.post(
+    "/signup",
+    status_code=status.HTTP_200_OK,
+    summary="User signup",
+    description="Initiates the signup process by sending a confirmation email",
+)
+async def signup_user(payload: SignupRequest):
+    """
+    Handles user signup by sending a confirmation email with a token.
+
+    Args:
+        email (EmailStr): The email address of the user.
+
+    Raises:
+        HTTPException: If the email already exists in the database.
+
+    Returns:
+        JSONResponse: A response indicating that the confirmation email was sent.
+    """
+    email = payload.email
+    try:
+        # Check if the email already exists in the database
+        existing_user = await admin_crud.get_by_email(email)
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already exists",
+            )
+
+        email_sent = await email_service.send_confirmation_email(to_email=email)
+
+        if not email_sent:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to send confirmation email",
+            )
+
+        return JSONResponse(
+            content={"message": "Confirmation email sent successfully"}
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during signup: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error during signup",
         )

@@ -2,7 +2,7 @@
 This module contains Pydantic schemas for auth.
 """
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from .base import BaseSchema
 
 
@@ -14,6 +14,12 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+
+class SignupRequest(BaseModel):
+    """
+    Signup request model
+    """
+    email: EmailStr
 
 class SignupConfirmation(BaseSchema):
     """

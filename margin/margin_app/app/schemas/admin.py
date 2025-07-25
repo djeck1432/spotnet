@@ -1,14 +1,17 @@
 """
-This module contains Pydantic schemas for admin.
+Pydantic schemas for admin user management.
+
+This module defines request and response models for admin-related API endpoints,
+including validation rules and serialization configurations.
 """
 
 from uuid import UUID
 from typing import Optional
-from .base import GetAll
-from pydantic import BaseModel, EmailStr, ConfigDict
+from .base import GetAll, BaseSchema
+from pydantic import EmailStr, ConfigDict
 
 
-class AdminBase(BaseModel):
+class AdminBase(BaseSchema):
     """
     Admin base model
     """
@@ -30,12 +33,15 @@ class AdminRequest(AdminBase):
         extra = "forbid"
 
 
-class AdminResetPassword(BaseModel):
+class AdminResetPassword(BaseSchema):
     """
-    Admin reset password model
+    Schema for token-based admin password reset.
+
+    This schema is used when an admin user resets their password
+    using a secure reset token received via email. Only requires
+    the new password as the identity is verified through the token.
     """
 
-    old_password: str
     new_password: str
 
 
@@ -55,8 +61,18 @@ class AdminGetAllResponse(GetAll[AdminResponse]):
     """
 
 
-class AdminUpdateRequest(BaseModel):
+class AdminUpdateRequest(BaseSchema):
     """
     Admin update request model (for updating admin fields)
     """
+
     name: Optional[str] = None
+
+
+class AdminLogin(BaseSchema):
+    """
+    Request model for admin login
+    """
+
+    email: str
+    password: str

@@ -69,6 +69,40 @@ class UserOrderCRUD(DBConnector):
             UserOrder | None: The order object if found, None otherwise
         """
         return await self.get_object(order_id)
+    
+    async def update_order(
+        self, 
+        order: UserOrder,
+        user_id: Optional[uuid.UUID] = None,
+        price: Optional[Decimal] = None,
+        token: Optional[str] = None,
+        position: Optional[uuid.UUID] = None
+    ) -> UserOrder | None:
+        """
+        Update an existing order in the database.
+
+        Args:
+            order_id (uuid.UUID): ID of the order to update
+            user_id (uuid.UUID, optional): New user ID for the order
+            price (Decimal, optional): New price for the order
+            token (str, optional): New token symbol for the order
+            position (uuid.UUID, optional): New position ID for the order
+
+        Returns:
+            UserOrder | None: The updated order object if found and updated, None otherwise
+        """
+
+        if user_id is not None:
+            order.user_id = user_id
+        if price is not None:
+            order.price = price
+        if token is not None:
+            order.token = token
+        if position is not None:
+            order.position = position
+
+        updated_order = await self.write_to_db(order)
+        return updated_order
 
 
 order_crud = UserOrderCRUD(UserOrder)

@@ -6,7 +6,6 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 from app.schemas.deposit import DepositResponse
-from pydantic import ConfigDict
 from app.models.margin_position import MarginPositionStatus
 from .base import BaseSchema, GetAll
 
@@ -83,12 +82,3 @@ class AddMarginPositionResponse(BaseSchema):
     transaction_id: str
     liquidated_at: datetime
     status: MarginPositionStatus
-
-
-class UserLogin(BaseSchema):
-    """
-    Request model for user login
-    """
-
-    email: str
-    password: str

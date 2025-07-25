@@ -23,6 +23,9 @@ assignees: ''
 
 ## How to prepare PR
 1. Check if your code [smell](https://refactoring.guru/refactoring/smells) good
-2.  Add `close #<issue number>` to link your issue with your PR
-3.  Do not commit changes which is not related to your task 
-4. Check after you created PR, if you committed everything.
+2. Add `close #<issue number>` to link your issue with your PR
+3. Do not commit changes that are unrelated to your task
+4. Check after you created PR, if you committed everything
+
+
+## Task Description

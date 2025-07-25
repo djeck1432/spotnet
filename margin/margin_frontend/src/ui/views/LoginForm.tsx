@@ -128,7 +128,7 @@ const LoginForm = () => {
       </Button>
       <div className="flex justify-center gap-2 text-xs">
         <p>{textData.signUpHint}</p>
-        <a href="#" className="underline">
+        <a href="/signup" className="underline">
           {textData.signUp}
         </a>
       </div>
