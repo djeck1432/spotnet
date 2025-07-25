@@ -28,7 +28,7 @@ async def test_reset_password_success(
     mock_get_password_hash.return_value = "hashed_password"
 
     response = client.post(
-        "/reset_password",
+        "/api/auth/reset_password",
         json={"token": "valid_token", "new_password": "new_password123"},
     )
 
@@ -46,7 +46,7 @@ async def test_reset_password_invalid_token(mock_decode_token):
     mock_decode_token.side_effect = Exception("Invalid token")
 
     response = client.post(
-        "/reset_password",
+        "/api/auth/reset_password",
         json={"token": "invalid_token", "new_password": "new_password123"},
     )
 
@@ -68,7 +68,7 @@ async def test_reset_password_admin_not_found(
     mock_get_by_email.return_value = None
 
     response = client.post(
-        "/reset_password",
+        "/api/auth/reset_password",
         json={"token": "valid_token", "new_password": "new_password123"},
     )
 
