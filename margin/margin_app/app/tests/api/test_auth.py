@@ -55,7 +55,7 @@ async def test_reset_password_invalid_token(mock_decode_token):
 
 
 @pytest.mark.asyncio
-@patch("app.services.auth.base.decode_signup_token", new_callable=AsyncMock)
+@patch("app.api.auth.decode_signup_token", new_callable=AsyncMock)
 @patch("app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock)
 async def test_reset_password_admin_not_found(
     mock_get_by_email,
