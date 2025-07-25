@@ -319,34 +319,42 @@ async def change_password(
     "/reset_password",
     status_code=status.HTTP_200_OK,
     summary="password reset for admin",
-    description="change password for admin",
+    description="Resets the admin's password using a token.",
 )
-async def reset_password(data: AdminResetPassword, token: str):
+async def reset_password(data: AdminResetPassword):
     """
-    Reset the password for an admin user.
-    This function verifies the provided old password, updates the password
-    to a new one if the verification is successful, and saves the changes
-    to the database.
+    Reset the password for an admin user using a token from email.
+
+    This function decodes the provided JWT token to get the admin's email,
+    verifies the admin exists, and then updates the password.
+
     Args:
-        data (AdminResetPassword): An object containing the old and new passwords.
-        token (str): The authentication token of the current admin user.
+        data (AdminResetPassword): An object containing the reset token and the new password.
+
     Raises:
-        HTTPException: If the provided old password does not match the stored password.
+        HTTPException: If the token is invalid, expired, or the user is not found.
+
     Returns:
         JSONResponse: A response indicating that the password was successfully changed.
     """
-
-    admin = await get_current_user(token=token)
-
-    if not verify_password(data.old_password, admin.password):
+    try:
+        email = decode_signup_token(data.token)
+    except InvalidTokenError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="The provided old password does not match",
+            detail=f"Invalid token: {e}",
+        )
+
+    admin = await admin_crud.get_by_email(email)
+    if not admin:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Admin with this email was not found.",
         )
 
     admin.password = get_password_hash(data.new_password)
     await admin_crud.write_to_db(admin)
-    return JSONResponse(content={"message": "Password was changed"})
+    return JSONResponse(content={"message": "Password was changed successfully"})
 
 
 @router.post("/signup-confirmation", status_code=status.HTTP_200_OK)
