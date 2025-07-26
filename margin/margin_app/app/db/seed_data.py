@@ -12,8 +12,17 @@ from datetime import datetime
 from hashlib import sha256
 
 from app.db.sessions import AsyncSessionLocal
-from app.models import (Admin, Deposit, Liquidation, MarginPosition, Pool,
-                        Transaction, User, UserOrder, UserPool)
+from app.models import (
+    Admin,
+    Deposit,
+    Liquidation,
+    MarginPosition,
+    Pool,
+    Transaction,
+    User,
+    UserOrder,
+    UserPool,
+)
 from faker import Faker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -33,8 +42,8 @@ class SeedDataGenerator:
         self.amount = amount
         self.faker = Faker()
 
-        logging.getLogger('sqlalchemy').setLevel(logging.WARNING)
-        logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
+        logging.getLogger("sqlalchemy").setLevel(logging.WARNING)
+        logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
 
     def generate_hex(self) -> str:
         """
@@ -44,7 +53,7 @@ class SeedDataGenerator:
         """
         random_string = self.faker.uuid4()
         return "0x" + sha256(random_string.encode()).hexdigest()
-    
+
     def hash_password(self, password: str) -> str:
         """
         Hash a password using bcrypt.
@@ -53,8 +62,8 @@ class SeedDataGenerator:
         :return: The hashed password.
         """
         salt = bcrypt.gensalt()
-        hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
-        return hashed.decode('utf-8')
+        hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
+        return hashed.decode("utf-8")
 
     async def generate_users(self, session: AsyncSession):
         """
@@ -170,7 +179,13 @@ class SeedDataGenerator:
         admin_credentials = []
 
         for _ in range(self.amount):
-            plain_password = self.faker.password(length=12, special_chars=True, digits=True, upper_case=True, lower_case=True)
+            plain_password = self.faker.password(
+                length=12,
+                special_chars=True,
+                digits=True,
+                upper_case=True,
+                lower_case=True,
+            )
             hashed_password = self.hash_password(plain_password)
             is_super_admin = self.faker.boolean(chance_of_getting_true=30)
             name = self.faker.name()
@@ -184,27 +199,31 @@ class SeedDataGenerator:
             )
             admins.append(admin)
 
-            admin_credentials.append({
-                'name': name,
-                'email': email,
-                'password': plain_password,
-                'is_super_admin': is_super_admin
-            })
+            admin_credentials.append(
+                {
+                    "name": name,
+                    "email": email,
+                    "password": plain_password,
+                    "is_super_admin": is_super_admin,
+                }
+            )
 
         session.add_all(admins)
         await session.commit()
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("ADMIN CREDENTIALS (SAVE THESE FOR TESTING)")
-        print("="*60)
+        print("=" * 60)
         for cred in admin_credentials:
-            super_admin_status = "Super Admin" if cred['is_super_admin'] else "Regular Admin"
+            super_admin_status = (
+                "Super Admin" if cred["is_super_admin"] else "Regular Admin"
+            )
             print(f"Name: {cred['name']}")
             print(f"Email: {cred['email']}")
             print(f"Password: {cred['password']}")
             print(f"Role: {super_admin_status}")
             print("-" * 40)
-        print("="*60 + "\n")
+        print("=" * 60 + "\n")
 
     async def generate_liquidations(self, session: AsyncSession):
         """
