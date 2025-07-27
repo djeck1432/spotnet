@@ -385,23 +385,28 @@ def _find_earliest_amount(user_pools: Sequence[UserPool], within_delta_hours: in
     return earliest_up.amount if earliest_up else None
 
 
-@pytest.mark.asyncio
-async def test_pool_statistic_view(
+@pytest_asyncio.fixture
+async def pools_with_view_check(
     new_mock_pools_with_session: tuple[Sequence[Pool], AsyncSession],
 ):
-    """Test fetching all from PoolStatisticDBView"""
+    """Fixture that checks if PoolStatisticDBView is available and skips if not"""
     mock_pools, session = new_mock_pools_with_session
     
-    # Skip test if database view is not available (common in test environments)
+    # Check if database view is available (skip at fixture level if not)
     try:
         res = await session.execute(select(PoolStatisticDBView))
+        retrieved_pools: Sequence[PoolStatisticDBView] = res.scalars().all()
+        return mock_pools, session, retrieved_pools
     except (ProgrammingError, OperationalError, AttributeError, Exception) as e:
         pytest.skip(f"PoolStatisticDBView not available in test database: {type(e).__name__}")
-        
-    try:
-        retrieved_pools: Sequence[PoolStatisticDBView] = res.scalars().all()
-    except (AttributeError, Exception) as e:
-        pytest.skip(f"Error retrieving PoolStatisticDBView data: {type(e).__name__}")
+
+
+@pytest.mark.asyncio
+async def test_pool_statistic_view(
+    pools_with_view_check: tuple[Sequence[Pool], AsyncSession, Sequence[PoolStatisticDBView]],
+):
+    """Test fetching all from PoolStatisticDBView"""
+    mock_pools, session, retrieved_pools = pools_with_view_check
         
     pools_by_id = {pool.id: pool for pool in mock_pools}
     for pool in retrieved_pools:
