@@ -183,4 +183,3 @@ class DashboardMixin:
         main_position = position_db_connector.get_position_by_id(position_id)
         main_position_balance = main_position and main_position.amount or "0"
         return main_position_balance
-

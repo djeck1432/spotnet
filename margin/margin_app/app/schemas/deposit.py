@@ -6,7 +6,6 @@ from decimal import Decimal
 from uuid import UUID
 from typing import Optional
 from datetime import datetime
-from pydantic import ConfigDict
 
 from .base import BaseSchema, GetAll
 

@@ -8,6 +8,7 @@ from app.telegram.filters.admin_filter import AdminFilter
 router = Router()
 router.message.filter(AdminFilter())
 
+
 @router.message(Command("admin_check"))
 async def admin_check_handler(message: types.Message):
     """

@@ -4,7 +4,6 @@ Integration test for the PositionClose view.
 
 import asyncio
 import logging
-from datetime import datetime
 from typing import Any, Dict
 
 import pytest
@@ -79,9 +78,9 @@ class TestPositionClose:
             # Open position
             current_prices = asyncio.run(DashboardMixin.get_current_prices())
             position_status = position_db.open_position(position.id, current_prices)
-            assert (
-                position_status == Status.OPENED
-            ), "Position status should be 'opened' after updating"
+            assert position_status == Status.OPENED, (
+                "Position status should be 'opened' after updating"
+            )
             logger.info(
                 f"Position {position.id} successfully opened with status '{position.status}'."
             )
@@ -91,7 +90,9 @@ class TestPositionClose:
             assert close_result, "Close operation should succeed."
 
             position = position_db.get_position_by_id(position.id)
-            assert (
-                position.status == Status.CLOSED
-            ), "Position status should be 'closed' after close operation"
-            assert position.closed_at is not None, "Position should have closed_at timestamp"
+            assert position.status == Status.CLOSED, (
+                "Position status should be 'closed' after close operation"
+            )
+            assert position.closed_at is not None, (
+                "Position should have closed_at timestamp"
+            )

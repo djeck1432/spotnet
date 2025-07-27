@@ -24,9 +24,11 @@ class UserOrder(BaseModel):
     Table:
     - Name: "user_order"
     """
+
     __tablename__ = "user_order"
-    user_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True),
-                                          ForeignKey("user.id"), primary_key=True)
+    user_id: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("user.id"), primary_key=True
+    )
     price: Mapped[Decimal] = mapped_column(nullable=False)
     token: Mapped[str] = mapped_column(VARCHAR)
     position: Mapped[UUID] = mapped_column(UUID(as_uuid=True))

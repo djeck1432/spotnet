@@ -86,5 +86,3 @@ def test_create_referral_link_for_multiple_users(client, mock_get_user_by_wallet
     assert response1.status_code == 200
     assert response2.status_code == 200
     assert referral_code1 != referral_code2
-
-

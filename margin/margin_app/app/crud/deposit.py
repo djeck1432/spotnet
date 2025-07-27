@@ -7,7 +7,6 @@ import uuid
 from decimal import Decimal
 from typing import Any, Dict, Optional
 
-from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.crud.base import DBConnector

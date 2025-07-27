@@ -18,7 +18,7 @@ from web_app.db.models import (
     TransactionStatus,
     User,
     Vault,
-    ExtraDeposit
+    ExtraDeposit,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -88,6 +88,7 @@ def create_positions(session: SessionLocal, users: list[User]) -> list[Position]
         logger.info("No positions created.")
     return positions
 
+
 def create_extra_deposits(session: SessionLocal, positions: list[Position]) -> None:
     """
     Create and save fake extra deposit records associated with given positions.
@@ -101,18 +102,18 @@ def create_extra_deposits(session: SessionLocal, positions: list[Position]) -> N
         for _ in range(num_deposits):
             extra_deposit = ExtraDeposit(
                 position_id=position.id,
-                token_symbol=position.token_symbol,  
-                amount=str(  
-                    fake.random_number(digits=5)  
-                ),
-                added_at=fake.date_time_this_decade(),  
+                token_symbol=position.token_symbol,
+                amount=str(fake.random_number(digits=5)),
+                added_at=fake.date_time_this_decade(),
             )
             extra_deposits.append(extra_deposit)
-    
+
     if extra_deposits:
         session.bulk_save_objects(extra_deposits)
         session.commit()
-        logger.info(f"Created {len(extra_deposits)} extra deposits for {len(positions)} positions.")
+        logger.info(
+            f"Created {len(extra_deposits)} extra deposits for {len(positions)} positions."
+        )
     else:
         logger.info("No extra deposits created.")
 

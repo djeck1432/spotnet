@@ -4,7 +4,6 @@ from fastapi.testclient import TestClient
 import pytest_asyncio
 import pytest
 from sqlalchemy.ext.asyncio import create_async_engine
-from app.crud.base import DBConnector
 from app.core.config import settings
 from app.models.base import Base
 from app.main import app
@@ -33,12 +32,12 @@ async def setup_db():
     """Fixture to create and teardown database migrations"""
     engine = create_async_engine(settings.db_url)
     async with engine.begin() as conn:
-        res = await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(Base.metadata.create_all)
     try:
         yield
     finally:
         async with engine.begin() as conn:
-            res = await conn.run_sync(Base.metadata.drop_all)
+            await conn.run_sync(Base.metadata.drop_all)
 
 
 @pytest.fixture(scope="module")

@@ -6,7 +6,6 @@ import uuid
 from decimal import Decimal
 from typing import Optional
 
-from app.models.user_order import UserOrder
 from .base import GetAll
 from pydantic import BaseModel, Field, ConfigDict
 
@@ -41,13 +40,14 @@ class UserOrderGetAllResponse(GetAll[UserOrderResponse]):
 
 class UserOrderUpdate(BaseModel):
     """Schema for updating an order."""
+
     model_config = ConfigDict(
         json_encoders={
             uuid.UUID: str,
             Decimal: str,
         }
     )
-    
+
     user_id: Optional[uuid.UUID] = None
     price: Optional[Decimal] = None
     token: Optional[str] = None

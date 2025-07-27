@@ -6,12 +6,9 @@ from .base import BaseSchema
 from uuid import UUID
 from typing import Optional
 from decimal import Decimal
-from pydantic import ConfigDict
 from .base import GetAll
 from app.models.pool import PoolRiskStatus
 from datetime import datetime
-
-from typing import Optional
 
 
 class UserPoolBase(BaseSchema):

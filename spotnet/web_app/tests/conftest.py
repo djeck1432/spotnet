@@ -42,14 +42,18 @@ def client() -> None:
     mock_db_connector = MagicMock(spec=DBConnector)
     app.dependency_overrides[get_database] = lambda: mock_db_connector
 
-    with patch(
-        "starknet_py.contract.Contract.from_address", new_callable=AsyncMock
-    ) as mock_from_address, patch(
-        "starknet_py.net.full_node_client.FullNodeClient.get_class_hash_at",
-        new_callable=AsyncMock,
-    ) as mock_class_hash, patch(
-        "starknet_py.net.http_client.HttpClient.request", new_callable=AsyncMock
-    ) as mock_request:
+    with (
+        patch(
+            "starknet_py.contract.Contract.from_address", new_callable=AsyncMock
+        ) as mock_from_address,
+        patch(
+            "starknet_py.net.full_node_client.FullNodeClient.get_class_hash_at",
+            new_callable=AsyncMock,
+        ) as mock_class_hash,
+        patch(
+            "starknet_py.net.http_client.HttpClient.request", new_callable=AsyncMock
+        ) as mock_request,
+    ):
         # Mock return values
         mock_from_address.return_value = MagicMock()
         mock_class_hash.return_value = "0x123"

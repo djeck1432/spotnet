@@ -10,8 +10,17 @@ from datetime import datetime
 from hashlib import sha256
 
 from app.db.sessions import AsyncSessionLocal
-from app.models import (Admin, Deposit, Liquidation, MarginPosition, Pool,
-                        Transaction, User, UserOrder, UserPool)
+from app.models import (
+    Admin,
+    Deposit,
+    Liquidation,
+    MarginPosition,
+    Pool,
+    Transaction,
+    User,
+    UserOrder,
+    UserPool,
+)
 from faker import Faker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select

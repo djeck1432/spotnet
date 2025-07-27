@@ -103,7 +103,7 @@ class PositionDBConnector(UserDBConnector):
             except SQLAlchemyError as e:
                 logger.error(f"Failed to retrieve positions: {str(e)}")
                 return []
-      
+
     def get_all_positions_by_wallet_id(
         self, wallet_id: str, start: int, limit: int
     ) -> list[dict]:
@@ -138,11 +138,11 @@ class PositionDBConnector(UserDBConnector):
             except SQLAlchemyError as e:
                 logger.error(f"Failed to retrieve positions: {str(e)}")
                 return []
-    
+
     def get_count_positions_by_wallet_id(self, wallet_id: str) -> int:
         """
         Counts total number of positions for a user.
-        
+
         :param wallet_id: Wallet ID of the user
         :return: Total number of positions
         """
@@ -394,7 +394,6 @@ class PositionDBConnector(UserDBConnector):
         """
         with self.Session() as db:
             try:
-
                 position = db.query(Position).filter(Position.id == position_id).first()
 
                 if not position:
@@ -509,7 +508,9 @@ class PositionDBConnector(UserDBConnector):
             )
             return {deposit.token_symbol: deposit.amount for deposit in deposits}
 
-    def get_extra_deposits_by_position_id(self, position_id: UUID) -> list[ExtraDeposit]:
+    def get_extra_deposits_by_position_id(
+        self, position_id: UUID
+    ) -> list[ExtraDeposit]:
         """
         Get all extra deposits by position id
 
@@ -524,11 +525,12 @@ class PositionDBConnector(UserDBConnector):
             )
             return extra_deposits
 
-
     def delete_all_extra_deposits(self, position_id: UUID) -> None:
         """
         Delete all extra deposits for a position.
         """
         with self.Session() as db:
-            db.query(ExtraDeposit).filter(ExtraDeposit.position_id == position_id).delete()
+            db.query(ExtraDeposit).filter(
+                ExtraDeposit.position_id == position_id
+            ).delete()
             db.commit()

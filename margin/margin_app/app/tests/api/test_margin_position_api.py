@@ -7,7 +7,6 @@ from unittest.mock import patch
 
 import pytest
 
-from app.models import MarginPosition
 from app.models.margin_position import MarginPositionStatus
 from app.schemas.margin_position import MarginPositionResponse
 
@@ -104,21 +103,25 @@ def test_update_margin_position_success(
 ):
     """Test successfully updating a margin position."""
     position_id = uuid.uuid4()
-    
+
     # Create the updated position response
     updated_data = valid_position_data.copy()
     updated_data.update(valid_update_data)
-    
+
     updated_position_response = MarginPositionResponse(
         id=position_id, status="Open", liquidated_at=None, **updated_data
     )
     mock_update_margin_position.return_value = updated_position_response
 
-    response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=valid_update_data)
-    
+    response = client.post(
+        f"{MARGIN_POSITION_URL}/{position_id}", json=valid_update_data
+    )
+
     assert response.status_code == 200
     assert response.json()["id"] == str(position_id)
-    assert response.json()["borrowed_amount"] == str(valid_update_data["borrowed_amount"])
+    assert response.json()["borrowed_amount"] == str(
+        valid_update_data["borrowed_amount"]
+    )
     assert response.json()["multiplier"] == valid_update_data["multiplier"]
     assert response.json()["status"] == "Open"
     mock_update_margin_position.assert_called_once()
@@ -130,30 +133,36 @@ def test_update_margin_position_partial_update(
     """Test updating a margin position with partial data (only multiplier)."""
     position_id = uuid.uuid4()
     partial_update_data = {"multiplier": 10}
-    
+
     # Create response with only multiplier updated
     updated_data = valid_position_data.copy()
     updated_data["multiplier"] = partial_update_data["multiplier"]
-    
+
     updated_position_response = MarginPositionResponse(
         id=position_id, status="Open", liquidated_at=None, **updated_data
     )
     mock_update_margin_position.return_value = updated_position_response
 
-    response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=partial_update_data)
-    
+    response = client.post(
+        f"{MARGIN_POSITION_URL}/{position_id}", json=partial_update_data
+    )
+
     assert response.status_code == 200
     assert response.json()["multiplier"] == partial_update_data["multiplier"]
     mock_update_margin_position.assert_called_once()
 
 
-def test_update_margin_position_not_found(client, valid_update_data, mock_update_margin_position):
+def test_update_margin_position_not_found(
+    client, valid_update_data, mock_update_margin_position
+):
     """Test updating a non-existent margin position."""
     position_id = uuid.uuid4()
     mock_update_margin_position.return_value = None
 
-    response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=valid_update_data)
-    
+    response = client.post(
+        f"{MARGIN_POSITION_URL}/{position_id}", json=valid_update_data
+    )
+
     assert response.status_code == 404
     assert "not found" in response.json()["detail"]
     mock_update_margin_position.assert_called_once()
@@ -171,7 +180,7 @@ def test_update_margin_position_closed_position(
     response = client.post(
         f"{MARGIN_POSITION_URL}/{position_id}", json=valid_update_data
     )
-    
+
     assert response.status_code == 400
     assert "Cannot update a closed margin position" in response.json()["detail"]
     mock_update_margin_position.assert_called_once()
@@ -182,8 +191,10 @@ def test_update_margin_position_invalid_multiplier(client, mock_update_margin_po
     position_id = uuid.uuid4()
     invalid_update_data = {"multiplier": 25}  # Invalid multiplier > 20
 
-    response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=invalid_update_data)
-    
+    response = client.post(
+        f"{MARGIN_POSITION_URL}/{position_id}", json=invalid_update_data
+    )
+
     # Should be handled by Pydantic validation at the schema level
     assert response.status_code == 422
     # Check that the error message mentions multiplier validation
@@ -197,8 +208,10 @@ def test_update_margin_position_invalid_uuid(client, valid_update_data):
     """Test updating a margin position with invalid UUID format."""
     invalid_id = "not-a-uuid"
 
-    response = client.post(f"{MARGIN_POSITION_URL}/{invalid_id}", json=valid_update_data)
-    
+    response = client.post(
+        f"{MARGIN_POSITION_URL}/{invalid_id}", json=valid_update_data
+    )
+
     assert response.status_code == 422
 
 
@@ -206,7 +219,7 @@ def test_update_margin_position_empty_data(client, mock_update_margin_position):
     """Test updating a margin position with empty data."""
     position_id = uuid.uuid4()
     empty_data = {}
-    
+
     # Mock should still be called and return updated position
     mock_update_margin_position.return_value = MarginPositionResponse(
         id=position_id,
@@ -215,11 +228,11 @@ def test_update_margin_position_empty_data(client, mock_update_margin_position):
         multiplier=5,
         transaction_id="txn_123",
         status="Open",
-        liquidated_at=None
+        liquidated_at=None,
     )
 
     response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=empty_data)
-    
+
     assert response.status_code == 200
     mock_update_margin_position.assert_called_once()
 
@@ -230,7 +243,7 @@ def test_update_margin_position_negative_borrowed_amount(client):
     invalid_data = {"borrowed_amount": -100.00}
 
     response = client.post(f"{MARGIN_POSITION_URL}/{position_id}", json=invalid_data)
-    
+
     # Should be handled by Pydantic validation at the schema level
     assert response.status_code == 422
     # Check that the error message mentions validation

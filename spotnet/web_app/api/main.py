@@ -1,7 +1,7 @@
 """
 Main FastAPI application module for the SPOTNET API.
 
-This module sets up the FastAPI application 
+This module sets up the FastAPI application
 and includes middleware for session management and CORS.
 It also includes routers for the dashboard, position, and user endpoints.
 """

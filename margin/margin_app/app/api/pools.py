@@ -234,6 +234,7 @@ async def update_user_pool(user_pool: UserPoolUpdate) -> UserPoolUpdateResponse:
 
     return updated_pool
 
+
 @router.get(
     "/user_pool/{user_pool_id}",
     response_model=UserPoolResponse,
@@ -267,4 +268,3 @@ async def get_user_pool(user_pool_id: UUID) -> UserPoolResponse:
             detail=f"User pool with id {user_pool_id} not found",
         )
     return user_pool
-

@@ -2,8 +2,6 @@
 Alembic environment configuration for database migrations.
 """
 
-import alembic_postgresql_enum
-import os
 import asyncio
 from logging.config import fileConfig
 

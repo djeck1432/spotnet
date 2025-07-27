@@ -2,7 +2,7 @@
 This module contains the API routes for the Deposit model.
 """
 
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Query, status

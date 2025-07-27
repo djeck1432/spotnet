@@ -11,8 +11,6 @@ import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
 
-from app.schemas.liquidation import LiquidationResponse
-
 
 MARGIN_POSITION_URL = "api/margin"
 
@@ -85,9 +83,9 @@ class TestLiquidation:
             "bonus_token": self.test_bonus_token,
         }
         response = client.post(MARGIN_POSITION_URL + "/liquidate", json=request_data)
-        
+
         # TODO: This should be 400, but validation is failing at schema level with 422
-        # This needs to be investigated separately from our margin position work  
+        # This needs to be investigated separately from our margin position work
         assert response.status_code == 422
         assert "detail" in response.json()
 

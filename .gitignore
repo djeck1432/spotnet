@@ -184,3 +184,5 @@ node_modules/
 .vscode 
 .cursor*
 .DS_Store
+# Environment variables
+.env

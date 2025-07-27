@@ -26,6 +26,7 @@ class TokenConfig:
     collateral_factor: Decimal = Decimal("0.0")
     borrow_factor: Decimal = Decimal("0.0")
 
+
 @dataclass(frozen=True)
 class TokenMultipliers:
     """
@@ -36,6 +37,7 @@ class TokenMultipliers:
     STRK: float = 1.9
     kSTRK: float = 1.8
     USDC: float = 5.0
+
 
 class TokenParams:
     """

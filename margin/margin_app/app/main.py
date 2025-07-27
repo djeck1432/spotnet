@@ -4,7 +4,7 @@ Main FastAPI application entry point.
 
 import sys
 
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from loguru import logger
@@ -20,7 +20,6 @@ from app.api.user import router as user_router
 from app.api.auth import router as auth_router
 from app.api.dashboard import router as dashboard_router
 from app.services.auth.base import get_current_user
-from app.models.admin import Admin
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -103,16 +102,13 @@ async def auth_admin_user(request: Request, call_next):
     """
     if not request.url.path.startswith("/api/admin"):
         return await call_next(request)
-    
-    public_endpoints = [
-        "/api/admin/reset_password/",
-        "/api/admin/change_password"
-    ]
+
+    public_endpoints = ["/api/admin/reset_password/", "/api/admin/change_password"]
 
     for endpoint in public_endpoints:
         if request.url.path.startswith(endpoint):
             return await call_next(request)
-        
+
     try:
         auth_header = request.headers.get("Authorization")
         if not auth_header:

@@ -369,7 +369,6 @@ class TestStarknetClient:
         except RepayDataException:
             assert RepayDataException.args
         else:
-
             assert isinstance(repay_data, dict)
             assert {"supply_price", "debt_price", "pool_key"}.issubset(
                 repay_data

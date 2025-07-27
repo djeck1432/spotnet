@@ -353,7 +353,7 @@ async def test_get_repay_data_missing_wallet_id(
                 "ekubo_limits": {"mock_key": "mock_value"},
             },
         ),
-            # New test case for kSTRK
+        # New test case for kSTRK
         (
             "valid_wallet_id_4",
             "kSTRK",
@@ -421,7 +421,6 @@ async def test_create_position_success(
             "web_app.db.crud.PositionDBConnector.get_contract_address_by_wallet_id"
         ) as mock_get_contract_address,
     ):
-
         mock_create_position.return_value = mock_position
         mock_get_transaction_data.return_value = mock_deposit_data
         mock_get_contract_address.return_value = "mock_contract_address"
@@ -435,12 +434,12 @@ async def test_create_position_success(
                 "multiplier": multiplier,
             },
         )
-        assert (
-            response.is_success
-        ), f"Expected status code 200 but got {response.status_code}"
-        assert (
-            response.json() == expected_response
-        ), "Response JSON does not match expected response"
+        assert response.is_success, (
+            f"Expected status code 200 but got {response.status_code}"
+        )
+        assert response.json() == expected_response, (
+            "Response JSON does not match expected response"
+        )
 
 
 @pytest.mark.parametrize(
@@ -497,11 +496,14 @@ async def test_get_user_positions_success(client: TestClient) -> None:
     ]
     mock_total_count = len(mock_positions)
 
-    with patch(
-        "web_app.db.crud.PositionDBConnector.get_all_positions_by_wallet_id"
-    ) as mock_get_positions, patch(
+    with (
+        patch(
+            "web_app.db.crud.PositionDBConnector.get_all_positions_by_wallet_id"
+        ) as mock_get_positions,
+        patch(
             "web_app.db.crud.PositionDBConnector.get_count_positions_by_wallet_id"
-    ) as mock_get_count_positions:
+        ) as mock_get_count_positions,
+    ):
         mock_get_positions.return_value = mock_positions
         mock_get_count_positions.return_value = mock_total_count
 

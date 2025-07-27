@@ -9,7 +9,6 @@ Create Date: 2025-05-01 13:13:37.013237
 from typing import Sequence, Union
 
 from alembic import op
-import sqlalchemy as sa
 
 from app.db.extensions import CreateView, DropView
 from app.models.pool import _PoolStatisticViewQueryBuilder

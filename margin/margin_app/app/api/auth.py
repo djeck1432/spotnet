@@ -15,9 +15,8 @@ from app.services.auth.base import (
     google_auth,
     create_access_token,
     create_refresh_token,
-    get_current_user,
     decode_signup_token,
-    )
+)
 
 from app.crud.admin import admin_crud
 from app.schemas.admin import AdminLogin
@@ -49,12 +48,12 @@ async def login_google() -> RedirectResponse:
     response_model=dict,
     status_code=status.HTTP_200_OK,
     summary="admin logout",
-     description="Logout admin and clear authentication cookies"
+    description="Logout admin and clear authentication cookies",
 )
 async def logout_admin(request: Request, response: Response) -> dict:
     """
     Logout the admin user and clear all authentication cookies.
-    
+
     This endpoint:
     - Clears the refresh_token cookie with secure parameters
     - Blacklists the refresh token to prevent reuse
@@ -64,108 +63,102 @@ async def logout_admin(request: Request, response: Response) -> dict:
     Args:
         request: Request object to get current admin
         response: Response object to delete cookies
-        
+
     Returns:
         dict: Success message
-        
+
     Raises:
         HTTPException: If admin is not authenticated
     """
     try:
         current_admin = await get_admin_user_from_state(request)
-        
+
         if not current_admin:
             authorization = request.headers.get("Authorization")
             if not authorization or not authorization.startswith("Bearer "):
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="No authentication token found"
+                    detail="No authentication token found",
                 )
-            
+
             token = authorization.split(" ")[1]
-            
+
             try:
                 email = decode_signup_token(token)
 
                 if not email:
                     raise HTTPException(
                         status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Invalid token format"
+                        detail="Invalid token format",
                     )
-                
+
                 current_admin = await admin_crud.get_by_email(email)
                 if not current_admin:
                     raise HTTPException(
                         status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Admin not found"
+                        detail="Admin not found",
                     )
-                    
+
             except InvalidTokenError:
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Invalid or expired token"
+                    detail="Invalid or expired token",
                 )
             except Exception as e:
                 if "Invalid token" in str(e) or "Token expired" in str(e):
                     raise HTTPException(
                         status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Invalid or expired token"
+                        detail="Invalid or expired token",
                     )
                 raise
-        
+
         response.delete_cookie(
-            key="refresh_token",
-            path="/",
-            httponly=True,
-            secure=True,
-            samesite="lax"
+            key="refresh_token", path="/", httponly=True, secure=True, samesite="lax"
         )
-        
+
         logger.info(f"Admin {current_admin.email} logged out successfully")
-        
+
         return {"message": "Admin logged out successfully"}
-        
+
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Error during logout: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Error during logout"
+            detail="Error during logout",
         )
-    
+
 
 @router.post("/refresh")
 async def refresh_access_token(request: Request):
     """Refresh access token using refresh token."""
     refresh_token = request.cookies.get("refresh_token")
-    
+
     if not refresh_token:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Refresh token not found"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token not found"
         )
     try:
         email = decode_signup_token(refresh_token)
         admin = await admin_crud.get_by_email(email)
-        
+
         if not admin:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Admin not found"
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Admin not found"
             )
- 
+
         new_access_token = create_access_token(admin.email)
-        
+
         return {"access_token": new_access_token, "token_type": "bearer"}
-        
+
     except Exception as e:
         if "Invalid token" in str(e) or "Token expired" in str(e):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid or expired refresh token"
+                detail="Invalid or expired refresh token",
             )
-        raise    
+        raise
 
 
 @router.get("/google", status_code=status.HTTP_200_OK)
@@ -211,7 +204,7 @@ async def auth_google(code: str, response: Response):
             httponly=True,
             secure=True,
             path="/",
-            max_age=settings.refresh_token_expire_days * 24 * 60 * 60
+            max_age=settings.refresh_token_expire_days * 24 * 60 * 60,
         )
 
         return {"access_token": access_token, "token_type": "bearer"}
@@ -223,12 +216,13 @@ async def auth_google(code: str, response: Response):
             detail="Failed to authenticate admin.",
         )
 
+
 @router.post(
     "/login",
     status_code=status.HTTP_200_OK,
     summary="admin login",
     description="login admin with email and password",
-    )
+)
 async def login_admin(data: AdminLogin, response: Response):
     """
     handles admin login by email and password
@@ -428,6 +422,7 @@ async def signup_confirmation(
             detail="Failed to confirm signup",
         )
 
+
 @router.post(
     "/signup",
     status_code=status.HTTP_200_OK,
@@ -465,9 +460,7 @@ async def signup_user(payload: SignupRequest):
                 detail="Failed to send confirmation email",
             )
 
-        return JSONResponse(
-            content={"message": "Confirmation email sent successfully"}
-        )
+        return JSONResponse(content={"message": "Confirmation email sent successfully"})
 
     except HTTPException:
         raise

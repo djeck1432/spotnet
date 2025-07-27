@@ -2,6 +2,7 @@
 This module provides CRUD operations for the leaderboard, retrieving the top users by positions.
 
 """
+
 from .base import DBConnector
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import func
@@ -9,6 +10,7 @@ from web_app.db.models import User, Position
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 class LeaderboardDBConnector(DBConnector):
     """
@@ -26,7 +28,7 @@ class LeaderboardDBConnector(DBConnector):
                 results = (
                     db.query(
                         User.wallet_id,
-                        func.count(Position.id).label("positions_number")
+                        func.count(Position.id).label("positions_number"),
                     )
                     .join(Position, Position.user_id == User.id)
                     .filter(Position.status.in_(["closed", "opened"]))
@@ -37,14 +39,17 @@ class LeaderboardDBConnector(DBConnector):
                 )
 
                 return [
-                    {"wallet_id": result.wallet_id, "positions_number": result.positions_number}
+                    {
+                        "wallet_id": result.wallet_id,
+                        "positions_number": result.positions_number,
+                    }
                     for result in results
                 ]
 
             except SQLAlchemyError as e:
                 logger.error(f"Error retrieving top users by positions: {e}")
                 return []
-            
+
     def get_position_token_statistics(self) -> list[dict]:
         """
         Retrieves closed/opened positions groupped by token_symbol.
@@ -55,7 +60,7 @@ class LeaderboardDBConnector(DBConnector):
                 results = (
                     db.query(
                         Position.token_symbol,
-                        func.count(Position.id).label("total_positions")
+                        func.count(Position.id).label("total_positions"),
                     )
                     .filter(Position.status.in_(["closed", "opened"]))
                     .group_by(Position.token_symbol)
@@ -65,7 +70,7 @@ class LeaderboardDBConnector(DBConnector):
                 return [
                     {
                         "token_symbol": result.token_symbol,
-                        "total_positions": result.total_positions
+                        "total_positions": result.total_positions,
                     }
                     for result in results
                 ]

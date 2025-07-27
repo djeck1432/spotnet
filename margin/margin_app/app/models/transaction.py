@@ -1,13 +1,18 @@
-'''
+"""
 Transaction model for the application.
-'''
+"""
 
+import uuid
+from typing import TYPE_CHECKING
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
 
 from .base import BaseModel
-import uuid
+
+if TYPE_CHECKING:
+    from .user import User
+
 
 class Transaction(BaseModel):
     """
@@ -18,6 +23,7 @@ class Transaction(BaseModel):
         event_name (str): Name of the event related to the transaction.
         user_id (uuid.UUID): ID of the user who made the transaction.
     """
+
     __tablename__ = "transaction"
 
     transaction_id: Mapped[str] = mapped_column(String, unique=True, nullable=False)

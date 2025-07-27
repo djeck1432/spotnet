@@ -7,14 +7,12 @@ from unittest.mock import AsyncMock, patch
 import uuid
 import pytest
 import jwt
-from fastapi.testclient import TestClient
 from app.core.config import settings
 from app.services.auth.base import (
     create_access_token,
     get_current_user,
     decode_signup_token,
 )
-from app.models.admin import Admin
 from app.crud.admin import admin_crud
 from types import SimpleNamespace
 
@@ -195,12 +193,12 @@ class TestAdminLogout:
             "access_token=" in header for header in set_cookie_headers
         )
 
-        assert (
-            refresh_cookie_cleared
-        ), f"Refresh token cookie should be cleared. Headers: {set_cookie_headers}"
-        assert (
-            not access_cookie_cleared
-        ), f"Access token should NOT be in cookies. Headers: {set_cookie_headers}"
+        assert refresh_cookie_cleared, (
+            f"Refresh token cookie should be cleared. Headers: {set_cookie_headers}"
+        )
+        assert not access_cookie_cleared, (
+            f"Access token should NOT be in cookies. Headers: {set_cookie_headers}"
+        )
 
     @patch("app.api.auth.admin_crud.get_by_email", new_callable=AsyncMock)
     @patch("app.api.auth.get_admin_user_from_state", new_callable=AsyncMock)
@@ -281,9 +279,9 @@ class TestAdminLogout:
             if "refresh_token=" in header:
                 assert "HttpOnly" in header, f"Cookie should be HttpOnly: {header}"
                 assert "Path=/" in header, f"Cookie should have Path=/: {header}"
-                assert (
-                    "SameSite=lax" in header
-                ), f"Cookie should have SameSite=lax: {header}"
+                assert "SameSite=lax" in header, (
+                    f"Cookie should have SameSite=lax: {header}"
+                )
                 assert "Secure" in header, f"Cookie should be Secure: {header}"
 
     @patch("app.api.auth.get_admin_user_from_state", new_callable=AsyncMock)
@@ -488,9 +486,9 @@ class TestAdminLogout:
             for header in set_cookie_headers
         )
 
-        assert (
-            refresh_cookie_cleared
-        ), f"refresh_token cookie should be removed. Headers: {set_cookie_headers}"
+        assert refresh_cookie_cleared, (
+            f"refresh_token cookie should be removed. Headers: {set_cookie_headers}"
+        )
 
     def test_logout_endpoint_is_post_not_get(self, client):
         """Test that logout endpoint requires POST method for security."""

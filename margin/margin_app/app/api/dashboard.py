@@ -24,9 +24,9 @@ async def get_statistic() -> StatisticResponse:
     try:
         response = {}
         response["users"] = await user_crud.get_objects_amounts()
-        response["opened_positions"] = (
-            await margin_position_crud.get_opened_positions_amount()
-        )
+        response[
+            "opened_positions"
+        ] = await margin_position_crud.get_opened_positions_amount()
 
         liquidated_positions = (
             await margin_position_crud.get_liquidated_positions_amount()

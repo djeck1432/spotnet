@@ -24,9 +24,7 @@ class Liquidation(BaseModel):
     __tablename__ = "liquidation"
 
     margin_position_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("margin_position.id"),
-        nullable=False
+        UUID(as_uuid=True), ForeignKey("margin_position.id"), nullable=False
     )
     bonus_amount: Mapped[Decimal] = mapped_column(nullable=False)
     bonus_token: Mapped[str] = mapped_column(String, nullable=False)

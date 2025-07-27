@@ -1,10 +1,10 @@
 """
 dashboard_tests.py
 This module contains unit tests for the dashboard functionality within the web_app.
-It verifies the successful retrieval of dashboard data, handling of missing positions 
-and contract addresses, and ensures proper integration with external services like 
-ZkLend. The tests also cover edge cases and error scenarios, including invalid wallet 
-IDs and service failures, to confirm that the dashboard endpoint behaves reliably 
+It verifies the successful retrieval of dashboard data, handling of missing positions
+and contract addresses, and ensures proper integration with external services like
+ZkLend. The tests also cover edge cases and error scenarios, including invalid wallet
+IDs and service failures, to confirm that the dashboard endpoint behaves reliably
 under various conditions.
 """
 
@@ -78,6 +78,7 @@ RETURN_EXTRA_DEPOSIT = [
     {"token": "USDC", "amount": "200.0"},
 ]
 
+
 @pytest.mark.asyncio
 async def test_get_dashboard_success():
     """Test successful retrieval of dashboard data."""
@@ -87,31 +88,37 @@ async def test_get_dashboard_success():
     mock_position_balance = 500
     multiplier = 1
 
-    with patch(
-        "web_app.api.dashboard.position_db_connector.get_contract_address_by_wallet_id"
-    ) as mock_get_contract_address_by_wallet_id, patch(
-        "web_app.api.dashboard.position_db_connector.get_positions_by_wallet_id"
-    ) as mock_get_positions_by_wallet_id, patch(
-        "web_app.contract_tools.mixins.health_ratio.HealthRatioMixin.get_health_ratio_and_tvl"
-    ) as mock_get_health_ratio_and_tvl, patch(
-        "web_app.db.crud.position.PositionDBConnector.get_extra_deposits_by_position_id",
-    ) as mock_get_extra_deposits_by_position_id, patch(
-        "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_wallet_balances",
-        new_callable=AsyncMock,
-    ) as mock_get_wallet_balances, patch(
-        "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_current_position_sum",
-        new_callable=AsyncMock,
-    ) as mock_get_current_position_sum, patch(
-        "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_start_position_sum",
-        new_callable=AsyncMock,
-    ) as mock_get_start_position_sum, patch(
-        "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_position_balance",
-        new_callable=AsyncMock,
-    ) as mock_get_position_balance:
-
-        mock_get_position_balance.return_value = (
-            mock_position_balance
-        )
+    with (
+        patch(
+            "web_app.api.dashboard.position_db_connector.get_contract_address_by_wallet_id"
+        ) as mock_get_contract_address_by_wallet_id,
+        patch(
+            "web_app.api.dashboard.position_db_connector.get_positions_by_wallet_id"
+        ) as mock_get_positions_by_wallet_id,
+        patch(
+            "web_app.contract_tools.mixins.health_ratio.HealthRatioMixin.get_health_ratio_and_tvl"
+        ) as mock_get_health_ratio_and_tvl,
+        patch(
+            "web_app.db.crud.position.PositionDBConnector.get_extra_deposits_by_position_id",
+        ) as mock_get_extra_deposits_by_position_id,
+        patch(
+            "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_wallet_balances",
+            new_callable=AsyncMock,
+        ) as mock_get_wallet_balances,
+        patch(
+            "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_current_position_sum",
+            new_callable=AsyncMock,
+        ) as mock_get_current_position_sum,
+        patch(
+            "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_start_position_sum",
+            new_callable=AsyncMock,
+        ) as mock_get_start_position_sum,
+        patch(
+            "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_position_balance",
+            new_callable=AsyncMock,
+        ) as mock_get_position_balance,
+    ):
+        mock_get_position_balance.return_value = mock_position_balance
         mock_get_extra_deposits_by_position_id.return_value = MOCK_EXTRA_DEPOSITS
         mock_get_contract_address_by_wallet_id.return_value = "0xabcdef1234567890"
         mock_get_positions_by_wallet_id.return_value = [
@@ -165,17 +172,22 @@ async def test_get_dashboard_no_positions():
     """Test handling of wallet with no positions."""
 
     wallet_id = "0x1234567890abcdef"
-    with patch(
-        "web_app.api.dashboard.position_db_connector.get_contract_address_by_wallet_id"
-    ) as mock_get_contract_address_by_wallet_id, patch(
-        "web_app.api.dashboard.position_db_connector.get_positions_by_wallet_id"
-    ) as mock_get_positions_by_wallet_id, patch(
-        "web_app.contract_tools.mixins.health_ratio.HealthRatioMixin.get_health_ratio_and_tvl",
-        new_callable=AsyncMock,
-    ) as mock_get_health_ratio_and_tvl, patch(
-        "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_wallet_balances",
-        new_callable=AsyncMock,
-    ) as mock_get_wallet_balances:
+    with (
+        patch(
+            "web_app.api.dashboard.position_db_connector.get_contract_address_by_wallet_id"
+        ) as mock_get_contract_address_by_wallet_id,
+        patch(
+            "web_app.api.dashboard.position_db_connector.get_positions_by_wallet_id"
+        ) as mock_get_positions_by_wallet_id,
+        patch(
+            "web_app.contract_tools.mixins.health_ratio.HealthRatioMixin.get_health_ratio_and_tvl",
+            new_callable=AsyncMock,
+        ) as mock_get_health_ratio_and_tvl,
+        patch(
+            "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_wallet_balances",
+            new_callable=AsyncMock,
+        ) as mock_get_wallet_balances,
+    ):
         mock_get_contract_address_by_wallet_id.return_value = "0xabcdef1234567890"
         mock_get_positions_by_wallet_id.return_value = []
         mock_get_wallet_balances.return_value = {
@@ -200,18 +212,22 @@ async def test_get_dashboard_no_contract_address():
     """Test handling of missing contract address."""
 
     wallet_id = "0x1234567890abcdef"
-    with patch(
-        "web_app.api.dashboard.position_db_connector.get_contract_address_by_wallet_id"
-    ) as mock_get_contract_address_by_wallet_id, patch(
-        "web_app.api.dashboard.position_db_connector.get_positions_by_wallet_id"
-    ) as mock_get_positions_by_wallet_id, patch(
-        "web_app.contract_tools.mixins.health_ratio.HealthRatioMixin.get_health_ratio_and_tvl",
-        new_callable=AsyncMock,
-    ) as mock_get_health_ratio_and_tvl, patch(
-        "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_wallet_balances",
-        new_callable=AsyncMock,
-    ) as mock_get_wallet_balances:
-
+    with (
+        patch(
+            "web_app.api.dashboard.position_db_connector.get_contract_address_by_wallet_id"
+        ) as mock_get_contract_address_by_wallet_id,
+        patch(
+            "web_app.api.dashboard.position_db_connector.get_positions_by_wallet_id"
+        ) as mock_get_positions_by_wallet_id,
+        patch(
+            "web_app.contract_tools.mixins.health_ratio.HealthRatioMixin.get_health_ratio_and_tvl",
+            new_callable=AsyncMock,
+        ) as mock_get_health_ratio_and_tvl,
+        patch(
+            "web_app.contract_tools.mixins.dashboard.DashboardMixin.get_wallet_balances",
+            new_callable=AsyncMock,
+        ) as mock_get_wallet_balances,
+    ):
         mock_get_contract_address_by_wallet_id.return_value = None
         mock_get_positions_by_wallet_id.return_value = []
         mock_get_wallet_balances.return_value = {
@@ -326,7 +342,7 @@ async def test_external_service_errors(mock_db_connector):
     with patch(
         "web_app.contract_tools.mixins.health_ratio.HealthRatioMixin.get_health_ratio_and_tvl",
         side_effect=Exception("External API error"),
-    ) as mock_get_health_ratio_and_tvl:
+    ):
         with pytest.raises(Exception) as exc_info:
             await get_dashboard(VALID_WALLET_ID)
         assert str(exc_info.value) == "External API error"

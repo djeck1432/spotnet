@@ -3,7 +3,6 @@ Tests for user API endpoints.
 """
 
 from datetime import datetime
-import json
 import uuid
 from decimal import Decimal
 from unittest.mock import AsyncMock, patch, MagicMock

@@ -49,7 +49,7 @@ class MarginPositionCRUD(DBConnector):
     ) -> Optional[MarginPosition]:
         """
         Updates a margin position with the provided data.
-        
+
         :param position_id: UUID of the position to update
         :param update_data: MarginPositionUpdate containing fields to update
         :return: Updated MarginPosition or None if not found
@@ -58,18 +58,18 @@ class MarginPositionCRUD(DBConnector):
         position = await self.get_object(position_id)
         if not position:
             return None
-        
+
         # Check if position is closed
         if position.status == MarginPositionStatus.CLOSED:
             raise ValueError("Cannot update a closed margin position")
-        
+
         # Update only provided fields
         if update_data.borrowed_amount is not None:
             position.borrowed_amount = update_data.borrowed_amount
-        
+
         if update_data.multiplier is not None:
             position.multiplier = update_data.multiplier
-        
+
         # Save changes to database
         updated_position = await self.write_to_db(position)
         return updated_position

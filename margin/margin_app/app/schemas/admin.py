@@ -30,6 +30,7 @@ class AdminRequest(AdminBase):
 
     class Config:
         "Only allow fields that are defined in the model"
+
         extra = "forbid"
 
 
@@ -41,6 +42,7 @@ class AdminResetPassword(BaseSchema):
     using a secure reset token received via email. It requires
     the token and the new password.
     """
+
     token: str
     new_password: str
 

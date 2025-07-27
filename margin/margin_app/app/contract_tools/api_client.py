@@ -8,6 +8,7 @@ from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
+
 class BaseAPIClient:
     """A robust, reusable asynchronous API client using httpx."""
 
@@ -27,7 +28,7 @@ class BaseAPIClient:
         endpoint: str,
         params: Optional[Dict[str, Any]] = None,
         json: Optional[Dict[str, Any]] = None,
-        timeout: int = 15
+        timeout: int = 15,
     ) -> Optional[Any]:
         """
         Makes an asynchronous HTTP request.
@@ -64,7 +65,9 @@ class BaseAPIClient:
             logger.error(f"An unexpected error occurred: {str(e)}")
             return None
 
-    async def get(self, endpoint: str, params: Optional[Dict[str, Any]] = None) -> Optional[Any]:
+    async def get(
+        self, endpoint: str, params: Optional[Dict[str, Any]] = None
+    ) -> Optional[Any]:
         """
         Convenience method for making a GET request.
 
@@ -72,4 +75,4 @@ class BaseAPIClient:
         :param params: URL query parameters.
         :return: The JSON response from the API, or None if an error occurs.
         """
-        return await self.request('GET', endpoint, params=params)
+        return await self.request("GET", endpoint, params=params)

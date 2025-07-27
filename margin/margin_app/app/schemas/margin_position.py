@@ -6,7 +6,7 @@ from datetime import datetime
 from decimal import Decimal
 from enum import Enum
 from uuid import UUID
-from pydantic import ConfigDict, Field
+from pydantic import Field
 from typing import Optional
 
 from .base import BaseSchema

@@ -19,7 +19,7 @@ import string
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from web_app.db.database import Base, get_database
+from web_app.db.database import get_database
 from web_app.db.crud import UserDBConnector
 from pydantic import BaseModel
 
@@ -32,10 +32,10 @@ router = APIRouter(
 
 
 class ReferralResponse(BaseModel):
-    """ 
+    """
     Response model
     """
-    
+
     wallet_id: str
     referral_code: str
 
@@ -71,7 +71,7 @@ async def create_referal_link(
     Raises:
         HTTPException: If the user is not found in the database
     """
-    
+
     if not wallet_id:
         raise HTTPException(status_code=400, detail="Wallet ID cannot be empty")
 

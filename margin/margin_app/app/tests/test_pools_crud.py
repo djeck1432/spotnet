@@ -24,7 +24,7 @@ from app.models.user import User
 from app.tests.conftest import fake
 from app.tests.test_crud_user import user_crud  # noqa
 from app.schemas.pools import UserPoolResponse
-from app.main import app 
+from app.main import app
 
 from app.schemas.pools import PoolResponse
 import pytest
@@ -232,6 +232,7 @@ async def test_update_user_pool_not_found(user_pool_crud, mock_db_session):
     assert result is None
     mock_db_session.get.assert_called_once_with(UserPool, user_pool_id)
 
+
 @pytest.mark.asyncio
 async def test_get_user_pool_success():
     """Test successfully getting a user pool by ID."""
@@ -245,29 +246,30 @@ async def test_get_user_pool_success():
     )
 
     with patch(
-        "app.api.pools.user_pool_crud.get_object", 
-        new=AsyncMock(return_value=mock_user_pool)
+        "app.api.pools.user_pool_crud.get_object",
+        new=AsyncMock(return_value=mock_user_pool),
     ):
         client = TestClient(app)
         resp = client.get(f"/api/pool/user_pool/{user_pool_id}")
-        
+
         assert resp.status_code == status.HTTP_200_OK
         data = resp.json()
         assert data["id"] == str(user_pool_id)
+
 
 @pytest.mark.asyncio
 async def test_get_user_pool_not_found():
     """Test getting a non-existent user pool."""
     user_pool_id = uuid.uuid4()
     with patch(
-        "app.api.pools.user_pool_crud.get_object", 
-        new=AsyncMock(return_value=None)
+        "app.api.pools.user_pool_crud.get_object", new=AsyncMock(return_value=None)
     ):
         client = TestClient(app)
         resp = client.get(f"/api/pool/user_pool/{user_pool_id}")
-        
+
         assert resp.status_code == status.HTTP_404_NOT_FOUND
         assert "not found" in resp.json()["detail"]
+
 
 @pytest.mark.asyncio
 async def test_get_user_pool_invalid_uuid():
@@ -275,20 +277,21 @@ async def test_get_user_pool_invalid_uuid():
     invalid_uuid = "not-a-uuid"
     client = TestClient(app)
     resp = client.get(f"/api/pool/user_pool/{invalid_uuid}")
-    
+
     assert resp.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
 
 @pytest.mark.asyncio
 async def test_get_user_pool_internal_error():
     """Test handling internal error when getting a user pool."""
     user_pool_id = uuid.uuid4()
     with patch(
-        "app.api.pools.user_pool_crud.get_object", 
-        new=AsyncMock(side_effect=Exception("DB error"))
+        "app.api.pools.user_pool_crud.get_object",
+        new=AsyncMock(side_effect=Exception("DB error")),
     ):
         client = TestClient(app)
         resp = client.get(f"/api/pool/user_pool/{user_pool_id}")
-        
+
         assert resp.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
         assert "Something went wrong" in resp.json()["detail"]
 
@@ -317,14 +320,14 @@ async def test_fetch_all_with_amount_delta(pool_crud, mock_db_session):
 
 
 @pytest_asyncio.fixture
-async def new_test_user(user_crud: UserCRUD):
+async def new_test_user(user_crud_instance: UserCRUD):
     """
     Fixture to create test user using user_crud as another fixture
     Deletes created user on test teardown
     """
-    user = await user_crud.write_to_db(User(wallet_id=str(uuid.uuid4())))
+    user = await user_crud_instance.write_to_db(User(wallet_id=str(uuid.uuid4())))
     yield user
-    await user_crud.delete_object(user)
+    await user_crud_instance.delete_object(user)
 
 
 @pytest_asyncio.fixture
@@ -399,7 +402,7 @@ async def test_pool_statistic_view(
             _find_earliest_amount(expected_pool.user_pools, n) for n in [24, 48, 72]
         ]
         for i, amount_x in enumerate([amount_24, amount_48, amount_72], 1):
-            volume_x = getattr(pool, f"volume_{i*24}")
+            volume_x = getattr(pool, f"volume_{i * 24}")
             if amount_x is None:
                 assert volume_x == 0
             else:

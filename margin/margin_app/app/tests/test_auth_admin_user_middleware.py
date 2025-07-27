@@ -9,13 +9,8 @@ from unittest.mock import AsyncMock, patch
 from fastapi import status
 
 from app.services.auth.base import create_access_token
-from app.models.admin import Admin
-from app.crud.admin import admin_crud
 from app.tests.api.test_admin_api import (
-    mock_get_all_admin,
-    mock_get_admin_by_email,
     test_admin_object,
-    make_admin_obj,
 )
 from types import SimpleNamespace
 

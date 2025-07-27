@@ -1,6 +1,7 @@
 """
 Utils for integration tests.
 """
+
 from contextlib import contextmanager
 
 from web_app.db.crud.user import UserDBConnector
@@ -12,6 +13,7 @@ from web_app.db.models import User
 user_db = UserDBConnector()
 airdrop = AirDropDBConnector()
 position_db = PositionDBConnector()
+
 
 @contextmanager
 def with_temp_user(wallet_id: str) -> User:
@@ -27,4 +29,4 @@ def with_temp_user(wallet_id: str) -> User:
     for position in position_db.get_all_positions_by_wallet_id(wallet_id, 0, 1000):
         position_db.delete_all_extra_deposits(position["id"])
     position_db.delete_all_user_positions(user.id)
-    position_db.delete_user_by_wallet_id(wallet_id)                         
+    position_db.delete_user_by_wallet_id(wallet_id)

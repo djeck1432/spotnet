@@ -2,10 +2,15 @@
 This module defines the Deposit model for the Spotnet application.
 """
 
+from typing import TYPE_CHECKING
 from sqlalchemy import Column, String, ForeignKey, Numeric
 from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from .base import BaseModel
+
+if TYPE_CHECKING:
+    from .user import User
+
 
 # pylint: disable=too-few-public-methods
 class Deposit(BaseModel):

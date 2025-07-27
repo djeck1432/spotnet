@@ -179,7 +179,10 @@ class StarknetClient:
         :return: A dictionary with token names as keys and tuples of addresses as values.
         """
         reserves = await self.get_available_zklend_reserves()
-        return {token: (reserve[1], reserve[2], reserve[4]) for token, reserve in reserves.items()}
+        return {
+            token: (reserve[1], reserve[2], reserve[4])
+            for token, reserve in reserves.items()
+        }
 
     async def get_zklend_debt(self, user: str, token: str) -> list[int]:
         """
@@ -249,9 +252,10 @@ class StarknetClient:
         # Get pool key
         pool_key = self._build_ekubo_pool_key(deposit_token, borrowing_token)
         # Convert addresses
-        deposit_token, borrowing_token = self._convert_address(
-            deposit_token
-        ), self._convert_address(borrowing_token)
+        deposit_token, borrowing_token = (
+            self._convert_address(deposit_token),
+            self._convert_address(borrowing_token),
+        )
 
         deposit_data = {
             "token": deposit_token,
@@ -292,9 +296,10 @@ class StarknetClient:
         decimals_sum = TokenParams.get_token_decimals(
             deposit_token
         ) + TokenParams.get_token_decimals(borrowing_token)
-        deposit_token, borrowing_token = self._convert_address(
-            deposit_token
-        ), self._convert_address(borrowing_token)
+        deposit_token, borrowing_token = (
+            self._convert_address(deposit_token),
+            self._convert_address(borrowing_token),
+        )
 
         is_token1 = deposit_token == pool_key["token1"]
         supply_price = floor(

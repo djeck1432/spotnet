@@ -19,13 +19,15 @@ class SignupRequest(BaseModel):
     """
     Signup request model
     """
+
     email: EmailStr
+
 
 class SignupConfirmation(BaseSchema):
     """
     Signup confirmation request model
     """
-    
+
     token: str
     password: str
     name: str

@@ -1,5 +1,5 @@
 """
-    This module contains custom errors for the database
+This module contains custom errors for the database
 """
 
 

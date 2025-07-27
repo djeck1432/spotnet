@@ -22,7 +22,7 @@ from app.schemas.admin import (
     AdminUpdateRequest,
 )
 from app.services.auth.base import get_admin_user_from_state, get_current_user
-from app.services.auth.security import get_password_hash, verify_password
+from app.services.auth.security import get_password_hash
 from app.services.emails import email_service
 from fastapi.responses import JSONResponse
 from pydantic import EmailStr

@@ -3,25 +3,25 @@ Research and Implementation Guide for Avnu Integration
 ================================================
 
 Objective:
-Replace the Ekubo functionality in the existing StarknetClient code with Avnu for performing 
-USDC/ETH swaps and related functionalities. Additional integration of Avnu's gasless service 
+Replace the Ekubo functionality in the existing StarknetClient code with Avnu for performing
+USDC/ETH swaps and related functionalities. Additional integration of Avnu's gasless service
 endpoints.
 
 Three Key Features of Avnu
 --------------
 1. Best Execution and Broad Asset Access:
-    AVNU is designed to offer traders and dApps the most competitive prices by providing access 
-    to a wide range of assets.It focuses on delivering optimal execution for swaps while maintaining 
+    AVNU is designed to offer traders and dApps the most competitive prices by providing access
+    to a wide range of assets.It focuses on delivering optimal execution for swaps while maintaining
     an exceptional user experience.
 2. Gas Fee Abstraction with Paymaster Service:
     AVNU's Paymaster service simplifies transactions by abstracting gas fees,
-    enabling users to pay gas fees in any token or allowing developers to sponsor users' 
-    fees. This reduces friction and enhances usability by eliminating the need to handle native 
+    enabling users to pay gas fees in any token or allowing developers to sponsor users'
+    fees. This reduces friction and enhances usability by eliminating the need to handle native
     tokens for gas.
 3. Advanced Tools for Traders and Developers:
     AVNU provides advanced features like Dollar-Cost Averaging (DCA) for strategic investing,
-    real-time market data insights, and a comprehensive token list. For developers, AVNU offers 
-    robust resources, including guides, contracts, audits, and tools to facilitate seamless 
+    real-time market data insights, and a comprehensive token list. For developers, AVNU offers
+    robust resources, including guides, contracts, audits, and tools to facilitate seamless
     integration into their applications.
 
 
@@ -32,7 +32,7 @@ API Endpoints:
 1. Gasless Service Status: GET https://starknet.api.avnu.fi/paymaster/v1/status
    Fetch the current status of the gasless service.
 
-2. Check Account Compatibility: 
+2. Check Account Compatibility:
     GET https://starknet.api.avnu.fi/paymaster/v1/accounts/{address}/compatible
    Check if an account is compatible with the gasless service.
 
@@ -49,16 +49,19 @@ API Endpoints:
 import asyncio
 import logging
 import os
+
 # from decimal import Decimal
 from typing import Any, Dict, List
 
 from avnu_sdk import AvnuClient
+
 # import starknet_py.hash.selector
 # import starknet_py.net.client_models
 from starknet_py.net.full_node_client import FullNodeClient
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class StarknetClient:
     """
@@ -132,14 +135,18 @@ class StarknetClient:
         :return: A dictionary containing the execution result.
         """
         try:
-            execution_result = await self.avnu_client.post("paymaster/v1/execute", json=typed_data)
+            execution_result = await self.avnu_client.post(
+                "paymaster/v1/execute", json=typed_data
+            )
             logger.info("Gasless call executed successfully: %s", execution_result)
             return execution_result
         except Exception as e:
             logger.error("Error executing gasless call: %s", e)
             raise
 
-    async def execute_swap(self, token_in: str, token_out: str, amount: int) -> Dict[str, Any]:
+    async def execute_swap(
+        self, token_in: str, token_out: str, amount: int
+    ) -> Dict[str, Any]:
         """
         Executes a token swap using Avnu.
 
@@ -162,6 +169,7 @@ class StarknetClient:
         except Exception as e:
             logger.error("Error executing swap: %s", e)
             raise
+
 
 CLIENT = StarknetClient()
 

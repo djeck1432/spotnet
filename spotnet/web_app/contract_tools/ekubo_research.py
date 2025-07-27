@@ -16,12 +16,12 @@ Contract Reference:
 https://docs.ekubo.org/integration-guides/reference/contract-addresses#immutable-contracts
 
 
-Documentation: 
+Documentation:
 ------------------
 https://docs.ekubo.org/
 
 
-Additional: 
+Additional:
 ------------------
 https://github.com/EkuboProtocol/abis/blob/main/src/interfaces/router.cairo
 https://mainnet-api.ekubo.org/openapi.json

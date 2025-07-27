@@ -2,18 +2,14 @@
 CRUD operations for User model
 """
 
-import asyncio
-import uuid
 from typing import Optional
 from uuid import UUID
 from sqlalchemy.sql import text
-from sqlalchemy.exc import IntegrityError
 from decimal import Decimal
 
 from app.models.deposit import Deposit
 from app.models.margin_position import MarginPosition
 from app.models.user import User
-from app.schemas.user import UserGetAllResponse
 
 from .base import DBConnector
 

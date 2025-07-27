@@ -4,11 +4,12 @@ This module initializes the Telegram bot and sets up the dispatcher for handling
 It imports necessary components from the aiogram library and configures logging.
 """
 
-from aiogram import Bot, Dispatcher
 import logging
 
+from aiogram import Bot, Dispatcher
+
 from .config import TELEGRAM_TOKEN
-from .handlers import cmd_router
+from .handlers import admin_router, cmd_router
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -27,4 +28,4 @@ else:
 # Create a Dispatcher for handling updates
 dp = Dispatcher()
 # Include command routers for handling specific commands
-dp.include_routers(cmd_router)
+dp.include_routers(cmd_router, admin_router)

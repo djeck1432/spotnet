@@ -3,7 +3,6 @@ This module handles position-related API endpoints.
 """
 
 from decimal import Decimal, InvalidOperation
-from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Query, Request
@@ -337,11 +336,8 @@ async def get_user_positions(
         wallet_id, start=start, limit=limit
     )
     total_positions = position_db_connector.get_count_positions_by_wallet_id(wallet_id)
-    
-    return UserPositionHistoryResponse(
-        positions=positions,
-        total_count=total_positions
-    )
+
+    return UserPositionHistoryResponse(positions=positions, total_count=total_positions)
 
 
 @router.get(

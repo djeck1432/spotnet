@@ -10,15 +10,14 @@ from unittest.mock import AsyncMock, patch
 from types import SimpleNamespace
 
 import pytest
-from fastapi import status
 from app.services.auth.base import create_access_token
 
 ADMIN_URL = "/api/admin/"
 
 test_admin_object = {
-    "name": f"test_name",
+    "name": "test_name",
     "id": str(uuid.uuid4()),
-    "email": f"email@test.com",
+    "email": "email@test.com",
     "is_super_admin": True,
 }
 
@@ -387,8 +386,10 @@ def test_reset_password_extra_fields_ignored(
     mock_write_to_db.return_value = mock_admin
 
     base_url = f"{ADMIN_URL}reset_password/valid_token"
-    query_params = "?new_password=newSecurePassword123!&extra_field=ignored&another=param"
-    
+    query_params = (
+        "?new_password=newSecurePassword123!&extra_field=ignored&another=param"
+    )
+
     response = client.post(f"{base_url}{query_params}")
 
     assert response.status_code == 200

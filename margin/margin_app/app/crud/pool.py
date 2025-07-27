@@ -9,7 +9,6 @@ import uuid
 from decimal import Decimal
 from typing import Optional
 
-from sqlalchemy.dialects.postgresql import INTERVAL
 from sqlalchemy.orm import aliased
 
 from app.crud.base import DBConnector
@@ -153,7 +152,7 @@ class UserPoolCRUD(DBConnector):
 
             await db.commit()
             await db.refresh(user_pool)
-            return user_pool    
+            return user_pool
 
 
 pool_crud = PoolCRUD(Pool)

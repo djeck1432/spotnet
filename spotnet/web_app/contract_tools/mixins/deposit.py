@@ -3,6 +3,7 @@ This module contains the deposit mixin class.
 """
 
 from decimal import Decimal
+from starknet_py.contract import Contract
 from web_app.contract_tools.constants import TokenParams
 from web_app.contract_tools.blockchain_call import CLIENT
 
@@ -25,7 +26,7 @@ class DepositMixin:
         multiplier: Decimal,
         wallet_id: str,
         borrowing_token: str,
-        ekubo_contract: "Contract",
+        ekubo_contract: Contract,
     ) -> dict:
         """
         Get transaction data for the deposit.
@@ -53,9 +54,7 @@ class DepositMixin:
         return loop_liquidity_data
 
     @classmethod
-    async def get_repay_data(
-        cls, supply_token: str, ekubo_contract: "Contract"
-    ) -> dict:
+    async def get_repay_data(cls, supply_token: str, ekubo_contract: Contract) -> dict:
         """
         Get transaction data for the repay.
         :param supply_token: Deposit token

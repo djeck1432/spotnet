@@ -7,9 +7,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Iterator
 
-EKUBO_MAINNET_ADDRESS: str = (
-    "0x00000005dd3d2f4429af886cd1a3b08289dbcea99a294197e9eb43b0e0325b4b"  # mainnet address
-)
+EKUBO_MAINNET_ADDRESS: str = "0x00000005dd3d2f4429af886cd1a3b08289dbcea99a294197e9eb43b0e0325b4b"  # mainnet address
 
 ZKLEND_MARKET_ADDRESS: str = (
     "0x04c0a5193d58f74fbace4b74dcf65481e734ed1714121bdc571da345540efa05"
@@ -21,6 +19,7 @@ kSTRK = "kSTRK"
 USDC = "USDC"
 
 ZKLEND_SCALE_DECIMALS = Decimal("1000000000000000000000000000")
+
 
 @dataclass(frozen=True)
 class TokenConfig:
@@ -34,6 +33,7 @@ class TokenConfig:
     collateral_factor: Decimal = Decimal("0.0")
     borrow_factor: Decimal = Decimal("0.0")
 
+
 @dataclass(frozen=True)
 class TokenMultipliers:
     """
@@ -44,6 +44,7 @@ class TokenMultipliers:
     STRK: float = 1.9
     kSTRK: float = 1.8
     USDC: float = 5.0
+
 
 class TokenParams:
     """
@@ -163,6 +164,7 @@ class TokenParams:
         :return: underlying address
         """
         return token_address[:2] + "0" + token_address[2:]
+
 
 class ProtocolAddress(Enum):
     """

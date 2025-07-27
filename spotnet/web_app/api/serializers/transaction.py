@@ -101,10 +101,10 @@ class UpdateUserContractRequest(BaseModel):
     contract_address: str
 
 
-
 class WithdrawAllData(BaseModel):
     """
     Response model to withdraw all containing repay data and a list of token addresses
     """
+
     repay_data: RepayTransactionDataResponse
     tokens: list[str]

@@ -84,7 +84,6 @@ async def check_liquidation_proof(liquidatee_address: str) -> None:
         collateral_amount = event.data[6]
 
         if int(liquidatee_address, base=16) == liquidatee:
-
             liquid_results.append(
                 (liquidator, liquidatee, debt_face_amount, collateral_amount)
             )

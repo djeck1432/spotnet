@@ -2,7 +2,6 @@
 This module contains CRUD operations for orders.
 """
 
-import asyncio
 import logging
 import uuid
 from decimal import Decimal
@@ -69,14 +68,14 @@ class UserOrderCRUD(DBConnector):
             UserOrder | None: The order object if found, None otherwise
         """
         return await self.get_object(order_id)
-    
+
     async def update_order(
-        self, 
+        self,
         order: UserOrder,
         user_id: Optional[uuid.UUID] = None,
         price: Optional[Decimal] = None,
         token: Optional[str] = None,
-        position: Optional[uuid.UUID] = None
+        position: Optional[uuid.UUID] = None,
     ) -> UserOrder | None:
         """
         Update an existing order in the database.

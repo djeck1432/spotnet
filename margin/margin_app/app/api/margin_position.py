@@ -12,7 +12,6 @@ from loguru import logger
 from app.api.common import GetAllMediator
 from app.crud.liquidation import liquidation_crud
 from app.crud.margin_position import margin_position_crud
-from app.models.margin_position import MarginPosition
 from app.schemas.liquidation import (
     LiquidationRequest,
     LiquidationResponse,
@@ -74,7 +73,7 @@ async def update_margin_position(
 
     Raises:
         HTTPException: 404 error if the position is not found
-        HTTPException: 400 error if the position cannot be updated 
+        HTTPException: 400 error if the position cannot be updated
                        (e.g., closed position, invalid data)
     """
     try:
@@ -82,15 +81,13 @@ async def update_margin_position(
             position_id=margin_position_id,
             update_data=update_data,
         )
-        
+
         if not updated_position:
             raise HTTPException(
                 status_code=404,
-                detail=(
-                    f"Margin position with id {margin_position_id} not found"
-                )
+                detail=(f"Margin position with id {margin_position_id} not found"),
             )
-        
+
         return updated_position
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e

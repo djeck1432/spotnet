@@ -2,7 +2,7 @@
 
 
 Revision ID: d71e1e3e800f
-Revises: 
+Revises:
 Create Date: 2024-10-12 20:41:29.852081
 
 """

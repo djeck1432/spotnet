@@ -14,7 +14,6 @@ from starlette import status
 
 from app.models.pool import Pool
 from app.schemas.pools import (
-    PoolGetAllResponse,
     PoolResponse,
     PoolRiskStatus,
     UserPoolResponse,

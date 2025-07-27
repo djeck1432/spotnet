@@ -81,7 +81,7 @@ class EmailService:
                 )
                 return True
 
-            response = self.client.send(message)
+            self.client.send(message)
             logger.info(f"Email sent successfully to {to_emails}")
             return True
 

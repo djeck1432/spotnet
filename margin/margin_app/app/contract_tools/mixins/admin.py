@@ -30,7 +30,7 @@ class AdminMixin:
         :return: Returns dictionary mapping token symbols to their current prices as Decimal.
         """
         prices = {}
-        
+
         if api_client is None:
             api_client = BaseAPIClient(base_url=AVNU_PRICE_URL)
 
@@ -43,7 +43,7 @@ class AdminMixin:
         if not isinstance(response_data, list):
             logger.error(
                 "Unexpected data format from AVNU API. Expected list, got %s.",
-                type(response_data)
+                type(response_data),
             )
             return prices
 
@@ -52,7 +52,10 @@ class AdminMixin:
             current_price = token_data.get("currentPrice")
 
             if not (address and current_price is not None):
-                logger.debug("Skipping token data due to missing address or price: %s", token_data)
+                logger.debug(
+                    "Skipping token data due to missing address or price: %s",
+                    token_data,
+                )
                 continue
 
             try:

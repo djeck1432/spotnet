@@ -17,7 +17,6 @@ import asyncio
 import logging
 import pytest
 from typing import Dict, Any
-from datetime import datetime
 from web_app.db.crud import PositionDBConnector, AirDropDBConnector
 from web_app.contract_tools.mixins.dashboard import DashboardMixin
 from web_app.db.models import Status
@@ -78,7 +77,6 @@ class TestPositionCreation:
         token_symbol = form_data["token_symbol"]
         amount = form_data["amount"]
         multiplier = form_data["multiplier"]
-        borrowing_token = form_data["borrowing_token"]
 
         with with_temp_user(wallet_id):
             position = position_db.create_position(
@@ -87,12 +85,12 @@ class TestPositionCreation:
                 amount=amount,
                 multiplier=multiplier,
             )
-            assert (
-                position.status == Status.PENDING
-            ), "Position status should be 'pending' upon creation"
-            assert (
-                position.is_protection is False
-            ), "Position should not have protection by default"
+            assert position.status == Status.PENDING, (
+                "Position status should be 'pending' upon creation"
+            )
+            assert position.is_protection is False, (
+                "Position should not have protection by default"
+            )
 
             logger.info(
                 f"Position {position.id} created successfully with status '{position.status}'."
@@ -100,21 +98,23 @@ class TestPositionCreation:
 
             # Open position
             current_prices = asyncio.run(DashboardMixin.get_current_prices())
-            assert (
-                position.token_symbol in current_prices
-            ), "Token price missing in current prices"
+            assert position.token_symbol in current_prices, (
+                "Token price missing in current prices"
+            )
             position_status = position_db.open_position(position.id, current_prices)
-            assert (
-                position_status == Status.OPENED
-            ), "Position status should be 'opened' after updating"
+            assert position_status == Status.OPENED, (
+                "Position status should be 'opened' after updating"
+            )
             logger.info(f"Position {position.id} successfully opened.")
             # Verify position attributes after opening
             position = position_db.get_position_by_id(position.id)
             assert position is not None, "Position not found in database before opening"
-            assert position.status == Status.OPENED, "Position status should be 'opened'"
-            assert (
-                position.start_price == current_prices[token_symbol]
-            ), "Start price should be the token price"
-            assert (
-                position.created_at is not None
-            ), "Position should have a created_at timestamp"
+            assert position.status == Status.OPENED, (
+                "Position status should be 'opened'"
+            )
+            assert position.start_price == current_prices[token_symbol], (
+                "Start price should be the token price"
+            )
+            assert position.created_at is not None, (
+                "Position should have a created_at timestamp"
+            )

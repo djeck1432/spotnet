@@ -1,5 +1,5 @@
-
 """Main entry point for the Telegram bot service."""
+
 import asyncio
 from aiogram import Bot, Dispatcher
 from .config import BotConfig
@@ -14,6 +14,7 @@ async def main():
     dp.include_router(start_router)
     print("Telegram bot is running...")
     await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

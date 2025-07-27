@@ -19,10 +19,12 @@ async def test_google_auth_returns_access_token():
     Test that the Google auth endpoint returns an access token in the response body.
     This is the primary requirement of the task.
     """
-    with patch("app.api.auth.google_auth") as mock_google_auth, patch(
-        "app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock
-    ) as mock_get_by_email:
-
+    with (
+        patch("app.api.auth.google_auth") as mock_google_auth,
+        patch(
+            "app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock
+        ) as mock_get_by_email,
+    ):
         mock_user_data = MagicMock()
         mock_user_data.email = "test@example.com"
         mock_user_data.name = "Test Admin"
@@ -49,10 +51,12 @@ async def test_google_auth_sets_refresh_token_cookie():
     """
     Test that the Google auth endpoint sets a refresh token in a secure HTTP cookie.
     """
-    with patch("app.api.auth.google_auth") as mock_google_auth, patch(
-        "app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock
-    ) as mock_get_by_email:
-
+    with (
+        patch("app.api.auth.google_auth") as mock_google_auth,
+        patch(
+            "app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock
+        ) as mock_get_by_email,
+    ):
         mock_user_data = MagicMock()
         mock_user_data.email = "test@example.com"
         mock_user_data.name = "Test Admin"
@@ -78,12 +82,15 @@ async def test_google_auth_with_nonexistent_admin():
     """
     Test that a new admin is created if one doesn't exist.
     """
-    with patch("app.api.auth.google_auth") as mock_google_auth, patch(
-        "app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock
-    ) as mock_get_by_email, patch(
-        "app.crud.admin.admin_crud.create_admin", new_callable=AsyncMock
-    ) as mock_create_admin:
-
+    with (
+        patch("app.api.auth.google_auth") as mock_google_auth,
+        patch(
+            "app.crud.admin.admin_crud.get_by_email", new_callable=AsyncMock
+        ) as mock_get_by_email,
+        patch(
+            "app.crud.admin.admin_crud.create_admin", new_callable=AsyncMock
+        ) as mock_create_admin,
+    ):
         mock_user_data = MagicMock()
         mock_user_data.email = "new@example.com"
         mock_user_data.name = "New Admin"

@@ -26,7 +26,6 @@ async def test_create_admin(admin_db_connector):
 
     Session = async_sessionmaker(admin_db_connector.engine, expire_on_commit=False)
     async with Session() as session:
-
         admin = Admin(
             email="admin@example.com",
             name="Test Admin",
@@ -41,9 +40,9 @@ async def test_create_admin(admin_db_connector):
         )
         retrieved = result.scalar_one_or_none()
         assert retrieved is not None, "Admin instance should exist in the database."
-        assert (
-            retrieved.name == "Test Admin"
-        ), "Admin name should match the created value."
+        assert retrieved.name == "Test Admin", (
+            "Admin name should match the created value."
+        )
         assert retrieved.is_super_admin is True, "Admin super status should be True."
 
 

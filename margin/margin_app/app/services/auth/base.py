@@ -12,7 +12,6 @@ from app.core.config import settings
 from app.crud.admin import admin_crud
 from app.models.admin import Admin
 from app.schemas.admin import AdminResponse
-from app.services.auth.security import verify_password
 
 
 def get_expire_time(minutes: int) -> datetime:

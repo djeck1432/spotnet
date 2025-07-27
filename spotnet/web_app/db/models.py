@@ -56,6 +56,7 @@ class User(Base):
     wallet_id = Column(String, nullable=False, unique=True, index=True)
     contract_address = Column(String)
 
+
 class Referal(Base):
     """
     SQLAlchemy model for the referal table.

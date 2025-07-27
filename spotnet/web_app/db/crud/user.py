@@ -35,7 +35,7 @@ class UserDBConnector(DBConnector):
                     .join(TelegramUser, TelegramUser.wallet_id == User.wallet_id)
                     .filter(
                         Position.status == Status.OPENED.value,
-                        TelegramUser.is_allowed_notification == True,
+                        TelegramUser.is_allowed_notification,
                     )
                     .distinct()
                     .all()

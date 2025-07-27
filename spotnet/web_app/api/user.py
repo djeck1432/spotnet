@@ -18,7 +18,6 @@ from web_app.api.serializers.user import (
     SubscribeToNotificationRequest,
     UpdateUserContractResponse,
 )
-from web_app.contract_tools.blockchain_call import CLIENT
 from web_app.contract_tools.mixins import DashboardMixin, PositionMixin
 from web_app.db.crud import (
     PositionDBConnector,
