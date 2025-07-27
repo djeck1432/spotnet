@@ -7,7 +7,9 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Iterator
 
-EKUBO_MAINNET_ADDRESS: str = "0x00000005dd3d2f4429af886cd1a3b08289dbcea99a294197e9eb43b0e0325b4b"  # mainnet address
+EKUBO_MAINNET_ADDRESS: str = (
+    "0x00000005dd3d2f4429af886cd1a3b08289dbcea99a294197e9eb43b0e0325b4b"  # mainnet address
+)
 
 ZKLEND_MARKET_ADDRESS: str = (
     "0x04c0a5193d58f74fbace4b74dcf65481e734ed1714121bdc571da345540efa05"

@@ -130,27 +130,27 @@ async def assets_handler(message: types.Message):
 
         # Determine health status
         if liquidation_rate < 10:
-            health_status = "🟢 *Healthy*"
+            health_status = "*Healthy*"
         elif liquidation_rate < 20:
-            health_status = "🟡 *Moderate*"
+            health_status = "*Moderate*"
         else:
-            health_status = "🔴 *High Risk*"
+            health_status = "*High Risk*"
 
         # Format the response using Telegram Markdown for neat display
         response_text = f"""
-📊 *Asset Statistics Dashboard*
+*Asset Statistics Dashboard*
 
-👥 *Total Users:* `{total_users:,}`
-📈 *Active Positions:* `{total_positions:,}`
-💥 *Liquidated Positions:* `{liquidated_positions:,}`
-📋 *Pending Orders:* `{total_orders:,}`
+*Total Users:* `{total_users:,}`
+*Active Positions:* `{total_positions:,}`
+*Liquidated Positions:* `{liquidated_positions:,}`
+*Pending Orders:* `{total_orders:,}`
 
-📊 *Key Metrics:*
-🔄 *Total Active Trades:* `{total_positions + total_orders:,}`
-📉 *Liquidation Rate:* `{liquidation_rate:.2f}%`
-👤 *Avg Positions/User:* `{avg_positions_per_user:.2f}`
+*Key Metrics:*
+*Total Active Trades:* `{total_positions + total_orders:,}`
+*Liquidation Rate:* `{liquidation_rate:.2f}%`
+*Avg Positions/User:* `{avg_positions_per_user:.2f}`
 
-🎯 *Platform Health:*
+*Platform Health:*
 {health_status}
 
 _Last updated: Just now_
@@ -162,14 +162,14 @@ _Last updated: Just now_
         # Handle any errors gracefully
         error_msg_suffix = "" if len(str(e)) <= 100 else "..."
         error_message = f"""
-❌ *Error Retrieving Asset Statistics*
+*Error Retrieving Asset Statistics*
 
 An error occurred while fetching the data:
 `{str(e)[:100]}{error_msg_suffix}`
 
 Please try again later or contact the development team.
 
-💡 *Troubleshooting:*
+*Troubleshooting:*
 • Check if the API service is running
 • Verify database connectivity
 • Review application logs
@@ -187,15 +187,15 @@ async def admin_help_handler(message: types.Message):
         message (types.Message): The incoming Telegram message.
     """
     help_text = """
-🔧 *Admin Commands*
+*Admin Commands*
 
-/assets - 📊 View comprehensive asset statistics dashboard
-/admin_help - ❓ Show this help message
+/assets - View comprehensive asset statistics dashboard
+/admin_help - Show this help message
 
-🛡️ *Admin Privileges*
+*Admin Privileges*
 You have administrative access to view platform statistics and analytics.
 
-💡 *Tips:*
+*Tips:*
 • Use /assets to monitor platform health
 • Statistics are updated in real-time
 • Contact @support for technical issues
@@ -216,16 +216,16 @@ async def admin_status_handler(message: types.Message):
     total_admins = len(admin_filter.admin_ids)
 
     status_text = f"""
-🔐 *Admin Status*
+*Admin Status*
 
-✅ *Access Confirmed*
+*Access Confirmed*
 You are authenticated as an administrator.
 
-👥 *Admin Count:* `{total_admins}`
-🆔 *Your ID:* `{message.from_user.id}`
-👤 *Name:* {message.from_user.full_name}
+*Admin Count:* `{total_admins}`
+*Your ID:* `{message.from_user.id}`
+*Name:* {message.from_user.full_name}
 
-🕐 *Session Info:*
+*Session Info:*
 • Active since bot restart
 • Commands logged for security
     """.strip()

@@ -14,4 +14,4 @@ async def admin_check_handler(message: types.Message):
     """
     Responds with an admin verification message if user passes the AdminFilter.
     """
-    await message.answer("✅ You are an admin!")
+    await message.answer("You are an admin!")

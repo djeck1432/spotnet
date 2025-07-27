@@ -123,7 +123,7 @@ def test_get_users_for_notifications(user_db):
     mock_context = mock_session.__enter__.return_value
     mock_query = mock_context.query.return_value
     (
-        mock_query.join.return_value.join.return_value.filter.return_value.distinct.return_value.all.return_value
+        mock_query.join.return_value.join.return_value.filter.return_value.distinct.return_value.all.return_value  # noqa: E501
     ) = [
         ("0x123", "tg_id_1"),
         ("0x456", "tg_id_2"),

@@ -9,9 +9,10 @@ The admin handler provides administrative commands for the Telegram bot, specifi
 ### Commands Available
 
 1. **`/assets`** - View comprehensive asset statistics dashboard
+
    - Total users count
    - Active positions
-   - Liquidated positions  
+   - Liquidated positions
    - Pending orders
    - Key metrics (liquidation rate, average positions per user)
    - Platform health status
@@ -37,6 +38,7 @@ API_BASE_URL=http://localhost:8000
 ### 2. Admin Filter
 
 The admin handler uses an `AdminFilter` that:
+
 - Loads admin IDs from the `TELEGRAM_ADMIN_IDS` environment variable
 - Validates user permissions before executing admin commands
 - Provides secure access control
@@ -44,6 +46,7 @@ The admin handler uses an `AdminFilter` that:
 ### 3. Statistics Integration
 
 The handler attempts to fetch statistics from:
+
 1. **Primary**: Local API endpoint (`/api/dashboard/statistic`)
 2. **Fallback**: Mock data for development/testing
 
@@ -64,20 +67,20 @@ The handler attempts to fetch statistics from:
 Send `/assets` command to get a formatted dashboard:
 
 ```
-📊 Asset Statistics Dashboard
+Asset Statistics Dashboard
 
-👥 Total Users: 1,250
-📈 Active Positions: 342
-💥 Liquidated Positions: 28
-📋 Pending Orders: 156
+Total Users: 1,250
+Active Positions: 342
+Liquidated Positions: 28
+Pending Orders: 156
 
-📊 Key Metrics:
-🔄 Total Active Trades: 498
-📉 Liquidation Rate: 8.19%
-👤 Avg Positions/User: 0.27
+Key Metrics:
+Total Active Trades: 498
+Liquidation Rate: 8.19%
+Avg Positions/User: 0.27
 
-🎯 Platform Health:
-🟢 Healthy
+Platform Health:
+Healthy
 
 Last updated: Just now
 ```
@@ -92,20 +95,23 @@ Last updated: Just now
 ## Platform Health Indicators
 
 The system provides automatic health assessment:
-- 🟢 **Healthy**: Liquidation rate < 10%
-- 🟡 **Moderate**: Liquidation rate 10-20%
-- 🔴 **High Risk**: Liquidation rate > 20%
+
+- **Healthy**: Liquidation rate < 10%
+- **Moderate**: Liquidation rate 10-20%
+- **High Risk**: Liquidation rate > 20%
 
 ## Troubleshooting
 
 ### Common Issues
 
 1. **"Not authorized" error**
+
    - Verify your Telegram ID is in `TELEGRAM_ADMIN_IDS`
    - Check environment variable format (comma-separated, no spaces)
    - Restart the bot after configuration changes
 
 2. **Statistics not loading**
+
    - Check if the API service is running
    - Verify `API_BASE_URL` is correct
    - Review application logs for errors
@@ -138,6 +144,7 @@ For development, the handler will use mock data if the API is unavailable:
 ## Future Enhancements
 
 Potential additions for future versions:
+
 - Real-time statistics updates
 - Historical data visualization
 - Export functionality
