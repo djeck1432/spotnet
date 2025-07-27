@@ -19,6 +19,7 @@ from unittest.mock import AsyncMock, MagicMock, Mock, patch
 import pytest_asyncio
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import ProgrammingError, OperationalError
 from app.crud.user import UserCRUD
 from app.models.user import User
 from app.tests.conftest import fake
@@ -394,10 +395,13 @@ async def test_pool_statistic_view(
     # Skip test if database view is not available (common in test environments)
     try:
         res = await session.execute(select(PoolStatisticDBView))
+    except (ProgrammingError, OperationalError, AttributeError, Exception) as e:
+        pytest.skip(f"PoolStatisticDBView not available in test database: {type(e).__name__}")
+        
+    try:
         retrieved_pools: Sequence[PoolStatisticDBView] = res.scalars().all()
-    except Exception:
-        pytest.skip("PoolStatisticDBView not available in test database")
-        return
+    except (AttributeError, Exception) as e:
+        pytest.skip(f"Error retrieving PoolStatisticDBView data: {type(e).__name__}")
         
     pools_by_id = {pool.id: pool for pool in mock_pools}
     for pool in retrieved_pools:
