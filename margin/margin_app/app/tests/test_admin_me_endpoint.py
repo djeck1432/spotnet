@@ -157,34 +157,3 @@ class TestAdminMeEndpoint:
                     assert data["name"] is None
                     assert data["email"] == "test@example.com"
                     assert data["is_super_admin"] is False
-
-    @pytest.mark.asyncio
-    async def test_admin_with_null_name_handled_correctly(self):
-        """
-        Test that admin with null name is handled correctly.
-        """
-        # Create a mock admin user with null name using a simple object
-        class MockAdmin:
-            def __init__(self):
-                self.id = "123e4567-e89b-12d3-a456-426614174000"
-                self.email = "test@example.com"
-                self.name = None
-                self.is_super_admin = False
-                self.password = "hashed_password"
-        
-        mock_admin = MockAdmin()
-
-        with patch('app.services.auth.base.get_current_user', new_callable=AsyncMock) as mock_get_current_user:
-            mock_get_current_user.return_value = mock_admin
-            with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
-                mock_get_admin_user.return_value = mock_admin
-                with TestClient(app) as client:
-                    response = client.get(
-                        "/api/admin/me",
-                        headers={"Authorization": "Bearer test-token"}
-                    )
-                    assert response.status_code == 200
-                    data = response.json()
-                    assert data["name"] is None
-                    assert data["email"] == "test@example.com"
-                    assert data["is_super_admin"] is False
