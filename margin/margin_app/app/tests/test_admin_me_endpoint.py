@@ -24,15 +24,16 @@ class TestAdminMeEndpoint:
         """
         Test that authenticated access returns correct admin data.
         """
-        # Create a mock admin user
-        admin_id = uuid4()
-        mock_admin = Admin(
-            id=admin_id,
-            email="test@example.com",
-            name="Test Admin",
-            is_super_admin=True,
-            password="hashed_password"  # This should not be returned
-        )
+        # Create a mock admin user using a simple object instead of Admin model
+        class MockAdmin:
+            def __init__(self):
+                self.id = "123e4567-e89b-12d3-a456-426614174000"
+                self.email = "test@example.com"
+                self.name = "Test Admin"
+                self.is_super_admin = True
+                self.password = "hashed_password"
+        
+        mock_admin = MockAdmin()
 
         # Mock the authentication middleware by patching the get_current_user function
         with patch('app.main.get_current_user', new_callable=AsyncMock) as mock_get_user:
@@ -51,7 +52,7 @@ class TestAdminMeEndpoint:
                 data = response.json()
                 
                 # Verify correct fields are returned
-                assert data["id"] == str(admin_id)
+                assert data["id"] == "123e4567-e89b-12d3-a456-426614174000"
                 assert data["email"] == "test@example.com"
                 assert data["name"] == "Test Admin"
                 assert data["is_super_admin"] is True
@@ -102,15 +103,16 @@ class TestAdminMeEndpoint:
         """
         Test that the response structure matches the expected schema.
         """
-        # Create a mock admin user
-        admin_id = uuid4()
-        mock_admin = Admin(
-            id=admin_id,
-            email="test@example.com",
-            name="Test Admin",
-            is_super_admin=False,
-            password="hashed_password"
-        )
+        # Create a mock admin user using a simple object
+        class MockAdmin:
+            def __init__(self):
+                self.id = "123e4567-e89b-12d3-a456-426614174000"
+                self.email = "test@example.com"
+                self.name = "Test Admin"
+                self.is_super_admin = False
+                self.password = "hashed_password"
+        
+        mock_admin = MockAdmin()
 
         # Mock the authentication middleware
         with patch('app.main.get_current_user', new_callable=AsyncMock) as mock_get_user:
@@ -144,15 +146,16 @@ class TestAdminMeEndpoint:
         """
         Test that admin with null name is handled correctly.
         """
-        # Create a mock admin user with null name
-        admin_id = uuid4()
-        mock_admin = Admin(
-            id=admin_id,
-            email="test@example.com",
-            name=None,
-            is_super_admin=False,
-            password="hashed_password"
-        )
+        # Create a mock admin user with null name using a simple object
+        class MockAdmin:
+            def __init__(self):
+                self.id = "123e4567-e89b-12d3-a456-426614174000"
+                self.email = "test@example.com"
+                self.name = None
+                self.is_super_admin = False
+                self.password = "hashed_password"
+        
+        mock_admin = MockAdmin()
 
         # Mock the authentication middleware
         with patch('app.main.get_current_user', new_callable=AsyncMock) as mock_get_user:
