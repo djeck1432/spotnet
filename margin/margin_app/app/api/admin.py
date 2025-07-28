@@ -322,7 +322,7 @@ async def get_current_admin_profile(request: Request) -> AdminMeResponse:
         )
 
     return AdminMeResponse(
-        id=current_admin.id,
+        id=str(current_admin.id),
         email=current_admin.email,
         name=current_admin.name,
         is_super_admin=current_admin.is_super_admin,
