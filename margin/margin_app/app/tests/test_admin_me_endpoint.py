@@ -35,31 +35,24 @@ class TestAdminMeEndpoint:
         
         mock_admin = MockAdmin()
 
-        # Mock the authentication middleware by patching get_admin_user_from_state in the correct module
-        with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
-            mock_get_admin_user.return_value = mock_admin
-
-            # Create test client
-            with TestClient(app) as client:
-                # Make request to /admin/me endpoint with Authorization header
-                response = client.get(
-                    "/api/admin/me",
-                    headers={"Authorization": "Bearer test-token"}
-                )
-
-                # Assert response
-                assert response.status_code == 200
-                data = response.json()
-                
-                # Verify correct fields are returned
-                assert data["id"] == "123e4567-e89b-12d3-a456-426614174000"
-                assert data["email"] == "test@example.com"
-                assert data["name"] == "Test Admin"
-                assert data["is_super_admin"] is True
-                
-                # Verify sensitive data is NOT returned
-                assert "password" not in data
-                assert "password_hash" not in data
+        # Patch both get_current_user (for middleware) and get_admin_user_from_state (for endpoint)
+        with patch('app.services.auth.base.get_current_user', new_callable=AsyncMock) as mock_get_current_user:
+            mock_get_current_user.return_value = mock_admin
+            with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
+                mock_get_admin_user.return_value = mock_admin
+                with TestClient(app) as client:
+                    response = client.get(
+                        "/api/admin/me",
+                        headers={"Authorization": "Bearer test-token"}
+                    )
+                    assert response.status_code == 200
+                    data = response.json()
+                    assert data["id"] == "123e4567-e89b-12d3-a456-426614174000"
+                    assert data["email"] == "test@example.com"
+                    assert data["name"] == "Test Admin"
+                    assert data["is_super_admin"] is True
+                    assert "password" not in data
+                    assert "password_hash" not in data
 
     @pytest.mark.asyncio
     async def test_unauthorized_access_returns_401(self):
@@ -114,32 +107,24 @@ class TestAdminMeEndpoint:
         
         mock_admin = MockAdmin()
 
-        # Mock the authentication middleware
-        with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
-            mock_get_admin_user.return_value = mock_admin
-
-            # Create test client
-            with TestClient(app) as client:
-                # Make request to /admin/me endpoint with Authorization header
-                response = client.get(
-                    "/api/admin/me",
-                    headers={"Authorization": "Bearer test-token"}
-                )
-
-                # Assert response
-                assert response.status_code == 200
-                data = response.json()
-                
-                # Verify all required fields are present
-                required_fields = ["id", "email", "name", "is_super_admin"]
-                for field in required_fields:
-                    assert field in data
-                
-                # Verify field types
-                assert isinstance(data["id"], str)
-                assert isinstance(data["email"], str)
-                assert isinstance(data["name"], str) or data["name"] is None
-                assert isinstance(data["is_super_admin"], bool)
+        with patch('app.services.auth.base.get_current_user', new_callable=AsyncMock) as mock_get_current_user:
+            mock_get_current_user.return_value = mock_admin
+            with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
+                mock_get_admin_user.return_value = mock_admin
+                with TestClient(app) as client:
+                    response = client.get(
+                        "/api/admin/me",
+                        headers={"Authorization": "Bearer test-token"}
+                    )
+                    assert response.status_code == 200
+                    data = response.json()
+                    required_fields = ["id", "email", "name", "is_super_admin"]
+                    for field in required_fields:
+                        assert field in data
+                    assert isinstance(data["id"], str)
+                    assert isinstance(data["email"], str)
+                    assert isinstance(data["name"], str) or data["name"] is None
+                    assert isinstance(data["is_super_admin"], bool)
 
     @pytest.mark.asyncio
     async def test_admin_with_null_name_handled_correctly(self):
@@ -157,23 +142,17 @@ class TestAdminMeEndpoint:
         
         mock_admin = MockAdmin()
 
-        # Mock the authentication middleware
-        with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
-            mock_get_admin_user.return_value = mock_admin
-
-            # Create test client
-            with TestClient(app) as client:
-                # Make request to /admin/me endpoint with Authorization header
-                response = client.get(
-                    "/api/admin/me",
-                    headers={"Authorization": "Bearer test-token"}
-                )
-
-                # Assert response
-                assert response.status_code == 200
-                data = response.json()
-                
-                # Verify null name is handled correctly
-                assert data["name"] is None
-                assert data["email"] == "test@example.com"
-                assert data["is_super_admin"] is False 
+        with patch('app.services.auth.base.get_current_user', new_callable=AsyncMock) as mock_get_current_user:
+            mock_get_current_user.return_value = mock_admin
+            with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
+                mock_get_admin_user.return_value = mock_admin
+                with TestClient(app) as client:
+                    response = client.get(
+                        "/api/admin/me",
+                        headers={"Authorization": "Bearer test-token"}
+                    )
+                    assert response.status_code == 200
+                    data = response.json()
+                    assert data["name"] is None
+                    assert data["email"] == "test@example.com"
+                    assert data["is_super_admin"] is False
