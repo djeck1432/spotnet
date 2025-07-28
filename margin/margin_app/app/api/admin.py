@@ -295,6 +295,8 @@ async def update_admin_name(
 
 @router.get("/admin/assets", response_model=AssetsResponse)
 def get_assets(db: Session = Depends(get_db)):
+    """
+    Retrieve the assets and their statistics."""
     stats = {}  # Replace with actual function call to retrieve asset statistics
 
     assets_list = [
