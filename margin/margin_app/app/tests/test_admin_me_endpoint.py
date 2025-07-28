@@ -35,8 +35,8 @@ class TestAdminMeEndpoint:
         
         mock_admin = MockAdmin()
 
-        # Mock the authentication middleware by patching get_admin_user_from_state
-        with patch('app.services.auth.base.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
+        # Mock the authentication middleware by patching get_admin_user_from_state in the correct module
+        with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
             mock_get_admin_user.return_value = mock_admin
 
             # Create test client
@@ -115,7 +115,7 @@ class TestAdminMeEndpoint:
         mock_admin = MockAdmin()
 
         # Mock the authentication middleware
-        with patch('app.services.auth.base.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
+        with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
             mock_get_admin_user.return_value = mock_admin
 
             # Create test client
@@ -158,7 +158,7 @@ class TestAdminMeEndpoint:
         mock_admin = MockAdmin()
 
         # Mock the authentication middleware
-        with patch('app.services.auth.base.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
+        with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_get_admin_user:
             mock_get_admin_user.return_value = mock_admin
 
             # Create test client
