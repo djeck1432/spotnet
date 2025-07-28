@@ -13,7 +13,7 @@ from app.services.auth.base import (
     create_reset_password_token,
     create_access_token,
 )
-from mjml import mjml2html
+from mjml import mjml_to_html  # Changed import to use specific function
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import logging
 import os
@@ -42,7 +42,7 @@ class EmailService:
         """
         template = jinja_env.get_template(template_name)
         mjml_content = template.render(context)
-        html_result = mjml2html(mjml_content)
+        html_result = mjml_to_html(mjml_content) # changed to use explicit function
         return html_result["html"]
 
     async def send_email(
