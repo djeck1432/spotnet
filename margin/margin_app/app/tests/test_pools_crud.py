@@ -396,19 +396,24 @@ async def pools_with_mocked_view(
     mock_view_pools = []
     for pool in mock_pools:
         if pool.user_pools:
-            # Calculate volumes based on user_pools data
+            # Calculate volumes using the same logic as the test expects
             latest_amount = pool.user_pools[0].amount
             earliest_amount = pool.user_pools[-1].amount
             volume = latest_amount - earliest_amount
+            
+            # Calculate time-based volumes using _find_earliest_amount
+            amount_24 = _find_earliest_amount(pool.user_pools, 24)
+            amount_48 = _find_earliest_amount(pool.user_pools, 48)
+            amount_72 = _find_earliest_amount(pool.user_pools, 72)
             
             # Create mock view object
             mock_view_pool = Mock()
             mock_view_pool.id = pool.id
             mock_view_pool.token = pool.token
             mock_view_pool.volume = volume
-            mock_view_pool.volume_24 = volume  # Simplified for test
-            mock_view_pool.volume_48 = volume
-            mock_view_pool.volume_72 = volume
+            mock_view_pool.volume_24 = latest_amount - amount_24 if amount_24 is not None else 0
+            mock_view_pool.volume_48 = latest_amount - amount_48 if amount_48 is not None else 0
+            mock_view_pool.volume_72 = latest_amount - amount_72 if amount_72 is not None else 0
             mock_view_pools.append(mock_view_pool)
     
     return mock_pools, session, mock_view_pools
