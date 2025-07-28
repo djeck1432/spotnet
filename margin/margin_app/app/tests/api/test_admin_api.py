@@ -438,7 +438,7 @@ def test_reset_password_different_admin_tokens(
     assert response.status_code == 200
 
 @pytest.mark.asyncio
-async def test_get_admin_assets_success(client, mock_admin_crud):
+async def test_get_admin_assets_success(client):
     """Test retrieving admin assets successfully with mocked data."""
     mock_data = {
         "total": 2,
