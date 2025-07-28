@@ -9,6 +9,7 @@ import pytest
 from unittest.mock import AsyncMock, patch, MagicMock
 from fastapi.testclient import TestClient
 from fastapi import HTTPException
+from uuid import uuid4
 
 from app.main import app
 from app.models.admin import Admin
@@ -24,8 +25,9 @@ class TestAdminMeEndpoint:
         Test that authenticated access returns correct admin data.
         """
         # Create a mock admin user
+        admin_id = uuid4()
         mock_admin = Admin(
-            id="123e4567-e89b-12d3-a456-426614174000",
+            id=admin_id,
             email="test@example.com",
             name="Test Admin",
             is_super_admin=True,
@@ -49,7 +51,7 @@ class TestAdminMeEndpoint:
                 data = response.json()
                 
                 # Verify correct fields are returned
-                assert data["id"] == "123e4567-e89b-12d3-a456-426614174000"
+                assert data["id"] == str(admin_id)
                 assert data["email"] == "test@example.com"
                 assert data["name"] == "Test Admin"
                 assert data["is_super_admin"] is True
@@ -101,8 +103,9 @@ class TestAdminMeEndpoint:
         Test that the response structure matches the expected schema.
         """
         # Create a mock admin user
+        admin_id = uuid4()
         mock_admin = Admin(
-            id="123e4567-e89b-12d3-a456-426614174000",
+            id=admin_id,
             email="test@example.com",
             name="Test Admin",
             is_super_admin=False,
@@ -142,8 +145,9 @@ class TestAdminMeEndpoint:
         Test that admin with null name is handled correctly.
         """
         # Create a mock admin user with null name
+        admin_id = uuid4()
         mock_admin = Admin(
-            id="123e4567-e89b-12d3-a456-426614174000",
+            id=admin_id,
             email="test@example.com",
             name=None,
             is_super_admin=False,
