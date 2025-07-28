@@ -321,14 +321,14 @@ async def test_fetch_all_with_amount_delta(pool_crud, mock_db_session):
 
 
 @pytest_asyncio.fixture
-async def new_test_user(user_crud_instance: UserCRUD):
+async def new_test_user(user_crud: UserCRUD):
     """
     Fixture to create test user using user_crud as another fixture
     Deletes created user on test teardown
     """
-    user = await user_crud_instance.write_to_db(User(wallet_id=str(uuid.uuid4())))
+    user = await user_crud.write_to_db(User(wallet_id=str(uuid.uuid4())))
     yield user
-    await user_crud_instance.delete_object(user)
+    await user_crud.delete_object(user)
 
 
 @pytest_asyncio.fixture
