@@ -41,11 +41,8 @@ class TestAdminMeEndpoint:
 
             # Create test client
             with TestClient(app) as client:
-                # Make request to /admin/me endpoint with Authorization header
-                response = client.get(
-                    "/api/admin/me",
-                    headers={"Authorization": "Bearer test-token"}
-                )
+                # Make request to /admin/me endpoint without Authorization header
+                response = client.get("/api/admin/me")
 
                 # Assert response
                 assert response.status_code == 200
@@ -120,11 +117,8 @@ class TestAdminMeEndpoint:
 
             # Create test client
             with TestClient(app) as client:
-                # Make request to /admin/me endpoint with Authorization header
-                response = client.get(
-                    "/api/admin/me",
-                    headers={"Authorization": "Bearer test-token"}
-                )
+                # Make request to /admin/me endpoint without Authorization header
+                response = client.get("/api/admin/me")
 
                 # Assert response
                 assert response.status_code == 200
@@ -163,11 +157,8 @@ class TestAdminMeEndpoint:
 
             # Create test client
             with TestClient(app) as client:
-                # Make request to /admin/me endpoint with Authorization header
-                response = client.get(
-                    "/api/admin/me",
-                    headers={"Authorization": "Bearer test-token"}
-                )
+                # Make request to /admin/me endpoint without Authorization header
+                response = client.get("/api/admin/me")
 
                 # Assert response
                 assert response.status_code == 200
