@@ -6,7 +6,7 @@ the currently authenticated admin's data.
 """
 
 import pytest
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, patch, MagicMock
 from fastapi.testclient import TestClient
 from fastapi import HTTPException
 
@@ -32,14 +32,17 @@ class TestAdminMeEndpoint:
             password="hashed_password"  # This should not be returned
         )
 
-        # Mock the authentication function
-        with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_auth:
-            mock_auth.return_value = mock_admin
+        # Mock the authentication middleware by patching the get_current_user function
+        with patch('app.main.get_current_user', new_callable=AsyncMock) as mock_get_user:
+            mock_get_user.return_value = mock_admin
 
             # Create test client
             with TestClient(app) as client:
-                # Make request to /admin/me endpoint
-                response = client.get("/api/admin/me")
+                # Make request to /admin/me endpoint with Authorization header
+                response = client.get(
+                    "/api/admin/me",
+                    headers={"Authorization": "Bearer test-token"}
+                )
 
                 # Assert response
                 assert response.status_code == 200
@@ -60,19 +63,37 @@ class TestAdminMeEndpoint:
         """
         Test that unauthorized access returns 401 error.
         """
-        # Mock the authentication function to return None (no authenticated user)
-        with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_auth:
-            mock_auth.return_value = None
+        # Test without Authorization header
+        with TestClient(app) as client:
+            # Make request to /admin/me endpoint without Authorization header
+            response = client.get("/api/admin/me")
+
+            # Assert response
+            assert response.status_code == 401
+            data = response.json()
+            assert data["detail"] == "Missing authorization header."
+
+    @pytest.mark.asyncio
+    async def test_invalid_token_returns_401(self):
+        """
+        Test that invalid token returns 401 error.
+        """
+        # Mock the authentication middleware to raise an exception
+        with patch('app.main.get_current_user', new_callable=AsyncMock) as mock_get_user:
+            mock_get_user.side_effect = Exception("Invalid token")
 
             # Create test client
             with TestClient(app) as client:
-                # Make request to /admin/me endpoint
-                response = client.get("/api/admin/me")
+                # Make request to /admin/me endpoint with invalid token
+                response = client.get(
+                    "/api/admin/me",
+                    headers={"Authorization": "Bearer invalid-token"}
+                )
 
                 # Assert response
                 assert response.status_code == 401
                 data = response.json()
-                assert data["detail"] == "Authentication required"
+                assert data["detail"] == "Authentication error."
 
     @pytest.mark.asyncio
     async def test_response_structure_matches_schema(self):
@@ -88,14 +109,17 @@ class TestAdminMeEndpoint:
             password="hashed_password"
         )
 
-        # Mock the authentication function
-        with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_auth:
-            mock_auth.return_value = mock_admin
+        # Mock the authentication middleware
+        with patch('app.main.get_current_user', new_callable=AsyncMock) as mock_get_user:
+            mock_get_user.return_value = mock_admin
 
             # Create test client
             with TestClient(app) as client:
-                # Make request to /admin/me endpoint
-                response = client.get("/api/admin/me")
+                # Make request to /admin/me endpoint with Authorization header
+                response = client.get(
+                    "/api/admin/me",
+                    headers={"Authorization": "Bearer test-token"}
+                )
 
                 # Assert response
                 assert response.status_code == 200
@@ -126,14 +150,17 @@ class TestAdminMeEndpoint:
             password="hashed_password"
         )
 
-        # Mock the authentication function
-        with patch('app.api.admin.get_admin_user_from_state', new_callable=AsyncMock) as mock_auth:
-            mock_auth.return_value = mock_admin
+        # Mock the authentication middleware
+        with patch('app.main.get_current_user', new_callable=AsyncMock) as mock_get_user:
+            mock_get_user.return_value = mock_admin
 
             # Create test client
             with TestClient(app) as client:
-                # Make request to /admin/me endpoint
-                response = client.get("/api/admin/me")
+                # Make request to /admin/me endpoint with Authorization header
+                response = client.get(
+                    "/api/admin/me",
+                    headers={"Authorization": "Bearer test-token"}
+                )
 
                 # Assert response
                 assert response.status_code == 200
