@@ -436,3 +436,15 @@ def test_reset_password_different_admin_tokens(
     )
 
     assert response.status_code == 200
+
+def test_get_admin_assets_success(client, db_session, create_user_pool_data):
+    # `create_user_pool_data` should be a fixture adding fake user pools to DB
+    response = client.get("/admin/assets")
+    assert response.status_code == 200
+    data = response.json()
+    assert "total" in data
+    assert isinstance(data["assets"], list)
+
+def test_get_admin_assets_unauthorized(client):
+    response = client.get("/admin/assets", headers={"Authorization": "Bearer invalid"})
+    assert response.status_code in (401, 403)
