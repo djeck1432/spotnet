@@ -13,6 +13,8 @@ import pytest
 from fastapi import status
 from app.services.auth.base import create_access_token
 from spotnet.web_app.tests.conftest import client
+from decimal import Decimal
+
 
 ADMIN_URL = "/api/admin/"
 
@@ -438,24 +440,29 @@ def test_reset_password_different_admin_tokens(
 
     assert response.status_code == 200
 
-@patch("app.services.statistics.StatisticsService.get_asset_statistics")
-async def test_get_asset_statistics(mock_stats, auth_token):
-    """Test asset statistics endpoint returns and the request is successfull"""
-    mock_stats.return_value = {
-        "total_value": 34551,
-        "assets": [
-            {"name": "Bitcoin", "amount": 0.5832112, "value": 15032},
-            {"name": "Ethereum", "amount": 1.7294746, "value": 11246},
-            {"name": "Solana", "amount": 196.9766, "value": 8273}
-        ]
+@patch("app.contract_tools.admin_mixin.AdminMixin.get_current_prices")
+async def test_get_asset_statistics(mock_prices, auth_token):
+    # Mock prices
+    mock_prices.return_value = {
+        "BTC": Decimal('40000'),
+        "ETH": Decimal('2500'),
+        "SOL": Decimal('100')
     }
     
-    response = client.get(
-        "/admin/statistic/assets",
-        headers={"Authorization": f"Bearer {auth_token}"}
-    )
-    
-    assert response.status_code == 200
-    data = response.json()
-    assert data["total_value"] == 34551
-    assert len(data["assets"]) == 3
+    # Mock database response
+    with patch("app.services.statistics.StatisticsService._get_token_amounts") as mock_amounts:
+        mock_amounts.return_value = {
+            "BTC": Decimal('1.5'),
+            "ETH": Decimal('10'),
+            "SOL": Decimal('100')
+        }
+        
+        response = client.get(
+            "/admin/statistic/assets",
+            headers={"Authorization": f"Bearer {auth_token}"}
+        )
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total_value"] == 1.5*40000 + 10*2500 + 100*100
+        assert len(data["assets"]) == 3
