@@ -76,3 +76,17 @@ class AdminLogin(BaseSchema):
 
     email: str
     password: str
+
+
+class AdminMeResponse(BaseSchema):
+    """
+    Response model for /admin/me endpoint.
+    Contains only non-sensitive admin data.
+    """
+
+    id: UUID
+    email: EmailStr
+    name: Optional[str] = None
+    is_super_admin: bool
+
+    model_config = ConfigDict(from_attributes=True)
