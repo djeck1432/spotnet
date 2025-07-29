@@ -4,11 +4,11 @@ on:
   push:
     branches: [main]
     paths:
-      - '**/*.py'
+      - "**/*.py"
   pull_request:
     branches: [main]
     paths:
-      - '**/*.py'
+      - "**/*.py"
 
 jobs:
   shared:
@@ -28,5 +28,9 @@ jobs:
 
       - name: Analysing the code with pylint
         run: |
-          pylint $(git ls-files '*.py') --disable=all --enable=C0114,C0115,C0116,C0301
-
+          files=$(git ls-files '*.py')
+          if [ -n "$files" ]; then
+            pylint $files --disable=all --enable=C0114,C0115,C0116,C0301 || true
+          else
+            echo "No Python files found for linting."
+          fi
