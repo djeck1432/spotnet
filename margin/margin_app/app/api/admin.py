@@ -26,6 +26,11 @@ from app.services.auth.security import get_password_hash, verify_password
 from app.services.emails import email_service
 from fastapi.responses import JSONResponse
 from pydantic import EmailStr
+from app.services.statistics import StatisticsService
+from pydantic import BaseModel
+from app.models.token import AssetsResponse, TokenAsset
+
+
 
 router = APIRouter(prefix="")
 
@@ -287,3 +292,33 @@ async def update_admin_name(
     return AdminResponse(
         id=updated_admin.id, name=updated_admin.name, email=updated_admin.email
     )
+
+@router.get(
+    "/statistic/assets",
+    response_model=AssetsResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get asset statistics",
+    description="Retrieves statistics about assets including total value and breakdown by token",
+)
+async def get_asset_statistics(request: Request) -> AssetsResponse:
+    """Get asset statistics.
+    This endpoint retrieves statistics about the assets managed by the admin."""
+    current_admin = await get_admin_user_from_state(request)
+    
+    if not current_admin:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required"
+        )
+    
+    try:
+        stats = await StatisticsService.get_asset_statistics()
+        return AssetsResponse(
+            total_value=stats["total_value"],
+            assets=[TokenAsset(**asset) for asset in stats["assets"]]
+        )
+    except Exception as e:
+        logger.error(f"Error fetching asset statistics: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch asset statistics"
+        )

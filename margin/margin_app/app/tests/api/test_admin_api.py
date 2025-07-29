@@ -12,6 +12,7 @@ from types import SimpleNamespace
 import pytest
 from fastapi import status
 from app.services.auth.base import create_access_token
+from spotnet.web_app.tests.conftest import client
 
 ADMIN_URL = "/api/admin/"
 
@@ -436,3 +437,25 @@ def test_reset_password_different_admin_tokens(
     )
 
     assert response.status_code == 200
+
+@patch("app.services.statistics.StatisticsService.get_asset_statistics")
+async def test_get_asset_statistics(mock_stats, auth_token):
+    """Test asset statistics endpoint returns and the request is successfull"""
+    mock_stats.return_value = {
+        "total_value": 34551,
+        "assets": [
+            {"name": "Bitcoin", "amount": 0.5832112, "value": 15032},
+            {"name": "Ethereum", "amount": 1.7294746, "value": 11246},
+            {"name": "Solana", "amount": 196.9766, "value": 8273}
+        ]
+    }
+    
+    response = client.get(
+        "/admin/statistic/assets",
+        headers={"Authorization": f"Bearer {auth_token}"}
+    )
+    
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total_value"] == 34551
+    assert len(data["assets"]) == 3
