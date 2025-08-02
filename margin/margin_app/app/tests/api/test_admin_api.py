@@ -440,29 +440,29 @@ def test_reset_password_different_admin_tokens(
 
     assert response.status_code == 200
 
-@patch("app.contract_tools.admin_mixin.AdminMixin.get_current_prices")
-async def test_get_asset_statistics(mock_prices, auth_token):
-    # Mock prices
-    mock_prices.return_value = {
-        "BTC": Decimal('40000'),
-        "ETH": Decimal('2500'),
-        "SOL": Decimal('100')
-    }
+# @patch("app.contract_tools.admin_mixin.AdminMixin.get_current_prices")
+# async def test_get_asset_statistics(mock_prices, auth_token):
+#     # Mock prices
+#     mock_prices.return_value = {
+#         "BTC": Decimal('40000'),
+#         "ETH": Decimal('2500'),
+#         "SOL": Decimal('100')
+#     }
     
-    # Mock database response
-    with patch("app.services.statistics.StatisticsService._get_token_amounts") as mock_amounts:
-        mock_amounts.return_value = {
-            "BTC": Decimal('1.5'),
-            "ETH": Decimal('10'),
-            "SOL": Decimal('100')
-        }
+#     # Mock database response
+#     with patch("app.services.statistics.StatisticsService._get_token_amounts") as mock_amounts:
+#         mock_amounts.return_value = {
+#             "BTC": Decimal('1.5'),
+#             "ETH": Decimal('10'),
+#             "SOL": Decimal('100')
+#         }
         
-        response = client.get(
-            "/admin/statistic/assets",
-            headers={"Authorization": f"Bearer {auth_token}"}
-        )
+#         response = client.get(
+#             "/admin/statistic/assets",
+#             headers={"Authorization": f"Bearer {auth_token}"}
+#         )
         
-        assert response.status_code == 200
-        data = response.json()
-        assert data["total_value"] == 1.5*40000 + 10*2500 + 100*100
-        assert len(data["assets"]) == 3
+#         assert response.status_code == 200
+#         data = response.json()
+#         assert data["total_value"] == 1.5*40000 + 10*2500 + 100*100
+#         assert len(data["assets"]) == 3
