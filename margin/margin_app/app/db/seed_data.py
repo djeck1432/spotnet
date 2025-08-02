@@ -23,10 +23,19 @@ from app.models import (
     UserOrder,
     UserPool,
 )
+from app.crud.token import token_crud
+
 from faker import Faker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
+
+initial_tokens = [
+    {"id": "BTC", "name": "Bitcoin", "decimals": 8},
+    {"id": "ETH", "name": "Ethereum", "decimals": 18},
+    {"id": "SOL", "name": "Solana", "decimals": 9},
+    # Add other tokens you support
+]
 
 class SeedDataGenerator:
     """
@@ -320,6 +329,14 @@ class SeedDataGenerator:
             print("Successfully generated orders")
             await self.generate_transactions(session)
             print("Successfully generated transactions")
+
+    async def seed_tokens(session: AsyncSession):
+        """
+        Seed initial tokens into the database if they do not already exist."""
+        for token_data in initial_tokens:
+            if not await token_crud.get(session, token_data["id"]):
+                await token_crud.create(session, obj_in=token_data)
+
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ except password reset require authentication.
 from typing import Optional
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, Query, status, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, status, Request
 from loguru import logger
 from sqlalchemy.exc import IntegrityError
 
@@ -27,6 +27,12 @@ from app.services.auth.security import get_password_hash, verify_password
 from app.services.emails import email_service
 from fastapi.responses import JSONResponse
 from pydantic import EmailStr
+from app.services.statistics import StatisticsService
+from app.db.sessions import get_db
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.schemas.token import AssetsResponse, TokenAsset
+
 
 router = APIRouter(prefix="")
 
@@ -327,3 +333,33 @@ async def get_current_admin_profile(request: Request) -> AdminMeResponse:
         name=current_admin.name,
         is_super_admin=current_admin.is_super_admin,
     )
+
+@router.get(
+    "/statistic/assets",
+    response_model=AssetsResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get asset statistics",
+    description="Retrieves statistics about assets including total value and breakdown by token",
+)
+async def get_asset_statistics(request: Request, session: AsyncSession = Depends(get_db)):
+    """Get asset statistics.
+    This endpoint retrieves statistics about the assets managed by the admin."""
+    current_admin = await get_admin_user_from_state(request)
+    
+    if not current_admin:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required"
+        )
+    
+    try:
+        stats = await StatisticsService.get_asset_statistics(session)
+        return AssetsResponse(
+            total_value=stats["total_value"],
+            assets=[TokenAsset(**asset) for asset in stats["assets"]]
+        )
+    except Exception as e:
+        logger.error(f"Error fetching asset statistics: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch asset statistics"
+        )
