@@ -12,7 +12,7 @@ from types import SimpleNamespace
 import pytest
 from fastapi import status
 from app.services.auth.base import create_access_token
-from spotnet.web_app.tests.conftest import client
+from app.tests.conftest import client
 from decimal import Decimal
 
 
