@@ -306,3 +306,40 @@ def get_assets(db: Session = Depends(get_db)):
     ]
 
     return AssetsResponse(total=stats["total"], assets=assets_list)
+@router.get(
+    "/me",
+    response_model=AdminMeResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get current admin profile",
+    description="Returns the currently authenticated admin's profile data",
+)
+async def get_current_admin_profile(request: Request) -> AdminMeResponse:
+    """
+    Get the current authenticated admin's profile information.
+
+    This endpoint relies on the authentication token to identify the admin
+    and returns relevant admin fields while excluding sensitive data.
+
+    Parameters:
+    - request: The request object containing the authenticated admin user
+
+    Returns:
+    - AdminMeResponse: The current admin's profile data
+
+    Raises:
+    - HTTPException: If user is not authenticated (401)
+    """
+    current_admin = await get_admin_user_from_state(request)
+
+    if not current_admin:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail="Authentication required"
+        )
+
+    return AdminMeResponse(
+        id=str(current_admin.id),
+        email=current_admin.email,
+        name=current_admin.name,
+        is_super_admin=current_admin.is_super_admin,
+    )
