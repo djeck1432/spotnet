@@ -10,7 +10,7 @@ from unittest.mock import AsyncMock, patch
 from types import SimpleNamespace
 
 import pytest
-from fastapi import status
+from fastapi import status, HTTPException
 from app.services.auth.base import create_access_token
 
 ADMIN_URL = "/api/admin/"
@@ -436,3 +436,28 @@ def test_reset_password_different_admin_tokens(
     )
 
     assert response.status_code == 200
+
+# @pytest.mark.asyncio
+# async def test_get_admin_assets_success(client):
+#     """Test retrieving admin assets successfully with mocked data."""
+#     mock_data = {
+#         "total": 2,
+#         "assets": [{"id": 1, "name": "Asset 1"}, {"id": 2, "name": "Asset 2"}]
+#     }
+    
+#     with patch("app.api.admin.get_admin_assets", new_callable=AsyncMock) as mock_get_assets:
+#         mock_get_assets.return_value = mock_data
+#         response = client.get(f"{ADMIN_URL}assets")
+#         assert response.status_code == 200
+#         data = response.json()
+#         assert data == mock_data
+
+# @pytest.mark.asyncio
+# async def test_get_admin_assets_unauthorized(client):
+#     """Test unauthorized access to admin assets endpoint."""
+#     with patch("app.api.admin.get_admin_assets", side_effect=HTTPException(status_code=401)):
+#         response = client.get(
+#             f"{ADMIN_URL}assets",
+#             headers={"Authorization": "Bearer invalid"}
+#         )
+#         assert response.status_code == 401
