@@ -20,6 +20,7 @@ from app.schemas.admin import (
     AdminResponse,
     AdminGetAllResponse,
     AdminUpdateRequest,
+    AdminMeResponse,
 )
 from app.services.auth.base import get_admin_user_from_state, get_current_user
 from app.services.auth.security import get_password_hash, verify_password

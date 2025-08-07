@@ -38,10 +38,10 @@ class AdminResetPassword(BaseSchema):
     Schema for token-based admin password reset.
 
     This schema is used when an admin user resets their password
-    using a secure reset token received via email. Only requires
-    the new password as the identity is verified through the token.
+    using a secure reset token received via email. It requires
+    the token and the new password.
     """
-
+    token: str
     new_password: str
 
 
@@ -76,3 +76,17 @@ class AdminLogin(BaseSchema):
 
     email: str
     password: str
+
+
+class AdminMeResponse(BaseSchema):
+    """
+    Response model for /admin/me endpoint.
+    Contains only non-sensitive admin data.
+    """
+
+    id: UUID
+    email: EmailStr
+    name: Optional[str] = None
+    is_super_admin: bool
+
+    model_config = ConfigDict(from_attributes=True)
