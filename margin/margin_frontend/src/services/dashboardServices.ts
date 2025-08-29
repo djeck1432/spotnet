@@ -9,7 +9,7 @@ interface DashboardStatistics {
 }
 
 const fetchDashboardStatistics = async (): Promise<DashboardStatistics> => {
-  const response = await api.get("api/dashboard/statistic").json<DashboardStatistics>();
+  const response = await api.get("dashboard/statistic").json<DashboardStatistics>();
   return response;
 };
 
