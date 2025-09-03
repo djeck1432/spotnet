@@ -3,12 +3,12 @@ CRUD operations for Admin model
 """
 
 from typing import Optional, List
-from sqlalchemy import select
-
+from sqlalchemy import select, func
+from app.models.pool import UserPool
 from app.services.auth.security import get_password_hash
 from app.models.admin import Admin
 from .base import DBConnector
-
+from app.models.token import Token
 
 class AdminCRUD(DBConnector):
     """
@@ -79,6 +79,20 @@ class AdminCRUD(DBConnector):
             admin.password = get_password_hash(model.password)
 
         return await self.write_to_db(admin)
+    
+    async def get_token_statistics(self):
+        """get token statistics including total amount per token"""
+        query = (
+            select(
+                Token.name,
+                func.sum(UserPool.amount).label("total_amount")
+        )
+        .join(Token, UserPool.token_id == Token.id)
+        .group_by(Token.name)
+        )
+    
+        result = await self.session.execute(query)
+        return result.all()
 
 
 admin_crud = AdminCRUD(Admin)

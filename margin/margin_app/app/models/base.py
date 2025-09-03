@@ -7,7 +7,7 @@ from datetime import datetime
 
 from sqlalchemy import DateTime
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import as_declarative
+from sqlalchemy.orm import as_declarative
 from sqlalchemy.orm import Mapped, mapped_column
 
 

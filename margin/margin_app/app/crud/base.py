@@ -6,7 +6,7 @@ import logging
 from uuid import UUID
 
 from contextlib import asynccontextmanager
-from typing import AsyncIterator, Type, TypeVar, Optional, Any
+from typing import AsyncIterator, Type, TypeVar, Optional, Any, Generic
 
 
 from sqlalchemy import func, select
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 ModelType = TypeVar("ModelType", bound=BaseModel)
 
 
-class DBConnector:
+class DBConnector(Generic[ModelType]):
     """
     Provides database connection and operations management using SQLAlchemy
     in a FastAPI application context.
