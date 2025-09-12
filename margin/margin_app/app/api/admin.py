@@ -27,6 +27,10 @@ from app.services.auth.security import get_password_hash, verify_password
 from app.services.emails import email_service
 from fastapi.responses import JSONResponse
 from pydantic import EmailStr
+from app.db.sessions import get_db
+from app.schemas.dashboard import AssetsResponse, Asset
+from fastapi import Depends 
+from sqlalchemy.orm import Session   
 
 router = APIRouter(prefix="")
 
@@ -290,6 +294,18 @@ async def update_admin_name(
     )
 
 
+@router.get("/admin/assets", response_model=AssetsResponse)
+def get_assets(db: Session = Depends(get_db)):
+    """
+    Retrieve the assets and their statistics."""
+    stats = {}  # Replace with actual function call to retrieve asset statistics
+
+    assets_list = [
+        Asset(symbol=symbol, amount=data["amount"], value=data["value"])
+        for symbol, data in stats["assets"].items()
+    ]
+
+    return AssetsResponse(total=stats["total"], assets=assets_list)
 @router.get(
     "/me",
     response_model=AdminMeResponse,
