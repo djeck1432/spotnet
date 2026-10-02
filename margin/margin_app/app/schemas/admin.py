@@ -1,92 +1,22 @@
-"""
-Pydantic schemas for admin user management.
-
-This module defines request and response models for admin-related API endpoints,
-including validation rules and serialization configurations.
-"""
-
-from uuid import UUID
-from typing import Optional
-from .base import GetAll, BaseSchema
-from pydantic import EmailStr, ConfigDict
+from pydantic import BaseModel, Field
+from decimal import Decimal
 
 
-class AdminBase(BaseSchema):
-    """
-    Admin base model
-    """
-
-    name: Optional[str] = None
-    email: EmailStr
+class AssetStatisticDetail(BaseModel):
+    token_symbol: str = Field(..., description="Token symbol")
+    total_amount: Decimal = Field(..., description="Total token amount across all user pools")
+    price: Decimal = Field(..., description="Current token price")
+    total_value: Decimal = Field(..., description="Total value (amount * price)")
 
 
-class AdminRequest(AdminBase):
-    """
-    Admin request model
-    """
-
-    email: EmailStr
-    name: Optional[str] = None
-
-    class Config:
-        "Only allow fields that are defined in the model"
-        extra = "forbid"
+class AssetStatisticResponse(BaseModel):
+    token_symbol: str = Field(..., description="Token symbol")
+    total_amount: str = Field(..., description="Total token amount across all user pools")
+    price: str = Field(..., description="Current token price")
+    total_value: str = Field(..., description="Total value (amount * price)")
 
 
-class AdminResetPassword(BaseSchema):
-    """
-    Schema for token-based admin password reset.
-
-    This schema is used when an admin user resets their password
-    using a secure reset token received via email. It requires
-    the token and the new password.
-    """
-    token: str
-    new_password: str
-
-
-class AdminResponse(AdminBase):
-    """
-    Admin response model
-    """
-
-    id: UUID
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class AdminGetAllResponse(GetAll[AdminResponse]):
-    """
-    Admin get all response model
-    """
-
-
-class AdminUpdateRequest(BaseSchema):
-    """
-    Admin update request model (for updating admin fields)
-    """
-
-    name: Optional[str] = None
-
-
-class AdminLogin(BaseSchema):
-    """
-    Request model for admin login
-    """
-
-    email: str
-    password: str
-
-
-class AdminMeResponse(BaseSchema):
-    """
-    Response model for /admin/me endpoint.
-    Contains only non-sensitive admin data.
-    """
-
-    id: UUID
-    email: EmailStr
-    name: Optional[str] = None
-    is_super_admin: bool
-
-    model_config = ConfigDict(from_attributes=True)
+class AdminDashboardResponse(BaseModel):
+    total_users: int = Field(..., description="Total number of users")
+    total_deposits: Decimal = Field(..., description="Total deposit amount")
+    total_withdrawals: Decimal = Field(..., description="Total withdrawal amount")
